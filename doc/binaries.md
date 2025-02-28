@@ -15,107 +15,107 @@ These libraries are fundamental dependencies and will be extensively used by oth
 
 ```bash
 # linux
-bash script/zlib.sh linux test
-bash script/bzip2.sh linux test
+bash scripts/zlib.sh linux test
+bash scripts/bzip2.sh linux test
 
 # macos
-bash script/zlib.sh macos test
-bash script/bzip2.sh macos test
+bash scripts/zlib.sh macos test
+bash scripts/bzip2.sh macos test
 
 ```
 
 ## Other Libraries
 
 ```bash
-bash script/xz.sh
-bash script/libdeflate.sh
+bash scripts/xz.sh
+bash scripts/libdeflate.sh
 
 bash install.sh zlib libdeflate bzip2 xz
 
-bash script/ncurses.sh
-bash script/readline.sh
+bash scripts/ncurses.sh
+bash scripts/readline.sh
 
 bash install.sh ncurses readline
 
-bash script/sqlite.sh
+bash scripts/sqlite.sh
 
-bash script/gdbm.sh
-bash script/expat.sh
+bash scripts/gdbm.sh
+bash scripts/expat.sh
 
-bash script/libpng.sh
-bash script/pixman.sh
+bash scripts/libpng.sh
+bash scripts/pixman.sh
 
-bash script/argtable.sh
-bash script/libxcrypt.sh
+bash scripts/argtable.sh
+bash scripts/libxcrypt.sh
 
-bash script/gsl.sh
+bash scripts/gsl.sh
 
 # --with-libdeflate
-bash script/htslib.sh
+bash scripts/htslib.sh
 
 ```
 
 ## `Makefile`
 
 ```bash
-bash script/pigz.sh
+bash scripts/pigz.sh
 
-bash script/bwa.sh
-bash script/minimap2.sh
-bash script/miniprot.sh
+bash scripts/bwa.sh
+bash scripts/minimap2.sh
+bash scripts/miniprot.sh
 
-bash script/lastz.sh
-bash script/sickle.sh
-bash script/faops.sh
-bash script/phylip.sh
+bash scripts/lastz.sh
+bash scripts/sickle.sh
+bash scripts/faops.sh
+bash scripts/phylip.sh
 
-# bash script/mafft.sh # mafft has hard-coded paths
+# bash scripts/mafft.sh # mafft has hard-coded paths
 
-bash script/phast.sh # build without CLAPACK
+bash scripts/phast.sh # build without CLAPACK
 
-bash script/consel.sh
-bash script/trimal.sh
+bash scripts/consel.sh
+bash scripts/trimal.sh
 
 # use specific commit to ensure reproducibility
-bash script/DAZZ_DB.sh
-bash script/DALIGNER.sh
-bash script/MERQURY.FK.sh
-bash script/FASTGA.sh
-bash script/FASTK.sh # Depend on zlib, libdeflate and libhts
-bash script/multiz.sh
-bash script/paml.sh
-bash script/ASTER.sh
+bash scripts/DAZZ_DB.sh
+bash scripts/DALIGNER.sh
+bash scripts/MERQURY.FK.sh
+bash scripts/FASTGA.sh
+bash scripts/FASTK.sh # Depend on zlib, libdeflate and libhts
+bash scripts/multiz.sh
+bash scripts/paml.sh
+bash scripts/ASTER.sh
 
 ```
 
 ## `./configure`
 
 ```bash
-bash script/datamash.sh
+bash scripts/datamash.sh
 
-bash script/TRF.sh
-bash script/hmmer.sh
-bash script/hmmer2.sh
-bash script/mummer.sh
+bash scripts/TRF.sh
+bash scripts/hmmer.sh
+bash scripts/hmmer2.sh
+bash scripts/mummer.sh
 
-bash script/clustalo.sh # depends on argtable
+bash scripts/clustalo.sh # depends on argtable
 
-bash script/htslib.sh # depends on libdeflate, --with-libdeflate
+bash scripts/htslib.sh # depends on libdeflate, --with-libdeflate
 
 # bundled htslib
-bash script/samtools.sh
-bash script/bcftools.sh
+bash scripts/samtools.sh
+bash scripts/bcftools.sh
 
 ```
 
 ## `cmake`
 
 ```bash
-bash script/bifrost.sh
-bash script/spoa.sh
-bash script/diamond.sh
+bash scripts/bifrost.sh
+bash scripts/spoa.sh
+bash scripts/diamond.sh
 
-bash script/newick-utils.sh
+bash scripts/newick-utils.sh
 
 bash scripts/eigen.sh
 
@@ -124,7 +124,7 @@ bash scripts/eigen.sh
 ## Source codes from Git Repositories
 
 ```bash
-bash script/bcalm.sh
+bash scripts/bcalm.sh
 
 ```
 
@@ -133,14 +133,14 @@ bash script/bcalm.sh
 * Built on a CentOS 7 VM with gcc 4.8
 
 ```bash
-bash script/boost.sh
+bash scripts/boost.sh
 
 ```
 
 * Built on a CentOS 7 VM using system libgomp
 
 ```bash
-bash script/FastTree.sh
+bash scripts/FastTree.sh
 
 ```
 
@@ -149,23 +149,23 @@ bash script/FastTree.sh
 ### CLI utilities
 
 ```bash
-bash script/rust.sh fd
-bash script/rust.sh ripgrep
-# bash script/rust.sh bat
-bash script/rust.sh hyperfine
-bash script/rust.sh tealdeer
-bash script/rust.sh tokei
+bash scripts/rust.sh fd
+bash scripts/rust.sh ripgrep
+# bash scripts/rust.sh bat
+bash scripts/rust.sh hyperfine
+bash scripts/rust.sh tealdeer
+bash scripts/rust.sh tokei
 
 ```
 
 ### My bioinformatics utilities
 
 ```bash
-bash script/rust.sh intspan
-bash script/rust.sh nwr
-bash script/rust.sh hnsm
-bash script/rust.sh pgr
-bash script/rust.sh anchr
+bash scripts/rust.sh intspan
+bash scripts/rust.sh nwr
+bash scripts/rust.sh hnsm
+bash scripts/rust.sh pgr
+bash scripts/rust.sh anchr
 
 ```
 
@@ -196,18 +196,18 @@ chmod +x ${BIN}
 tar -cf - ${BIN} | gzip -9 > tar/${BIN}.linux.tar.gz
 rm ${BIN}
 
-bash script/tsv-utils.sh
-bash script/pup.sh
+bash scripts/tsv-utils.sh
+bash scripts/pup.sh
 
-bash script/raxml-ng.sh
-bash script/mash.sh
-bash script/megahit.sh
-bash script/mmseqs.sh
-bash script/freebayes.sh
-bash script/iqtree2.sh
+bash scripts/raxml-ng.sh
+bash scripts/mash.sh
+bash scripts/megahit.sh
+bash scripts/mmseqs.sh
+bash scripts/freebayes.sh
+bash scripts/iqtree2.sh
 
 # java
-bash script/fastqc.sh
-bash script/picard.sh
+bash scripts/fastqc.sh
+bash scripts/picard.sh
 
 ```
