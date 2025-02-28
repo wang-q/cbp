@@ -26,8 +26,6 @@ tera = "1.19.1"
 flate2 = "1.0.27"
 itertools = "0.11.0"
 
-intspan = "0.8.4"
-
 ftp = "3.0.1"
 tar = "0.4.40"
 dirs = "5.0.1"

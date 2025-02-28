@@ -46,23 +46,23 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
     match args.get_one::<String>("name").unwrap().as_ref() {
         "readme" => {
-            let mut writer = intspan::writer(outfile);
+            let mut writer = cbp::writer(outfile);
             writer.write_all(FILE_MD_README.as_ref())?;
         }
         "common" => {
-            let mut writer = intspan::writer(outfile);
+            let mut writer = cbp::writer(outfile);
             writer.write_all(FILE_MD_COMMON.as_ref())?;
         }
         "sources" => {
-            let mut writer = intspan::writer(outfile);
+            let mut writer = cbp::writer(outfile);
             writer.write_all(FILE_MD_SOURCES.as_ref())?;
         }
         "binaries" => {
-            let mut writer = intspan::writer(outfile);
+            let mut writer = cbp::writer(outfile);
             writer.write_all(FILE_MD_BINARIES.as_ref())?;
         }
         "developer" => {
-            let mut writer = intspan::writer(outfile);
+            let mut writer = cbp::writer(outfile);
             writer.write_all(FILE_MD_DEVELOPER.as_ref())?;
         }
         _ => unreachable!(),
