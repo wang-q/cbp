@@ -1,3 +1,3 @@
-//! Subcommand modules for the `bp` binary.
+//! Subcommand modules for the `cbp` binary.
 
 pub mod kb;
