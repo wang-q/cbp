@@ -12,6 +12,9 @@ NOTES=$(gh release view Binaries --json body -q .body)
 TEMP_HASHES=$(mktemp)
 trap 'rm -f $TEMP_HASHES' EXIT
 
+# Extract existing hashes and description
+DESCRIPTION=$(echo "$NOTES" | sed '/^```text$/,/^```$/d')
+
 # Extract existing hashes
 if echo "$NOTES" | grep -q '```text'; then
     echo "$NOTES" | sed -n '/^```text$/,/^```$/p' | grep -v '^```' > "$TEMP_HASHES"
@@ -40,11 +43,8 @@ done
 sort "$TEMP_HASHES" > "${TEMP_HASHES}.sorted"
 mv "${TEMP_HASHES}.sorted" "$TEMP_HASHES"
 
-# Update notes with new hash block
-if echo "$NOTES" | grep -q '```text'; then
-    NOTES=$(echo "$NOTES" | sed '/^```text$/,/^```$/d')
-fi
-NOTES="${NOTES}\n\`\`\`text\n$(cat "$TEMP_HASHES")\n\`\`\`"
+# Combine description and hash block
+NOTES="${DESCRIPTION}\n\n\`\`\`text\n$(cat "$TEMP_HASHES")\n\`\`\`"
 
 # Update release notes
 echo -e "$NOTES" | gh release edit Binaries --notes-file -
