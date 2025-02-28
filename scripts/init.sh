@@ -42,8 +42,7 @@ mkdir -p "$HOME/.cbp/binaries"
 
 # Download latest version of cbp
 echo "Downloading cbp..."
-latest_version=$(curl -s https://api.github.com/repos/wang-q/cbp/releases/latest | jq -r .tag_name)
-download_url="https://github.com/wang-q/cbp/releases/download/${latest_version}/cbp.${OS_TYPE}"
+download_url="https://github.com/wang-q/cbp/releases/latest/download/cbp.${OS_TYPE}"
 
 curl -L -o "$HOME/bin/cbp" "$download_url"
 chmod +x "$HOME/bin/cbp"
