@@ -2,15 +2,18 @@
 
 [![Publish](https://github.com/wang-q/cbp/actions/workflows/publish.yml/badge.svg)](https://github.com/wang-q/cbp/actions)
 [![Build](https://github.com/wang-q/cbp/actions/workflows/build.yml/badge.svg)](https://github.com/wang-q/cbp/actions)
-[![Codecov](https://img.shields.io/codecov/c/github/wang-q/cbp/master.svg)](https://codecov.io/github/wang-q/cbp?branch=master)
+[![Codecov](https://img.shields.io/codecov/c/github/wang-q/cbp/main.svg)](https://codecov.io/github/wang-q/cbp?branch=main)
 [![Lines of code](https://www.aschey.tech/tokei/github/wang-q/cbp)](https://github.com//wang-q/cbp)
-[![License](https://img.shields.io/github/license/wang-q/builds)](https://github.com/wang-q/builds/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/wang-q/builds)](https://github.com/wang-q/builds/blob/main/LICENSE)
 
-`cbp` is a **C**ross-platform **B**inary **P**ackage manager for bioinformatics tools, focusing on glibc 2.17 (CentOS 7)
-compatibility and Apple Silicon support. Pre-built binaries are cross-compiled with Zig for
-consistent builds across platforms.
+`cbp` is a **C**ross-platform **B**inary **P**ackage manager for bioinformatics tools, focusing on
+glibc 2.17 (CentOS 7) compatibility and Apple Silicon support. Pre-built binaries are cross-compiled
+with Zig for consistent builds across platforms.
 
-The name `cbp` is inspired by DNA's "constant base pairing" - a fundamental principle in molecular biology where adenine (A) always pairs with thymine (T), and guanine (G) always pairs with cytosine (C). Just as these base pairs maintain reliable and consistent DNA structure, `cbp` aims to provide consistent and reliable binary packages across different platforms.
+The name `cbp` is inspired by DNA's "constant base pairing" - a fundamental principle in molecular
+biology where A always pairs with T, and G always pairs with C. Just as these base pairs maintain
+reliable and consistent DNA structure, `cbp` aims to provide consistent and reliable binary packages
+across different platforms.
 
 ## User Guide
 
@@ -34,7 +37,7 @@ First, create the target directory and download the installation script:
 mkdir -p ~/bin
 
 # Download the installation script
-curl -LO https://raw.githubusercontent.com/wang-q/cbp/master/install.sh
+curl -LO https://raw.githubusercontent.com/wang-q/cbp/main/install.sh
 chmod +x install.sh
 
 # Download and install jq (required for the installation script)
