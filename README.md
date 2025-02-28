@@ -12,6 +12,8 @@
 compatibility and Apple Silicon support. Pre-built binaries are cross-compiled with Zig for
 consistent builds across platforms.
 
+The name `cbp` is inspired by DNA's "constant base pairing" - a fundamental principle in molecular biology where adenine (A) always pairs with thymine (T), and guanine (G) always pairs with cytosine (C). Just as these base pairs maintain reliable and consistent DNA structure, `cbp` aims to provide consistent and reliable binary packages across different platforms.
+
 ## User Guide
 
 ### System Requirements
