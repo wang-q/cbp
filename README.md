@@ -17,7 +17,7 @@ across different platforms.
 
 ## System Requirements
 
-* Linux (glibc 2.17+) or macOS (Apple Silicon)
+* Linux (glibc 2.17+), macOS (Apple Silicon), or Windows WSL
 * Bash shell
 * curl
 * jq
@@ -31,6 +31,7 @@ curl -L https://raw.githubusercontent.com/wang-q/cbp/main/scripts/init.sh | bash
 
 ```
 
+> ⚠️ Windows user should run in WSL
 
 First, create the target directory and download the installation script:
 

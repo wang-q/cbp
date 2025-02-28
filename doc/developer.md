@@ -7,7 +7,6 @@ internal workings.
 
 ### Requirements
 
-* Linux (glibc 2.17+), macOS (Apple Silicon), or Windows WSL
 * Zig compiler
 * Rust toolchain
 * Git
