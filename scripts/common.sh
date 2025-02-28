@@ -1,6 +1,9 @@
 #!/bin/bash
 
 # Prevent direct execution of this script
+# ${BASH_SOURCE[0]} is the path of the currently executing script (common.sh)
+# ${0} is the path used to call the script
+# If they are equal, the script is being executed directly instead of being sourced
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     echo "Error: This script should be sourced, not executed directly"
     echo "Usage: source ${BASH_SOURCE[0]}"
@@ -15,6 +18,9 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
 fi
 
 # Get the directory of the script and project name
+# ${BASH_SOURCE[1]} is the path of the script that sourced this file
+# When common.sh is sourced by another script (e.g., zlib.sh),
+# ${BASH_SOURCE[1]} refers to zlib.sh's path
 BASH_DIR=$( cd "$( dirname "${BASH_SOURCE[1]}" )" && pwd )
 PROJ=$(basename "${BASH_SOURCE[1]}" .sh)
 
