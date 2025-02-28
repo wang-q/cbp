@@ -40,8 +40,7 @@ fn command_kb_no_args() -> anyhow::Result<()> {
 fn command_kb_invalid_doc() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin("cbp")?;
     cmd.arg("kb").arg("nonexistent");
-    cmd.assert()
-        .failure();
+    cmd.assert().failure();
 
     Ok(())
 }
@@ -53,7 +52,7 @@ fn command_kb_with_output_file() -> anyhow::Result<()> {
 
     let temp_dir = TempDir::new()?;
     let test_output = temp_dir.path().join("test_output.md");
-    
+
     let mut cmd = Command::cargo_bin("cbp")?;
     cmd.arg("kb")
         .arg("readme")

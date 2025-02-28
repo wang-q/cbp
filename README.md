@@ -1,10 +1,8 @@
-# `cbp` - a Cross-platform Binary Package manager
+# cbp
 
 [![Publish](https://github.com/wang-q/cbp/actions/workflows/publish.yml/badge.svg)](https://github.com/wang-q/cbp/actions)
 [![Build](https://github.com/wang-q/cbp/actions/workflows/build.yml/badge.svg)](https://github.com/wang-q/cbp/actions)
 [![Codecov](https://img.shields.io/codecov/c/github/wang-q/cbp/master.svg)](https://codecov.io/github/wang-q/cbp?branch=master)
-[![Crates.io](https://img.shields.io/crates/v/cbp.svg)](https://crates.io/crates/cbp)
-![](https://img.shields.io/crates/d/cbp?label=downloads%20%28crates.io%29)
 [![Lines of code](https://www.aschey.tech/tokei/github/wang-q/cbp)](https://github.com//wang-q/cbp)
 [![License](https://img.shields.io/github/license/wang-q/builds)](https://github.com/wang-q/builds/blob/master/LICENSE)
 
