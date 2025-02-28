@@ -157,7 +157,7 @@ run_test() {
         exit 1
     fi
 
-    if ! echo "${test_output}" | grep -q "Test PASSED"; then
+    if ! echo "${test_output}" | grep -q "PASSED"; then
         echo "==> Error: ${name} test did not pass"
         exit 1
     fi

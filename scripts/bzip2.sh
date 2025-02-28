@@ -25,8 +25,6 @@ ln -sf bzmore bzless
 
 # Clean up and reorganize
 cd "${TEMP_DIR}/collect"
-mv "${TEMP_DIR}/collect/bin"/* "${TEMP_DIR}/collect/"
-rm -rf "${TEMP_DIR}/collect/bin"
 rm -rf "${TEMP_DIR}/collect/man"
 
 # Run test if requested

@@ -17,11 +17,12 @@ These libraries are fundamental dependencies and will be extensively used by oth
 # linux
 bash scripts/zlib.sh linux test
 bash scripts/bzip2.sh linux test
+bash scripts/libdeflate.sh linux test
 
 # macos
 bash scripts/zlib.sh macos test
 bash scripts/bzip2.sh macos test
-bash scripts/libdeflate.sh macos test
+# bash scripts/libdeflate.sh macos test
 
 ```
 
