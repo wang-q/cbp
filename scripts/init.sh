@@ -53,7 +53,7 @@ for rc in "$HOME/.bashrc" "$HOME/.bash_profile" "$HOME/.zshrc"; do
     if [ -f "$rc" ]; then
         if ! grep -q '# .cbp' "$rc"; then
             echo '# .cbp' >> "$rc"
-            echo 'export PATH="$HOME/.cbp/bin/:$PATH"' >> "$rc"
+            echo 'export PATH="$HOME/.cbp/bin:$PATH"' >> "$rc"
         fi
     fi
 done
