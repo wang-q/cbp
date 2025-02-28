@@ -2,29 +2,29 @@
 
 # Detect OS and architecture
 OS_TYPE=""
-ARCH=""
 
-if [ $(uname -s) = "Darwin" ]; then
-    OS_TYPE="macos"
-elif [ $(uname -s) = "Linux" ]; then
-    OS_TYPE="linux"
-    # Check glibc version
-    glibc_version=$(ldd --version 2>&1 | head -n1 | grep -oP '(?<=\s)\d+\.\d+')
-    if (( $(echo "$glibc_version < 2.17" | bc -l) )); then
-        echo "Requires glibc version >= 2.17"
+if [ "$(uname -s)" = "Darwin" ]; then
+    if [ "$(uname -m)" = "arm64" ]; then
+        OS_TYPE="macos"
+    else
+        echo "cbp currently supports Apple Silicon only on macOS"
+        exit 1
+    fi
+elif [ "$(uname -s)" = "Linux" ]; then
+    if [ "$(uname -m)" = "x86_64" ]; then
+        OS_TYPE="linux"
+        # Check glibc version
+        glibc_version=$(ldd --version 2>&1 | head -n1 | grep -oP '(?<=\s)\d+\.\d+')
+        if (( $(echo "$glibc_version < 2.17" | bc -l) )); then
+            echo "Requires glibc version >= 2.17"
+            exit 1
+        fi
+    else
+        echo "cbp currently supports x86_64 only on Linux"
         exit 1
     fi
 else
     echo "cbp currently supports Linux and macOS only"
-    exit 1
-fi
-
-if [ $(uname -m) = "x86_64" ]; then
-    ARCH="x86_64"
-elif [ $(uname -m) = "arm64" ] || [ $(uname -m) = "aarch64" ]; then
-    ARCH="aarch64"
-else
-    echo "cbp currently supports x86_64 and ARM64 architectures only"
     exit 1
 fi
 
@@ -37,6 +37,7 @@ for cmd in curl jq; do
 done
 
 # Create necessary directories
+mkdir -p "$HOME/.cbp/bin"
 mkdir -p "$HOME/.cbp/cache"
 mkdir -p "$HOME/.cbp/binaries"
 
@@ -44,15 +45,15 @@ mkdir -p "$HOME/.cbp/binaries"
 echo "Downloading cbp..."
 download_url="https://github.com/wang-q/cbp/releases/latest/download/cbp.${OS_TYPE}"
 
-curl -L -o "$HOME/bin/cbp" "$download_url"
-chmod +x "$HOME/bin/cbp"
+curl -L -o "$HOME/.cbp/bin/cbp" "$download_url"
+chmod +x "$HOME/.cbp/bin/cbp"
 
 # Add to PATH
 for rc in "$HOME/.bashrc" "$HOME/.bash_profile" "$HOME/.zshrc"; do
     if [ -f "$rc" ]; then
         if ! grep -q '# .cbp' "$rc"; then
             echo '# .cbp' >> "$rc"
-            echo 'export PATH="$HOME/bin:$PATH"' >> "$rc"
+            echo 'export PATH="$HOME/.cbp/bin/:$PATH"' >> "$rc"
         fi
     fi
 done
