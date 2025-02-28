@@ -24,7 +24,7 @@ across different platforms.
 
 ## Install
 
-Current release: 0.0.1
+Current release: 0.1.0
 
 ```bash
 curl -L https://raw.githubusercontent.com/wang-q/cbp/main/scripts/init.sh | bash
