@@ -10,6 +10,7 @@ internal workings.
 * Zig compiler
 * Rust toolchain
 * Git
+* `gh` command, GitHub CLI
 * `file` command
 * Python 3
 
@@ -237,6 +238,12 @@ Binary packages are uploaded to a special "Binaries" release on GitHub, which is
     ```bash
     # If the file already exists, it will be replaced
     gh release upload Binaries binaries/zlib.*.tar.gz --clobber
+
+    # Or use the upload.sh script. It will:
+    # 1. Calculate SHA-256 hash for each file
+    # 2. Update release notes with new hashes
+    # 3. Upload files to GitHub Release
+    bash scripts/tools/upload.sh binaries/zlib.*.tar.gz
     ```
 
 ### Download URLs
