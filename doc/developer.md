@@ -58,6 +58,8 @@ rustup target add aarch64-apple-darwin
 ### Other tools
 
 ```bash
+cd $HOME/share
+
 # cmake
 curl -LO https://github.com/Kitware/CMake/releases/download/v3.31.5/cmake-3.31.5-linux-x86_64.sh
 bash cmake-3.31.5-linux-x86_64.sh
@@ -66,6 +68,7 @@ ln -s $HOME/share/cmake/bin/cmake $HOME/bin/cmake
 
 # ninja
 curl -LO https://github.com/ninja-build/ninja/releases/download/v1.12.1/ninja-linux.zip
+unzip ninja-linux.zip
 chmod +x ninja
 mv ninja $HOME/bin/
 rm ninja-linux.zip
@@ -112,6 +115,7 @@ Binary packages are built using shell scripts in the `scripts/` directory. Each 
 build script that sources `common.sh` for shared functionality.
 
 Example build process:
+
 1. Source code is downloaded to `sources/`
 2. Build script extracts and compiles the source
 3. Binaries are collected and packaged
@@ -165,6 +169,84 @@ $ bash install.sh --dep bwa
   File: bwa
         librt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007fb1c7f8c000)
 
+```
+
+## Binary Packages
+
+This section describes the binary packages distributed through the "Binaries" release.
+
+### Platform Support
+
+* Linux: x86_64 with glibc 2.17+ (CentOS 7 compatible)
+* macOS: ARM64 (Apple Silicon)
+
+### Package Format
+
+All packages are distributed as gzipped tarballs with the following naming convention:
+* Linux: package.linux.tar.gz
+* macOS: package.macos.tar.gz
+
+### Installation
+
+These binaries are meant to be installed via the `cbp` package manager. Manual installation is possible but not recommended.
+
+### Technical Notes
+
+* All binaries are statically linked where possible
+* Dynamic dependencies are limited to system libraries
+* Binaries are built with Zig for consistent cross-platform compatibility
+* This is a rolling release - packages are updated independently of `cbp` versions
+
+## Uploading Binaries
+
+Binary packages are uploaded to a special "Binaries" release on GitHub, which is independent of
+`cbp`'s version releases.
+
+### Upload Process
+
+1. Build the binary package using the build script
+    ```bash
+    bash scripts/zlib.sh linux    # or macos
+    ```
+
+2. The resulting tarball will be placed in `binaries/`
+    ```bash
+    ls -l binaries/zlib.*.tar.gz
+    ```
+
+3. Ensure you have the GitHub CLI installed and authenticated
+    ```bash
+    gh auth login
+
+    # Verify authentication status
+    gh auth status
+    ```
+
+3. Create the Binaries release on GitHub if it doesn't exist
+    ```bash
+    gh release view Binaries
+
+    gh release create Binaries \
+        --title "Binary Packages" \
+        --notes "This release contains pre-built binary packages for various platforms." \
+        --prerelease
+    ```
+
+
+3. Upload to GitHub Release
+    ```bash
+    # If the file already exists, it will be replaced
+    gh release upload Binaries binaries/zlib.*.tar.gz --clobber
+    ```
+
+### Download URLs
+
+The binary packages will be available at fixed URLs:
+
+```text
+https://github.com/wang-q/cbp/releases/download/Binaries/zlib.linux.tar.gz
+
+https://github.com/wang-q/cbp/releases/download/Binaries/zlib.macos.tar.gz
 ```
 
 ## Contributing
