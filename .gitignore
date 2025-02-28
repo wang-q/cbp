@@ -139,3 +139,5 @@ Cargo.lock
 *.sqlite
 *.dmp
 *.tsv
+
+binaries/

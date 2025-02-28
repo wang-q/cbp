@@ -1,5 +1,5 @@
 # Detect text files automatically
 * text=auto
-
 # Force Unix-style line endings on these files
 * eol=lf
+sources/*.tar.gz filter=lfs diff=lfs merge=lfs -text
