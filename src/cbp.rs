@@ -1,7 +1,7 @@
 extern crate clap;
 use clap::*;
 
-mod cmd_bp;
+mod cmd_cbp;
 
 fn main() -> anyhow::Result<()> {
     let app = Command::new("nwr")
@@ -11,7 +11,7 @@ fn main() -> anyhow::Result<()> {
         .propagate_version(true)
         .arg_required_else_help(true)
         .color(ColorChoice::Auto)
-        .subcommand(cmd_bp::kb::make_subcommand())
+        .subcommand(cmd_cbp::kb::make_subcommand())
         .after_help(
             r###"
 Subcommand groups:
@@ -21,7 +21,7 @@ Subcommand groups:
 
     // Check which subcomamnd the user ran...
     match app.get_matches().subcommand() {
-        Some(("kb", sub_matches)) => cmd_bp::kb::execute(sub_matches),
+        Some(("kb", sub_matches)) => cmd_cbp::kb::execute(sub_matches),
         _ => unreachable!(),
     }?;
 

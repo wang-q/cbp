@@ -1,11 +1,11 @@
 [package]
-name = "bp"
+name = "cbp"
 version = "0.0.1"
 authors = ["wang-q <wang-q@outlook.com>"]
-description = "`bp` is a Binary Package manager"
-documentation = "https://github.com/wang-q/bp"
-homepage = "https://github.com/wang-q/bp"
-repository = "https://github.com/wang-q/bp"
+description = "`cbp` is a Binary Package manager"
+documentation = "https://github.com/wang-q/cbp"
+homepage = "https://github.com/wang-q/cbp"
+repository = "https://github.com/wang-q/cbp"
 readme = "README.md"
 categories = ["command-line-utilities", "science"]
 license = "MIT"
@@ -13,8 +13,8 @@ edition = "2021"
 publish = false
 
 [[bin]]
-name = "bp"
-path = "src/bp.rs"
+name = "cbp"
+path = "src/cbp.rs"
 
 [dependencies]
 clap = { version = "4.4.3", features = ["cargo"] }

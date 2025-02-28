@@ -1,14 +1,14 @@
-# `bp` - a Binary Package manager
+# `cbp` - a Cross-platform Binary Package manager
 
-[![Publish](https://github.com/wang-q/bp/actions/workflows/publish.yml/badge.svg)](https://github.com/wang-q/bp/actions)
-[![Build](https://github.com/wang-q/bp/actions/workflows/build.yml/badge.svg)](https://github.com/wang-q/bp/actions)
-[![Codecov](https://img.shields.io/codecov/c/github/wang-q/bp/master.svg)](https://codecov.io/github/wang-q/bp?branch=master)
-[![Crates.io](https://img.shields.io/crates/v/bp.svg)](https://crates.io/crates/bp)
-![](https://img.shields.io/crates/d/bp?label=downloads%20%28crates.io%29)
-[![Lines of code](https://www.aschey.tech/tokei/github/wang-q/bp)](https://github.com//wang-q/bp)
+[![Publish](https://github.com/wang-q/cbp/actions/workflows/publish.yml/badge.svg)](https://github.com/wang-q/cbp/actions)
+[![Build](https://github.com/wang-q/cbp/actions/workflows/build.yml/badge.svg)](https://github.com/wang-q/cbp/actions)
+[![Codecov](https://img.shields.io/codecov/c/github/wang-q/cbp/master.svg)](https://codecov.io/github/wang-q/cbp?branch=master)
+[![Crates.io](https://img.shields.io/crates/v/cbp.svg)](https://crates.io/crates/cbp)
+![](https://img.shields.io/crates/d/cbp?label=downloads%20%28crates.io%29)
+[![Lines of code](https://www.aschey.tech/tokei/github/wang-q/cbp)](https://github.com//wang-q/cbp)
 [![License](https://img.shields.io/github/license/wang-q/builds)](https://github.com/wang-q/builds/blob/master/LICENSE)
 
-`bp` is a **B**inary **P**ackage manager for bioinformatics tools, focusing on glibc 2.17 (CentOS 7)
+`cbp` is a **C**ross-platform **B**inary **P**ackage manager for bioinformatics tools, focusing on glibc 2.17 (CentOS 7)
 compatibility and Apple Silicon support. Pre-built binaries are cross-compiled with Zig for
 consistent builds across platforms.
 
@@ -34,7 +34,7 @@ First, create the target directory and download the installation script:
 mkdir -p ~/bin
 
 # Download the installation script
-curl -LO https://raw.githubusercontent.com/wang-q/bp/master/install.sh
+curl -LO https://raw.githubusercontent.com/wang-q/cbp/master/install.sh
 chmod +x install.sh
 
 # Download and install jq (required for the installation script)
@@ -68,12 +68,12 @@ cargo build
 
 ```
 
-## `bp help`
+## `cbp help`
 
 ```text
-`bp` is a package manager
+`cbp` is a package manager
 
-Usage: bp [COMMAND]
+Usage: cbp [COMMAND]
 
 Commands:
   kb    Prints docs (knowledge bases)
