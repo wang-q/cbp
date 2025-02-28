@@ -21,6 +21,7 @@ bash scripts/bzip2.sh linux test
 # macos
 bash scripts/zlib.sh macos test
 bash scripts/bzip2.sh macos test
+bash scripts/libdeflate.sh macos test
 
 ```
 
@@ -28,7 +29,6 @@ bash scripts/bzip2.sh macos test
 
 ```bash
 bash scripts/xz.sh
-bash scripts/libdeflate.sh
 
 bash install.sh zlib libdeflate bzip2 xz
 
