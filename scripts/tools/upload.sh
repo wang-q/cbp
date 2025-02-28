@@ -24,7 +24,11 @@ for file in "$@"; do
     
     echo "==> Processing ${NAME}..."
     # Update hash in temp file
-    sed -i '' -E "/${NAME}: [a-f0-9]{64}/d" "$TEMP_HASHES"
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        sed -i '' -E "/${NAME}: [a-f0-9]{64}/d" "$TEMP_HASHES"
+    else
+        sed -i -E "/${NAME}: [a-f0-9]{64}/d" "$TEMP_HASHES"
+    fi
     echo "${NAME}: ${HASH}" >> "$TEMP_HASHES"
     
     # Upload file
