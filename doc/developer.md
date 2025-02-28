@@ -173,6 +173,17 @@ $ bash install.sh --dep bwa
 
 ## Binary Packages
 
+Create the Binaries release on GitHub if it doesn't exist
+
+```bash
+gh release view Binaries
+
+gh release create Binaries \
+    --title "Binary Packages" \
+    --notes "This release contains pre-built binary packages for various platforms." \
+    --prerelease
+```
+
 This section describes the binary packages distributed through the "Binaries" release.
 
 ### Platform Support
@@ -222,18 +233,7 @@ Binary packages are uploaded to a special "Binaries" release on GitHub, which is
     gh auth status
     ```
 
-3. Create the Binaries release on GitHub if it doesn't exist
-    ```bash
-    gh release view Binaries
-
-    gh release create Binaries \
-        --title "Binary Packages" \
-        --notes "This release contains pre-built binary packages for various platforms." \
-        --prerelease
-    ```
-
-
-3. Upload to GitHub Release
+4. Upload to GitHub Release
     ```bash
     # If the file already exists, it will be replaced
     gh release upload Binaries binaries/zlib.*.tar.gz --clobber
