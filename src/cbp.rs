@@ -4,10 +4,10 @@ use clap::*;
 mod cmd_cbp;
 
 fn main() -> anyhow::Result<()> {
-    let app = Command::new("nwr")
+    let app = Command::new("cbp")
         .version(crate_version!())
         .author(crate_authors!())
-        .about("`bp` is a Binary Package manager")
+        .about("`cbp` is a Cross-platform Binary Package manager")
         .propagate_version(true)
         .arg_required_else_help(true)
         .color(ColorChoice::Auto)

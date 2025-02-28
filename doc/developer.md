@@ -1,6 +1,6 @@
 # Developer Guide
 
-This guide is intended for developers who want to contribute to the `bp` project or understand its
+This guide is intended for developers who want to contribute to the `cbp` project or understand its
 internal workings.
 
 ## Development Environment
@@ -93,7 +93,7 @@ git lfs track "sources/*.tar.gz"
 ## Project Structure
 
 ```text
-bp/
+cbp/
 |-- binaries/      # Build artifacts
 |-- doc/           # Documentation
 |-- scripts/       # Build scripts
@@ -101,6 +101,7 @@ bp/
 |   |-- *.sh       # Package-specific build scripts
 |-- sources/       # Source packages
 |-- src/           # Rust source code
+|-- tests/         # Rust test code
 
 ```
 

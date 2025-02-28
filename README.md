@@ -15,20 +15,22 @@ biology where A always pairs with T, and G always pairs with C. Just as these ba
 reliable and consistent DNA structure, `cbp` aims to provide consistent and reliable binary packages
 across different platforms.
 
-## User Guide
-
-### System Requirements
+## System Requirements
 
 * Linux (glibc 2.17+) or macOS (Apple Silicon)
 * Bash shell
-* Perl
 * curl
 * jq
-* A directory `$HOME/bin` in your `$PATH`
 
 ## Install
 
 Current release: 0.0.1
+
+```bash
+curl -L https://raw.githubusercontent.com/wang-q/cbp/main/scripts/init.sh | bash
+
+```
+
 
 First, create the target directory and download the installation script:
 
