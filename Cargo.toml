@@ -1,0 +1,50 @@
+[package]
+name = "bp"
+version = "0.0.1"
+authors = ["wang-q <wang-q@outlook.com>"]
+description = "`bp` is a package manager"
+documentation = "https://github.com/wang-q/bp"
+homepage = "https://github.com/wang-q/bp"
+repository = "https://github.com/wang-q/bp"
+readme = "README.md"
+categories = ["command-line-utilities", "science"]
+license = "MIT"
+edition = "2021"
+
+[[bin]]
+name = "bp"
+path = "src/bp.rs"
+
+[dependencies]
+clap = { version = "4.4.3", features = ["cargo"] }
+anyhow = "1.0.75"
+regex = "1.9.5"
+lazy_static = "1.4.0"
+tera = "1.19.1"
+
+flate2 = "1.0.27"
+itertools = "0.11.0"
+
+intspan = "0.8.4"
+
+ftp = "3.0.1"
+tar = "0.4.40"
+dirs = "5.0.1"
+log = "0.4.20"
+simplelog = "0.12.1"
+md5 = "0.7.0"
+
+cmd_lib = "1.9.3"
+tempfile = "3.8.0"
+
+[build-dependencies]
+
+[dev-dependencies]
+assert_cmd = "2.0.12"
+predicates = "3.0.3"
+rand = "0.8.5"
+criterion = "0.5.1"
+approx = "0.5.1"
+
+[profile.release]
+lto = true
