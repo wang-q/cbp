@@ -2,6 +2,8 @@
 
 ## Unreleased - ReleaseDate
 
+## 0.1.0 - 2025-02-28
+
 - Initial release
 - Added `kb` command for documentation display
   - README.md
