@@ -11,6 +11,12 @@ curl -o sources/xz.tar.gz -L https://github.com/tukaani-project/xz/releases/down
 
 curl -o sources/libdeflate.tar.gz -L https://github.com/ebiggers/libdeflate/archive/refs/tags/v1.23.tar.gz
 
+curl -o sources/ncurses.tar.gz -L https://ftp.gnu.org/gnu/ncurses/ncurses-6.5.tar.gz
+
+curl -o sources/readline.tar.gz -L https://ftp.gnu.org/gnu/readline/readline-8.2.tar.gz
+
+curl -o sources/sqlite.tar.gz -L https://www.sqlite.org/2025/sqlite-autoconf-3490100.tar.gz
+
 curl -o sources/gdbm.tar.gz -L https://ftp.gnu.org/gnu/gdbm/gdbm-1.24.tar.gz
 
 curl -o sources/expat.tar.gz -L https://github.com/libexpat/libexpat/releases/download/R_2_6_4/expat-2.6.4.tar.gz
@@ -41,57 +47,15 @@ curl -L https://github.com/besser82/libxcrypt/releases/download/v4.4.38/libxcryp
     tar -czf sources/libxcrypt.tar.gz libxcrypt/ &&
     rm -rf libxcrypt
 
-curl -o sources/ncurses.tar.gz -L https://ftp.gnu.org/gnu/ncurses/ncurses-6.5.tar.gz
-
-curl -o sources/readline.tar.gz -L https://ftp.gnu.org/gnu/readline/readline-8.2.tar.gz
-
-curl -o sources/sqlite.tar.gz -L https://www.sqlite.org/2025/sqlite-autoconf-3490100.tar.gz
-
 curl -o sources/gsl.tar.gz -L https://ftp.gnu.org/gnu/gsl/gsl-2.8.tar.gz
-
-# curl -o sources/clapack.tar.gz -L https://www.netlib.org/clapack/clapack-3.2.1-CMAKE.tgz
-
-```
-
-## C++ libraries
-
-```bash
-
-curl -L https://archives.boost.io/release/1.74.0/source/boost_1_74_0.tar.gz |
-    tar xvfz - \
-        --exclude='libs/math/test/*' \
-        --exclude='libs/geometry/test/*' \
-        --exclude='libs/gil/test/*' \
-        --exclude='libs/multiprecision/test/*' \
-        --exclude='libs/beast/test/*' \
-        --exclude='libs/*/example/*' \
-        --exclude='libs/*/doc/*' \
-        --exclude='*.html' \
-        --exclude='*.htm' \
-        --exclude='*.pdf' \
-        --exclude='*.png' \
-        --exclude='*.jpg' \
-        --exclude='*.gif' \
-        --exclude='*.bmp' \
-        --exclude='*.css' \
-        --exclude='*.js' \
-        --exclude='*.txt' \
-        --exclude='*.dat' \
-        --exclude='*.dat' \
-        --exclude='*.qbk' \
-        --exclude='*.svg' \
-        --exclude='*.xml' &&
-    mv boost_1_74_0 boost &&
-    tar -czf sources/boost.tar.gz boost/ &&
-    rm -rf boost
-
-curl -o sources/eigen.tar.gz -L https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz
 
 # curl -L https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/openmp-19.1.7.src.tar.xz |
 #     tar xvfJ - &&
 #     mv openmp-19.1.7.src libomp &&
 #     tar -czf sources/libomp.tar.gz libomp/ &&
 #     rm -rf libomp
+
+# curl -o sources/clapack.tar.gz -L https://www.netlib.org/clapack/clapack-3.2.1-CMAKE.tgz
 
 ```
 
@@ -118,7 +82,6 @@ curl -o sources/mafft.tar.gz -L https://gitlab.com/sysimm/mafft/-/archive/v7.526
 
 curl -o sources/phast.tar.gz -L https://github.com/CshlSiepelLab/phast/archive/refs/tags/v1.7.tar.gz
 
-
 # just .tar file
 curl -L http://stat.sys.i.kyoto-u.ac.jp/prog/consel/pub/cnsls020.tgz |
     tar xvf - &&
@@ -144,17 +107,16 @@ curl -L https://github.com/inab/trimal/archive/refs/tags/v1.5.0.tar.gz |
 #     tar -czf sources/bedtools.tar.gz bedtools/ &&
 #     rm -rf bedtools
 
-
 # use specific commit to ensure reproducibility
 curl -o sources/DAZZ_DB.tar.gz -L https://github.com/thegenemyers/DAZZ_DB/archive/be65e5991ec0aa4ebbfa926ea00e3680de7b5760.tar.gz
 
 curl -o sources/DALIGNER.tar.gz -L https://github.com/thegenemyers/DALIGNER/archive/a8e2f42f752f21d21c92fbc39c75b16b52c6cabe.tar.gz
 
-curl -o sources/FASTK.tar.gz -L https://github.com/thegenemyers/FASTK/archive/ddea6cf254f378db51d22c6eb21af775fa9e1f77.tar.gz
-
 curl -o sources/MERQURY.FK.tar.gz -L https://github.com/thegenemyers/MERQURY.FK/archive/a1005336b0eae8a1dd478017e3dbbae5366ccda5.tar.gz
 
 curl -o sources/FASTGA.tar.gz -L https://github.com/thegenemyers/FASTGA/archive/e97c33ef4daeafdfbb7b5dda56d31eaac9a5e214.tar.gz
+
+curl -o sources/FASTK.tar.gz -L https://github.com/thegenemyers/FASTK/archive/ddea6cf254f378db51d22c6eb21af775fa9e1f77.tar.gz
 
 curl -o sources/multiz.tar.gz -L https://github.com/wang-q/multiz/archive/633c0f7814c887e9e7468ad42076d62496651cb8.tar.gz
 
@@ -170,7 +132,7 @@ curl -L https://github.com/chaoszhang/ASTER/archive/e8da7edf8adf4205cf5551630dc7
 
 ```
 
-## ./configure
+## `./configure`
 
 ```bash
 curl -o sources/datamash.tar.gz -L https://ftp.gnu.org/gnu/datamash/datamash-1.8.tar.gz
@@ -186,7 +148,6 @@ curl -L http://eddylab.org/software/hmmer/2.4i/hmmer-2.4i.tar.gz |
     tar -czf sources/hmmer2.tar.gz hmmer2/ &&
     rm -rf hmmer2
 
-
 # curl -o sources/MaSuRCA.tar.gz -L https://github.com/alekseyzimin/masurca/releases/download/v4.1.2/MaSuRCA-4.1.2.tar.gz
 
 curl -o sources/mummer.tar.gz -L https://github.com/mummer4/mummer/releases/download/v4.0.1/mummer-4.0.1.tar.gz
@@ -197,8 +158,7 @@ curl -L http://www.clustal.org/omega/clustal-omega-1.2.4.tar.gz |
     tar -czf sources/clustalo.tar.gz clustalo/ &&
     rm -rf clustalo
 
-
-# The .tar.gz source code from GitHub equires autoconf/automake to generate ./configure
+# The .tar.gz source code from GitHub requires autoconf/automake to generate ./configure
 curl -L https://github.com/samtools/htslib/releases/download/1.21/htslib-1.21.tar.bz2 |
     tar xvfj - &&
     tar -czf sources/htslib.tar.gz htslib-1.21/ &&
@@ -233,9 +193,65 @@ curl -L https://github.com/tjunier/newick_utils/archive/da121155a977197cab9fbb15
     tar -czf sources/newick-utils.tar.gz newick-utils/ &&
     rm -rf newick-utils
 
+curl -o sources/eigen.tar.gz -L https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz
+
 ```
 
-## `zig cc`
+## Source codes from Git Repositories
+
+This section clones recursively and sets up all required git repo at specific commits.
+
+```bash
+# bcalm
+REPO=bcalm
+git clone --recursive https://github.com/GATB/${REPO}.git
+cd ${REPO}
+git checkout v2.2.3
+
+rm -rf .git
+rm -rf gatb-core/.git
+cd ..
+tar -cf - ${REPO}/ | gzip -9 > sources/${REPO}.tar.gz
+rm -rf ${REPO}
+
+```
+
+## Projects requiring specific build environments
+
+* Built on a CentOS 7 VM with gcc 4.8
+
+```bash
+curl -L https://archives.boost.io/release/1.74.0/source/boost_1_74_0.tar.gz |
+    tar xvfz - \
+        --exclude='libs/math/test/*' \
+        --exclude='libs/geometry/test/*' \
+        --exclude='libs/gil/test/*' \
+        --exclude='libs/multiprecision/test/*' \
+        --exclude='libs/beast/test/*' \
+        --exclude='libs/*/example/*' \
+        --exclude='libs/*/doc/*' \
+        --exclude='*.html' \
+        --exclude='*.htm' \
+        --exclude='*.pdf' \
+        --exclude='*.png' \
+        --exclude='*.jpg' \
+        --exclude='*.gif' \
+        --exclude='*.bmp' \
+        --exclude='*.css' \
+        --exclude='*.js' \
+        --exclude='*.txt' \
+        --exclude='*.dat' \
+        --exclude='*.dat' \
+        --exclude='*.qbk' \
+        --exclude='*.svg' \
+        --exclude='*.xml' &&
+    mv boost_1_74_0 boost &&
+    tar -czf sources/boost.tar.gz boost/ &&
+    rm -rf boost
+
+```
+
+* Built on a CentOS 7 VM using system libgomp
 
 ```bash
 mkdir -p FastTree &&
@@ -254,7 +270,7 @@ curl -o sources/fd.tar.gz -L https://github.com/sharkdp/fd/archive/refs/tags/v10
 
 curl -o sources/ripgrep.tar.gz -L https://github.com/BurntSushi/ripgrep/archive/refs/tags/14.1.1.tar.gz
 
-curl -o sources/bat.tar.gz -L https://github.com/sharkdp/bat/archive/refs/tags/v0.25.0.tar.gz
+#curl -o sources/bat.tar.gz -L https://github.com/sharkdp/bat/archive/refs/tags/v0.25.0.tar.gz
 
 curl -o sources/hyperfine.tar.gz -L https://github.com/sharkdp/hyperfine/archive/refs/tags/v1.19.0.tar.gz
 
@@ -275,24 +291,5 @@ curl -o sources/hnsm.tar.gz -L https://github.com/wang-q/hnsm/archive/refs/tags/
 curl -o sources/pgr.tar.gz -L https://github.com/wang-q/pgr/archive/refs/tags/v0.1.0.tar.gz
 
 curl -o sources/anchr.tar.gz -L https://github.com/wang-q/anchr/archive/fadc09fe502e7b31cf6bbd9fa29b7188bf42ae3a.tar.gz
-
-```
-
-## Source codes from Git Repositories
-
-This section clones recursively and sets up all required git repo at specific commits.
-
-```bash
-# bcalm
-REPO=bcalm
-git clone --recursive https://github.com/GATB/${REPO}.git
-cd ${REPO}
-git checkout v2.2.3
-
-rm -rf .git
-rm -rf gatb-core/.git
-cd ..
-tar -cf - ${REPO}/ | gzip -9 > sources/${REPO}.tar.gz
-rm -rf ${REPO}
 
 ```
