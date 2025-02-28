@@ -5,7 +5,12 @@
 ```bash
 curl -o sources/zlib.tar.gz -L https://zlib.net/zlib-1.3.1.tar.gz
 
-curl -o sources/bzip2.tar.gz -L https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
+curl -L https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz |
+    tar xvfz - \
+        --exclude='manual.*' &&
+    mv bzip2-1.0.8 bzip2 &&
+    tar -czf sources/bzip2.tar.gz bzip2/ &&
+    rm -rf bzip2/
 
 curl -o sources/xz.tar.gz -L https://github.com/tukaani-project/xz/releases/download/v5.6.4/xz-5.6.4.tar.gz
 
