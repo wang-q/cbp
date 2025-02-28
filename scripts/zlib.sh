@@ -14,5 +14,14 @@ CC="zig cc -target ${TARGET_ARCH}" \
 make
 make install
 
-# Use build_tar function from common.sh
+# Run test if requested
+if [ "${RUN_TEST}" = "test" ]; then
+    source "${BASH_DIR}/tests/zlib.sh"
+    create_and_build_test
+    run_test "${TEMP_DIR}/test" "zlib"
+else
+    echo "==> Skipping tests (use 'test' as second argument to enable)"
+fi
+
+# Create package
 build_tar

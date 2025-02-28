@@ -30,6 +30,8 @@ if [ "$(uname -s)" = "Darwin" ]; then
 else
     OS_TYPE=${1:-linux}
 fi
+# Set test mode based on command line argument
+RUN_TEST=${2:-""}
 
 # Validate the OS type
 if [[ "$OS_TYPE" != "linux" && "$OS_TYPE" != "macos" ]]; then

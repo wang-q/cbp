@@ -6,11 +6,27 @@ This file contains build instructions for each component. Note that:
 2. Build artifacts are packaged into .tar.gz files and stored in the `binaries/` directory
 3. Each build is performed in a temporary directory to avoid polluting the project's directories
 
-## Basic Libraries
+## Core Libraries
+
+These libraries are fundamental dependencies and will be extensively used by other components. Each library comes with:
+1. A build script in `scripts/`
+2. Additional tests in `scripts/tests/`
+3. Tests should be run on native platform only, as cross-compiled binaries cannot be executed on the build machine
 
 ```bash
-bash script/zlib.sh
-bash script/bzip2.sh
+# linux
+bash script/zlib.sh linux test
+bash script/bzip2.sh linux test
+
+# macos
+bash script/zlib.sh macos test
+bash script/bzip2.sh macos test
+
+```
+
+## Other Libraries
+
+```bash
 bash script/xz.sh
 bash script/libdeflate.sh
 
