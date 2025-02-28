@@ -117,6 +117,56 @@ Example build process:
 3. Binaries are collected and packaged
 4. Resulting tarball is placed in `binaries/`
 
+## Dynamic Library Dependencies
+
+The binaries in this project have minimal dynamic library dependencies:
+
+1. Core System Libraries
+    * linux-vdso.so.1 - Virtual dynamic shared object
+    * libc.so.6 - GNU C Library (glibc)
+    * libpthread.so.0 - POSIX threads library
+    * libdl.so.2 - Dynamic linking library
+    * /lib64/ld-linux-x86-64.so.2 - Dynamic linker/loader
+
+2. C/C++ Runtime Libraries
+    * libstdc++.so.6 - GNU Standard C++ Library
+    * libm.so.6 - Math library
+    * libgcc_s.so.1 - GCC support library
+
+Example of checking dependencies:
+
+```text
+$ ldd ~/bin/trimal
+        linux-vdso.so.1 (0x00007ffff4599000)
+        libstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f796772c000)
+        libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f7967643000)
+        libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f7967615000)
+        libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f7967403000)
+        /lib64/ld-linux-x86-64.so.2 (0x00007f79679b6000)
+
+$ bash install.sh --dep trimal
+==> Dependencies for package trimal:
+  File: readal
+    No additional dependencies
+
+  File: statal
+    No additional dependencies
+
+  File: trimal
+    No additional dependencies
+
+$ bash install.sh --dep muscle
+==> Dependencies for package muscle:
+  File: muscle
+    Static executable
+
+$ bash install.sh --dep bwa
+==> Dependencies for package bwa:
+  File: bwa
+        librt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007fb1c7f8c000)
+
+```
+
 ## Contributing
 
 ### Adding a New Package
