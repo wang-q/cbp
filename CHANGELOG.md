@@ -9,7 +9,7 @@
 - Added `list` command for package management
   - List all installed packages
   - Show files in specific package
-- Added `untracked` command to find unmanaged files
+- Added `check` command to find unmanaged files
   - Skip system generated files (macOS/Windows/Linux)
   - Ignore package management directories
 - Added `remove` command for package management
