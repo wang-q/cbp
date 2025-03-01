@@ -48,7 +48,7 @@ impl CbpDirs {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_cbp_dirs_new() -> anyhow::Result<()> {
         let temp_home = tempfile::tempdir()?;
