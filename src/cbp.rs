@@ -13,6 +13,7 @@ fn main() -> anyhow::Result<()> {
         .color(ColorChoice::Auto)
         .subcommand(cmd_cbp::kb::make_subcommand())
         .subcommand(cmd_cbp::list::make_subcommand())
+        .subcommand(cmd_cbp::local::make_subcommand())
         .subcommand(cmd_cbp::remove::make_subcommand())
         .subcommand(cmd_cbp::untracked::make_subcommand())
         .after_help(
@@ -26,6 +27,7 @@ Subcommand groups:
     match app.get_matches().subcommand() {
         Some(("kb", sub_matches)) => cmd_cbp::kb::execute(sub_matches),
         Some(("list", sub_matches)) => cmd_cbp::list::execute(sub_matches),
+        Some(("local", sub_matches)) => cmd_cbp::local::execute(sub_matches),
         Some(("remove", sub_matches)) => cmd_cbp::remove::execute(sub_matches),
         Some(("untracked", sub_matches)) => cmd_cbp::untracked::execute(sub_matches),
         _ => unreachable!(),
