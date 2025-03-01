@@ -99,8 +99,8 @@ build_tar() {
         ! -name ".hidden" \
         ! -name "*~" \
         ! -name "*.swp" \
-        -print0 | 
-        tar --null -T - -cf - |
+        -print | grep -v '/\._' | sed 's|^\./||' | 
+        tar -T - -cf - |
         gzip -9 > "${TEMP_DIR}/${FN_TAR}" ||
         { echo "==> Error: Failed to create archive"; exit 1; }
 
