@@ -1,7 +1,4 @@
 use clap::*;
-use flate2::read::GzDecoder;
-use std::fs;
-use tar::Archive;
 
 // Create clap subcommand arguments
 pub fn make_subcommand() -> Command {

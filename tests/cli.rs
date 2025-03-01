@@ -66,3 +66,64 @@ fn command_kb_with_output_file() -> anyhow::Result<()> {
 
     Ok(())
 }
+
+#[test]
+fn test_list_empty() -> anyhow::Result<()> {
+    Command::cargo_bin("cbp")?
+        .arg("list")
+        .arg("--dir")
+        .arg("tests/cbp_macos")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("==> Installed packages:"));
+
+    Ok(())
+}
+
+#[test]
+fn test_list_packages() -> anyhow::Result<()> {
+    let mut cmd = Command::cargo_bin("cbp")?;
+    let output = cmd
+        .arg("list")
+        .arg("--dir")
+        .arg("tests/cbp_macos")
+        .output()
+        .unwrap();
+    let stdout = String::from_utf8(output.stdout).unwrap();
+
+    assert_eq!(stdout.lines().count(), 4);
+    assert!(stdout.contains("zlib"));
+    assert!(stdout.contains("bzip2"));
+
+    Ok(())
+}
+
+#[test]
+fn test_list_specific_package() -> anyhow::Result<()> {
+    let mut cmd = Command::cargo_bin("cbp")?;
+    let output = cmd
+        .arg("list")
+        .arg("--dir")
+        .arg("tests/cbp_macos")
+        .arg("zlib")
+        .output()
+        .unwrap();
+    let stdout = String::from_utf8(output.stdout).unwrap();
+
+    assert_eq!(stdout.lines().count(), 10);
+    assert!(stdout.contains("include/zlib.h"));
+    assert!(stdout.contains("lib/libz.a"));
+
+    let mut cmd = Command::cargo_bin("cbp")?;
+    cmd.arg("list")
+        .arg("--dir")
+        .arg("tests/cbp_macos")
+        .arg("nonexistent")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(
+            "Warning: Package nonexistent is not installed",
+        ));
+
+    Ok(())
+}

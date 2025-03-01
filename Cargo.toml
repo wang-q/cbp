@@ -35,6 +35,8 @@ md5 = "0.7.0"
 
 cmd_lib = "1.9.3"
 tempfile = "3.8.0"
+walkdir = "2.5.0"
+glob = "0.3.2"
 
 [build-dependencies]
 

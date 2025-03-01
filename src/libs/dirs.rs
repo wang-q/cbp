@@ -18,7 +18,7 @@ impl CbpDirs {
         let home = dirs::home_dir()
             .ok_or_else(|| anyhow::anyhow!("Could not determine home directory"))?
             .join(".cbp");
-        
+
         Self::from(home)
     }
 
@@ -54,17 +54,17 @@ mod tests {
     fn test_cbp_dirs_new() -> anyhow::Result<()> {
         let temp_home = tempfile::tempdir()?;
         let original_home = std::env::var("HOME")?;
-        
+
         // Set temporary home directory
         std::env::set_var("HOME", temp_home.path());
-        
+
         // Test default directory structure
         let dirs = CbpDirs::new()?;
         assert!(dirs.home.exists());
         assert!(dirs.bin.exists());
         assert!(dirs.cache.exists());
         assert!(dirs.binaries.exists());
-        
+
         // Restore original home directory
         std::env::set_var("HOME", original_home);
         Ok(())
@@ -73,14 +73,14 @@ mod tests {
     #[test]
     fn test_cbp_dirs_from() -> anyhow::Result<()> {
         let temp_dir = tempfile::tempdir()?;
-        
+
         // Test custom directory structure
         let dirs = CbpDirs::from(temp_dir.path().to_path_buf())?;
         assert!(dirs.home.exists());
         assert!(dirs.bin.exists());
         assert!(dirs.cache.exists());
         assert!(dirs.binaries.exists());
-        
+
         Ok(())
     }
 }
