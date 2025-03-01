@@ -2,6 +2,8 @@
 
 ## Unreleased - ReleaseDate
 
+- Added `tar` command for creating package archives
+
 ## 0.2.0 - 2025-03-01
 
 - Added `install` command with proxy support

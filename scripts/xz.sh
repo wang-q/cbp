@@ -44,4 +44,5 @@ else
 fi
 
 # Use build_tar function from common.sh
+# build_tar
 build_tar

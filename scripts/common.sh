@@ -72,43 +72,19 @@ build_tar() {
     local name=${1:-${PROJ}}
     local os_type=${2:-${OS_TYPE}}
 
-    echo "==> Creating package ${name} for ${os_type}..."
-
     # Define the name of the compressed file
     FN_TAR="${name}.${os_type}.tar.gz"
 
-    # Create compressed archive
-    cd ${TEMP_DIR}/collect ||
-        { echo "==> Error: collect directory not found"; exit 1; }
+    # Create compressed archive using cbp tar
+    cd ${TEMP_DIR} ||
+        { echo "==> Error: temp directory not found"; exit 1; }
 
-    # Remove unnecessary documentation directories
-    rm -rf share/info/ share/man/ share/doc/ share/locale/
-
-    # Create archive excluding system files
-    find . -type f \
-        ! -name ".DS_Store" \
-        ! -name "*.AppleDouble" \
-        ! -name "._.DS_Store" \
-        ! -name "._*" \
-        ! -name ".Spotlight-*" \
-        ! -name ".Trashes" \
-        ! -name "Thumbs.db" \
-        ! -name "desktop.ini" \
-        ! -name "*.lnk" \
-        ! -name ".directory" \
-        ! -name ".hidden" \
-        ! -name "*~" \
-        ! -name "*.swp" \
-        -print | grep -v '/\._' | sed 's|^\./||' | 
-        tar -T - -cf - |
-        gzip -9 > "${TEMP_DIR}/${FN_TAR}" ||
+    cbp tar collect -o "${FN_TAR}" --cleanup ||
         { echo "==> Error: Failed to create archive"; exit 1; }
 
     # Move archive to the central tar directory
-    mv ${TEMP_DIR}/${FN_TAR} ${BASH_DIR}/../binaries/ ||
+    mv "${FN_TAR}" ${BASH_DIR}/../binaries/ ||
         { echo "==> Error: Failed to move archive"; exit 1; }
-
-    echo "==> Package created: ${FN_TAR}"
 }
 
 # Collect binaries from Makefile's all target
