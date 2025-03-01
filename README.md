@@ -15,111 +15,136 @@ biology where A always pairs with T, and G always pairs with C. Just as these ba
 reliable and consistent DNA structure, `cbp` aims to provide consistent and reliable binary packages
 across different platforms.
 
-## System Requirements
+## Features
 
-* Linux (glibc 2.17+), macOS (Apple Silicon), or Windows WSL
-* Bash shell
-* curl
-* jq
+* Cross-platform compatibility
+  - Linux (glibc 2.17+)
+  - macOS (Apple Silicon)
+  - Windows WSL
+* Minimal dependencies
+  - Bash shell
+  - curl
+* Package management
+  - GitHub release integration
+  - Local package support
+  - Package tracking
+  - Proxy support
 
-## Install
-
-Current release: 0.1.0
+## Quick Start
 
 ```bash
+# Install cbp
 curl -L https://raw.githubusercontent.com/wang-q/cbp/main/scripts/init.sh | bash
 
+# List available packages
+cbp avail
+
+# Install packages
+cbp install zlib
+cbp install --proxy socks5://127.0.0.1:7890 zlib   # with proxy
+
+# Manage packages
+cbp list                    # list installed packages
+cbp list zlib              # show package contents
+cbp remove zlib            # remove package
 ```
 
 > ⚠️ Windows user should run in WSL
 
-First, create the target directory and download the installation script:
-
-```bash
-# Create bin directory if it doesn't exist
-mkdir -p ~/bin
-
-# Download the installation script
-curl -LO https://raw.githubusercontent.com/wang-q/cbp/main/install.sh
-chmod +x install.sh
-
-# Download and install jq (required for the installation script)
-curl -LO https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64
-chmod +x jq-linux-amd64
-mv jq-linux-amd64 ~/bin/jq
-# or sudo apt install jq
-
-# Verify the installation
-bash install.sh -h
-
-```
-
-Make sure `~/bin` is in your `$PATH`. Add the following line to your `~/.bashrc` if needed:
-
-```bash
-export PATH="$HOME/bin:$PATH"
-
-```
-
-```bash
-cargo install --path . --force # --offline
-
-# Concurrent tests may trigger sqlite locking
-cargo test -- --test-threads=1
-
-# build under WSL 2
-mkdir -p /tmp/cargo
-export CARGO_TARGET_DIR=/tmp/cargo
-cargo build
-
-```
-
 ## `cbp help`
 
 ```text
-`cbp` is a package manager
+`cbp` is a Cross-platform Binary Package manager
 
 Usage: cbp [COMMAND]
 
 Commands:
-  kb    Prints docs (knowledge bases)
-  help  Print this message or the help of the given subcommand(s)
+  install  Download and install packages from GitHub
+  list     List installed packages and their contents
+  remove   Remove installed packages
+  avail    List available packages from GitHub
+  local    Install packages from local binaries
+  check    Check for unmanaged files in ~/.cbp
+  kb       Display project documentation
+  help     Print this message or the help of the given subcommand(s)
 
 Options:
   -h, --help     Print help
   -V, --version  Print version
 
+
+Package Manager Features:
+    * Cross-platform support (macOS/Linux)
+    * Pre-built static binaries
+    * GitHub release integration
+    * Local package support
+    * Package tracking
+
+Directory Structure:
+    ~/.cbp/
+    ├── bin/      - Executable files
+    ├── cache/    - Downloaded packages
+    ├── records/  - Package file lists
+    └── include/, lib/, share/ - Installed files
+
+Common Commands:
+1. Package Installation:
+   cbp install zlib                                   # from GitHub
+   cbp install --proxy socks5://127.0.0.1:7890 zlib   # with proxy
+   cbp local zlib                                     # from local files
+
+2. Package Management:
+   cbp list                                           # list all packages
+   cbp list zlib                                      # show package contents
+   cbp remove zlib                                    # remove package
+
+3. Package Discovery:
+   cbp avail                                          # list available packages
+   cbp check                                          # find unmanaged files
+
+4. Documentation:
+   cbp kb readme                                      # view documentation
+
 ```
 
-## Examples
+## Architecture
 
-## Project Design
+1. Package Management
+    * Command-line interface
+    * Package status tracking
+    * File-based record keeping
+    * Network proxy support
 
-This project is designed similar to Homebrew, with the following features:
+2. Build System
+    * Zig-based cross-compilation
+    * Platform-specific optimizations
+    * Static linking preferred
+    * Reproducible builds
 
-1. Standardized build process
-    * Download source code from official releases
-    * Extract and prepare in temporary directory
-    * Cross-compile with Zig
-    * Package and distribute as tarballs
+3. Directory Layout
+    * Runtime
+      - `~/.cbp/`  - User installation directory
+      - `bin/`     - Executable files
+      - `cache/`   - Downloaded packages
+      - `records/` - Package file lists
+    * Development
+      - `src/`     - Package manager source
+      - `tests/`   - Test suites
+      - `scripts/` - Build automation
+    * Distribution
+      - `sources/` - Upstream packages
+      - `binaries/` - Pre-built packages
+    * `src/`, `tests/` - Rust source code
 
-2. Cross-platform support
-    * Linux: glibc 2.17 (CentOS 7) compatibility
-    * macOS: aarch64 (Apple Silicon) native
-    * Zig as cross-compiler for consistent builds
-
-3. Unified directory structure
-    * `sources/` - Source packages
-    * `scripts/` - Build scripts and common functions
-    * `binaries/` - Build artifacts for distribution
-
-4. Modular design
-    * `common.sh` - Shared build environment and functions
-    * `install.sh` - Package installation manager
-    * Individual build script for each package
-
-The main focus is on bioinformatics tools, with special attention to glibc 2.17 (CentOS 7)
-compatibility.
+4. Core Components
+    * Package manager (Rust)
+      - Installation and removal
+      - File tracking
+      - Cache management
+    * Build system (Bash)
+      - Cross-compilation
+      - Package creation
+      - Testing framework
 
 ## License
 
