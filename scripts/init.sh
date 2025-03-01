@@ -14,10 +14,10 @@ elif [ "$(uname -s)" = "Linux" ]; then
     if [ "$(uname -m)" = "x86_64" ]; then
         OS_TYPE="linux"
         # Check glibc version
-        glibc_version=$(ldd --version 2>&1 | head -n1 | grep -oP '(?<=\s)\d+\.\d+')
+        glibc_version=$(ldd --version 2>&1 | head -n1 | grep -oP '(?<=\s)\d+\.\d+' | uniq)
         major=$(echo "$glibc_version" | cut -d. -f1)
         minor=$(echo "$glibc_version" | cut -d. -f2)
-        if [ "$major" -lt 2 ] || [ "$major" -eq 2 -a "$minor" -lt 17 ]; then
+        if [ "$major" -lt 2 ] || [ "$major" -eq 2 ] && [ "$minor" -lt 17 ]; then
             echo "Requires glibc version >= 2.17"
             exit 1
         fi
