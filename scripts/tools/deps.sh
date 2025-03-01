@@ -7,7 +7,7 @@ check_dependencies() {
     local record_file="${CBP_RECORDS}/${pkg}.files"
 
     if [ ! -f "${record_file}" ]; then
-        echo "Warning: Package ${pkg} is not installed"
+        echo "==> Package ${pkg} is not installed"
         return 1
     fi
 

@@ -3,15 +3,15 @@
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
 remove_package() {
-    local pkg_name="$1"
-    local record_file="${CBP_RECORDS}/${pkg_name}.files"
+    local pkg="$1"
+    local record_file="${CBP_RECORDS}/${pkg}.files"
 
     if [ ! -f "${record_file}" ]; then
-        echo "==> Package ${pkg_name} is not installed"
+        echo "==> Package ${pkg} is not installed"
         return 1
     fi
 
-    echo "==> Removing ${pkg_name}"
+    echo "==> Removing ${pkg}"
 
     # Remove files in package
     while read -r file; do

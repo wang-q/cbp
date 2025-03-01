@@ -122,7 +122,7 @@ fn command_list_specific_package() -> anyhow::Result<()> {
         .assert()
         .success()
         .stdout(predicate::str::contains(
-            "Warning: Package nonexistent is not installed",
+            "==> Package nonexistent not installed",
         ));
 
     Ok(())
@@ -166,7 +166,7 @@ fn command_remove() -> anyhow::Result<()> {
         .assert()
         .success()
         .stdout(predicate::str::contains(
-            "Warning: Package nonexistent is not installed",
+            "==> Package nonexistent is not installed",
         ));
 
     // Test removing existing package

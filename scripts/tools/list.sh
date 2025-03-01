@@ -41,7 +41,7 @@ list_installed() {
                 cat "${CBP_RECORDS}/${pkg}.files"
                 echo
             else
-                echo "Warning: Package ${pkg} is not installed"
+                echo "==> Package ${pkg} is not installed"
             fi
         done
     fi

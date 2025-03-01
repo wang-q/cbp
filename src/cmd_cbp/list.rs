@@ -61,7 +61,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                 print!("{}", content);
                 println!();
             } else {
-                println!("Warning: Package {} is not installed", package);
+                println!("==> Package {} is not installed", package);
             }
         }
     } else {

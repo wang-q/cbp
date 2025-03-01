@@ -54,35 +54,55 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
     for package in args.get_many::<String>("packages").unwrap() {
         let file_path = cbp_dirs.records.join(format!("{}.files", package));
-        if !file_path.exists() {
-            println!("Warning: Package {} is not installed", package);
-            continue;
-        }
+        if file_path.exists() {
+            println!("==> Removing {}:", package);
 
-        println!("==> Removing {}", package);
+            // 读取文件列表
+            let content = std::fs::read_to_string(&file_path)?;
+            let mut removed_count = 0;
 
-        // Remove package files
-        let content = std::fs::read_to_string(&file_path)?;
-        for file in content.lines() {
-            let path = cbp_dirs.home.join(file);
-            // Skip if it's a directory
-            if path.is_dir() {
-                continue;
-            }
-            if path.exists() || path.is_symlink() {
-                // 检查符号链接
-                if let Err(e) = std::fs::remove_file(&path) {
-                    println!("    Warning: Failed to remove {}: {}", file, e);
+            // 处理每个文件
+            for line in content.lines() {
+                if line.is_empty() {
+                    continue;
+                }
+
+                let file = cbp_dirs.home.join(line);
+                if file.exists() {
+                    if file.is_file() || file.is_symlink() {
+                        std::fs::remove_file(&file)?;
+                        removed_count += 1;
+
+                        // 检查并删除对应的资源分支文件
+                        if let Some(parent) = file.parent() {
+                            if let Some(file_name) = file.file_name() {
+                                if let Some(file_name_str) = file_name.to_str() {
+                                    let resource_fork =
+                                        parent.join(format!("._{}", file_name_str));
+                                    if resource_fork.exists() {
+                                        std::fs::remove_file(&resource_fork)?;
+                                        println!(
+                                            "    Removed resource fork: {}",
+                                            resource_fork.display()
+                                        );
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        println!("    Skipping directory: {}", file.display());
+                    }
+                } else {
+                    println!("    File not found: {}", file.display());
                 }
             }
-        }
 
-        // Remove record file
-        if let Err(e) = std::fs::remove_file(&file_path) {
-            println!("    Warning: Failed to remove package record: {}", e);
-            continue;
+            // 删除记录文件
+            std::fs::remove_file(&file_path)?;
+            println!("    Removed {} files", removed_count);
+        } else {
+            println!("==> Package {} is not installed", package);
         }
-        println!("    Done");
     }
 
     Ok(())
