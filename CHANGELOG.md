@@ -2,6 +2,12 @@
 
 ## Unreleased - ReleaseDate
 
+- Added `install` command for package management
+  - Download packages from GitHub releases
+  - Support proxy for network access
+  - Show download progress
+  - Platform-specific package selection
+  - Multiple package installation
 - Added `local` command for package management
   - Install packages from local binaries directory
   - Support both local builds and cached packages
@@ -13,7 +19,7 @@
   - Skip system generated files (macOS/Windows/Linux)
   - Ignore package management directories
 - Added `remove` command for package management
-  - Remove installed packages
+  - Remove installed packages and resource forks
   - Handle files and symlinks properly
   - Skip directory removal
 - Added core utilities
