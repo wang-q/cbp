@@ -8,6 +8,10 @@
 - Added `untracked` command to find unmanaged files
   - Skip system generated files (macOS/Windows/Linux)
   - Ignore package management directories
+- Added `remove` command for package management
+  - Remove installed packages
+  - Handle files and symlinks properly
+  - Skip directory removal
 - Added core utilities
   - Platform detection (macOS/Linux)
   - Directory structure management

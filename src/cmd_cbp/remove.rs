@@ -7,12 +7,20 @@ pub fn make_subcommand() -> Command {
             r###"
 Remove installed packages and their files.
 
+The command will:
+* Remove all files installed by the package
+* Remove package record file
+* Skip directories (they will be kept)
+* Handle both regular files and symbolic links
+
 Examples:
 1. Remove a single package:
    cbp remove zlib
 
 2. Remove multiple packages:
    cbp remove zlib bzip2
+
+Note: This command cannot be undone. Please make sure you want to remove these packages.
 "###,
         )
         .arg(
