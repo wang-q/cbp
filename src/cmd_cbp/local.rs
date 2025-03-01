@@ -6,27 +6,29 @@ pub fn make_subcommand() -> Command {
         .about("Install packages from local binaries")
         .after_help(
             r###"
-Install packages from local binaries directory or cache.
+Install packages from local binaries or downloaded cache.
 
-The command searches for package files in:
-1. ./binaries/   - Local build directory
-2. ~/.cbp/cache/ - Downloaded packages
+Search Locations:
+* ./binaries/     - Pre-built binary directory (primary)
+* ~/.cbp/cache/   - Downloaded packages (fallback)
 
-Package files must have the format:
-  <package_name>.<os_type>.tar.gz
+Package Format:
+* Naming: <package_name>.<os_type>.tar.gz
+* Type: Pre-built binary archives
+* OS: Platform-specific (macos/linux)
 
-The command will:
-* Check if package is already installed
-* Try local binaries first, then cache
-* Create package record file
-* Extract files to ~/.cbp
+Features:
+* Installation status checking
+* Automatic location selection
+* Package record management
+* File extraction to ~/.cbp
 
 Examples:
-1. Install a single package:
-   cbp local zlib
+* Single package
+  cbp local zlib
 
-2. Install multiple packages:
-   cbp local zlib bzip2
+* Multiple packages
+  cbp local zlib bzip2
 "###,
         )
         .arg(

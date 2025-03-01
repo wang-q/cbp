@@ -5,23 +5,29 @@ pub fn make_subcommand() -> Command {
         .about("Remove installed packages")
         .after_help(
             r###"
-Remove installed packages and their files.
+Remove installed packages and their associated files.
 
-The command will:
-* Remove all files installed by the package
-* Remove package record file
-* Skip directories (they will be kept)
-* Handle both regular files and symbolic links
-* Skip non-existent files
+Features:
+* Complete package removal
+* Resource fork cleanup
+* Safe directory handling
+* Symlink support
+* Missing file tolerance
+
+Safety Measures:
+* Directories are preserved
+* Non-package files are untouched
+* Missing files are skipped
+* Package record verification
 
 Examples:
-1. Remove a single package:
-   cbp remove zlib
+* Single package
+  cbp remove zlib
 
-2. Remove multiple packages:
-   cbp remove zlib bzip2
+* Multiple packages
+  cbp remove zlib bzip2
 
-Note: This command cannot be undone.
+Warning: This operation cannot be undone.
 "###,
         )
         .arg(

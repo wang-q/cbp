@@ -2,8 +2,8 @@
 
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-list_untracked() {
-    echo "==> Untracked files in ${CBP_HOME}/:"
+list_check() {
+    echo "==> Unmanaged files in ${CBP_HOME}/:"
     # Create temp file to store known files
     local temp_known=$(mktemp)
     trap 'rm -f ${temp_known}' EXIT
@@ -26,4 +26,4 @@ list_untracked() {
 }
 
 # Run the function
-list_untracked
+list_check

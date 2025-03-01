@@ -1,28 +1,32 @@
 use clap::*;
 
+/// Create the check subcommand
 pub fn make_subcommand() -> Command {
-    Command::new("untracked")
-        .about("List untracked files")
+    Command::new("check")
+        .about("Check for unmanaged files in ~/.cbp")
         .after_help(
             r###"
-List files in ~/.cbp that are not managed by any package.
+Scan ~/.cbp directory for files not managed by any package.
 
-The command helps you find:
-* Files not installed by any package
-* Files not in system directories (records/, cache/)
+Scan Scope:
+* Files not listed in any package records
+* Files outside cbp system directories (records/, cache/)
 * Files not required by cbp itself
 
-Ignored files:
-* System generated files
-  - macOS: .DS_Store, __MACOSX, .AppleDouble
-  - Windows: Thumbs.db, desktop.ini
-  - Linux: backup files (*~), vim swp files
+Auto-ignored:
+* macOS system files
+  - .DS_Store
+  - __MACOSX/
+  - .AppleDouble
+  - ._*         # Resource fork files
+* Linux system files
+  - Backup files (*~)
+  - Vim swap files (.swp)
+* Windows system files
+  - Thumbs.db
+  - desktop.ini
 
-Examples:
-1. List untracked files:
-   cbp untracked
-
-Note: This command is useful for cleaning up your ~/.cbp directory.
+Purpose: Helps identify and clean up redundant files in ~/.cbp directory.
 "###,
         )
         .arg(
@@ -45,7 +49,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         cbp::CbpDirs::new()?
     };
 
-    println!("==> Untracked files in {}:", cbp_dirs.home.display());
+    println!("==> Unmanaged files in {}:", cbp_dirs.home.display());
 
     // Collect all known files from installed packages
     let mut known_files = Vec::new();

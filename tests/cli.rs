@@ -69,13 +69,13 @@ fn command_kb_with_output_file() -> anyhow::Result<()> {
 
 fn setup_test_data() -> anyhow::Result<tempfile::TempDir> {
     let temp_dir = tempfile::TempDir::new()?;
-    
+
     // 解压测试数据
     let mut archive = tar::Archive::new(flate2::read::GzDecoder::new(
         std::fs::File::open("tests/cbp_macos.tar.gz")?,
     ));
     archive.unpack(temp_dir.path())?;
-    
+
     Ok(temp_dir)
 }
 
@@ -145,11 +145,11 @@ fn command_list_specific_package() -> anyhow::Result<()> {
 }
 
 #[test]
-fn command_untracted() -> anyhow::Result<()> {
+fn command_check() -> anyhow::Result<()> {
     let temp_dir = setup_test_data()?;
     let mut cmd = Command::cargo_bin("cbp")?;
     let output = cmd
-        .arg("untracked")
+        .arg("check")
         .arg("--dir")
         .arg(temp_dir.path().join("cbp_macos"))
         .output()
@@ -157,7 +157,7 @@ fn command_untracted() -> anyhow::Result<()> {
     let stdout = String::from_utf8(output.stdout).unwrap();
 
     assert!(stdout.lines().count() > 0);
-    assert!(stdout.contains("==> Untracked files"));
+    assert!(stdout.contains("==> Unmanaged files"));
 
     Ok(())
 }

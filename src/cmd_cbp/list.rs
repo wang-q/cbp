@@ -6,22 +6,24 @@ pub fn make_subcommand() -> Command {
         .about("List installed packages and their contents")
         .after_help(
             r###"
-List installed packages and their contents.
+Display information about installed packages.
 
-Without arguments, lists all installed packages.
-With package names, shows the files contained in each package.
+Operations:
+* Without arguments: Show all installed packages
+* With package names: Show detailed contents of specified packages
 
-The command will:
-* Group packages by first letter
-* Format output in columns
-* Skip empty lines and invalid entries
+Features:
+* Alphabetical grouping
+* Columnar output format
+* System file filtering
 
 Examples:
-1. List all installed packages:
-   cbp list
+* List all packages
+  cbp list
 
-2. Show files in specific package(s):
-   cbp list zlib bzip2
+* Show package contents
+  cbp list zlib
+  cbp list zlib bzip2
 "###,
         )
         .arg(

@@ -6,7 +6,7 @@ pub fn make_subcommand() -> Command {
         .about("List available packages from GitHub")
         .after_help(
             r###"
-List available packages from the GitHub release repository.
+Query and list available packages from GitHub release repository.
 
 The command will:
 * Query GitHub release assets via API
@@ -14,19 +14,15 @@ The command will:
 * Group packages by first letter
 * Format output in columns
 
-Release page:
-* https://github.com/wang-q/cbp/releases/tag/Binaries
+[Release page](https://github.com/wang-q/cbp/releases/tag/Binaries)
 
-Examples:
-1. List all available packages:
-   cbp avail
+Options:
+* Platform filtering
+  cbp avail macos
+  cbp avail linux
 
-2. List packages for specific platform:
-   cbp avail macos
-   cbp avail linux
-
-3. Use with proxy:
-   cbp avail --proxy socks5://127.0.0.1:7890
+* Network proxy support
+  cbp avail --proxy socks5://127.0.0.1:7890
 "###,
         )
         .arg(

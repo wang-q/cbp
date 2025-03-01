@@ -162,12 +162,12 @@ mod tests {
 
     fn setup_test_data() -> anyhow::Result<tempfile::TempDir> {
         let temp_dir = tempfile::TempDir::new()?;
-        
+
         let mut archive = tar::Archive::new(flate2::read::GzDecoder::new(
             std::fs::File::open("tests/cbp_macos.tar.gz")?,
         ));
         archive.unpack(temp_dir.path())?;
-        
+
         Ok(temp_dir)
     }
 
