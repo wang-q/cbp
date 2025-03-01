@@ -29,7 +29,7 @@ else
 fi
 
 # Check required dependencies
-for cmd in curl jq; do
+for cmd in curl; do
     if ! command -v $cmd >/dev/null 2>&1; then
         echo "Missing required dependency: $cmd"
         exit 1
@@ -39,7 +39,7 @@ done
 # Create necessary directories
 mkdir -p "$HOME/.cbp/bin"
 mkdir -p "$HOME/.cbp/cache"
-mkdir -p "$HOME/.cbp/binaries"
+mkdir -p "$HOME/.cbp/records"
 
 # Download latest version of cbp
 echo "Downloading cbp..."
@@ -62,4 +62,4 @@ echo "cbp installation completed!"
 echo "To make the environment variables take effect, run:"
 echo "    source ~/.bashrc  # or restart your terminal"
 echo "To verify installation:"
-echo "    cbp --version"
+echo "    cbp help"

@@ -36,6 +36,8 @@ across different platforms.
 # Install cbp
 curl -L https://raw.githubusercontent.com/wang-q/cbp/main/scripts/init.sh | bash
 
+source ~/.bashrc
+
 # List available packages
 cbp avail
 

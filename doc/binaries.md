@@ -19,6 +19,7 @@ These libraries are fundamental dependencies and will be extensively used by oth
 bash scripts/zlib.sh linux test
 bash scripts/bzip2.sh linux test
 bash scripts/libdeflate.sh linux test
+bash scripts/xz.sh linux test
 
 ```
 
@@ -28,13 +29,13 @@ bash scripts/libdeflate.sh linux test
 bash scripts/zlib.sh macos test
 bash scripts/bzip2.sh macos test
 # bash scripts/libdeflate.sh macos test
+bash scripts/xz.sh macos test
 
 ```
 
 ## Other Libraries
 
 ```bash
-bash scripts/xz.sh
 
 bash scripts/tools/local.sh zlib bzip2 libdeflate xz
 
