@@ -8,8 +8,8 @@ pub struct CbpDirs {
     pub bin: PathBuf,
     /// Cache directory (~/.cbp/cache)
     pub cache: PathBuf,
-    /// Package records directory (~/.cbp/binaries)
-    pub binaries: PathBuf,
+    /// Package records directory (~/.cbp/records)
+    pub records: PathBuf,
 }
 
 impl CbpDirs {
@@ -22,16 +22,11 @@ impl CbpDirs {
         Self::from(home)
     }
 
-    /// Creates a new CbpDirs instance from a specified home directory
-    ///
-    /// # Arguments
-    ///
-    /// * `home` - Base directory for CBP
     pub fn from(home: PathBuf) -> anyhow::Result<Self> {
         let dirs = Self {
             bin: home.join("bin"),
             cache: home.join("cache"),
-            binaries: home.join("binaries"),
+            records: home.join("records"),
             home,
         };
 
@@ -39,7 +34,7 @@ impl CbpDirs {
         std::fs::create_dir_all(&dirs.home)?;
         std::fs::create_dir_all(&dirs.bin)?;
         std::fs::create_dir_all(&dirs.cache)?;
-        std::fs::create_dir_all(&dirs.binaries)?;
+        std::fs::create_dir_all(&dirs.records)?;
 
         Ok(dirs)
     }
@@ -62,7 +57,7 @@ mod tests {
         assert!(dirs.home.exists());
         assert!(dirs.bin.exists());
         assert!(dirs.cache.exists());
-        assert!(dirs.binaries.exists());
+        assert!(dirs.records.exists());
 
         // Restore original home directory
         std::env::set_var("HOME", original_home);
@@ -78,7 +73,7 @@ mod tests {
         assert!(dirs.home.exists());
         assert!(dirs.bin.exists());
         assert!(dirs.cache.exists());
-        assert!(dirs.binaries.exists());
+        assert!(dirs.records.exists());
 
         Ok(())
     }

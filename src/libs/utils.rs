@@ -125,7 +125,7 @@ pub fn install_package(
     let mut archive = tar::Archive::new(gz);
 
     // List files in package
-    let record_file = cbp_dirs.binaries.join(format!("{}.files", pkg_name));
+    let record_file = cbp_dirs.records.join(format!("{}.files", pkg_name));
     let mut file_list = String::new();
     {
         let entries = archive.entries()?;
@@ -233,7 +233,7 @@ mod tests {
         install_package("zlib", &pkg_file, &cbp_dirs)?;
 
         // Verify file list
-        let record_file = cbp_dirs.binaries.join("zlib.files");
+        let record_file = cbp_dirs.records.join("zlib.files");
         assert!(record_file.exists());
         let file_list = std::fs::read_to_string(record_file)?;
         assert!(file_list.contains("include/zlib.h"));

@@ -45,10 +45,10 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
     // Collect all known files from installed packages
     let mut known_files = Vec::new();
-    if cbp_dirs.binaries.exists() {
-        let files = cbp::find_files(&cbp_dirs.binaries, Some("*.files"))?;
+    if cbp_dirs.records.exists() {
+        let files = cbp::find_files(&cbp_dirs.records, Some("*.files"))?;
         for file in files {
-            let content = std::fs::read_to_string(cbp_dirs.binaries.join(&file))?;
+            let content = std::fs::read_to_string(cbp_dirs.records.join(&file))?;
             known_files.extend(content.lines().map(|s| s.to_string()));
         }
     }

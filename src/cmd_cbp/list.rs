@@ -50,7 +50,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
     if let Some(packages) = args.get_many::<String>("packages") {
         for package in packages {
-            let file_path = cbp_dirs.binaries.join(format!("{}.files", package));
+            let file_path = cbp_dirs.records.join(format!("{}.files", package));
             if file_path.exists() {
                 println!("==> Files in package {}:", package);
                 let content = std::fs::read_to_string(&file_path)?;
@@ -62,8 +62,8 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         }
     } else {
         println!("==> Installed packages:");
-        if cbp_dirs.binaries.exists() {
-            let files = cbp::find_files(&cbp_dirs.binaries, Some("*.files"))?;
+        if cbp_dirs.records.exists() {
+            let files = cbp::find_files(&cbp_dirs.records, Some("*.files"))?;
             let packages: Vec<String> = files
                 .iter()
                 .filter_map(|f| f.strip_suffix(".files").map(|s| s.to_string()))

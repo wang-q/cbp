@@ -68,7 +68,7 @@ fn command_kb_with_output_file() -> anyhow::Result<()> {
 }
 
 #[test]
-fn test_list_empty() -> anyhow::Result<()> {
+fn command_list_empty() -> anyhow::Result<()> {
     Command::cargo_bin("cbp")?
         .arg("list")
         .arg("--dir")
@@ -81,7 +81,7 @@ fn test_list_empty() -> anyhow::Result<()> {
 }
 
 #[test]
-fn test_list_packages() -> anyhow::Result<()> {
+fn command_list_packages() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin("cbp")?;
     let output = cmd
         .arg("list")
@@ -99,7 +99,7 @@ fn test_list_packages() -> anyhow::Result<()> {
 }
 
 #[test]
-fn test_list_specific_package() -> anyhow::Result<()> {
+fn command_list_specific_package() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin("cbp")?;
     let output = cmd
         .arg("list")
@@ -129,7 +129,7 @@ fn test_list_specific_package() -> anyhow::Result<()> {
 }
 
 #[test]
-fn test_untracted() -> anyhow::Result<()> {
+fn command_untracted() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin("cbp")?;
     let output = cmd
         .arg("untracked")
@@ -147,7 +147,7 @@ fn test_untracted() -> anyhow::Result<()> {
 }
 
 #[test]
-fn test_remove() -> anyhow::Result<()> {
+fn command_remove() -> anyhow::Result<()> {
     // Create a temporary directory and copy test data
     let temp_dir = tempfile::TempDir::new()?;
     let src_dir = std::path::Path::new("tests/cbp_macos");

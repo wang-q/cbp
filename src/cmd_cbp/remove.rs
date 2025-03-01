@@ -52,7 +52,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     };
 
     for package in args.get_many::<String>("packages").unwrap() {
-        let file_path = cbp_dirs.binaries.join(format!("{}.files", package));
+        let file_path = cbp_dirs.records.join(format!("{}.files", package));
         if !file_path.exists() {
             println!("Warning: Package {} is not installed", package);
             continue;

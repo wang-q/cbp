@@ -1,0 +1,8 @@
+include/
+include/zlib.h
+include/zconf.h
+lib/
+lib/pkgconfig/
+lib/libz.a
+lib/pkgconfig/zlib.pc
+share/
