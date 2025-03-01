@@ -84,7 +84,24 @@ build_tar() {
     # Remove unnecessary documentation directories
     rm -rf share/info/ share/man/ share/doc/ share/locale/
 
-    tar -cf - * | gzip -9 > ${TEMP_DIR}/${FN_TAR} ||
+    # Create archive excluding system files
+    find . -type f \
+        ! -name ".DS_Store" \
+        ! -name "*.AppleDouble" \
+        ! -name "._.DS_Store" \
+        ! -name "._*" \
+        ! -name ".Spotlight-*" \
+        ! -name ".Trashes" \
+        ! -name "Thumbs.db" \
+        ! -name "desktop.ini" \
+        ! -name "*.lnk" \
+        ! -name ".directory" \
+        ! -name ".hidden" \
+        ! -name "*~" \
+        ! -name "*.swp" \
+        -print0 | 
+        tar --null -T - -cf - |
+        gzip -9 > "${TEMP_DIR}/${FN_TAR}" ||
         { echo "==> Error: Failed to create archive"; exit 1; }
 
     # Move archive to the central tar directory
