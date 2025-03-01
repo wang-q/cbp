@@ -13,13 +13,18 @@ These libraries are fundamental dependencies and will be extensively used by oth
 2. Additional tests in `scripts/tests/`
 3. Tests should be run on native platform only, as cross-compiled binaries cannot be executed on the build machine
 
+* linux
+
 ```bash
-# linux
 bash scripts/zlib.sh linux test
 bash scripts/bzip2.sh linux test
 bash scripts/libdeflate.sh linux test
 
-# macos
+```
+
+* macos
+
+```bash
 bash scripts/zlib.sh macos test
 bash scripts/bzip2.sh macos test
 # bash scripts/libdeflate.sh macos test
