@@ -3,7 +3,7 @@ use clap::*;
 /// Create clap subcommand arguments
 pub fn make_subcommand() -> Command {
     Command::new("list")
-        .about("List installed package(s)")
+        .about("List installed packages and their contents")
         .after_help(
             r###"
 List installed packages and their contents.
@@ -11,13 +11,17 @@ List installed packages and their contents.
 Without arguments, lists all installed packages.
 With package names, shows the files contained in each package.
 
+The command will:
+* Group packages by first letter
+* Format output in columns
+* Skip empty lines and invalid entries
+
 Examples:
 1. List all installed packages:
    cbp list
 
-2. Show files in a specific package(s):
+2. Show files in specific package(s):
    cbp list zlib bzip2
-
 "###,
         )
         .arg(

@@ -2,7 +2,7 @@ use clap::*;
 
 pub fn make_subcommand() -> Command {
     Command::new("remove")
-        .about("Remove installed package(s)")
+        .about("Remove installed packages")
         .after_help(
             r###"
 Remove installed packages and their files.
@@ -12,6 +12,7 @@ The command will:
 * Remove package record file
 * Skip directories (they will be kept)
 * Handle both regular files and symbolic links
+* Skip non-existent files
 
 Examples:
 1. Remove a single package:
@@ -20,7 +21,7 @@ Examples:
 2. Remove multiple packages:
    cbp remove zlib bzip2
 
-Note: This command cannot be undone. Please make sure you want to remove these packages.
+Note: This command cannot be undone.
 "###,
         )
         .arg(

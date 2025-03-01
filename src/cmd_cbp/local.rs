@@ -8,12 +8,18 @@ pub fn make_subcommand() -> Command {
             r###"
 Install packages from local binaries directory or cache.
 
-The command looks for package files in the following locations:
+The command searches for package files in:
 1. ./binaries/   - Local build directory
 2. ~/.cbp/cache/ - Downloaded packages
 
-Package files should have the format:
+Package files must have the format:
   <package_name>.<os_type>.tar.gz
+
+The command will:
+* Check if package is already installed
+* Try local binaries first, then cache
+* Create package record file
+* Extract files to ~/.cbp
 
 Examples:
 1. Install a single package:
@@ -21,7 +27,6 @@ Examples:
 
 2. Install multiple packages:
    cbp local zlib bzip2
-
 "###,
         )
         .arg(

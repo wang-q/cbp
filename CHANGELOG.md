@@ -2,6 +2,10 @@
 
 ## Unreleased - ReleaseDate
 
+- Added `local` command for package management
+  - Install packages from local binaries directory
+  - Support both local builds and cached packages
+  - Prevent duplicate installations
 - Added `list` command for package management
   - List all installed packages
   - Show files in specific package

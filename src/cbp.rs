@@ -18,8 +18,33 @@ fn main() -> anyhow::Result<()> {
         .subcommand(cmd_cbp::untracked::make_subcommand())
         .after_help(
             r###"
-Subcommand groups:
+Package Types:
+    * Pre-built binaries (.tar.gz)
+    * Platform specific (macos/linux)
+    * Static linking preferred
 
+Directory Structure:
+    ~/.cbp/
+    ├── bin/      - Executable files
+    ├── cache/    - Downloaded packages
+    ├── records/  - Package file lists
+    └── include/, lib/, share/ - Installed files
+
+Examples:
+1. View documentation:
+   cbp kb readme
+
+2. Install a package:
+   cbp local zlib
+
+3. List installed packages:
+   cbp list
+
+4. Remove a package:
+   cbp remove zlib
+
+5. Find unmanaged files:
+   cbp untracked
 "###,
         );
 

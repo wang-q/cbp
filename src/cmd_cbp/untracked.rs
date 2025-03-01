@@ -18,6 +18,10 @@ Ignored files:
   - Windows: Thumbs.db, desktop.ini
   - Linux: backup files (*~), vim swp files
 
+Examples:
+1. List untracked files:
+   cbp untracked
+
 Note: This command is useful for cleaning up your ~/.cbp directory.
 "###,
         )

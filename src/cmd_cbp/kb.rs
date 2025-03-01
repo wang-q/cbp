@@ -3,15 +3,24 @@ use clap::*;
 // Create clap subcommand arguments
 pub fn make_subcommand() -> Command {
     Command::new("kb")
-        .about("Prints docs (knowledge bases)")
+        .about("Display documentation (knowledge bases)")
         .after_help(
             r###"
-* readme    - show README.md
-* common    - describe scripts/common.sh
-* sources   - describe sources/
-* binaries  - describe binaries/
-* developer - describe development guide
+Display documentation from the knowledge base.
 
+Available documents:
+* readme    - System requirements and basic usage
+* common    - Common build functions in scripts/common.sh
+* sources   - Source code organization and management
+* binaries  - Binary package management
+* developer - Development guide and contribution
+
+Examples:
+1. Display README:
+   cbp kb readme
+
+2. Save documentation to file:
+   cbp kb developer -o dev-guide.md
 "###,
         )
         .arg(
