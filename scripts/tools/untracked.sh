@@ -2,8 +2,8 @@
 
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-list_foreign() {
-    echo "==> Foreign files in ${CBP_HOME}/:"
+list_untracked() {
+    echo "==> Untracked files in ${CBP_HOME}/:"
     # Create temp file to store known files
     local temp_known=$(mktemp)
     trap 'rm -f ${temp_known}' EXIT
@@ -26,4 +26,4 @@ list_foreign() {
 }
 
 # Run the function
-list_foreign
+list_untracked
