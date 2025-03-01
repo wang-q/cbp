@@ -94,6 +94,23 @@ pub fn find_files(dir: &Path, pattern: Option<&str>) -> anyhow::Result<Vec<Strin
     Ok(files)
 }
 
+/// Check if a file is managed by cbp itself
+pub fn is_cbp_file(path: &str) -> bool {
+    path == "bin/cbp" || path.starts_with("binaries/") || path.starts_with("cache/")
+}
+
+/// Check if a file should be ignored based on system patterns
+pub fn is_system_file(path: &str) -> bool {
+    // Skip system generated files
+    path.ends_with(".DS_Store") ||      // macOS system files
+    path.contains("/__MACOSX/") ||      
+    path.ends_with(".AppleDouble") ||   
+    path.ends_with("Thumbs.db") ||      // Windows system files
+    path.ends_with("desktop.ini") ||    
+    path.ends_with("~") ||              // Linux hidden files
+    path.ends_with(".swp")
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
