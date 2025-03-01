@@ -22,11 +22,13 @@ PERL_FMT='
     $count++;
 '
 
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+
 list_installed() {
     if [ $# -eq 0 ]; then
         echo "==> Installed packages:"
-        if [ -d "$HOME/.cbp/binaries" ]; then
-            find "$HOME/.cbp/binaries" -name "*.files" -exec basename {} \; |
+        if [ -d "${CBP_BINARIES}" ]; then
+            find_files "${CBP_BINARIES}" "*.files" |
                 sed 's/\.files$//' |
                 sort |
                 perl -n -e "${PERL_FMT}"
@@ -34,9 +36,9 @@ list_installed() {
         echo
     else
         for pkg in "$@"; do
-            if [ -f "$HOME/.cbp/binaries/${pkg}.files" ]; then
+            if [ -f "${CBP_BINARIES}/${pkg}.files" ]; then
                 echo "==> Files in package ${pkg}:"
-                cat "$HOME/.cbp/binaries/${pkg}.files"
+                cat "${CBP_BINARIES}/${pkg}.files"
                 echo
             else
                 echo "Warning: Package ${pkg} is not installed"

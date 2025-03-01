@@ -1,26 +1,6 @@
 #!/bin/bash
 
-# Format packages in columns
-PERL_FMT='
-    BEGIN{
-        $p="";
-        $count=0;
-        $width=80;
-    }
-    chomp;
-    $c = substr($_, 0, 1);
-    if ($p ne "" and $c ne $p) {
-        print "\n";
-        $count = 0;
-    }
-    if ($count > 0 and $count * 16 + 16 > $width) {
-        print "\n";
-        $count = 0;
-    }
-    $p = $c;
-    printf "  %-14s", $_;
-    $count++;
-'
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
 list_packages() {
     local pattern="$1"

@@ -1,9 +1,10 @@
 #!/bin/bash
 
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+
 remove_package() {
     local pkg_name="$1"
-    local install_dir="$HOME/.cbp"
-    local record_file="$HOME/.cbp/binaries/${pkg_name}.files"
+    local record_file="${CBP_BINARIES}/${pkg_name}.files"
 
     if [ ! -f "${record_file}" ]; then
         echo "==> Package ${pkg_name} is not installed"
@@ -14,8 +15,8 @@ remove_package() {
 
     # Remove files in package
     while read -r file; do
-        if [ -f "${install_dir}/${file}" ]; then
-            rm -f "${install_dir}/${file}"
+        if [ -f "${CBP_HOME}/${file}" ]; then
+            rm -f "${CBP_HOME}/${file}"
         fi
     done < "${record_file}"
 
