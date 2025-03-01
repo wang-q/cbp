@@ -127,3 +127,21 @@ fn test_list_specific_package() -> anyhow::Result<()> {
 
     Ok(())
 }
+
+#[test]
+fn test_untracted() -> anyhow::Result<()> {
+    let mut cmd = Command::cargo_bin("cbp")?;
+    let output = cmd
+        .arg("untracked")
+        .arg("--dir")
+        .arg("tests/cbp_macos")
+        .output()
+        .unwrap();
+    let stdout = String::from_utf8(output.stdout).unwrap();
+
+    assert_eq!(stdout.lines().count(), 2);
+    assert!(stdout.contains("==> Untracked files"));
+    assert!(stdout.contains("\n\n"));
+
+    Ok(())
+}
