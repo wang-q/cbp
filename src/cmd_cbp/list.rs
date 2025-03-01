@@ -70,6 +70,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             let files = cbp::find_files(&cbp_dirs.records, Some("*.files"))?;
             let packages: Vec<String> = files
                 .iter()
+                .filter(|f| !cbp::is_system_file(f))
                 .filter_map(|f| f.strip_suffix(".files").map(|s| s.to_string()))
                 .collect();
 

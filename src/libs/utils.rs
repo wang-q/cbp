@@ -160,6 +160,17 @@ pub fn install_package(
 mod tests {
     use super::*;
 
+    fn setup_test_data() -> anyhow::Result<tempfile::TempDir> {
+        let temp_dir = tempfile::TempDir::new()?;
+        
+        let mut archive = tar::Archive::new(flate2::read::GzDecoder::new(
+            std::fs::File::open("tests/cbp_macos.tar.gz")?,
+        ));
+        archive.unpack(temp_dir.path())?;
+        
+        Ok(temp_dir)
+    }
+
     #[test]
     fn test_get_os_type() {
         // Since std::env::consts::OS is a compile-time constant,
@@ -222,13 +233,16 @@ mod tests {
 
     #[test]
     fn test_install_real_package() -> anyhow::Result<()> {
-        // Create temporary directory as CBP_HOME
+        let test_dir = setup_test_data()?;
         let temp_dir = tempfile::tempdir()?;
         let cbp_dirs = crate::CbpDirs::from(temp_dir.path().to_path_buf())?;
 
-        // Copy test package to temp directory
+        // 从测试数据目录复制包文件
         let pkg_file = temp_dir.path().join("zlib.macos.tar.gz");
-        std::fs::copy("tests/cbp_macos/cache/zlib.macos.tar.gz", &pkg_file)?;
+        std::fs::copy(
+            test_dir.path().join("cbp_macos/cache/zlib.macos.tar.gz"),
+            &pkg_file,
+        )?;
 
         // Test package installation
         install_package("zlib", &pkg_file, &cbp_dirs)?;
