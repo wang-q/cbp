@@ -18,6 +18,7 @@ fn main() -> anyhow::Result<()> {
         .subcommand(cmd_cbp::local::make_subcommand())
         .subcommand(cmd_cbp::check::make_subcommand())
         .subcommand(cmd_cbp::kb::make_subcommand())
+        .subcommand(cmd_cbp::tar::make_subcommand())
         .after_help(
             r###"
 Package Manager Features:
@@ -63,6 +64,7 @@ Common Commands:
         Some(("local", sub_matches)) => cmd_cbp::local::execute(sub_matches),
         Some(("remove", sub_matches)) => cmd_cbp::remove::execute(sub_matches),
         Some(("check", sub_matches)) => cmd_cbp::check::execute(sub_matches),
+        Some(("tar", sub_matches)) => cmd_cbp::tar::execute(sub_matches),
         _ => unreachable!(),
     }?;
 

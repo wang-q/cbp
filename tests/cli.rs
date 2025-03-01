@@ -231,3 +231,61 @@ fn command_local() -> anyhow::Result<()> {
 
     Ok(())
 }
+
+#[test]
+fn command_tar() -> anyhow::Result<()> {
+    use std::fs;
+    use tempfile::TempDir;
+
+    // Create test directory
+    let temp_dir = TempDir::new()?;
+    let collect_dir = temp_dir.path().join("collect");
+    fs::create_dir(&collect_dir)?;
+
+    // Create test files
+    fs::write(collect_dir.join("test.txt"), "test content")?;
+    fs::create_dir_all(collect_dir.join("lib"))?;
+    fs::write(collect_dir.join("lib/libtest.a"), "test lib")?;
+
+    // Create system files (should be filtered)
+    fs::write(collect_dir.join(".DS_Store"), "system file")?;
+    fs::write(collect_dir.join("._test"), "resource fork")?;
+
+    // Create doc directory (should be removed)
+    fs::create_dir_all(collect_dir.join("share/man"))?;
+    fs::write(collect_dir.join("share/man/test.1"), "man page")?;
+
+    // Run tar command
+    let mut cmd = Command::cargo_bin("cbp")?;
+    cmd.arg("tar")
+        .arg("--pkg")
+        .arg("test")
+        .arg(&collect_dir)
+        .current_dir(temp_dir.path())  // Set working directory
+        .assert()
+        .success();
+
+    // Verify package file
+    let tar_name = format!("test.{}.tar.gz", cbp::get_os_type()?);
+    assert!(temp_dir.path().join(&tar_name).exists());
+
+    // Verify package contents
+    let tar_file = fs::File::open(temp_dir.path().join(&tar_name))?;
+    let gz = flate2::read::GzDecoder::new(tar_file);
+    let mut archive = tar::Archive::new(gz);
+    let entries: Vec<_> = archive.entries()?.collect::<Result<_, _>>()?;
+
+    // Verify file list
+    let paths: Vec<_> = entries
+        .iter()
+        .map(|e| e.path().unwrap().to_string_lossy().into_owned())
+        .collect();
+
+    assert!(paths.contains(&"test.txt".to_string()));
+    assert!(paths.contains(&"lib/libtest.a".to_string()));
+    assert!(!paths.contains(&".DS_Store".to_string()));
+    assert!(!paths.contains(&"._test".to_string()));
+    assert!(!paths.contains(&"share/man/test.1".to_string()));
+
+    Ok(())
+}
