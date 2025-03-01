@@ -54,55 +54,45 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
     for package in args.get_many::<String>("packages").unwrap() {
         let file_path = cbp_dirs.records.join(format!("{}.files", package));
-        if file_path.exists() {
-            println!("==> Removing {}:", package);
+        if !file_path.exists() {
+            println!("==> Package {} is not installed", package);
+            continue;
+        }
 
-            // 读取文件列表
-            let content = std::fs::read_to_string(&file_path)?;
-            let mut removed_count = 0;
+        println!("==> Removing {}:", package);
+        let content = std::fs::read_to_string(&file_path)?;
 
-            // 处理每个文件
-            for line in content.lines() {
-                if line.is_empty() {
-                    continue;
-                }
-
-                let file = cbp_dirs.home.join(line);
-                if file.exists() {
-                    if file.is_file() || file.is_symlink() {
-                        std::fs::remove_file(&file)?;
-                        removed_count += 1;
-
-                        // 检查并删除对应的资源分支文件
-                        if let Some(parent) = file.parent() {
-                            if let Some(file_name) = file.file_name() {
-                                if let Some(file_name_str) = file_name.to_str() {
-                                    let resource_fork =
-                                        parent.join(format!("._{}", file_name_str));
-                                    if resource_fork.exists() {
-                                        std::fs::remove_file(&resource_fork)?;
-                                        println!(
-                                            "    Removed resource fork: {}",
-                                            resource_fork.display()
-                                        );
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        println!("    Skipping directory: {}", file.display());
-                    }
-                } else {
-                    println!("    File not found: {}", file.display());
-                }
+        for line in content.lines() {
+            if line.is_empty() {
+                continue;
             }
 
-            // 删除记录文件
-            std::fs::remove_file(&file_path)?;
-            println!("    Removed {} files", removed_count);
-        } else {
-            println!("==> Package {} is not installed", package);
+            let file = cbp_dirs.home.join(line);
+            if !file.exists() && !file.is_symlink() {
+                println!("    File not found: {}", file.display());
+                continue;
+            }
+
+            if !file.is_file() && !file.is_symlink() {
+                continue;
+            }
+
+            std::fs::remove_file(&file)?;
+
+            // 处理资源分支文件
+            let file_name = match file.file_name().and_then(|n| n.to_str()) {
+                Some(name) => name,
+                None => continue,
+            };
+
+            let resource_fork = file.parent().unwrap().join(format!("._{}", file_name));
+            if resource_fork.exists() {
+                std::fs::remove_file(&resource_fork)?;
+            }
         }
+
+        std::fs::remove_file(&file_path)?;
+        println!("    Done");
     }
 
     Ok(())

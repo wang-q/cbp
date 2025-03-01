@@ -122,7 +122,7 @@ fn command_list_specific_package() -> anyhow::Result<()> {
         .assert()
         .success()
         .stdout(predicate::str::contains(
-            "==> Package nonexistent not installed",
+            "==> Package nonexistent is not installed",
         ));
 
     Ok(())
