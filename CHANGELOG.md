@@ -2,45 +2,20 @@
 
 ## Unreleased - ReleaseDate
 
-- Added `install` command for package management
-  - Download packages from GitHub releases
-  - Support proxy for network access
-  - Show download progress
-  - Platform-specific package selection
-  - Multiple package installation
-- Added `local` command for package management
-  - Install packages from local binaries directory
-  - Support both local builds and cached packages
-  - Prevent duplicate installations
+- Added `install` command with proxy support
+- Added `avail` command for package discovery
+- Added `local` command for local package installation
 - Added `list` command for package management
-  - List all installed packages
-  - Show files in specific package
-- Added `check` command to find unmanaged files
-  - Skip system generated files (macOS/Windows/Linux)
-  - Ignore package management directories
-- Added `remove` command for package management
-  - Remove installed packages and resource forks
-  - Handle files and symlinks properly
-  - Skip directory removal
-- Added core utilities
-  - Platform detection (macOS/Linux)
-  - Directory structure management
-  - Package listing and formatting
-- Added `scripts/tools/` directory containing Bash prototypes for package management
+- Added `check` command for unmanaged files detection
+- Added `remove` command with resource fork handling
+- Added core utilities for platform detection and package management
+- Improved documentation and help messages
+- Added `scripts/tools/` directory
 
 ## 0.1.0 - 2025-02-28
 
 - Initial release
 - Added `kb` command for documentation display
-  - README.md
-  - common.sh documentation
-  - sources directory documentation
-  - binaries directory documentation
-  - developer guide
-- Supported platforms
-  - Linux (glibc 2.17+)
-  - macOS (Apple Silicon)
+- Supported Linux (glibc 2.17+) and macOS (Apple Silicon)
 - Added installation script `init.sh`
-- Added build script framework
-  - common.sh providing shared build functions
-  - Cross-platform compilation support
+- Added build script framework with cross-platform support
