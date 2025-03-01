@@ -201,9 +201,11 @@ fn command_local() -> anyhow::Result<()> {
 
     // Create cache directory and copy test package
     std::fs::create_dir_all(cbp_home.join("cache"))?;
+    let os_type = cbp::get_os_type()?;
+    let pkg_file = format!("zlib.{}.tar.gz", os_type);
     std::fs::copy(
-        "tests/cbp_macos/cache/zlib.macos.tar.gz",
-        cbp_home.join("cache/zlib.macos.tar.gz"),
+        "tests/cbp_macos/cache/zlib.macos.tar.gz".to_string(),
+        cbp_home.join("cache").join(&pkg_file),
     )?;
 
     // Run local command
