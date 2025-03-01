@@ -28,7 +28,13 @@ check_dependencies() {
             echo "  File: ${file}"
             if [[ "$(uname)" == "Darwin" ]]; then
                 # macOS: use otool
-                local deps=$(otool -L "${full_path}" | tail -n +2 | grep -v "@rpath" | sed 's/^[[:space:]]*//')
+                local deps=$(
+                    otool -L "${full_path}" |
+                        grep -v "${full_path}:" |
+                        grep -v "libSystem\.B\.dylib" |
+                        grep -v "libc++\.1\.dylib" |
+                        sed 's/^[[:space:]]*//'
+                )
                 if [ -n "${deps}" ]; then
                     echo "${deps}" | sed 's/^/    /'
                 else
