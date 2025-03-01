@@ -3,15 +3,16 @@ use clap::*;
 /// Create clap subcommand arguments
 pub fn make_subcommand() -> Command {
     Command::new("avail")
-        .about("List available packages")
+        .about("List available packages from GitHub")
         .after_help(
             r###"
-List available packages from the release repository.
+List available packages from the GitHub release repository.
 
 The command will:
-* Query GitHub release assets
+* Query GitHub release assets via API
 * Filter by platform (macos/linux)
 * Group packages by first letter
+* Format output in columns
 
 Release page:
 * https://github.com/wang-q/cbp/releases/tag/Binaries
@@ -23,6 +24,9 @@ Examples:
 2. List packages for specific platform:
    cbp avail macos
    cbp avail linux
+
+3. Use with proxy:
+   cbp avail --proxy socks5://127.0.0.1:7890
 "###,
         )
         .arg(
@@ -32,16 +36,30 @@ Examples:
                 .index(1)
                 .value_name("PLATFORM"),
         )
+        .arg(
+            Arg::new("proxy")
+                .long("proxy")
+                .help("Proxy server URL (e.g., socks5://127.0.0.1:7890)")
+                .num_args(1)
+                .value_name("URL"),
+        )
 }
 
 /// Execute avail command
 pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     // Query GitHub releases using ureq
-    let resp: serde_json::Value =
-        ureq::get("https://api.github.com/repos/wang-q/cbp/releases/tags/Binaries")
-            .set("User-Agent", "cbp")
-            .call()?
-            .into_json()?;
+    let agent = if let Some(proxy_url) = args.get_one::<String>("proxy") {
+        let proxy = ureq::Proxy::new(proxy_url)?;
+        ureq::AgentBuilder::new().proxy(proxy).build()
+    } else {
+        ureq::AgentBuilder::new().build()
+    };
+
+    let resp: serde_json::Value = agent
+        .get("https://api.github.com/repos/wang-q/cbp/releases/tags/Binaries")
+        .set("user-agent", "cbp")
+        .call()?
+        .into_json()?;
 
     // Extract and filter package names
     let mut packages: Vec<String> = Vec::new();
