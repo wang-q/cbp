@@ -1,11 +1,25 @@
 use clap::*;
 
-// Create clap subcommand arguments
+/// Create clap subcommand arguments
 pub fn make_subcommand() -> Command {
     Command::new("list")
         .about("List installed package(s)")
         .after_help(
             r###"
+List installed packages and their contents.
+
+Without arguments, lists all installed packages.
+With package names, shows the files contained in each package.
+
+Usage:
+    cbp list [PACKAGES...]
+
+Examples:
+1. List all installed packages:
+   cbp list
+
+2. Show files in a specific package(s):
+   cbp list zlib bzip2
 
 "###,
         )
@@ -13,7 +27,8 @@ pub fn make_subcommand() -> Command {
             Arg::new("packages")
                 .help("Name of the packages")
                 .num_args(0..)
-                .index(1),
+                .index(1)
+                .value_name("PACKAGES"),
         )
         .arg(
             Arg::new("dir")
@@ -21,11 +36,12 @@ pub fn make_subcommand() -> Command {
                 .short('d')
                 .num_args(1)
                 .value_name("DIR")
-                .help("Change working directory"),
+                .help("Change working directory")
+                .hide(true),
         )
 }
 
-// command implementation
+/// Execute list command
 pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     let cbp_dirs = if args.contains_id("dir") {
         let home =

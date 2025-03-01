@@ -9,6 +9,7 @@
   - Platform detection (macOS/Linux)
   - Directory structure management
   - Package listing and formatting
+- Added `scripts/tools/` directory containing Bash prototypes for package management
 
 ## 0.1.0 - 2025-02-28
 
