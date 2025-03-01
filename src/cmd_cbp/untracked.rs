@@ -7,14 +7,21 @@ pub fn make_subcommand() -> Command {
             r###"
 List files in ~/.cbp that are not managed by any package.
 
+The command helps you find:
+* Files not installed by any package
+* Files not in system directories (binaries/, cache/)
+* Files not required by cbp itself
+
+Ignored files:
+* System generated files
+  - macOS: .DS_Store, __MACOSX, .AppleDouble
+  - Windows: Thumbs.db, desktop.ini
+  - Linux: backup files (*~), vim swp files
+
 Usage:
     cbp untracked
 
-These files are:
-* Not installed by any package
-* Not in binaries/ or cache/ directories
-* Not the cbp executable itself
-
+Note: This command is useful for cleaning up your ~/.cbp directory.
 "###,
         )
         .arg(
