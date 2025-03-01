@@ -190,3 +190,31 @@ fn command_remove() -> anyhow::Result<()> {
 
     Ok(())
 }
+
+#[test]
+fn command_local() -> anyhow::Result<()> {
+    let temp = tempfile::TempDir::new()?;
+
+    // Set up CBP_HOME
+    std::env::set_var("HOME", temp.path());
+    let cbp_home = temp.path().join(".cbp");
+
+    // Create cache directory and copy test package
+    std::fs::create_dir_all(cbp_home.join("cache"))?;
+    std::fs::copy(
+        "tests/cbp_macos/cache/zlib.macos.tar.gz",
+        cbp_home.join("cache/zlib.macos.tar.gz"),
+    )?;
+
+    // Run local command
+    let mut cmd = Command::cargo_bin("cbp")?;
+    cmd.arg("local").arg("zlib").current_dir(temp.path());
+    cmd.assert().success();
+
+    // Verify installation
+    assert!(cbp_home.join("include/zlib.h").exists());
+    assert!(cbp_home.join("lib/libz.a").exists());
+    assert!(cbp_home.join("records/zlib.files").exists());
+
+    Ok(())
+}

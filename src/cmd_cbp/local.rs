@@ -6,9 +6,13 @@ pub fn make_subcommand() -> Command {
         .about("Install packages from local binaries")
         .after_help(
             r###"
-Install packages from local binaries directory.
+Install packages from local binaries directory or cache.
 
-The command looks for package files in ~/.cbp/cache/ with the format:
+The command looks for package files in the following locations:
+1. ./binaries/   - Local build directory
+2. ~/.cbp/cache/ - Downloaded packages
+
+Package files should have the format:
   <package_name>.<os_type>.tar.gz
 
 Examples:
@@ -18,7 +22,6 @@ Examples:
 2. Install multiple packages:
    cbp local zlib bzip2
 
-Note: Package files must exist in the binaries/ directory.
 "###,
         )
         .arg(
@@ -49,20 +52,10 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         cbp::CbpDirs::new()?
     };
 
-    let os_type = cbp::libs::utils::get_os_type()?;
+    let os_type = cbp::get_os_type()?;
 
     // Process packages
     for pkg in args.get_many::<String>("packages").unwrap() {
-        let pkg_file = cbp_dirs.records.join(format!("{}.{}.tar.gz", pkg, os_type));
-
-        if !pkg_file.exists() {
-            return Err(anyhow::anyhow!(
-                "==> Package {}.{}.tar.gz not found in binaries/",
-                pkg,
-                os_type
-            ));
-        }
-
         // Check if package is already installed
         let record_file = cbp_dirs.records.join(format!("{}.files", pkg));
         if record_file.exists() {
@@ -70,7 +63,28 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             continue;
         }
 
-        cbp::libs::utils::install_package(pkg, &pkg_file, &cbp_dirs)?;
+        // Try local binaries directory first
+        let local_file =
+            std::path::Path::new("binaries").join(format!("{}.{}.tar.gz", pkg, os_type));
+
+        // Then try cache directory
+        let cache_file = cbp_dirs.cache.join(format!("{}.{}.tar.gz", pkg, os_type));
+
+        let pkg_file = if local_file.exists() {
+            println!("==> Using locally built package from binaries/");
+            local_file
+        } else if cache_file.exists() {
+            println!("==> Using cached package from ~/.cbp/cache/");
+            cache_file
+        } else {
+            return Err(anyhow::anyhow!(
+                "==> Package {}.{}.tar.gz not found in binaries/ or cache/",
+                pkg,
+                os_type
+            ));
+        };
+
+        cbp::install_package(pkg, &pkg_file, &cbp_dirs)?;
     }
 
     Ok(())
