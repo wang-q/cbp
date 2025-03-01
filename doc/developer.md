@@ -77,6 +77,12 @@ rm ninja-linux.zip
 # meson
 pip3 install meson
 
+# Download and install jq
+curl -LO https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64
+chmod +x jq-linux-amd64
+mv jq-linux-amd64 ~/bin/jq
+# or sudo apt install jq
+
 ```
 
 ### git lfs
@@ -90,6 +96,21 @@ brew install git-lfs
 
 git lfs install
 git lfs track "sources/*.tar.gz"
+
+```
+
+### cbp itself
+
+```bash
+cargo install --path . --force # --offline
+
+# Concurrent tests may trigger sqlite locking
+cargo test -- --test-threads=1
+
+# build under WSL 2
+mkdir -p /tmp/cargo
+export CARGO_TARGET_DIR=/tmp/cargo
+cargo build
 
 ```
 
@@ -195,12 +216,14 @@ This section describes the binary packages distributed through the "Binaries" re
 ### Package Format
 
 All packages are distributed as gzipped tarballs with the following naming convention:
+
 * Linux: package.linux.tar.gz
 * macOS: package.macos.tar.gz
 
 ### Installation
 
-These binaries are meant to be installed via the `cbp` package manager. Manual installation is possible but not recommended.
+These binaries are meant to be installed via the `cbp` package manager. Manual installation is
+possible but not recommended.
 
 ### Technical Notes
 
