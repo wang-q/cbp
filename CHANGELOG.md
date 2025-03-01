@@ -2,7 +2,13 @@
 
 ## Unreleased - ReleaseDate
 
-
+- Added `list` command for package management
+  - List all installed packages
+  - Show files in specific package
+- Added core utilities
+  - Platform detection (macOS/Linux)
+  - Directory structure management
+  - Package listing and formatting
 
 ## 0.1.0 - 2025-02-28
 
