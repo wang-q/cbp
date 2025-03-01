@@ -18,9 +18,6 @@ Ignored files:
   - Windows: Thumbs.db, desktop.ini
   - Linux: backup files (*~), vim swp files
 
-Usage:
-    cbp untracked
-
 Note: This command is useful for cleaning up your ~/.cbp directory.
 "###,
         )
@@ -37,7 +34,8 @@ Note: This command is useful for cleaning up your ~/.cbp directory.
 
 pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     let cbp_dirs = if args.contains_id("dir") {
-        let home = std::path::Path::new(args.get_one::<String>("dir").unwrap()).to_path_buf();
+        let home =
+            std::path::Path::new(args.get_one::<String>("dir").unwrap()).to_path_buf();
         cbp::CbpDirs::from(home)?
     } else {
         cbp::CbpDirs::new()?
@@ -72,7 +70,8 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
            // Linux hidden files
            !file.ends_with("~") &&             
            !file.ends_with(".swp") &&          
-           !known_files.contains(&file) {
+           !known_files.contains(&file)
+        {
             println!("  {}", file);
         }
     }

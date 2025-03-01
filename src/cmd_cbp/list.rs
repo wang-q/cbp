@@ -11,9 +11,6 @@ List installed packages and their contents.
 Without arguments, lists all installed packages.
 With package names, shows the files contained in each package.
 
-Usage:
-    cbp list [PACKAGES...]
-
 Examples:
 1. List all installed packages:
    cbp list

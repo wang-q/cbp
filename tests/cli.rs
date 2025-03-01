@@ -145,3 +145,48 @@ fn test_untracted() -> anyhow::Result<()> {
 
     Ok(())
 }
+
+#[test]
+fn test_remove() -> anyhow::Result<()> {
+    // Create a temporary directory and copy test data
+    let temp_dir = tempfile::TempDir::new()?;
+    let src_dir = std::path::Path::new("tests/cbp_macos");
+    let dest_dir = temp_dir.path().join("cbp_macos");
+
+    // Copy entire test directory
+    let options = fs_extra::dir::CopyOptions::new();
+    fs_extra::dir::copy(src_dir, temp_dir.path(), &options)?;
+
+    // Test removing non-existent package
+    Command::cargo_bin("cbp")?
+        .arg("remove")
+        .arg("--dir")
+        .arg(&dest_dir)
+        .arg("nonexistent")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(
+            "Warning: Package nonexistent is not installed",
+        ));
+
+    // Test removing existing package
+    Command::cargo_bin("cbp")?
+        .arg("remove")
+        .arg("--dir")
+        .arg(&dest_dir)
+        .arg("zlib")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("==> Removing zlib"))
+        .stdout(predicate::str::contains("Done"));
+
+    // Verify package is removed
+    assert!(!dest_dir.join("binaries/zlib.files").exists());
+    assert!(!dest_dir.join("lib/zlib.a").exists());
+
+    // Verify other package still exists
+    assert!(dest_dir.join("binaries/bzip2.files").exists());
+    assert!(dest_dir.join("lib/libbz2.a").exists());
+
+    Ok(())
+}
