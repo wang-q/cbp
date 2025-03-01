@@ -95,7 +95,7 @@ Options:
 
 ## Project Design
 
-This project is designed like a package manager (similar to Homebrew), with the following features:
+This project is designed similar to Homebrew, with the following features:
 
 1. Standardized build process
     * Download source code from official releases

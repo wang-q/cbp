@@ -36,7 +36,7 @@ bash scripts/bzip2.sh macos test
 ```bash
 bash scripts/xz.sh
 
-bash install.sh zlib libdeflate bzip2 xz
+bash scripts/tools/local.sh zlib libdeflate bzip2 xz
 
 bash scripts/ncurses.sh
 bash scripts/readline.sh
