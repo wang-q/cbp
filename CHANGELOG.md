@@ -2,6 +2,8 @@
 
 ## Unreleased - ReleaseDate
 
+## 0.2.0 - 2025-03-01
+
 - Added `install` command with proxy support
 - Added `avail` command for package discovery
 - Added `local` command for local package installation
