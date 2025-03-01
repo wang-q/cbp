@@ -258,10 +258,11 @@ fn command_tar() -> anyhow::Result<()> {
     // Run tar command
     let mut cmd = Command::cargo_bin("cbp")?;
     cmd.arg("tar")
-        .arg("--pkg")
-        .arg("test")
+        .arg("-o")
+        .arg(format!("test.{}.tar.gz", cbp::get_os_type()?))
         .arg(&collect_dir)
-        .current_dir(temp_dir.path())  // Set working directory
+        .arg("--cleanup") // Add cleanup flag
+        .current_dir(temp_dir.path())
         .assert()
         .success();
 
