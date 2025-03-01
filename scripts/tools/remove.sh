@@ -4,7 +4,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
 remove_package() {
     local pkg_name="$1"
-    local record_file="${CBP_BINARIES}/${pkg_name}.files"
+    local record_file="${CBP_RECORDS}/${pkg_name}.files"
 
     if [ ! -f "${record_file}" ]; then
         echo "==> Package ${pkg_name} is not installed"

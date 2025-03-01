@@ -9,14 +9,14 @@ list_untracked() {
     trap 'rm -f ${temp_known}' EXIT
 
     # Collect files from installed packages
-    if [ -d "${CBP_BINARIES}" ]; then
-        cat "${CBP_BINARIES}"/*.files > "${temp_known}" 2>/dev/null
+    if [ -d "${CBP_RECORDS}" ]; then
+        cat "${CBP_RECORDS}"/*.files > "${temp_known}" 2>/dev/null
     fi
 
     # Find and display files not in known list
     find_files "${CBP_HOME}" | while read -r file; do
         if [[ "$file" != "bin/cbp" ]] && 
-           [[ ! "$file" =~ ^binaries/ ]] && 
+           [[ ! "$file" =~ ^records/ ]] &&
            [[ ! "$file" =~ ^cache/ ]] && 
            ! grep -Fxq "$file" "${temp_known}"; then
             echo "  $file"

@@ -8,7 +8,7 @@ pub fn make_subcommand() -> Command {
             r###"
 Install packages from local binaries directory.
 
-The command looks for package files in ~/.cbp/binaries/ with the format:
+The command looks for package files in ~/.cbp/cache/ with the format:
   <package_name>.<os_type>.tar.gz
 
 Examples:

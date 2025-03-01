@@ -25,7 +25,7 @@ install_package() {
     ensure_dirs
 
     # List files in package
-    tar tzf "${pkg_file}" > "${CBP_BINARIES}/${pkg_name}.files" || {
+    tar tzf "${pkg_file}" > "${CBP_RECORDS}/${pkg_name}.files" || {
         echo "    Failed to list files in ${pkg_name}"
         return 1
     }
@@ -33,7 +33,7 @@ install_package() {
     # Extract files
     tar xzf "${pkg_file}" --directory="${CBP_HOME}" || {
         echo "    Failed to extract ${pkg_name}"
-        rm -f "${CBP_BINARIES}/${pkg_name}.files"
+        rm -f "${CBP_RECORDS}/${pkg_name}.files"
         return 1
     }
 

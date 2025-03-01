@@ -96,7 +96,7 @@ pub fn find_files(dir: &Path, pattern: Option<&str>) -> anyhow::Result<Vec<Strin
 
 /// Check if a file is managed by cbp itself
 pub fn is_cbp_file(path: &str) -> bool {
-    path == "bin/cbp" || path.starts_with("binaries/") || path.starts_with("cache/")
+    path == "bin/cbp" || path.starts_with("records/") || path.starts_with("cache/")
 }
 
 /// Check if a file should be ignored based on system patterns

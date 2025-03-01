@@ -181,11 +181,11 @@ fn command_remove() -> anyhow::Result<()> {
         .stdout(predicate::str::contains("Done"));
 
     // Verify package is removed
-    assert!(!dest_dir.join("binaries/zlib.files").exists());
+    assert!(!dest_dir.join("records/zlib.files").exists());
     assert!(!dest_dir.join("lib/zlib.a").exists());
 
     // Verify other package still exists
-    assert!(dest_dir.join("binaries/bzip2.files").exists());
+    assert!(dest_dir.join("records/bzip2.files").exists());
     assert!(dest_dir.join("lib/libbz2.a").exists());
 
     Ok(())

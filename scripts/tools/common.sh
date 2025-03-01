@@ -13,7 +13,7 @@ BASH_DIR=$( cd "$( dirname "${BASH_SOURCE[1]}" )" && pwd )
 CBP_HOME="$HOME/.cbp"
 CBP_BIN="$CBP_HOME/bin"
 CBP_CACHE="$CBP_HOME/cache"
-CBP_BINARIES="$CBP_HOME/binaries"
+CBP_RECORDS="$CBP_HOME/records"
 
 # Format packages in columns
 PERL_FMT='
@@ -39,7 +39,7 @@ PERL_FMT='
 
 # Create necessary directories
 ensure_dirs() {
-    mkdir -p "$CBP_BIN" "$CBP_CACHE" "$CBP_BINARIES"
+    mkdir -p "$CBP_BIN" "$CBP_CACHE" "$CBP_RECORDS"
 }
 
 # Platform specific find command
@@ -62,7 +62,7 @@ install_package() {
     ensure_dirs
 
     # List files in package
-    tar tzf "${pkg_file}" > "${CBP_BINARIES}/${pkg_name}.files" || {
+    tar tzf "${pkg_file}" > "${CBP_RECORDS}/${pkg_name}.files" || {
         echo "    Failed to list files in ${pkg_name}"
         return 1
     }
@@ -70,7 +70,7 @@ install_package() {
     # Extract files
     tar xzf "${pkg_file}" --directory="${CBP_HOME}" || {
         echo "    Failed to extract ${pkg_name}"
-        rm -f "${CBP_BINARIES}/${pkg_name}.files"
+        rm -f "${CBP_RECORDS}/${pkg_name}.files"
         return 1
     }
 

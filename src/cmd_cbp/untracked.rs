@@ -9,7 +9,7 @@ List files in ~/.cbp that are not managed by any package.
 
 The command helps you find:
 * Files not installed by any package
-* Files not in system directories (binaries/, cache/)
+* Files not in system directories (records/, cache/)
 * Files not required by cbp itself
 
 Ignored files:

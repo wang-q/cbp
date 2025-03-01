@@ -4,7 +4,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
 check_dependencies() {
     local pkg="$1"
-    local record_file="${CBP_BINARIES}/${pkg}.files"
+    local record_file="${CBP_RECORDS}/${pkg}.files"
 
     if [ ! -f "${record_file}" ]; then
         echo "Warning: Package ${pkg} is not installed"
