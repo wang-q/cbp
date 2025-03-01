@@ -15,7 +15,9 @@ elif [ "$(uname -s)" = "Linux" ]; then
         OS_TYPE="linux"
         # Check glibc version
         glibc_version=$(ldd --version 2>&1 | head -n1 | grep -oP '(?<=\s)\d+\.\d+')
-        if (( $(echo "$glibc_version < 2.17" | bc -l) )); then
+        major=$(echo "$glibc_version" | cut -d. -f1)
+        minor=$(echo "$glibc_version" | cut -d. -f2)
+        if [ "$major" -lt 2 ] || [ "$major" -eq 2 -a "$minor" -lt 17 ]; then
             echo "Requires glibc version >= 2.17"
             exit 1
         fi
