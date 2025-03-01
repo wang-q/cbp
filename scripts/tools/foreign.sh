@@ -13,15 +13,24 @@ list_foreign() {
 
     # Find and display files not in known list
     if [[ "$(uname)" == "Darwin" ]]; then
-        find "$HOME/.cbp/" -type f -not -path "$HOME/.cbp/bin/cbp" -exec basename {} \; | sort
+        cd "$HOME/.cbp" && find . -type f \
+            -not -path "./bin/cbp" \
+            -not -path "./binaries/*" \
+            -not -path "./cache/*" \
+            -print | sed 's|^./||' | sort
     else
-        find "$HOME/.cbp/" -type f -not -path "$HOME/.cbp/bin/cbp" -printf "%P\n" | sort
+        find "$HOME/.cbp/" -type f \
+            -not -path "$HOME/.cbp/bin/cbp" \
+            -not -path "$HOME/.cbp/binaries/*" \
+            -not -path "$HOME/.cbp/cache/*" \
+            -printf "%P\n" | sort
     fi | 
     while read -r file; do
         if ! grep -Fxq "$file" "${temp_known}"; then
             echo "  $file"
         fi
     done
+
     echo
 }
 
