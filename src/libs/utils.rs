@@ -105,7 +105,7 @@ pub fn is_system_file(path: &str) -> bool {
     path.ends_with(".DS_Store") ||      // macOS system files
     path.contains("/__MACOSX/") ||      
     path.ends_with(".AppleDouble") ||   
-    path.split('/').last().map_or(false, |f| f.starts_with("._")) || // macOS resource fork files
+    path.split('/').last().is_some_and(|f| f.starts_with("._")) || // macOS resource fork files
     path.ends_with("Thumbs.db") ||      // Windows system files
     path.ends_with("desktop.ini") ||    
     path.ends_with("~") ||              // Linux hidden files
