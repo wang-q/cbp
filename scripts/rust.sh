@@ -7,19 +7,36 @@ cd "${BASH_DIR}"/..
 # Check if the OS type is provided as an argument
 if [ -z "$1" ]; then
     echo "Usage: $0 <PROJECT_NAME> [os_type]"
-    echo "Supported os_type: linux, macos"
+    echo "Supported os_type: linux, macos, windows"
     echo "Example: $0 intspan linux"
     exit 1
 fi
 PROJECT_NAME=$1
 
-# Set the default OS type to 'linux'
-OS_TYPE=${2:-linux}
+# Set default OS type based on current system
+case "$OSTYPE" in
+    darwin*)
+        DEFAULT_OS="macos"
+        ;;
+    linux*)
+        DEFAULT_OS="linux"
+        ;;
+    msys*|cygwin*|mingw*)
+        DEFAULT_OS="windows"
+        ;;
+    *)
+        echo "Error: Unsupported operating system: $OSTYPE"
+        exit 1
+        ;;
+esac
+
+# Use provided OS type or default
+OS_TYPE=${2:-$DEFAULT_OS}
 
 # Validate the OS type
-if [[ "$OS_TYPE" != "linux" && "$OS_TYPE" != "macos" ]]; then
+if [[ "$OS_TYPE" != "linux" && "$OS_TYPE" != "macos" && "$OS_TYPE" != "windows" ]]; then
     echo "Unsupported os_type: $OS_TYPE"
-    echo "Supported os_type: linux, macos"
+    echo "Supported os_type: linux, macos, windows"
     exit 1
 fi
 
@@ -28,6 +45,8 @@ if [ "$OS_TYPE" == "linux" ]; then
     TARGET_ARCH="x86_64-unknown-linux-gnu.2.17"
 elif [ "$OS_TYPE" == "macos" ]; then
     TARGET_ARCH="aarch64-apple-darwin"
+elif [ "$OS_TYPE" == "windows" ]; then
+    TARGET_ARCH="x86_64-pc-windows-gnu"
 fi
 
 # Create a directory for cargo build artifacts
@@ -72,7 +91,11 @@ BINS=$(
 # Copy the built binaries to the current directory
 mkdir -p collect/bin
 for BIN in $BINS; do
-    cp $CARGO_TARGET_DIR/${TARGET_ARCH}/release/$BIN collect/bin/
+    if [ "$OS_TYPE" == "windows" ]; then
+        cp $CARGO_TARGET_DIR/${TARGET_ARCH}/release/$BIN.exe collect/bin/
+    else
+        cp $CARGO_TARGET_DIR/${TARGET_ARCH}/release/$BIN collect/bin/
+    fi
 done
 
 # Define archive name based on OS type
