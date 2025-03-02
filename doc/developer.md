@@ -85,16 +85,9 @@ rustup target add aarch64-apple-darwin
 ### Other tools
 
 ```bash
-# cmake
-# linux
 cbp install cmake
-# mac
-brew install cmake
-
-# ninja
 cbp install ninja
 
-# meson
 pip3 install meson
 
 # jq

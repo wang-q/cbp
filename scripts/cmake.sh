@@ -6,11 +6,12 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 # Set download URL based on OS type
 if [ "$OS_TYPE" == "linux" ]; then
     DL_URL="https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6-linux-x86_64.tar.gz"
+elif [ "$OS_TYPE" == "macos" ]; then
+    # The content is CMake.app
+    DL_URL="https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6-macos-universal.tar.gz"
 elif [ "$OS_TYPE" == "windows" ]; then
     DL_URL="https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6-windows-x86_64.zip"
 else
-    # DL_URL="https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6-macos-universal.tar.gz"
-    # The content is CMake.app
     echo "Error: ${PROJ} does not support ${OS_TYPE}"
     exit 1
 fi
@@ -27,10 +28,17 @@ else
     tar xzf "${PROJ}.tar.gz"
 fi
 
-mv cmake-* collect
-
-rm -fr collect/doc
-rm -fr collect/man
+# Handle different directory structures
+if [ "$OS_TYPE" == "macos" ]; then
+    mkdir -p collect/bin collect/libexec
+    rm cmake-*/CMake.app/Contents/bin/cmake-gui
+    mv cmake-*/CMake.app/Contents/bin collect/
+    mv cmake-*/CMake.app/Contents/share collect/
+else
+    mv cmake-* collect
+    rm -fr collect/doc
+    rm -fr collect/man
+fi
 
 # Run test if requested
 if [ "${RUN_TEST}" = "test" ]; then
