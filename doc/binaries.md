@@ -60,6 +60,32 @@ bash scripts/gsl.sh
 
 ```
 
+## Common tools
+
+```bash
+# Download and package binary for current system
+bash scripts/jq.sh
+
+# Download, package and test binary
+bash scripts/jq.sh -t
+
+# Download and package for specific OS
+bash scripts/jq.sh macos     # Download macOS ARM64 binary
+bash scripts/jq.sh linux     # Download Linux x86_64 binary
+bash scripts/jq.sh windows   # Download Windows x86_64 binary
+
+# Note: Tests will fail when downloading for different OS
+# as binaries cannot be executed on incompatible architectures
+bash scripts/jq.sh -t macos  # This will fail on Linux
+
+```
+
+```bash
+
+bash scripts/tsv-utils.sh
+
+```
+
 ## `Makefile`
 
 ```bash
@@ -125,7 +151,7 @@ bash scripts/bifrost.sh
 bash scripts/spoa.sh
 bash scripts/diamond.sh
 
-bash scripts/newick-utils.sh
+bash scripts/newick-utils.sh # bison, flex
 
 bash scripts/eigen.sh
 
@@ -220,7 +246,6 @@ chmod +x ${BIN}
 tar -cf - ${BIN} | gzip -9 > tar/${BIN}.linux.tar.gz
 rm ${BIN}
 
-bash scripts/tsv-utils.sh
 bash scripts/pup.sh
 
 bash scripts/raxml-ng.sh
