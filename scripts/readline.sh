@@ -8,9 +8,14 @@ extract_source
 
 # ./configure --help
 
+# Set compiler for non-macOS systems
+if [ "$OS_TYPE" != "macos" ]; then
+    # need the same compiler for ncurses and readline
+    export CC="zig cc -target ${TARGET_ARCH}"
+    export CXX="zig c++ -target ${TARGET_ARCH}"
+fi
+
 # Build with the specified target architecture
-CC="zig cc -target ${TARGET_ARCH}" \
-CXX="zig c++ -target ${TARGET_ARCH}" \
 CFLAGS="-I$HOME/.cbp/include" \
 CXXFLAGS="-I$HOME/.cbp/include" \
 LDFLAGS="-L$HOME/.cbp/lib" \
@@ -21,9 +26,8 @@ LDFLAGS="-L$HOME/.cbp/lib" \
     --disable-shared \
     --enable-static \
     --disable-install-examples \
+    --with-curses \
     || exit 1
-# static linked to libcursesw may cause duplicate symbol definition error
-#        --with-curses \
 
 make -j 8 || exit 1
 make install || exit 1

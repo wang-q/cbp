@@ -41,10 +41,9 @@ cbp local zlib bzip2 xz
 
 ```bash
 bash scripts/ncurses.sh
+cbp local ncurses
 bash scripts/readline.sh
-
-cbp local ncurses readline
-
+cbp local readline
 bash scripts/sqlite.sh
 
 bash scripts/gdbm.sh
