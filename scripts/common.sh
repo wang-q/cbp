@@ -44,17 +44,30 @@ while getopts "t" opt; do
 done
 shift $((OPTIND-1))
 
-# Set the OS type based on the system or command line argument
-if [ "$(uname -s)" = "Darwin" ]; then
-    OS_TYPE=${1:-macos}
-else
-    OS_TYPE=${1:-linux}
-fi
+# Set default OS type based on current system
+case "$OSTYPE" in
+    darwin*)
+        DEFAULT_OS="macos"
+        ;;
+    linux*)
+        DEFAULT_OS="linux"
+        ;;
+    msys*|cygwin*|mingw*)
+        DEFAULT_OS="windows"
+        ;;
+    *)
+        echo "Error: Unsupported operating system: $OSTYPE"
+        exit 1
+        ;;
+esac
+
+# Use provided OS type or default
+OS_TYPE=${1:-$DEFAULT_OS}
 
 # Validate the OS type
-if [[ "$OS_TYPE" != "linux" && "$OS_TYPE" != "macos" ]]; then
+if [[ "$OS_TYPE" != "linux" && "$OS_TYPE" != "macos" && "$OS_TYPE" != "windows" ]]; then
     echo "Unsupported os_type: $OS_TYPE"
-    echo "Supported os_type: linux, macos"
+    echo "Supported os_type: linux, macos, windows"
     exit 1
 fi
 
@@ -63,6 +76,8 @@ if [ "$OS_TYPE" == "linux" ]; then
     TARGET_ARCH="x86_64-linux-gnu.2.17"
 elif [ "$OS_TYPE" == "macos" ]; then
     TARGET_ARCH="aarch64-macos-none"
+elif [ "$OS_TYPE" == "windows" ]; then
+    TARGET_ARCH="x86_64-windows-gnu"
 fi
 
 # Create temp directory
