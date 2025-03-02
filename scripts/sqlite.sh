@@ -17,7 +17,6 @@ CPPFLAGS="-I$HOME/bin/include -DSQLITE_ENABLE_API_ARMOR=1 -DSQLITE_ENABLE_COLUMN
 LDFLAGS="-L$HOME/bin/lib -static" \
     ./configure \
     --prefix="${TEMP_DIR}/collect" \
-    --bindir="${TEMP_DIR}/collect" \
     --disable-dependency-tracking \
     --disable-silent-rules \
     --disable-shared \
