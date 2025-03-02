@@ -12,18 +12,31 @@ curl -L ${DL_URL} -o ${PROJ}.zip ||
 unzip ${PROJ}.zip
 
 # Collect files
-mkdir -p collect/share
-cp -r FastQC/* collect/share/
+mkdir -p collect/libexec/fastqc/
+cp -r FastQC/* collect/libexec/fastqc/
 
 # Create wrapper script
-cat > collect/fastqc << 'EOF'
+mkdir -p collect/bin/
+cat > collect/bin/fastqc << 'EOF'
 #!/bin/bash
-SCRIPT_DIR=$(dirname $(readlink -f "$0"))
-exec "${SCRIPT_DIR}/libexec/fastqc/fastqc" "$@"
+
+# Find the real path of the script
+if [ -L "$0" ]; then
+    SCRIPT_PATH=$(readlink "$0")
+else
+    SCRIPT_PATH="$0"
+fi
+SCRIPT_DIR=$(cd "$(dirname "$SCRIPT_PATH")" && pwd)
+BASE_DIR=$(dirname "$SCRIPT_DIR")
+
+# Set memory options if needed
+JAVA_OPTS=${JAVA_OPTS:-"-Xmx2g"}
+
+exec "${BASE_DIR}/libexec/fastqc/fastqc" "$@"
 EOF
 
 chmod +x collect/libexec/fastqc/fastqc
-chmod +x collect/fastqc
+chmod +x collect/bin/fastqc
 
 # Use build_tar function from common.sh
 build_tar
