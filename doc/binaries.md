@@ -36,12 +36,12 @@ bash scripts/xz.sh macos test
 ## Other Libraries
 
 ```bash
-cbp install zlib bzip2 libdeflate xz
+cbp local zlib bzip2 libdeflate xz
 
 bash scripts/ncurses.sh
 bash scripts/readline.sh
 
-bash install.sh ncurses readline
+cbp local  ncurses readline
 
 bash scripts/sqlite.sh
 
