@@ -20,6 +20,10 @@ pub fn make_subcommand() -> Command {
             r###"
 Upload package files to GitHub release and update checksums.
 
+Requirements:
+* GitHub CLI (gh) must be installed and authenticated
+* Set HTTPS_PROXY if needed (e.g., export HTTPS_PROXY=http://127.0.0.1:7890)
+
 The command will:
 * Calculate MD5 checksums
 * Upload files to GitHub release
