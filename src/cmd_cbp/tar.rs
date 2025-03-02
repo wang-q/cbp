@@ -101,7 +101,16 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     // Add files with relative paths
     for path in &files {
         let full_path = collect_dir.join(path);
-        archive.append_path_with_name(&full_path, path)?;
+        if full_path.is_symlink() {
+            let target = std::fs::read_link(&full_path)?;
+            let mut header = tar::Header::new_gnu();
+            header.set_path(path)?;
+            header.set_size(0);
+            header.set_entry_type(tar::EntryType::Symlink);
+            archive.append_link(&mut header, target.to_str().unwrap(), path)?;
+        } else {
+            archive.append_path_with_name(&full_path, path)?;
+        }
     }
 
     // Finish compression

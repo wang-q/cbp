@@ -77,7 +77,7 @@ pub fn find_files(dir: &Path, pattern: Option<&str>) -> anyhow::Result<Vec<Strin
     let mut files: Vec<String> = walker
         .filter_map(|e| {
             e.ok().and_then(|entry| {
-                if !entry.file_type().is_file() {
+                if !entry.file_type().is_file() && !entry.file_type().is_symlink() {
                     return None;
                 }
                 entry

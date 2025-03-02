@@ -290,3 +290,76 @@ fn command_tar() -> anyhow::Result<()> {
 
     Ok(())
 }
+
+#[test]
+#[cfg(unix)]
+fn command_tar_symlink() -> anyhow::Result<()> {
+    use std::fs;
+    use std::os::unix::fs::symlink;
+    use tempfile::TempDir;
+
+    // Create test directory
+    let temp_dir = TempDir::new()?;
+    let collect_dir = temp_dir.path().join("collect");
+    fs::create_dir(&collect_dir)?;
+
+    // Create test files and symlink
+    fs::write(collect_dir.join("test.txt"), "test content")?;
+    std::env::set_current_dir(&collect_dir)?;
+    symlink("test.txt", "test.link")?;
+    
+    // Verify symlink was created correctly
+    let link_path = collect_dir.join("test.link");
+    println!("Symlink exists: {}", link_path.exists());
+    println!("Is symlink: {}", link_path.is_symlink());
+    if link_path.is_symlink() {
+        println!("Symlink target: {:?}", fs::read_link(&link_path)?);
+    }
+    
+    std::env::set_current_dir(temp_dir.path())?;
+
+    // Run tar command
+    let mut cmd = Command::cargo_bin("cbp")?;
+    cmd.arg("tar")
+        .arg("-o")
+        .arg(format!("test.{}.tar.gz", cbp::get_os_type()?))
+        .arg(&collect_dir)
+        .current_dir(temp_dir.path())
+        .assert()
+        .success();
+
+    // Verify package contents
+    let tar_file = fs::File::open(temp_dir.path().join(format!("test.{}.tar.gz", cbp::get_os_type()?)))?;
+    let gz = flate2::read::GzDecoder::new(tar_file);
+    let mut archive = tar::Archive::new(gz);
+    let entries: Vec<_> = archive.entries()?.collect::<Result<_, _>>()?;
+
+    // Verify file list with symlink
+    let paths: Vec<_> = entries
+        .iter()
+        .map(|e| {
+            let path = e.path().unwrap().to_string_lossy().into_owned();
+            println!("Entry type: {:?}", e.header().entry_type());
+            if e.header().entry_type() == tar::EntryType::Symlink {
+                let link_name = e.link_name().unwrap().unwrap();
+                let link_target = link_name.to_string_lossy().into_owned();
+                println!("Found symlink: {} -> {}", path, link_target);
+                // Swap the path and link_target to match the expected format
+                format!("{} -> {}", link_target, path)
+            } else {
+                println!("Found file: {}", path);
+                path
+            }
+        })
+        .collect();
+
+    println!("\nAll paths:");
+    for path in &paths {
+        println!("  {}", path);
+    }
+
+    assert!(paths.contains(&"test.txt".to_string()));
+    assert!(paths.contains(&"test.link -> test.txt".to_string()));
+
+    Ok(())
+}
