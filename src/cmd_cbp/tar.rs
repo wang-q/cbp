@@ -17,17 +17,17 @@ The command will:
 * Clean up documentation directories (optional)
 
 Examples:
-1. Default directory:
-   cbp tar
+1. Package current directory:
+   cbp tar .
 
-2. Custom directory:
+2. Package specific directory:
    cbp tar path/to/dir
 
 3. Custom output:
-   cbp tar -o output.tar.gz
+   cbp tar path/to/dir -o output.tar.gz
 
 4. Clean up docs:
-   cbp tar --cleanup
+   cbp tar path/to/dir --cleanup
 "###,
         )
         .arg(
@@ -36,7 +36,7 @@ Examples:
                 .num_args(1)
                 .value_name("DIR")
                 .index(1)
-                .default_value("collect"),
+                .required(true),
         )
         .arg(
             Arg::new("cleanup")
