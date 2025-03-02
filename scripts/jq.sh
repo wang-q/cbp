@@ -10,6 +10,9 @@ elif [ "$OS_TYPE" == "macos" ]; then
     DL_URL="https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-macos-arm64"
 elif [ "$OS_TYPE" == "windows" ]; then
     DL_URL="https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-windows-amd64.exe"
+else
+    echo "Error: ${PROJ} does not support ${OS_TYPE}"
+    exit 1
 fi
 
 # Download binary
