@@ -46,10 +46,12 @@ if [ -f "sources/${PROJECT_NAME}.tar.gz" ]; then
     # Extract the source code
     cd ${TEMP_DIR}
     tar xvfz ${PROJECT_NAME}.tar.gz || exit 1
-    cd ${PROJECT_NAME} || cd ${PROJECT_NAME}-* || exit 1
+    cd ${PROJECT_NAME} 2>/dev/null ||
+        cd ${PROJECT_NAME}-* 2>/dev/null ||
+        { echo "Error: Cannot find source directory ${PROJECT_NAME}"; exit 1; }
 else
-    # Enter the PROJECT_NAME project directory for local build
-    cd ${PROJECT_NAME} || exit 1
+    echo "Error: Source file sources/${PROJECT_NAME}.tar.gz not found"
+    exit 1
 fi
 
 # Build the project with the specified target architecture
