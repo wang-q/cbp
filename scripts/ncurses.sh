@@ -13,7 +13,6 @@ CC="zig cc -target ${TARGET_ARCH}" \
 CXX="zig c++ -target ${TARGET_ARCH}" \
     ./configure \
     --prefix="${TEMP_DIR}/collect" \
-    --bindir="${TEMP_DIR}/collect" \
     --disable-dependency-tracking \
     --disable-silent-rules \
     --disable-shared \

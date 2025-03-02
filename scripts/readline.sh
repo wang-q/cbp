@@ -16,7 +16,6 @@ CXXFLAGS="-I$HOME/bin/include" \
 LDFLAGS="-L$HOME/bin/lib" \
     ./configure \
     --prefix="${TEMP_DIR}/collect" \
-    --bindir="${TEMP_DIR}/collect" \
     --disable-dependency-tracking \
     --disable-silent-rules \
     --disable-shared \
