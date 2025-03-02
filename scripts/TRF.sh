@@ -10,14 +10,14 @@ extract_source
 CC="zig cc -target ${TARGET_ARCH}" \
     ./configure \
     --prefix="${TEMP_DIR}/collect" \
-    --bindir="${TEMP_DIR}/collect" \
     --disable-dependency-tracking \
     --disable-silent-rules \
     || exit 1
 make || exit 1
 make install || exit 1
 
-rm ${TEMP_DIR}/collect/trf4.10.0-rc.2.linux64.exe
+#tree ${TEMP_DIR}/collect/
+rm ${TEMP_DIR}/collect/bin/trf4.*.exe
 
-# Use build_tar function from common.sh
+## Use build_tar function from common.sh
 build_tar
