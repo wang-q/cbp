@@ -6,14 +6,20 @@
 # If they are equal, the script is being executed directly instead of being sourced
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     echo "Error: This script should be sourced, not executed directly"
-    echo "Usage: source ${BASH_SOURCE[0]}"
+    echo "Usage: source ${BASH_SOURCE[0]} [-t] [os_type]"
     echo
-    echo "This script defines the following variables:"
-    echo "  BASH_DIR    - Directory of the calling script"
-    echo "  PROJ        - Name of the calling script (without .sh)"
-    echo "  OS_TYPE     - Operating system type (linux or macos)"
-    echo "  TARGET_ARCH - Target architecture for compilation"
-    echo "  TEMP_DIR    - Temporary working directory"
+    echo "Options:"
+    echo "  -t          Run tests after build"
+    echo
+    echo "Arguments:"
+    echo "  os_type     Target OS (linux or macos, default: current OS)"
+    echo
+    echo "Environment:"
+    echo "  BASH_DIR    Directory of the calling script"
+    echo "  PROJ        Name of the calling script (without .sh)"
+    echo "  OS_TYPE     Operating system type"
+    echo "  TARGET_ARCH Target architecture for compilation"
+    echo "  TEMP_DIR    Temporary working directory"
     exit 1
 fi
 
@@ -24,14 +30,26 @@ fi
 BASH_DIR=$( cd "$( dirname "${BASH_SOURCE[1]}" )" && pwd )
 PROJ=$(basename "${BASH_SOURCE[1]}" .sh)
 
+# Process command line options
+while getopts "t" opt; do
+    case ${opt} in
+        t)
+            RUN_TEST="test"
+            ;;
+        *)
+            echo "Invalid option: -${OPTARG}"
+            exit 1
+            ;;
+    esac
+done
+shift $((OPTIND-1))
+
 # Set the OS type based on the system or command line argument
 if [ "$(uname -s)" = "Darwin" ]; then
     OS_TYPE=${1:-macos}
 else
     OS_TYPE=${1:-linux}
 fi
-# Set test mode based on command line argument
-RUN_TEST=${2:-""}
 
 # Validate the OS type
 if [[ "$OS_TYPE" != "linux" && "$OS_TYPE" != "macos" ]]; then
