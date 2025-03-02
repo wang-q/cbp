@@ -56,9 +56,6 @@ bash scripts/libxcrypt.sh
 
 bash scripts/gsl.sh
 
-# --with-libdeflate
-bash scripts/htslib.sh
-
 ```
 
 ## `Makefile`
