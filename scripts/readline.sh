@@ -21,8 +21,10 @@ LDFLAGS="-L$HOME/.cbp/lib" \
     --disable-shared \
     --enable-static \
     --disable-install-examples \
-    --with-curses \
     || exit 1
+# static linked to libcursesw may cause duplicate symbol definition error
+#        --with-curses \
+
 make -j 8 || exit 1
 make install || exit 1
 

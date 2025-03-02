@@ -6,12 +6,15 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 # Extract source code
 extract_source
 
-# ./configure --help
+# Set compiler for non-macOS systems
+if [ "$OS_TYPE" != "macos" ]; then
+    # ../ncurses/./tinfo/lib_baudrate.c:82:10: fatal error: 'sys/ttydev.h' file not found
+    export CC="zig cc -target ${TARGET_ARCH}"
+    export CXX="zig c++ -target ${TARGET_ARCH}"
+fi
 
-# Build with the specified target architecture
-CC="zig cc -target ${TARGET_ARCH}" \
-CXX="zig c++ -target ${TARGET_ARCH}" \
-    ./configure \
+# Common configure options
+./configure \
     --prefix="${TEMP_DIR}/collect" \
     --disable-dependency-tracking \
     --disable-silent-rules \
@@ -23,11 +26,17 @@ CXX="zig c++ -target ${TARGET_ARCH}" \
     --with-cxx-shared=no \
     --with-gpm=no \
     --without-ada \
+    --disable-termcap \
+    --disable-db-install \
+    --without-manpages \
+    --without-tests \
+    --without-progs \
     || exit 1
+
 make -j 8 || exit 1
 make install || exit 1
 
-# tree "${TEMP_DIR}/collect"
+# eza -T "${TEMP_DIR}/collect"
 # ldd "${TEMP_DIR}/collect/bin/clear"
 
 # Use build_tar function from common.sh
