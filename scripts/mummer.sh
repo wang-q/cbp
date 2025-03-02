@@ -12,7 +12,6 @@ CXX="zig c++ -target ${TARGET_ARCH}" \
 LDFLAGS="-static" \
     ./configure \
     --prefix="${TEMP_DIR}/collect" \
-    --bindir="${TEMP_DIR}/collect" \
     --disable-dependency-tracking \
     --disable-silent-rules \
     || exit 1
@@ -26,7 +25,7 @@ while IFS= read -r -d '' file; do
 done
 
 # Rename binary
-mv ${TEMP_DIR}/collect/annotate ${TEMP_DIR}/collect/annotate-mummer
+mv ${TEMP_DIR}/collect/bin/annotate ${TEMP_DIR}/collect/bin/annotate-mummer
 
 # ldd ${TEMP_DIR}/collect/mummer
 
