@@ -7,13 +7,14 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 extract_source
 
 # Build the project with the specified target architecture and flags
+cd src
 make \
     -j 8 \
     CC="zig cc -target ${TARGET_ARCH}" \
     AR="zig ar" \
-    CFLAGS="-I$HOME/.cbp/include -L$HOME/.cbp/lib -g -Wall -Wno-unused-function -O2" \
+    CFLAGS='-O3 -Wall -Wextra -Werror -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -Wno-misleading-indentation -Wno-implicit-const-int-float-conversion ${VERSION_FLAGS}' \
     || exit 1
 
 # Collect binaries and create tarball
-collect_make_bins
+collect_bins lastz
 build_tar

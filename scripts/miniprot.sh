@@ -10,10 +10,13 @@ extract_source
 make \
     -j 8 \
     CC="zig cc -target ${TARGET_ARCH}" \
+    CXX="zig c++ -target ${TARGET_ARCH}" \
     AR="zig ar" \
-    CFLAGS="-I$HOME/.cbp/include -L$HOME/.cbp/lib -g -Wall -Wno-unused-function -O2" \
+    CFLAGS="-I$HOME/.cbp/include -L$HOME/.cbp/lib -std=c99 -g -Wall -O3" \
     || exit 1
 
+# ldd miniprot
+
 # Collect binaries and create tarball
-collect_make_bins
+collect_bins miniprot
 build_tar

@@ -11,9 +11,10 @@ make \
     -j 8 \
     CC="zig cc -target ${TARGET_ARCH}" \
     AR="zig ar" \
-    CFLAGS="-I$HOME/.cbp/include -L$HOME/.cbp/lib -g -Wall -Wno-unused-function -O2" \
+    CFLAGS="-I$HOME/.cbp/include -c -Wall -O2 -std=gnu99 -Wno-unused-function" \
+    LDFLAGS="-L$HOME/.cbp/lib -lz" \
     || exit 1
 
 # Collect binaries and create tarball
-collect_make_bins
+collect_bins faops
 build_tar
