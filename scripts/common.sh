@@ -87,16 +87,6 @@ build_tar() {
         { echo "==> Error: Failed to move archive"; exit 1; }
 }
 
-# Collect binaries from Makefile's all target
-collect_make_bins() {
-    # Get binary names from Makefile
-    BINS=$(make -p | grep "^all: " | sed 's/^all: //')
-
-    # Create collect directory and copy binaries
-    mkdir -p ${TEMP_DIR}/collect/bin
-    cp ${BINS} ${TEMP_DIR}/collect/bin/
-}
-
 # Collect specified binaries
 collect_bins() {
     local bins=("$@")
@@ -107,10 +97,25 @@ collect_bins() {
         exit 1
     fi
 
-    # Create collect directory and copy binaries
+    # Create collect directory
     mkdir -p ${TEMP_DIR}/collect/bin
-    cp "${bins[@]}" ${TEMP_DIR}/collect/bin/ ||
-        { echo "Error: Failed to copy binaries"; exit 1; }
+
+    # Process each binary file
+    for bin in "${bins[@]}"; do
+        chmod +x "${bin}" ||
+            { echo "Error: Failed to make binary ${bin} executable"; exit 1; }
+        cp "${bin}" ${TEMP_DIR}/collect/bin/ ||
+            { echo "Error: Failed to copy binary ${bin}"; exit 1; }
+    done
+}
+
+# Collect binaries from Makefile's all target
+collect_make_bins() {
+    # Get binary names from Makefile
+    BINS=$(make -p | grep "^all: " | sed 's/^all: //')
+
+    # Use collect_bins to process binaries
+    collect_bins ${BINS}
 }
 
 # Fix shebang lines in scripts
@@ -159,6 +164,6 @@ run_test() {
 }
 
 export -f extract_source build_tar
-export -f collect_make_bins collect_bins 
+export -f collect_bins collect_make_bins
 export -f fix_shebang
 export -f run_test
