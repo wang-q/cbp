@@ -68,9 +68,9 @@ BINS=$(
 )
 
 # Copy the built binaries to the current directory
-mkdir collect
+mkdir -p collect/bin
 for BIN in $BINS; do
-    cp $CARGO_TARGET_DIR/${TARGET_ARCH}/release/$BIN collect/
+    cp $CARGO_TARGET_DIR/${TARGET_ARCH}/release/$BIN collect/bin/
 done
 
 # Define archive name based on OS type

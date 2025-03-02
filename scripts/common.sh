@@ -93,8 +93,8 @@ collect_make_bins() {
     BINS=$(make -p | grep "^all: " | sed 's/^all: //')
 
     # Create collect directory and copy binaries
-    mkdir -p ${TEMP_DIR}/collect
-    cp ${BINS} ${TEMP_DIR}/collect/
+    mkdir -p ${TEMP_DIR}/collect/bin
+    cp ${BINS} ${TEMP_DIR}/collect/bin/
 }
 
 # Collect specified binaries
@@ -108,8 +108,8 @@ collect_bins() {
     fi
 
     # Create collect directory and copy binaries
-    mkdir -p ${TEMP_DIR}/collect
-    cp "${bins[@]}" ${TEMP_DIR}/collect/ ||
+    mkdir -p ${TEMP_DIR}/collect/bin
+    cp "${bins[@]}" ${TEMP_DIR}/collect/bin/ ||
         { echo "Error: Failed to copy binaries"; exit 1; }
 }
 
