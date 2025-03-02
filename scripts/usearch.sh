@@ -22,7 +22,7 @@ collect_bins usearch
 # Run test if requested
 if [ "${RUN_TEST}" = "test" ]; then
     test_bin() {
-        local output=$("collect/bin/usearch" --version)
+        local output=$("collect/bin/usearch")
         echo "${output}"
         [ -n "${output}" ] && echo "PASSED"
     }
