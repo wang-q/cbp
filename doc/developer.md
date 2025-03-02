@@ -3,16 +3,42 @@
 This guide is intended for developers who want to contribute to the `cbp` project or understand its
 internal workings.
 
+<!-- TOC -->
+* [Developer Guide](#developer-guide)
+  * [Development Environment](#development-environment)
+    * [Requirements](#requirements)
+    * [Setup Build Environment](#setup-build-environment)
+    * [Other tools](#other-tools)
+    * [git lfs](#git-lfs)
+    * [cbp itself](#cbp-itself)
+  * [Project Structure](#project-structure)
+  * [Build Process](#build-process)
+    * [Building Binary Packages](#building-binary-packages)
+  * [Dynamic Library Dependencies](#dynamic-library-dependencies)
+  * [Uploading Binaries](#uploading-binaries)
+    * [Upload Process](#upload-process)
+    * [Download URLs](#download-urls)
+  * [Contributing](#contributing)
+    * [Development Workflow](#development-workflow)
+    * [Adding a New Package](#adding-a-new-package)
+    * [Example build script templates:](#example-build-script-templates)
+<!-- TOC -->
+
 ## Development Environment
 
 ### Requirements
 
-* Zig compiler
-* Rust toolchain
-* Git
-* `gh` command, GitHub CLI
+* Zig compiler (>= 0.13.0)
+* Rust toolchain (stable)
+* Git (with LFS support)
+* `gh` command (GitHub CLI)
 * `file` command
-* Python 3
+* Python 3 (>= 3.7)
+* Build tools
+    * cmake
+    * ninja
+    * meson
+    * jq
 
 ### Setup Build Environment
 
@@ -115,6 +141,7 @@ cbp/
 |-- doc/           # Documentation
 |-- scripts/       # Build scripts
 |   |-- common.sh  # Shared build functions
+|   |-- tools/     # Helper scripts
 |   |-- *.sh       # Package-specific build scripts
 |-- sources/       # Source packages
 |-- src/           # Rust source code
@@ -155,7 +182,7 @@ The binaries in this project have minimal dynamic library dependencies:
 Example of checking dependencies:
 
 ```text
-$ ldd ~/bin/trimal
+$ ldd ~/.cbp/bin/trimal
         linux-vdso.so.1 (0x00007ffff4599000)
         libstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f796772c000)
         libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f7967643000)
@@ -163,26 +190,26 @@ $ ldd ~/bin/trimal
         libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f7967403000)
         /lib64/ld-linux-x86-64.so.2 (0x00007f79679b6000)
 
-$ bash install.sh --dep trimal
+$ bash scripts/tools/deps.sh trimal
 ==> Dependencies for package trimal:
-  File: readal
+  File: bin/readal
     No additional dependencies
 
-  File: statal
+  File: bin/statal
     No additional dependencies
 
-  File: trimal
+  File: bin/trimal
     No additional dependencies
 
-$ bash install.sh --dep muscle
+$ bash scripts/tools/deps.sh muscle
 ==> Dependencies for package muscle:
-  File: muscle
+  File: bin/muscle
     Static executable
 
-$ bash install.sh --dep bwa
+$ bash scripts/tools/deps.sh bwa
 ==> Dependencies for package bwa:
-  File: bwa
-        librt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007fb1c7f8c000)
+  File: bin/bwa
+        librt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007de17629d000)
 
 ```
 
@@ -206,7 +233,7 @@ gh release create Binaries \
 
 1. Build the binary package using the build script
     ```bash
-    bash scripts/zlib.sh linux    # or macos
+    bash scripts/zlib.sh linux
     ```
 
 2. The resulting tarball will be placed in `binaries/`
@@ -214,7 +241,7 @@ gh release create Binaries \
     ls -l binaries/zlib.*.tar.gz
     ```
 
-3. Ensure you have the GitHub CLI installed and authenticated
+3. GitHub CLI should be installed and authenticated by the repository owner
     ```bash
     gh auth login
 
@@ -224,14 +251,15 @@ gh release create Binaries \
 
 4. Upload to GitHub Release
     ```bash
-    # If the file already exists, it will be replaced
+    # Upload with cbp command (recommended), which:
+    # 1. Calculate MD5 hash for each file
+    # 2. Upload files to GitHub Release
+    # 3. Update release notes with new hashes
+    cbp upload binaries/zlib.*.tar.gz
+    
+    # Or upload manually with gh command
+    # Note: This method does not update MD5 hashes
     gh release upload Binaries binaries/zlib.*.tar.gz --clobber
-
-    # Or use the upload.sh script. It will:
-    # 1. Calculate SHA-256 hash for each file
-    # 2. Update release notes with new hashes
-    # 3. Upload files to GitHub Release
-    bash scripts/tools/upload.sh binaries/zlib.*.tar.gz
     ```
 
 ### Download URLs
@@ -246,14 +274,26 @@ https://github.com/wang-q/cbp/releases/download/Binaries/zlib.macos.tar.gz
 
 ## Contributing
 
+### Development Workflow
+
+1. Fork the repository
+2. Create a feature branch
+3. Make changes following the style guide
+4. Run tests and ensure they pass
+5. Submit a pull request
+
 ### Adding a New Package
 
 1. Add source tarball to `sources/`
 2. Create build script in `scripts/`
 3. Test build on both Linux and macOS
-4. Update documentation if needed
+4. Add tests if applicable
+5. Update documentation
+6. Submit a pull request
 
-Example build script template:
+### Example build script templates:
+
+1. Build from source:
 
 ```bash
 #!/bin/bash
@@ -273,6 +313,45 @@ make \
 collect_make_bins
 
 # Create package
+build_tar
+
+```
+
+2. Download pre-built binary:
+
+```bash
+#!/bin/bash
+
+# Source common build environment
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+
+# Set download URL based on OS type
+if [ "$OS_TYPE" == "linux" ]; then
+    DL_URL="https://example.com/package-linux-x86_64"
+else
+    echo "Error: ${PROJ} does not support ${OS_TYPE}"
+    exit 1
+fi
+
+# Download
+echo "==> Downloading ${PROJ}..."
+curl -L "${DL_URL}" -o "${PROJ}" ||
+    { echo "Error: Failed to download ${PROJ}"; exit 1; }
+
+# Collect binaries
+collect_bins "${PROJ}"
+
+# Run test if requested
+if [ "${RUN_TEST}" = "test" ]; then
+    test_bin() {
+        local output=$("collect/bin/${PROJ}" --version)
+        echo "${output}"
+        [ -n "${output}" ] && echo "PASSED"
+    }
+    run_test test_bin
+fi
+
+# Pack binaries
 build_tar
 
 ```
