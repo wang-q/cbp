@@ -9,11 +9,10 @@ extract_source
 # Build with the specified target architecture
 CC="zig cc -target ${TARGET_ARCH}" \
 CXX="zig c++ -target ${TARGET_ARCH}" \
-CFLAGS="-I$HOME/bin/include" \
-LDFLAGS="-L$HOME/bin/lib" \
+CFLAGS="-I$HOME/.cbp/include" \
+LDFLAGS="-L$HOME.cbp/lib" \
     ./configure \
     --prefix="${TEMP_DIR}/collect" \
-    --bindir="${TEMP_DIR}/collect" \
     --without-curses \
     --without-ncursesw \
     --disable-bz2 \
