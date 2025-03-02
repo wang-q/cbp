@@ -344,8 +344,7 @@ fn command_tar_symlink() -> anyhow::Result<()> {
                 let link_name = e.link_name().unwrap().unwrap();
                 let link_target = link_name.to_string_lossy().into_owned();
                 println!("Found symlink: {} -> {}", path, link_target);
-                // Swap the path and link_target to match the expected format
-                format!("{} -> {}", link_target, path)
+                format!("{} -> {}", path, link_target)
             } else {
                 println!("Found file: {}", path);
                 path

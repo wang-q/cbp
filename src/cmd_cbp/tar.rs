@@ -107,7 +107,8 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             header.set_path(path)?;
             header.set_size(0);
             header.set_entry_type(tar::EntryType::Symlink);
-            archive.append_link(&mut header, target.to_str().unwrap(), path)?;
+            header.set_link_name(&target)?;  // 设置链接目标
+            archive.append_data(&mut header, path, std::io::empty())?;  // 使用空数据流
         } else {
             archive.append_path_with_name(&full_path, path)?;
         }
