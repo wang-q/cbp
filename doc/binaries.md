@@ -86,7 +86,9 @@ bash scripts/DAZZ_DB.sh
 bash scripts/DALIGNER.sh
 bash scripts/MERQURY.FK.sh
 bash scripts/FASTGA.sh
-bash scripts/FASTK.sh # Depend on zlib, libdeflate and libhts
+
+cbp local zlib libdeflate libhts
+bash scripts/FASTK.sh
 
 bash scripts/multiz.sh
 bash scripts/paml.sh

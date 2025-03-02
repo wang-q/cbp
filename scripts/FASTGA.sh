@@ -10,7 +10,7 @@ extract_source
 make \
     -j 8 \
     CC="zig cc -target ${TARGET_ARCH}" \
-    CFLAGS="-I$HOME/bin/include -L$HOME/bin/lib -O3 -Wall -Wextra -Wno-unused-result -fno-strict-aliasing" \
+    CFLAGS="-I$HOME/.cbp/include -L$HOME/.cbp/lib -O3 -Wall -Wextra -Wno-unused-result -fno-strict-aliasing" \
     || exit 1
 
 # Collect binaries and create tarball
