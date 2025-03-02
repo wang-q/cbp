@@ -14,7 +14,6 @@ CXX="zig c++ -target ${TARGET_ARCH}" \
 LDFLAGS="-static" \
     ./configure \
     --prefix="${TEMP_DIR}/collect" \
-    --bindir="${TEMP_DIR}/collect" \
     --disable-dependency-tracking \
     --disable-silent-rules \
     --enable-libgdbm-compat \
@@ -23,7 +22,7 @@ LDFLAGS="-static" \
 make -j 8 || exit 1
 make install || exit 1
 
-# ldd ${TEMP_DIR}/collect/gdbmtool
+# ldd ${TEMP_DIR}/collect/bin/gdbmtool
 
 # Use build_tar function from common.sh
 build_tar

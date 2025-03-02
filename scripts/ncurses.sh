@@ -28,7 +28,7 @@ make -j 8 || exit 1
 make install || exit 1
 
 # tree "${TEMP_DIR}/collect"
-# ldd "${TEMP_DIR}/collect/clear"
+# ldd "${TEMP_DIR}/collect/bin/clear"
 
 # Use build_tar function from common.sh
 build_tar

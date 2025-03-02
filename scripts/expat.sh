@@ -14,7 +14,6 @@ CXX="zig c++ -target ${TARGET_ARCH}" \
 LDFLAGS="-static" \
     ./configure \
     --prefix="${TEMP_DIR}/collect" \
-    --bindir="${TEMP_DIR}/collect" \
     --disable-dependency-tracking \
     --disable-silent-rules \
     --without-examples \
@@ -23,7 +22,7 @@ LDFLAGS="-static" \
 make -j 8 || exit 1
 make install || exit 1
 
-# ldd ${TEMP_DIR}/collect/xmlwf
+# ldd ${TEMP_DIR}/collect/bin/xmlwf
 
 # Use build_tar function from common.sh
 build_tar

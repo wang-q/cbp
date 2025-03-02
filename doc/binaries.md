@@ -41,7 +41,7 @@ cbp local zlib bzip2 libdeflate xz
 bash scripts/ncurses.sh
 bash scripts/readline.sh
 
-cbp local  ncurses readline
+cbp local ncurses readline
 
 bash scripts/sqlite.sh
 
