@@ -55,7 +55,7 @@ cbp remove zlib            # remove package
 
 ## `cbp help`
 
-Current release: 0.3.0
+Current release: 0.3.1
 
 ```text
 `cbp` is a Cross-platform Binary Package manager

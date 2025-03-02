@@ -2,6 +2,8 @@
 
 ## Unreleased - ReleaseDate
 
+## 0.3.1 - 2025-03-02
+
 - Fixed symlink handling in `tar` command
 - Added more software packages
 - Improved documentation and help messages
