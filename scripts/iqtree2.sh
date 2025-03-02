@@ -23,9 +23,6 @@ curl -L ${DL_URL} -o iqtree.${FILE_EXT} ||
 ${EXTRACT_CMD} iqtree.${FILE_EXT} ||
     { echo "Error: Failed to extract iqtree2"; exit 1; }
 
-# Collect binaries
-mkdir -p collect/bin
-cp iqtree-*/bin/* collect/bin/
-
 # Use build_tar function from common.sh
+collect_bins iqtree-*/bin/*
 build_tar

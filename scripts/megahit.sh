@@ -16,9 +16,6 @@ curl -L ${DL_URL} -o ${PROJ}.tar.gz ||
 tar xvfz ${PROJ}.tar.gz ||
     { echo "Error: Failed to extract ${PROJ}"; exit 1; }
 
-# Collect binaries and scripts
-mkdir -p collect/bin
-cp MEGAHIT-*/bin/* collect/bin/
-
 # Use build_tar function from common.sh
+collect_bins MEGAHIT-*/bin/*
 build_tar

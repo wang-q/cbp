@@ -16,9 +16,6 @@ curl -L ${DL_URL} -o ${PROJ}.tar ||
 tar xvf ${PROJ}.tar ||
     { echo "Error: Failed to extract ${PROJ}"; exit 1; }
 
-# Collect binaries and scripts
-mkdir -p collect/bin
-cp mash-*/mash collect/bin/
-
 # Use build_tar function from common.sh
+collect_bins  mash-*/mash
 build_tar

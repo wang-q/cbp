@@ -16,10 +16,6 @@ curl -L ${DL_URL} -o ${PROJ}.tar.gz ||
 tar xvfz ${PROJ}.tar.gz ||
     { echo "Error: Failed to extract ${PROJ}"; exit 1; }
 
-# Collect binaries
-mkdir -p collect/bin
-cp tsv-utils*/bin/* collect/bin/
-cp tsv-utils*/extras/scripts/* collect/bin/
-
 # Use build_tar function from common.sh
+collect_bins tsv-utils*/bin/* tsv-utils*/extras/scripts/*
 build_tar

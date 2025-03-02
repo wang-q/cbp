@@ -18,9 +18,6 @@ make caster-site || exit 1
 make caster-pair || exit 1
 make waster-site || exit 1
 
-# Create collect directory and copy binaries
-mkdir -p ${TEMP_DIR}/collect/bin
-cp -v bin/* ${TEMP_DIR}/collect/bin/ || exit 1
-
 # Use build_tar function from common.sh
+collect_bins bin/*
 build_tar

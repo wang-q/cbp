@@ -16,9 +16,6 @@ curl -L ${DL_URL} -o ${PROJ}.zip ||
 unzip ${PROJ}.zip ||
     { echo "Error: Failed to extract ${PROJ}"; exit 1; }
 
-# Collect binaries
-mkdir -p collect/bin
-cp raxml-ng collect/bin/
-
 # Use build_tar function from common.sh
+collect_bins raxml-ng
 build_tar
