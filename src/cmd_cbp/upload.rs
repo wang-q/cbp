@@ -27,7 +27,7 @@ Requirements:
 The command will:
 * Calculate MD5 checksums
 * Upload files to GitHub release
-* Update release notes with checksums and timestamps
+* Update release notes with checksums
 
 Examples:
 1. Upload single file:
