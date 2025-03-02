@@ -35,13 +35,13 @@ mkdir -p /tmp/cargo
 export CARGO_TARGET_DIR=/tmp/cargo
 
 # Check if we should use source tarball or local build
-if [ -f "src/${PROJECT_NAME}.tar.gz" ]; then
+if [ -f "sources/${PROJECT_NAME}.tar.gz" ]; then
     # Create temp directory
     TEMP_DIR=$(mktemp -d)
     trap 'rm -rf ${TEMP_DIR}' EXIT
 
     # Copy source to temp directory
-    cp src/${PROJECT_NAME}.tar.gz ${TEMP_DIR}/
+    cp sources/${PROJECT_NAME}.tar.gz ${TEMP_DIR}/
 
     # Extract the source code
     cd ${TEMP_DIR}
@@ -68,18 +68,19 @@ BINS=$(
 )
 
 # Copy the built binaries to the current directory
+mkdir collect
 for BIN in $BINS; do
-    cp $CARGO_TARGET_DIR/${TARGET_ARCH}/release/$BIN .
+    cp $CARGO_TARGET_DIR/${TARGET_ARCH}/release/$BIN collect/
 done
 
 # Define archive name based on OS type
 FN_TAR="${PROJECT_NAME}.${OS_TYPE}.tar.gz"
 
 # Create compressed archive with maximum compression
-tar -cf - ${BINS} | gzip -9 > ${FN_TAR}
+cbp tar collect -o "${FN_TAR}"
 
 # Move archive to the central tar directory
-mv ${FN_TAR} ${BASH_DIR}/../tar/
+mv ${FN_TAR} ${BASH_DIR}/../binaries/
 
 # Clean up the copied binaries
-rm $BINS
+rm -fr collect

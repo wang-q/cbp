@@ -151,6 +151,8 @@ bash scripts/FastTree.sh
 
 ### CLI utilities
 
+* linux
+
 ```bash
 bash scripts/rust.sh fd
 bash scripts/rust.sh ripgrep
@@ -158,6 +160,18 @@ bash scripts/rust.sh ripgrep
 bash scripts/rust.sh hyperfine
 bash scripts/rust.sh tealdeer
 bash scripts/rust.sh tokei
+
+```
+
+* macos
+
+```bash
+bash scripts/rust.sh fd macos
+bash scripts/rust.sh ripgrep macos
+# bash scripts/rust.sh bat
+bash scripts/rust.sh hyperfine macos
+bash scripts/rust.sh tealdeer macos
+bash scripts/rust.sh tokei macos
 
 ```
 
