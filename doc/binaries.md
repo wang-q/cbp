@@ -225,38 +225,30 @@ bash scripts/rust.sh anchr
 ## Binary tarballs
 
 ```bash
-BIN=usearch
-curl -o ${BIN} -L https://github.com/rcedgar/usearch12/releases/download/v12.0-beta1/usearch_linux_x86_12.0-beta
-chmod +x ${BIN}
-tar -cf - ${BIN} | gzip -9 > tar/${BIN}.linux.tar.gz
-rm ${BIN}
+bash scripts/muscle.sh -t linux
+bash scripts/reseek.sh -t linux
+bash scripts/usearch.sh -t linux
 
-BIN=reseek
-curl -o ${BIN} -L https://github.com/rcedgar/reseek/releases/download/v2.3/reseek-v2.3-linux-x86
-chmod +x ${BIN}
-tar -cf - ${BIN} | gzip -9 > tar/${BIN}.linux.tar.gz
-rm ${BIN}
+bash scripts/mosdepth.sh -t linux
 
-BIN=muscle
-curl -o ${BIN} -L https://github.com/rcedgar/muscle/releases/download/v5.3/muscle-linux-x86.v5.3
-chmod +x ${BIN}
-tar -cf - ${BIN} | gzip -9 > tar/${BIN}.linux.tar.gz
-rm ${BIN}
+#bash scripts/pup.sh
 
-BIN=mosdepth
-curl -o ${BIN} -L https://github.com/brentp/mosdepth/releases/download/v0.3.11/mosdepth
-chmod +x ${BIN}
-tar -cf - ${BIN} | gzip -9 > tar/${BIN}.linux.tar.gz
-rm ${BIN}
+bash scripts/iqtree2.sh -t linux
+bash scripts/iqtree2.sh macos
+bash scripts/iqtree2.sh windows
 
-bash scripts/pup.sh
+bash scripts/mash.sh -t linux
+bash scripts/mash.sh macos
 
-bash scripts/raxml-ng.sh
-bash scripts/mash.sh
-bash scripts/megahit.sh
-bash scripts/mmseqs.sh
-bash scripts/freebayes.sh
-bash scripts/iqtree2.sh
+bash scripts/megahit.sh -t linux
+
+bash scripts/mmseqs.sh -t linux
+bash scripts/mmseqs.sh macos
+
+bash scripts/raxml-ng.sh -t linux
+bash scripts/raxml-ng.sh macos
+
+bash scripts/freebayes.sh -t linux
 
 # java
 bash scripts/fastqc.sh
