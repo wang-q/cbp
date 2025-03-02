@@ -87,7 +87,7 @@ bash scripts/DALIGNER.sh
 bash scripts/MERQURY.FK.sh
 bash scripts/FASTGA.sh
 
-cbp local zlib libdeflate libhts
+cbp local zlib libdeflate htslib
 bash scripts/FASTK.sh
 
 bash scripts/multiz.sh
@@ -106,9 +106,11 @@ bash scripts/hmmer.sh
 bash scripts/hmmer2.sh
 bash scripts/mummer.sh
 
-bash scripts/clustalo.sh # depends on argtable
+cbp local argtable
+bash scripts/clustalo.sh
 
-bash scripts/htslib.sh # depends on libdeflate, --with-libdeflate
+cbp local libdeflate
+bash scripts/htslib.sh # --with-libdeflate
 
 # bundled htslib
 bash scripts/samtools.sh
