@@ -7,9 +7,11 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 extract_source
 
 # Modify the Makefile to use zig cc and specify the target architecture
-sed -i 's/^\t\s*gcc/\t$(CC)/g' Makefile || exit 1
-sed -i "s|^CFLAGS =.*$|CFLAGS = -I$HOME/bin/include -L$HOME/bin/lib -O3 -Wall -Wextra -Wno-unused-result -fno-strict-aliasing|g" Makefile || exit 1
-sed -i "1i CC = zig cc -target ${TARGET_ARCH}" Makefile || exit 1
+sed -i.bak 's/^\t\s*gcc/\t$(CC)/g' Makefile || exit 1
+sed -i.bak "s|^CFLAGS =.*$|CFLAGS = -I$HOME/.cbp/include -L$HOME/.cbp/lib -O3 -Wall -Wextra -Wno-unused-result -fno-strict-aliasing|g" Makefile || exit 1
+sed -i.bak "1i\\
+CC = zig cc -target ${TARGET_ARCH}
+" Makefile || exit 1
 
 # Build the project
 make || exit 1
