@@ -68,20 +68,15 @@ mv cmake-3.31.5-linux-x86_64 cmake
 ln -s $HOME/share/cmake/bin/cmake $HOME/bin/cmake
 
 # ninja
-curl -LO https://github.com/ninja-build/ninja/releases/download/v1.12.1/ninja-linux.zip
-unzip ninja-linux.zip
-chmod +x ninja
-mv ninja $HOME/bin/
-rm ninja-linux.zip
+cbp install ninja
 
 # meson
 pip3 install meson
 
-# Download and install jq
-curl -LO https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64
-chmod +x jq-linux-amd64
-mv jq-linux-amd64 ~/bin/jq
-# or sudo apt install jq
+# jq
+cbp install jq
+# sudo apt install jq
+# brew install jq
 
 ```
 

@@ -81,6 +81,9 @@ bash scripts/jq.sh -t macos  # This will fail on Linux
 ```
 
 ```bash
+bash scripts/ninja.sh macos  
+bash scripts/ninja.sh linux  
+bash scripts/ninja.sh windows  
 
 bash scripts/tsv-utils.sh
 
