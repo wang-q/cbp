@@ -84,6 +84,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     };
 
     // Process each file
+    let mut to_upload = Vec::new(); // Track files that need to be uploaded
     for file in &files {
         let path = Path::new(file);
         let name = path.file_name().unwrap().to_string_lossy().to_string();
@@ -95,10 +96,16 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
         // Update package information
         if let Some(existing) = packages.iter_mut().find(|p| p.name == name) {
-            // Update existing package
-            existing.md5 = hash;
-            existing.created_at = created_at.format("%Y-%m-%d").to_string();
-            existing.path = file.to_string();
+            // Check MD5, only update and upload if different
+            if existing.md5 != hash {
+                existing.md5 = hash;
+                existing.created_at = created_at.format("%Y-%m-%d").to_string();
+                existing.path = file.to_string();
+                to_upload.push(file.to_string());
+                println!("==> MD5 changed, will upload");
+            } else {
+                println!("==> MD5 unchanged, skip upload");
+            }
         } else {
             // Add new package
             packages.push(Package {
@@ -107,11 +114,17 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                 created_at: created_at.format("%Y-%m-%d").to_string(),
                 path: file.to_string(),
             });
+            to_upload.push(file.to_string());
         }
     }
 
     // Upload files
-    for file in &files {
+    if to_upload.is_empty() {
+        println!("==> No files need to be uploaded");
+        return Ok(());
+    }
+
+    for file in &to_upload {
         let path = Path::new(file);
         let name = path.file_name().unwrap().to_string_lossy().to_string();
         println!("==> Uploading {}...", name);
