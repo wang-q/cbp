@@ -23,7 +23,7 @@ CFLAGS="-I$HOME/.cbp/include" \
 CXXFLAGS="-I$HOME/.cbp/include" \
 make \
     CC="zig cc -target ${TARGET_ARCH}" \
-    CFLAGS="-I$HOME/.cbp/include -L$HOME/.cbp/lib -O3 -Wall -Wextra -Wno-unused-result -fno-strict-aliasing -D_GNU_SOURCE" \
+    CFLAGS="-I$HOME/.cbp/include -L$HOME/.cbp/lib -O3 -Wall -Wextra -Wno-unused-result -Wno-unused-but-set-variable -fno-strict-aliasing -D_GNU_SOURCE" \
     || exit 1
 
 # Get binary names from Makefile

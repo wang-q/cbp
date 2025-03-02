@@ -7,8 +7,10 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 extract_source
 
 # Modify the Makefile to use zig cc and specify the target architecture
-sed -i 's/g++/$(CXX)/g' makefile || exit 1
-sed -i "1i CXX = zig c++ -target ${TARGET_ARCH} -fpermissive -fcommon -Wno-unqualified-std-cast-call" makefile || exit 1
+sed -i.bak 's/g++/$(CXX)/g' makefile || exit 1
+sed -i.bak "1i\\
+CXX = zig c++ -target ${TARGET_ARCH} -fpermissive -fcommon -Wno-unqualified-std-cast-call
+" makefile || exit 1
 
 # Build the project
 make astral || exit 1

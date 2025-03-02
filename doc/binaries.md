@@ -16,10 +16,10 @@ These libraries are fundamental dependencies and will be extensively used by oth
 * linux
 
 ```bash
-bash scripts/zlib.sh linux test
-bash scripts/bzip2.sh linux test
-bash scripts/libdeflate.sh linux test
-bash scripts/xz.sh linux test
+bash scripts/zlib.sh -t
+bash scripts/bzip2.sh -t
+bash scripts/libdeflate.sh -t
+bash scripts/xz.sh -t
 
 cbp local zlib bzip2 libdeflate xz
 
@@ -28,12 +28,12 @@ cbp local zlib bzip2 libdeflate xz
 * macos
 
 ```bash
-bash scripts/zlib.sh macos test
-bash scripts/bzip2.sh macos test
-# bash scripts/libdeflate.sh macos test
-bash scripts/xz.sh macos test
+bash scripts/zlib.sh macos -t
+bash scripts/bzip2.sh macos -t
+bash scripts/libdeflate.sh -t
+bash scripts/xz.sh macos -t
 
-cbp local zlib bzip2 xz
+cbp local zlib bzip2 libdeflate xz
 
 ```
 
