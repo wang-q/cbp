@@ -189,21 +189,27 @@ bash scripts/FastTree.sh
 * linux
 
 ```bash
+bash scripts/rust.sh eza
 bash scripts/rust.sh fd
 bash scripts/rust.sh ripgrep
-# bash scripts/rust.sh bat
 bash scripts/rust.sh hyperfine
 bash scripts/rust.sh tealdeer
 bash scripts/rust.sh tokei
+
+bash scripts/rust.sh fd windows
+bash scripts/rust.sh ripgrep windows
+bash scripts/rust.sh hyperfine windows
+bash scripts/rust.sh tealdeer windows
+bash scripts/rust.sh tokei windows
 
 ```
 
 * macos
 
 ```bash
+bash scripts/rust.sh eza macos
 bash scripts/rust.sh fd macos
 bash scripts/rust.sh ripgrep macos
-# bash scripts/rust.sh bat
 bash scripts/rust.sh hyperfine macos
 bash scripts/rust.sh tealdeer macos
 bash scripts/rust.sh tokei macos
@@ -250,7 +256,10 @@ bash scripts/raxml-ng.sh macos
 bash scripts/freebayes.sh -t linux
 
 # java
-bash scripts/fastqc.sh
-bash scripts/picard.sh
+bash scripts/fastqc.sh linux
+bash scripts/fastqc.sh macos
+
+bash scripts/picard.sh linux
+bash scripts/picard.sh macos
 
 ```
