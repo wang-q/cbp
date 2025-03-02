@@ -21,6 +21,8 @@ bash scripts/bzip2.sh linux test
 bash scripts/libdeflate.sh linux test
 bash scripts/xz.sh linux test
 
+cbp local zlib bzip2 libdeflate xz
+
 ```
 
 * macos
@@ -31,13 +33,13 @@ bash scripts/bzip2.sh macos test
 # bash scripts/libdeflate.sh macos test
 bash scripts/xz.sh macos test
 
+cbp local zlib bzip2 xz
+
 ```
 
 ## Other Libraries
 
 ```bash
-cbp local zlib bzip2 libdeflate xz
-
 bash scripts/ncurses.sh
 bash scripts/readline.sh
 
