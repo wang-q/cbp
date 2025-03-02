@@ -48,8 +48,8 @@ bash scripts/sqlite.sh
 bash scripts/gdbm.sh
 bash scripts/expat.sh
 
-bash scripts/libpng.sh
 bash scripts/pixman.sh
+bash scripts/libpng.sh
 
 bash scripts/argtable.sh
 bash scripts/libxcrypt.sh
