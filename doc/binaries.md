@@ -85,6 +85,7 @@ bash scripts/DALIGNER.sh
 bash scripts/MERQURY.FK.sh
 bash scripts/FASTGA.sh
 bash scripts/FASTK.sh # Depend on zlib, libdeflate and libhts
+
 bash scripts/multiz.sh
 bash scripts/paml.sh
 bash scripts/ASTER.sh
