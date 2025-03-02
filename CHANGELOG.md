@@ -2,6 +2,8 @@
 
 ## Unreleased - ReleaseDate
 
+## 0.3.0 - 2025-03-02
+
 - Added `tar` command for creating package archives
 - Added `upload` command for managing GitHub releases
 - Improved package information tracking with MD5 checksums
