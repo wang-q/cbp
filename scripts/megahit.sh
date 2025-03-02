@@ -23,6 +23,12 @@ tar xvfz "${PROJ}.tar.gz" ||
 # Collect binaries
 collect_bins MEGAHIT-*/bin/*
 
+# Fix shebang lines in all files
+find "collect" -type f -print0 |
+while IFS= read -r -d '' file; do
+    fix_shebang "$file"
+done
+
 # Run test if requested
 if [ "${RUN_TEST}" = "test" ]; then
     test_bin() {
