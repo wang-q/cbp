@@ -12,13 +12,14 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     echo "  -t          Run tests after build"
     echo
     echo "Arguments:"
-    echo "  os_type     Target OS (linux or macos, default: current OS)"
+    echo "  os_type     Target OS (linux, macos, or windows, default: current OS)"
     echo
     echo "Environment:"
     echo "  BASH_DIR    Directory of the calling script"
     echo "  PROJ        Name of the calling script (without .sh)"
     echo "  OS_TYPE     Operating system type"
     echo "  TARGET_ARCH Target architecture for compilation"
+    echo "  BIN_SUFFIX  Binary suffix (.exe for Windows)"
     echo "  TEMP_DIR    Temporary working directory"
     exit 1
 fi
@@ -71,13 +72,16 @@ if [[ "$OS_TYPE" != "linux" && "$OS_TYPE" != "macos" && "$OS_TYPE" != "windows" 
     exit 1
 fi
 
-# Set the target architecture based on the OS type
+# Set the target architecture and binary suffix based on OS type
 if [ "$OS_TYPE" == "linux" ]; then
     TARGET_ARCH="x86_64-linux-gnu.2.17"
+    BIN_SUFFIX=""
 elif [ "$OS_TYPE" == "macos" ]; then
     TARGET_ARCH="aarch64-macos-none"
+    BIN_SUFFIX=""
 elif [ "$OS_TYPE" == "windows" ]; then
     TARGET_ARCH="x86_64-windows-gnu"
+    BIN_SUFFIX=".exe"
 fi
 
 # Create temp directory
@@ -135,10 +139,19 @@ collect_bins() {
 
     # Process each binary file
     for bin in "${bins[@]}"; do
-        chmod +x "${bin}" ||
-            { echo "Error: Failed to make binary ${bin} executable"; exit 1; }
-        cp "${bin}" ${TEMP_DIR}/collect/bin/ ||
-            { echo "Error: Failed to copy binary ${bin}"; exit 1; }
+        # Handle binary name with suffix
+        local source_bin="${bin}"
+        local target_bin="${bin}${BIN_SUFFIX}"
+        
+        # Check if source binary has suffix
+        if [ -n "${BIN_SUFFIX}" ] && [ -f "${bin}${BIN_SUFFIX}" ]; then
+            source_bin="${bin}${BIN_SUFFIX}"
+        fi
+
+        chmod +x "${source_bin}" ||
+            { echo "Error: Failed to make binary ${source_bin} executable"; exit 1; }
+        cp "${source_bin}" "${TEMP_DIR}/collect/bin/${target_bin}" ||
+            { echo "Error: Failed to copy binary ${source_bin}"; exit 1; }
     done
 }
 
