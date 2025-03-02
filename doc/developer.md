@@ -293,7 +293,7 @@ https://github.com/wang-q/cbp/releases/download/Binaries/zlib.macos.tar.gz
 
 ### Example build script templates:
 
-1. Build from source:
+* Build from source:
 
 ```bash
 #!/bin/bash
@@ -317,7 +317,7 @@ build_tar
 
 ```
 
-2. Download pre-built binary:
+* Download pre-built binary:
 
 ```bash
 #!/bin/bash
