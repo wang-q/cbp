@@ -9,7 +9,7 @@ struct Package {
     name: String,
     md5: String,
     created_at: String,
-    path: String, // 新增字段，记录文件路径
+    path: String,
 }
 
 pub fn make_subcommand() -> Command {
@@ -159,16 +159,16 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
     // Update release notes
     let pkg_tsv = format!(
-        "name\tmd5\tcreated_at\n{}",
+        "md5\tname\n{}",
         packages
             .iter()
-            .map(|p| format!("{}\t{}\t{}", p.name, p.md5, p.created_at))
+            .map(|p| format!("{}\t{}", p.md5, p.name))
             .collect::<Vec<String>>()
             .join("\n")
     );
 
     let new_notes = format!(
-        "{}\n\n### Package Lists\n\n```text\n{}\n```",
+        "{}\n\n### MD5 Checksums\n\n```text\n{}\n```",
         release_notes, pkg_tsv
     );
     let notes_file = temp_dir.path().join("release-notes.md");
