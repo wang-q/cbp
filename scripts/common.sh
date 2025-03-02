@@ -123,11 +123,11 @@ fix_shebang() {
     # Check if file is a script (has a shebang line)
     if head -n1 "$file" | grep -q '^#!'; then
         # Replace perl path
-        if sed -i '1s|^#!.*/perl.*$|#!/usr/bin/env perl|' "$file"; then
+        if sed -i.bak '1s|^#!.*/perl.*$|#!/usr/bin/env perl|' "$file"; then
             echo "==> Fixed perl shebang in ${file}"
         fi
         # Replace python path
-        if sed -i '1s|^#!.*/python.*$|#!/usr/bin/env python3|' "$file"; then
+        if sed -i.bak '1s|^#!.*/python.*$|#!/usr/bin/env python3|' "$file"; then
             echo "==> Fixed python shebang in ${file}"
         fi
     fi
