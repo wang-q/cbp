@@ -6,23 +6,41 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 # Set download URL based on OS type
 if [ "$OS_TYPE" == "linux" ]; then
     DL_URL="https://github.com/iqtree/iqtree2/releases/download/v2.4.0/iqtree-2.4.0-Linux-intel.tar.gz"
-    FILE_EXT="tar.gz"
-    EXTRACT_CMD="tar xvfz"
 elif [ "$OS_TYPE" == "macos" ]; then
     DL_URL="https://github.com/iqtree/iqtree2/releases/download/v2.4.0/iqtree-2.4.0-macOS.zip"
-    FILE_EXT="zip"
-    EXTRACT_CMD="unzip"
+elif [ "$OS_TYPE" == "windows" ]; then
+    DL_URL="https://github.com/iqtree/iqtree2/releases/download/v2.4.0/iqtree-2.4.0-Windows.zip"
+else
+    echo "Error: ${PROJ} does not support ${OS_TYPE}"
+    exit 1
 fi
 
-# Download and extract
-mkdir -p "${TEMP_DIR}"
-cd "${TEMP_DIR}"
+# Download binary
+echo "==> Downloading ${PROJ}..."
+if [[ "${DL_URL}" == *.zip ]]; then
+    curl -L "${DL_URL}" -o "${PROJ}.zip" ||
+        { echo "Error: Failed to download ${PROJ}"; exit 1; }
+    unzip "${PROJ}.zip" ||
+        { echo "Error: Failed to extract ${PROJ}"; exit 1; }
+else
+    curl -L "${DL_URL}" -o "${PROJ}.tar.gz" ||
+        { echo "Error: Failed to download ${PROJ}"; exit 1; }
+    tar xvfz "${PROJ}.tar.gz" ||
+        { echo "Error: Failed to extract ${PROJ}"; exit 1; }
+fi
 
-curl -L ${DL_URL} -o iqtree.${FILE_EXT} ||
-    { echo "Error: Failed to download iqtree2"; exit 1; }
-${EXTRACT_CMD} iqtree.${FILE_EXT} ||
-    { echo "Error: Failed to extract iqtree2"; exit 1; }
-
-# Use build_tar function from common.sh
+# Collect binaries
 collect_bins iqtree-*/bin/*
+
+# Run test if requested
+if [ "${RUN_TEST}" = "test" ]; then
+    test_bin() {
+        local output=$("collect/bin/iqtree2" --version)
+        echo "${output}"
+        [ -n "${output}" ] && echo "PASSED"
+    }
+    run_test test_bin
+fi
+
+# Pack binaries
 build_tar

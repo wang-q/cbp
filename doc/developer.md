@@ -14,7 +14,7 @@ internal workings.
 * `file` command
 * Python 3
 
-### Setup Development Environment
+### Setup Build Environment
 
 * Zig
 
@@ -59,13 +59,11 @@ rustup target add aarch64-apple-darwin
 ### Other tools
 
 ```bash
-cd $HOME/share
-
 # cmake
-curl -LO https://github.com/Kitware/CMake/releases/download/v3.31.5/cmake-3.31.5-linux-x86_64.sh
-bash cmake-3.31.5-linux-x86_64.sh
-mv cmake-3.31.5-linux-x86_64 cmake
-ln -s $HOME/share/cmake/bin/cmake $HOME/bin/cmake
+# linux
+cbp install cmake
+# mac
+brew install cmake
 
 # ninja
 cbp install ninja

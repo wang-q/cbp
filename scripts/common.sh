@@ -141,8 +141,8 @@ collect_bins() {
     for bin in "${bins[@]}"; do
         # Handle binary name with suffix
         local source_bin="${bin}"
-        local target_bin="${bin}${BIN_SUFFIX}"
-        
+        local target_bin="$(basename ${bin})${BIN_SUFFIX}"
+
         # Check if source binary has suffix
         if [ -n "${BIN_SUFFIX}" ] && [ -f "${bin}${BIN_SUFFIX}" ]; then
             source_bin="${bin}${BIN_SUFFIX}"

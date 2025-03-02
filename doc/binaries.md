@@ -70,8 +70,8 @@ bash scripts/jq.sh
 bash scripts/jq.sh -t
 
 # Download and package for specific OS
-bash scripts/jq.sh macos     # Download macOS ARM64 binary
 bash scripts/jq.sh linux     # Download Linux x86_64 binary
+bash scripts/jq.sh macos     # Download macOS ARM64 binary
 bash scripts/jq.sh windows   # Download Windows x86_64 binary
 
 # Note: Tests will fail when downloading for different OS
@@ -81,8 +81,8 @@ bash scripts/jq.sh -t macos  # This will fail on Linux
 ```
 
 ```bash
-bash scripts/ninja.sh macos  
 bash scripts/ninja.sh linux  
+bash scripts/ninja.sh macos  
 bash scripts/ninja.sh windows  
 
 bash scripts/tsv-utils.sh
