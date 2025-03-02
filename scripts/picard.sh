@@ -16,13 +16,26 @@ mkdir -p collect/libexec/
 cp picard.jar collect/libexec/
 
 # Create wrapper script
-cat > collect/picard << 'EOF'
+mkdir -p collect/bin/
+cat > collect/bin/picard << 'EOF'
 #!/bin/bash
-SCRIPT_DIR=$(dirname $(readlink -f "$0"))
-exec java -jar "${SCRIPT_DIR}/libexec/picard.jar" "$@"
+
+# Find the real path of the script
+if [ -L "$0" ]; then
+    SCRIPT_PATH=$(readlink "$0")
+else
+    SCRIPT_PATH="$0"
+fi
+SCRIPT_DIR=$(cd "$(dirname "$SCRIPT_PATH")" && pwd)
+BASE_DIR=$(dirname "$SCRIPT_DIR")
+
+# Set memory options if needed
+JAVA_OPTS=${JAVA_OPTS:-"-Xmx2g"}
+
+exec java $JAVA_OPTS -jar "${BASE_DIR}/libexec/picard.jar" "$@"
 EOF
 
-chmod +x collect/picard
+chmod +x collect/bin/picard
 
 # Use build_tar function from common.sh
 build_tar
