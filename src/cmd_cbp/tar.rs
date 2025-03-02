@@ -6,12 +6,15 @@ pub fn make_subcommand() -> Command {
         .about("Create compressed archive")
         .after_help(
             r###"
-Create a compressed archive from a directory.
+Create a compressed archive from a software package directory.
+This command is specifically designed for packaging software installations,
+not as a general-purpose tar replacement.
 
 The command will:
-* Filter out system files
-* Preserve relative paths
-* Clean up documentation (optional)
+* Filter out system files (.DS_Store, etc.)
+* Preserve relative paths within archive
+* Preserve symbolic links with relative targets
+* Clean up documentation directories (optional)
 
 Examples:
 1. Default directory:
@@ -107,8 +110,10 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             header.set_path(path)?;
             header.set_size(0);
             header.set_entry_type(tar::EntryType::Symlink);
-            header.set_link_name(&target)?;  // 设置链接目标
-            archive.append_data(&mut header, path, std::io::empty())?;  // 使用空数据流
+            // Store the original symlink target
+            header.set_link_name(&target)?;
+            // Use empty data for symlink
+            archive.append_data(&mut header, path, std::io::empty())?;
         } else {
             archive.append_path_with_name(&full_path, path)?;
         }
