@@ -4,6 +4,18 @@ use clap::{ArgMatches, Command};
 pub fn make_subcommand() -> Command {
     Command::new("prefix")
         .about("Display CBP installation directories")
+        .after_help(
+            r###"
+Display CBP directory paths.
+
+Usage:
+  cbp prefix         # Show home directory (~/.cbp)
+  cbp prefix bin     # Show binary directory
+  cbp prefix lib     # Show library directory
+  cbp prefix include # Show include directory
+  cbp prefix exe     # Show cbp executable path
+"###,
+        )
         .arg(
             clap::Arg::new("directory")
                 .help("Directory to display")
