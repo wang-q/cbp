@@ -32,11 +32,11 @@ struct Config {
 use mockall::automock;
 
 #[cfg_attr(test, automock)]
-pub trait HomeDirProvider {
+trait HomeDirProvider {
     fn home_dir(&self) -> Option<PathBuf>;
 }
 
-pub struct DefaultHomeDirProvider;
+struct DefaultHomeDirProvider;
 
 impl HomeDirProvider for DefaultHomeDirProvider {
     fn home_dir(&self) -> Option<PathBuf> {
