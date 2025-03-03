@@ -206,11 +206,8 @@ fn command_local() -> anyhow::Result<()> {
     let temp_dir = setup_test_data()?;
     let temp = tempfile::TempDir::new()?;
 
-    // Set up CBP_HOME
-    std::env::set_var("HOME", temp.path());
-    let cbp_home = temp.path().join(".cbp");
-
     // Create cache directory and copy test package
+    let cbp_home = temp.path();
     std::fs::create_dir_all(cbp_home.join("cache"))?;
     let os_type = cbp::get_os_type()?;
     let pkg_file = format!("zlib.{}.tar.gz", os_type);
@@ -219,9 +216,13 @@ fn command_local() -> anyhow::Result<()> {
         cbp_home.join("cache").join(&pkg_file),
     )?;
 
-    // Run local command
+    // Run local command with --dir option
     let mut cmd = Command::cargo_bin("cbp")?;
-    cmd.arg("local").arg("zlib").current_dir(temp.path());
+    cmd.arg("local")
+        .arg("--dir")
+        .arg(cbp_home)
+        .arg("zlib")
+        .current_dir(temp.path());
     cmd.assert().success();
 
     // Verify installation
