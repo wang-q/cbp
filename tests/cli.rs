@@ -366,3 +366,55 @@ fn command_tar_symlink() -> anyhow::Result<()> {
 
     Ok(())
 }
+
+#[test]
+fn command_init() -> anyhow::Result<()> {
+    use std::fs;
+    use tempfile::TempDir;
+
+    // Create temporary home directory
+    let temp_home = TempDir::new()?;
+    let original_home = std::env::var("HOME")?;
+    std::env::set_var("HOME", temp_home.path());
+
+    // Run init command
+    let mut cmd = Command::cargo_bin("cbp")?;
+    cmd.arg("init").assert().success();
+
+    // Verify directory structure
+    let cbp_home = temp_home.path().join(".cbp");
+    assert!(cbp_home.exists());
+    assert!(cbp_home.join("bin").exists());
+    assert!(cbp_home.join("cache").exists());
+    assert!(cbp_home.join("records").exists());
+
+    // Verify executable was copied
+    let cbp_exe = cbp_home.join("bin/cbp");
+    assert!(cbp_exe.exists());
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        let metadata = fs::metadata(&cbp_exe)?;
+        assert_eq!(metadata.permissions().mode() & 0o777, 0o755);
+    }
+
+    // Verify shell config updates
+    for config in [".bashrc", ".bash_profile", ".zshrc"] {
+        let config_path = temp_home.path().join(config);
+        fs::write(&config_path, "# Original content\n")?;
+        
+        // Run init again to test idempotency
+        Command::cargo_bin("cbp")?.arg("init").assert().success();
+        
+        let content = fs::read_to_string(&config_path)?;
+        assert!(content.contains("# .cbp\n"));
+        assert!(content.contains("export PATH=\"$HOME/.cbp/bin:$PATH\""));
+        
+        // Verify no duplicate entries
+        assert_eq!(content.matches("# .cbp\n").count(), 1);
+    }
+
+    // Restore original home
+    std::env::set_var("HOME", original_home);
+    Ok(())
+}

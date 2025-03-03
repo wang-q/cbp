@@ -3,6 +3,7 @@
 pub mod avail;
 pub mod check;
 pub mod install;
+pub mod init;
 pub mod kb;
 pub mod list;
 pub mod local;

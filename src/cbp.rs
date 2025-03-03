@@ -11,13 +11,14 @@ fn main() -> anyhow::Result<()> {
         .propagate_version(true)
         .arg_required_else_help(true)
         .color(ColorChoice::Auto)
-        .subcommand(cmd_cbp::install::make_subcommand()) // 最常用命令放前面
+        .subcommand(cmd_cbp::install::make_subcommand())
         .subcommand(cmd_cbp::list::make_subcommand())
         .subcommand(cmd_cbp::remove::make_subcommand())
         .subcommand(cmd_cbp::avail::make_subcommand())
-        .subcommand(cmd_cbp::local::make_subcommand())
-        .subcommand(cmd_cbp::check::make_subcommand())
+        .subcommand(cmd_cbp::init::make_subcommand())
         .subcommand(cmd_cbp::kb::make_subcommand())
+        .subcommand(cmd_cbp::check::make_subcommand())
+        .subcommand(cmd_cbp::local::make_subcommand())
         .subcommand(cmd_cbp::tar::make_subcommand())
         .subcommand(cmd_cbp::upload::make_subcommand())
         .subcommand(
@@ -27,7 +28,7 @@ fn main() -> anyhow::Result<()> {
         .after_help(
             r###"
 Package Manager Features:
-    * Cross-platform support (macOS/Linux)
+    * Cross-platform support (Linux/macOS/Windows)
     * Pre-built static binaries
     * GitHub release integration
     * Local package support
@@ -63,12 +64,13 @@ Common Commands:
     // Check which subcomamnd the user ran...
     match app.get_matches().subcommand() {
         Some(("avail", sub_matches)) => cmd_cbp::avail::execute(sub_matches),
-        Some(("install", sub_matches)) => cmd_cbp::install::execute(sub_matches), // 新增
+        Some(("check", sub_matches)) => cmd_cbp::check::execute(sub_matches),
+        Some(("init", sub_matches)) => cmd_cbp::init::execute(sub_matches),
+        Some(("install", sub_matches)) => cmd_cbp::install::execute(sub_matches),
         Some(("kb", sub_matches)) => cmd_cbp::kb::execute(sub_matches),
         Some(("list", sub_matches)) => cmd_cbp::list::execute(sub_matches),
         Some(("local", sub_matches)) => cmd_cbp::local::execute(sub_matches),
         Some(("remove", sub_matches)) => cmd_cbp::remove::execute(sub_matches),
-        Some(("check", sub_matches)) => cmd_cbp::check::execute(sub_matches),
         Some(("tar", sub_matches)) => cmd_cbp::tar::execute(sub_matches),
         Some(("upload", sub_matches)) => cmd_cbp::upload::execute(sub_matches),
         Some(("prefix", _)) => {
