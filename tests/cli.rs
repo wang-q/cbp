@@ -667,11 +667,24 @@ fn command_install() -> anyhow::Result<()> {
     let test_package = include_bytes!("zlib.macos.tar.gz");
     
     // 设置模拟端点
-    let _m = server.mock("GET", "/wang-q/cbp/releases/download/Binaries/zlib.macos.tar.gz")
+    // 设置多个模拟端点，使用同一个测试包
+    let _m1 = server.mock("GET", "/wang-q/cbp/releases/download/Binaries/zlib.macos.tar.gz")
         .with_status(200)
         .with_header("content-type", "application/gzip")
         .with_body(test_package)
         .create();
+
+    let _m2 = server.mock("GET", "/wang-q/cbp/releases/download/Binaries/zlib.linux.tar.gz")
+        .with_status(200)
+        .with_header("content-type", "application/gzip")
+        .with_body(test_package)
+        .create();
+
+    let _m3 = server.mock("GET", "/wang-q/cbp/releases/download/Binaries/zlib.windows.tar.gz")
+       .with_status(200)
+       .with_header("content-type", "application/gzip")
+       .with_body(test_package)
+       .create();
 
     // 使用环境变量临时覆盖 GitHub URL
     let mut cmd = Command::cargo_bin("cbp")?;
