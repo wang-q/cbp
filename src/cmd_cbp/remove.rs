@@ -85,7 +85,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
             std::fs::remove_file(&file)?;
 
-            // 处理资源分支文件
+            // Handle resource fork files
             let file_name = match file.file_name().and_then(|n| n.to_str()) {
                 Some(name) => name,
                 None => continue,
