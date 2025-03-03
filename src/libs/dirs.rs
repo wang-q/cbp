@@ -32,11 +32,11 @@ struct Config {
 use mockall::automock;
 
 #[cfg_attr(test, automock)]
-trait HomeDirProvider {
+pub trait HomeDirProvider {
     fn home_dir(&self) -> Option<PathBuf>;
 }
 
-struct DefaultHomeDirProvider;
+pub struct DefaultHomeDirProvider;
 
 impl HomeDirProvider for DefaultHomeDirProvider {
     fn home_dir(&self) -> Option<PathBuf> {
@@ -152,7 +152,6 @@ pub fn to_absolute_path(path: &str) -> anyhow::Result<std::path::PathBuf> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use mockall::predicate::*;
     use std::fs;
 
     #[test]
