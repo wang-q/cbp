@@ -103,7 +103,11 @@ home = "{}"
     fs::create_dir_all(&bin_dir)?;
 
     // Copy executable to bin directory
+    #[cfg(windows)]
+    let target_path = bin_dir.join("cbp.exe");
+    #[cfg(not(windows))]
     let target_path = bin_dir.join("cbp");
+
     if current_exe != target_path {
         fs::copy(&current_exe, &target_path)?;
         #[cfg(unix)]
@@ -155,6 +159,7 @@ home = "{}"
     Ok(())
 }
 
+#[cfg(unix)]
 // Generate PATH configurations
 fn generate_path_configs(custom_dir_path: Option<&PathBuf>) -> Vec<String> {
     let mut configs = vec!["export PATH=\"$HOME/.cbp/bin:$PATH\"".to_string()];
@@ -164,6 +169,7 @@ fn generate_path_configs(custom_dir_path: Option<&PathBuf>) -> Vec<String> {
     configs
 }
 
+#[cfg(unix)]
 // Update PATH in shell config files
 fn update_shell_config(
     config_path: &PathBuf,

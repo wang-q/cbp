@@ -55,6 +55,7 @@ Common Commands:
 
 4. Documentation:
    cbp kb readme                                      # view documentation
+
 "###,
         );
 
