@@ -389,6 +389,7 @@ fn command_tar_symlink() -> anyhow::Result<()> {
 }
 
 #[test]
+#[cfg(unix)]
 fn command_init_default() -> anyhow::Result<()> {
     use std::fs;
     use tempfile::TempDir;
@@ -438,6 +439,7 @@ fn command_init_default() -> anyhow::Result<()> {
 }
 
 #[test]
+#[cfg(unix)]
 fn command_init_custom_dir() -> anyhow::Result<()> {
     use std::fs;
     use tempfile::TempDir;
