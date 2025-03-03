@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/header.sh"
 
 # Process packages
 for pkg in "$@"; do

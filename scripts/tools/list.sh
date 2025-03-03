@@ -22,7 +22,7 @@ PERL_FMT='
     $count++;
 '
 
-source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/header.sh"
 
 list_installed() {
     if [ $# -eq 0 ]; then

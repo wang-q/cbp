@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/header.sh"
 
 list_check() {
     echo "==> Unmanaged files in ${CBP_HOME}/:"
