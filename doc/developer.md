@@ -4,24 +4,24 @@ This guide is intended for developers who want to contribute to the `cbp` projec
 internal workings.
 
 <!-- TOC -->
-* [Developer Guide](#developer-guide)
-  * [Development Environment](#development-environment)
-    * [Requirements](#requirements)
-    * [Setup Build Environment](#setup-build-environment)
-    * [Other tools](#other-tools)
-    * [git lfs](#git-lfs)
-    * [cbp itself](#cbp-itself)
-  * [Project Structure](#project-structure)
-  * [Build Process](#build-process)
-    * [Building Binary Packages](#building-binary-packages)
-  * [Dynamic Library Dependencies](#dynamic-library-dependencies)
-  * [Uploading Binaries](#uploading-binaries)
-    * [Upload Process](#upload-process)
-    * [Download URLs](#download-urls)
-  * [Contributing](#contributing)
-    * [Development Workflow](#development-workflow)
-    * [Adding a New Package](#adding-a-new-package)
-    * [Example build script templates:](#example-build-script-templates)
+- [Developer Guide](#developer-guide)
+  - [Development Environment](#development-environment)
+    - [Requirements](#requirements)
+    - [Setup Build Environment](#setup-build-environment)
+    - [Other tools](#other-tools)
+    - [git lfs](#git-lfs)
+    - [cbp itself](#cbp-itself)
+  - [Project Structure](#project-structure)
+  - [Build Process](#build-process)
+    - [Building Binary Packages](#building-binary-packages)
+  - [Dynamic Library Dependencies](#dynamic-library-dependencies)
+  - [Uploading Binaries](#uploading-binaries)
+    - [Upload Process](#upload-process)
+    - [Download URLs](#download-urls)
+  - [Contributing](#contributing)
+    - [Development Workflow](#development-workflow)
+    - [Adding a New Package](#adding-a-new-package)
+    - [Example build script templates:](#example-build-script-templates)
 <!-- TOC -->
 
 ## Development Environment
@@ -37,8 +37,8 @@ internal workings.
 * Build tools
     * cmake
     * ninja
-    * meson
     * jq
+    * meson
 
 ### Setup Build Environment
 
@@ -64,6 +64,11 @@ ln -s $HOME/share/zig/zig $HOME/bin/zig
 # Verify Zig target
 zig targets | jq .libc
 
+# We use the following targets:
+# x86_64-linux-gnu.2.17
+# aarch64-macos-none
+# x86_64-windows-gnu
+
 ```
 
 * Rust
@@ -88,13 +93,9 @@ rustup target add x86_64-pc-windows-gnu
 ```bash
 cbp install cmake
 cbp install ninja
+cbp install jq
 
 pip3 install meson
-
-# jq
-cbp install jq
-# sudo apt install jq
-# brew install jq
 
 ```
 
@@ -286,6 +287,8 @@ https://github.com/wang-q/cbp/releases/download/Binaries/zlib.macos.tar.gz
 6. Submit a pull request
 
 ### Example build script templates:
+
+
 
 * Build from source:
 
