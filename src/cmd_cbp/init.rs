@@ -6,6 +6,30 @@ use std::path::PathBuf;
 pub fn make_subcommand() -> Command {
     Command::new("init")
         .about("Initialize cbp environment")
+        .after_help(
+            r###"
+Initialize CBP environment and configure shell settings.
+
+Operations:
+* Create ~/.cbp directory structure
+* Install cbp executable
+* Configure shell environment
+* Set up custom installation path (optional)
+
+Shell Integration:
+* Updates PATH in shell config files
+* Supports bash and zsh
+* Preserves existing configurations
+* Idempotent updates
+
+Examples:
+* Default installation
+  cbp init
+
+* Custom installation directory
+  cbp init --dir /usr/local/cbp
+"###,
+        )
         .arg(
             clap::Arg::new("dir")
                 .long("dir")
