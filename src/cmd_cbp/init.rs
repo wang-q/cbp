@@ -13,20 +13,19 @@ Initialize CBP environment and configure shell settings.
 Operations:
 * Create ~/.cbp directory structure
 * Install cbp executable
-* Configure shell environment
-* Set up custom installation path (optional)
+* Updates $PATH on all supported platforms
 
-Shell Integration:
-* Updates PATH in shell config files
-* Supports bash and zsh
-* Preserves existing configurations
-* Idempotent updates
+Configuration:
+* Default: Uses ~/.cbp for everything
+* Custom: Separates config and packages
+  - Config stays in ~/.cbp
+  - Packages go to specified directory
 
 Examples:
 * Default installation
   cbp init
 
-* Custom installation directory
+* Custom package directory
   cbp init /opt/cbp
 "###,
         )
