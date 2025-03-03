@@ -180,3 +180,41 @@ fn update_shell_config(
     fs::write(config_path, new_content.join("\n") + "\n")?;
     Ok(())
 }
+
+#[cfg(windows)]
+fn update_windows_path(bin_dir: &PathBuf) -> anyhow::Result<()> {
+    use std::process::Command;
+
+    // 先检查路径是否已存在
+    let check_output = Command::new("powershell")
+        .args([
+            "-Command",
+            &format!(
+                "[Environment]::GetEnvironmentVariable('Path', \
+                [EnvironmentVariableTarget]::User) -split ';' -contains '{}'",
+                bin_dir.display()
+            ),
+        ])
+        .output()?;
+
+    // 如果输出包含 "True"，说明路径已存在
+    if String::from_utf8_lossy(&check_output.stdout).trim() == "True" {
+        return Ok(());
+    }
+
+    // 路径不存在，添加到 PATH
+    Command::new("powershell")
+        .args([
+            "-Command",
+            &format!(
+                "[Environment]::SetEnvironmentVariable('Path', \
+                [Environment]::GetEnvironmentVariable('Path', \
+                [EnvironmentVariableTarget]::User) + ';{}', \
+                [EnvironmentVariableTarget]::User)",
+                bin_dir.display()
+            ),
+        ])
+        .output()?;
+
+    Ok(())
+}
