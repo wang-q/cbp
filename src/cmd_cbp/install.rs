@@ -94,8 +94,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             .unwrap_or_else(|_| "https://github.com".to_string());
         let url = format!(
             "{}/wang-q/cbp/releases/download/Binaries/{}",
-            base_url,
-            pkg_file
+            base_url, pkg_file
         );
         let mut file = std::fs::File::create(&temp_file)?;
         let resp = agent.get(&url).call()?;
