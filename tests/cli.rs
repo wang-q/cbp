@@ -619,3 +619,39 @@ fn command_prefix() -> anyhow::Result<()> {
 
     Ok(())
 }
+
+#[test]
+fn command_avail() -> anyhow::Result<()> {
+    // 创建模拟服务器
+    let mut server = mockito::Server::new();
+
+    // 准备模拟的 JSON 响应
+    let mock_response = r#"{
+        "assets": [
+            {"name": "zlib.macos.tar.gz"},
+            {"name": "bzip2.macos.tar.gz"},
+            {"name": "zlib.linux.tar.gz"},
+            {"name": "bzip2.linux.tar.gz"}
+        ]
+    }"#;
+
+    // 设置模拟端点
+    let _m = server.mock("GET", "/repos/wang-q/cbp/releases/tags/Binaries")
+        .with_status(200)
+        .with_header("content-type", "application/json")
+        .with_body(mock_response)
+        .create();
+
+    // 使用环境变量临时覆盖 GitHub API URL
+    let mut cmd = Command::cargo_bin("cbp")?;
+    cmd.env("GITHUB_API_URL", &server.url())
+        .arg("avail")
+        .arg("macos");
+
+    cmd.assert()
+        .success()
+        .stdout(predicate::str::contains("zlib"))
+        .stdout(predicate::str::contains("bzip2"));
+
+    Ok(())
+}

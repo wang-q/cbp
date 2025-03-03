@@ -51,8 +51,11 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         ureq::AgentBuilder::new().build()
     };
 
+    let api_url = std::env::var("GITHUB_API_URL")
+        .unwrap_or_else(|_| "https://api.github.com".to_string());
+    
     let resp: serde_json::Value = agent
-        .get("https://api.github.com/repos/wang-q/cbp/releases/tags/Binaries")
+        .get(&format!("{}/repos/wang-q/cbp/releases/tags/Binaries", api_url))
         .set("user-agent", "cbp")
         .call()?
         .into_json()?;
