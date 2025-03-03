@@ -20,6 +20,10 @@ fn main() -> anyhow::Result<()> {
         .subcommand(cmd_cbp::kb::make_subcommand())
         .subcommand(cmd_cbp::tar::make_subcommand())
         .subcommand(cmd_cbp::upload::make_subcommand())
+        .subcommand(
+            Command::new("prefix")
+                .about("Display cbp installation directory")
+        )
         .after_help(
             r###"
 Package Manager Features:
@@ -67,6 +71,10 @@ Common Commands:
         Some(("check", sub_matches)) => cmd_cbp::check::execute(sub_matches),
         Some(("tar", sub_matches)) => cmd_cbp::tar::execute(sub_matches),
         Some(("upload", sub_matches)) => cmd_cbp::upload::execute(sub_matches),
+        Some(("prefix", _)) => {
+            println!("{}", cbp::get_cbp_home()?);
+            Ok(())
+        }
         _ => unreachable!(),
     }?;
 
