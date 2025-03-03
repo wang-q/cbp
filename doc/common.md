@@ -1,4 +1,4 @@
-# Common Shell Library Documentation
+# Common Shell Library
 
 The `scripts/common.sh` script provides a set of common variables and utility functions for building
 and packaging projects. It serves as a shared library and must be sourced by other scripts rather

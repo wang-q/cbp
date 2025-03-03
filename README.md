@@ -150,6 +150,8 @@ Common Commands:
       - Package creation
       - Testing framework
 
+For detailed information about development and build process, see the [Developer Guide](doc/developer.md).
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.

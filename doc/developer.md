@@ -151,6 +151,9 @@ cbp/
 Binary packages are built using shell scripts in the `scripts/` directory. Each package has its own
 build script that sources `common.sh` for shared functionality.
 
+See [Common Shell Library](common.md) for detailed information about the shared build
+functions and variables.
+
 Example build process:
 
 1. Source code is downloaded to `sources/`
