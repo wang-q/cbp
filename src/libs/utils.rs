@@ -24,6 +24,7 @@ pub fn get_os_type() -> anyhow::Result<String> {
     match std::env::consts::OS {
         "macos" => Ok("macos".to_string()),
         "linux" => Ok("linux".to_string()),
+        "windows" => Ok("windows".to_string()),
         os => Err(anyhow::anyhow!("Unsupported OS: {}", os)),
     }
 }
@@ -109,7 +110,9 @@ pub fn is_system_file(path: &str) -> bool {
     path.ends_with("Thumbs.db") ||      // Windows system files
     path.ends_with("desktop.ini") ||    
     path.ends_with("~") ||              // Linux hidden files
-    path.ends_with(".swp")
+    path.ends_with(".swp") ||
+    path.ends_with(".lnk") ||           // Windows shortcuts
+    path.contains("/System Volume Information/") // Windows system directory
 }
 
 /// Install package from a tar.gz file
@@ -186,8 +189,12 @@ mod tests {
             assert_eq!(get_os_type().unwrap(), "linux");
         }
 
-        // Other systems will return an error
-        #[cfg(not(any(target_os = "macos", target_os = "linux")))]
+        #[cfg(target_os = "windows")]
+        {
+            assert_eq!(get_os_type().unwrap(), "windows");
+        }
+
+        #[cfg(not(any(target_os = "macos", target_os = "linux", target_os = "windows")))]
         {
             assert!(get_os_type().is_err());
         }
