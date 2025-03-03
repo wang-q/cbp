@@ -28,6 +28,22 @@ struct Config {
     home: Option<String>,
 }
 
+#[cfg(test)]
+use mockall::automock;
+
+#[cfg_attr(test, automock)]
+trait HomeDirProvider {
+    fn home_dir(&self) -> Option<PathBuf>;
+}
+
+struct DefaultHomeDirProvider;
+
+impl HomeDirProvider for DefaultHomeDirProvider {
+    fn home_dir(&self) -> Option<PathBuf> {
+        dirs::home_dir()
+    }
+}
+
 impl CbpDirs {
     /// Creates a new CbpDirs instance with default home directory (~/.cbp)
     ///
@@ -43,7 +59,12 @@ impl CbpDirs {
     /// - Config file exists but cannot be read or parsed
     /// - Directory creation fails
     pub fn new() -> anyhow::Result<Self> {
-        let home = dirs::home_dir()
+        Self::new_with_provider(&DefaultHomeDirProvider)
+    }
+
+    fn new_with_provider(provider: &dyn HomeDirProvider) -> anyhow::Result<Self> {
+        let home = provider
+            .home_dir()
             .ok_or_else(|| anyhow::anyhow!("Could not determine home directory"))?;
 
         // Read configuration file
@@ -96,18 +117,24 @@ impl CbpDirs {
 /// - Home directory cannot be determined
 /// - Config file exists but cannot be read or parsed
 pub fn get_cbp_home() -> anyhow::Result<String> {
-    CbpDirs::new().map(|dirs| dirs.home.to_string_lossy().into_owned())
+    get_cbp_home_with_provider(&DefaultHomeDirProvider)
+}
+
+fn get_cbp_home_with_provider(provider: &dyn HomeDirProvider) -> anyhow::Result<String> {
+    CbpDirs::new_with_provider(provider)
+        .map(|dirs| dirs.home.to_string_lossy().into_owned())
 }
 
 /// Returns the CBP configuration directory
-///
-/// This is always ~/.cbp, regardless of the installation directory
-///
-/// # Errors
-///
-/// Returns error if home directory cannot be determined
 pub fn get_cbp_config_dir() -> anyhow::Result<PathBuf> {
-    dirs::home_dir()
+    get_cbp_config_dir_with_provider(&DefaultHomeDirProvider)
+}
+
+fn get_cbp_config_dir_with_provider(
+    provider: &dyn HomeDirProvider,
+) -> anyhow::Result<PathBuf> {
+    provider
+        .home_dir()
         .map(|home| home.join(".cbp"))
         .ok_or_else(|| anyhow::anyhow!("Could not determine home directory"))
 }
@@ -125,25 +152,23 @@ pub fn to_absolute_path(path: &str) -> anyhow::Result<std::path::PathBuf> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use mockall::predicate::*;
     use std::fs;
 
     #[test]
     fn test_cbp_dirs_new() -> anyhow::Result<()> {
         let temp_home = tempfile::tempdir()?;
-        let original_home = std::env::var("HOME")?;
+        let mut mock = MockHomeDirProvider::new();
+        mock.expect_home_dir()
+            .return_const(Some(temp_home.path().to_path_buf()));
 
-        // Set temporary home directory
-        std::env::set_var("HOME", temp_home.path());
-
-        // Test default directory structure
-        let dirs = CbpDirs::new()?;
+        let dirs = CbpDirs::new_with_provider(&mock)?;
+        assert_eq!(dirs.home, temp_home.path().join(".cbp"));
         assert!(dirs.home.exists());
         assert!(dirs.bin.exists());
         assert!(dirs.cache.exists());
         assert!(dirs.records.exists());
 
-        // Restore original home directory
-        std::env::set_var("HOME", original_home);
         Ok(())
     }
 
@@ -164,63 +189,43 @@ mod tests {
     #[test]
     fn test_cbp_dirs_with_config() -> anyhow::Result<()> {
         let temp_home = tempfile::tempdir()?;
-        let original_home = std::env::var("HOME")?;
-        std::env::set_var("HOME", temp_home.path());
+        let mut mock = MockHomeDirProvider::new();
+        mock.expect_home_dir()
+            .return_const(Some(temp_home.path().to_path_buf()));
 
         // Create config directory and custom installation directory
         let cbp_dir = temp_home.path().join(".cbp");
         let custom_dir = temp_home.path().join("custom-cbp");
         std::fs::create_dir_all(&cbp_dir)?;
 
+        // Replace backslashes with forward slashes for TOML compatibility
         let config_content = format!(
             r#"
             home = "{}"
         "#,
-            custom_dir.display()
+            custom_dir.display().to_string().replace('\\', "/")
         );
         std::fs::write(cbp_dir.join("config.toml"), config_content)?;
 
         // Test custom directory structure
-        let dirs = CbpDirs::new()?;
+        let dirs = CbpDirs::new_with_provider(&mock)?;
         assert_eq!(dirs.home, custom_dir);
         assert!(dirs.bin.exists());
         assert!(dirs.cache.exists());
         assert!(dirs.records.exists());
 
-        // Restore environment
-        std::env::set_var("HOME", original_home);
         Ok(())
     }
 
     #[test]
     fn test_get_cbp_config_dir() -> anyhow::Result<()> {
-        // Save original HOME environment variable
-        let original_home = std::env::var("HOME")?;
+        let temp_home = tempfile::tempdir()?;
+        let mut mock = MockHomeDirProvider::new();
+        mock.expect_home_dir()
+            .return_const(Some(temp_home.path().to_path_buf()));
 
-        // Test normal case
-        {
-            let temp_home = tempfile::tempdir()?;
-            std::env::set_var("HOME", temp_home.path());
-
-            let config_dir = get_cbp_config_dir()?;
-            assert_eq!(config_dir, temp_home.path().join(".cbp"));
-        }
-
-        // Restore environment
-        std::env::set_var("HOME", original_home);
-        Ok(())
-    }
-
-    #[test]
-    fn test_to_absolute_path() -> anyhow::Result<()> {
-        // Test absolute path
-        let abs_path = "/absolute/path";
-        assert_eq!(to_absolute_path(abs_path)?.to_string_lossy(), abs_path);
-
-        // Test relative path
-        let current_dir = std::env::current_dir()?;
-        let rel_path = "relative/path";
-        assert_eq!(to_absolute_path(rel_path)?, current_dir.join(rel_path));
+        let config_dir = get_cbp_config_dir_with_provider(&mock)?;
+        assert_eq!(config_dir, temp_home.path().join(".cbp"));
 
         Ok(())
     }
@@ -228,8 +233,9 @@ mod tests {
     #[test]
     fn test_cbp_dirs_with_invalid_config() -> anyhow::Result<()> {
         let temp_home = tempfile::tempdir()?;
-        let original_home = std::env::var("HOME")?;
-        std::env::set_var("HOME", temp_home.path());
+        let mut mock = MockHomeDirProvider::new();
+        mock.expect_home_dir()
+            .return_const(Some(temp_home.path().to_path_buf()));
 
         // Create invalid config file
         let cbp_dir = temp_home.path().join(".cbp");
@@ -240,25 +246,56 @@ mod tests {
         )?;
 
         // Should fall back to default directory
-        let dirs = CbpDirs::new()?;
+        let dirs = CbpDirs::new_with_provider(&mock)?;
         assert_eq!(dirs.home, cbp_dir);
 
-        // Restore environment
-        std::env::set_var("HOME", original_home);
         Ok(())
     }
 
     #[test]
     fn test_get_cbp_home() -> anyhow::Result<()> {
         let temp_home = tempfile::tempdir()?;
-        let original_home = std::env::var("HOME")?;
-        std::env::set_var("HOME", temp_home.path());
+        let mut mock = MockHomeDirProvider::new();
+        mock.expect_home_dir()
+            .return_const(Some(temp_home.path().to_path_buf()));
 
-        let cbp_home = get_cbp_home()?;
-        assert_eq!(cbp_home, temp_home.path().join(".cbp").to_string_lossy());
+        let home = get_cbp_home_with_provider(&mock)?;
+        assert_eq!(home, temp_home.path().join(".cbp").to_string_lossy());
+        assert!(temp_home.path().join(".cbp").exists());
 
-        // Restore environment
-        std::env::set_var("HOME", original_home);
+        Ok(())
+    }
+
+    #[test]
+    fn test_to_absolute_path() -> anyhow::Result<()> {
+        // Test absolute path
+        let abs_path = if cfg!(windows) {
+            "C:/absolute/path"
+        } else {
+            "/absolute/path"
+        };
+        let result = to_absolute_path(abs_path)?;
+        assert_eq!(result, std::path::PathBuf::from(abs_path));
+
+        // Create temporary directory for testing
+        let temp_dir = tempfile::tempdir()?;
+        let base_dir = temp_dir.path();
+        std::env::set_current_dir(base_dir)?;
+
+        // Test relative paths with different formats
+        let test_cases = vec![
+            "relative/path",
+            "./relative/path",
+            "relative/./path",
+        ];
+
+        // Verify path construction without checking existence
+        for rel_path in test_cases {
+            let result = to_absolute_path(rel_path)?;
+            let expected = base_dir.join(rel_path);
+            assert_eq!(result, expected);
+        }
+
         Ok(())
     }
 }
