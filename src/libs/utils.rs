@@ -163,17 +163,6 @@ pub fn install_package(
 mod tests {
     use super::*;
 
-    fn setup_test_data() -> anyhow::Result<tempfile::TempDir> {
-        let temp_dir = tempfile::TempDir::new()?;
-
-        let mut archive = tar::Archive::new(flate2::read::GzDecoder::new(
-            std::fs::File::open("tests/cbp_macos.tar.gz")?,
-        ));
-        archive.unpack(temp_dir.path())?;
-
-        Ok(temp_dir)
-    }
-
     #[test]
     fn test_get_os_type() {
         // Since std::env::consts::OS is a compile-time constant,
@@ -194,7 +183,11 @@ mod tests {
             assert_eq!(get_os_type().unwrap(), "windows");
         }
 
-        #[cfg(not(any(target_os = "macos", target_os = "linux", target_os = "windows")))]
+        #[cfg(not(any(
+            target_os = "macos",
+            target_os = "linux",
+            target_os = "windows"
+        )))]
         {
             assert!(get_os_type().is_err());
         }
@@ -240,28 +233,29 @@ mod tests {
 
     #[test]
     fn test_install_real_package() -> anyhow::Result<()> {
-        let test_dir = setup_test_data()?;
         let temp_dir = tempfile::tempdir()?;
         let cbp_dirs = crate::CbpDirs::from(temp_dir.path().to_path_buf())?;
 
-        // 从测试数据目录复制包文件
-        let pkg_file = temp_dir.path().join("zlib.macos.tar.gz");
-        std::fs::copy(
-            test_dir.path().join("cbp_macos/cache/zlib.macos.tar.gz"),
-            &pkg_file,
-        )?;
+        // 使用 CARGO_MANIFEST_DIR 获取项目根目录
+        let manifest_dir = env!("CARGO_MANIFEST_DIR");
+        let test_file =
+            std::path::Path::new(manifest_dir).join("tests/zlib.macos.tar.gz");
 
-        // Test package installation
+        // 复制测试包文件
+        let pkg_file = temp_dir.path().join("zlib.macos.tar.gz");
+        std::fs::copy(test_file, &pkg_file)?;
+
+        // 测试包安装
         install_package("zlib", &pkg_file, &cbp_dirs)?;
 
-        // Verify file list
+        // 验证文件列表
         let record_file = cbp_dirs.records.join("zlib.files");
         assert!(record_file.exists());
         let file_list = std::fs::read_to_string(record_file)?;
         assert!(file_list.contains("include/zlib.h"));
         assert!(file_list.contains("lib/libz.a"));
 
-        // Verify key files exist
+        // 验证关键文件存在
         assert!(cbp_dirs.home.join("include/zlib.h").exists());
         assert!(cbp_dirs.home.join("lib/libz.a").exists());
 
