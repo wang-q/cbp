@@ -28,11 +28,7 @@ struct Config {
     home: Option<String>,
 }
 
-#[cfg(test)]
-use mockall::automock;
-
-#[cfg_attr(test, automock)]
-trait HomeDirProvider {
+pub trait HomeDirProvider {
     fn home_dir(&self) -> Option<PathBuf>;
 }
 
@@ -41,6 +37,29 @@ struct DefaultHomeDirProvider;
 impl HomeDirProvider for DefaultHomeDirProvider {
     fn home_dir(&self) -> Option<PathBuf> {
         dirs::home_dir()
+    }
+}
+
+pub struct MockHomeDirProvider {
+    home_dir_result: Option<PathBuf>,
+}
+
+impl MockHomeDirProvider {
+    pub fn new() -> Self {
+        Self {
+            home_dir_result: None,
+        }
+    }
+
+    pub fn expect_home_dir(mut self, result: Option<PathBuf>) -> Self {
+        self.home_dir_result = result;
+        self
+    }
+}
+
+impl HomeDirProvider for MockHomeDirProvider {
+    fn home_dir(&self) -> Option<PathBuf> {
+        self.home_dir_result.clone()
     }
 }
 
@@ -62,7 +81,7 @@ impl CbpDirs {
         Self::new_with_provider(&DefaultHomeDirProvider)
     }
 
-    fn new_with_provider(provider: &dyn HomeDirProvider) -> anyhow::Result<Self> {
+    pub fn new_with_provider(provider: &dyn HomeDirProvider) -> anyhow::Result<Self> {
         let home = provider
             .home_dir()
             .ok_or_else(|| anyhow::anyhow!("Could not determine home directory"))?;
@@ -157,9 +176,8 @@ mod tests {
     #[test]
     fn test_cbp_dirs_new() -> anyhow::Result<()> {
         let temp_home = tempfile::tempdir()?;
-        let mut mock = MockHomeDirProvider::new();
-        mock.expect_home_dir()
-            .return_const(Some(temp_home.path().to_path_buf()));
+        let mock = MockHomeDirProvider::new()
+            .expect_home_dir(Some(temp_home.path().to_path_buf()));
 
         let dirs = CbpDirs::new_with_provider(&mock)?;
         assert_eq!(dirs.home, temp_home.path().join(".cbp"));
@@ -188,9 +206,8 @@ mod tests {
     #[test]
     fn test_cbp_dirs_with_config() -> anyhow::Result<()> {
         let temp_home = tempfile::tempdir()?;
-        let mut mock = MockHomeDirProvider::new();
-        mock.expect_home_dir()
-            .return_const(Some(temp_home.path().to_path_buf()));
+        let mock = MockHomeDirProvider::new()
+            .expect_home_dir(Some(temp_home.path().to_path_buf()));
 
         // Create config directory and custom installation directory
         let cbp_dir = temp_home.path().join(".cbp");
@@ -219,9 +236,8 @@ mod tests {
     #[test]
     fn test_get_cbp_config_dir() -> anyhow::Result<()> {
         let temp_home = tempfile::tempdir()?;
-        let mut mock = MockHomeDirProvider::new();
-        mock.expect_home_dir()
-            .return_const(Some(temp_home.path().to_path_buf()));
+        let mock = MockHomeDirProvider::new()
+            .expect_home_dir(Some(temp_home.path().to_path_buf()));
 
         let config_dir = get_cbp_config_dir_with_provider(&mock)?;
         assert_eq!(config_dir, temp_home.path().join(".cbp"));
@@ -232,9 +248,8 @@ mod tests {
     #[test]
     fn test_cbp_dirs_with_invalid_config() -> anyhow::Result<()> {
         let temp_home = tempfile::tempdir()?;
-        let mut mock = MockHomeDirProvider::new();
-        mock.expect_home_dir()
-            .return_const(Some(temp_home.path().to_path_buf()));
+        let mock = MockHomeDirProvider::new()
+            .expect_home_dir(Some(temp_home.path().to_path_buf()));
 
         // Create invalid config file
         let cbp_dir = temp_home.path().join(".cbp");
@@ -254,9 +269,8 @@ mod tests {
     #[test]
     fn test_get_cbp_home() -> anyhow::Result<()> {
         let temp_home = tempfile::tempdir()?;
-        let mut mock = MockHomeDirProvider::new();
-        mock.expect_home_dir()
-            .return_const(Some(temp_home.path().to_path_buf()));
+        let mock = MockHomeDirProvider::new()
+            .expect_home_dir(Some(temp_home.path().to_path_buf()));
 
         let home = get_cbp_home_with_provider(&mock)?;
         assert_eq!(home, temp_home.path().join(".cbp").to_string_lossy());
