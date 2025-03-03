@@ -58,6 +58,8 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
     // Download existing package information
     let mut packages: Vec<Package> = {
+        // gh release download [<tag>] [flags]
+        // "--repo", "wang-q/cbp",
         let output = std::process::Command::new("gh")
             .args([
                 "release",
@@ -132,6 +134,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         let path = Path::new(file);
         let name = path.file_name().unwrap().to_string_lossy().to_string();
         println!("==> Uploading {}...", name);
+        // gh release upload <tag> <files>... [flags]
         std::process::Command::new("gh")
             .args(["release", "upload", "Binaries", file, "--clobber"])
             .status()?;
