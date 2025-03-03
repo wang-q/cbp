@@ -307,7 +307,7 @@ fn command_tar_symlink() -> anyhow::Result<()> {
     fs::write(collect_dir.join("test.txt"), "test content")?;
     std::env::set_current_dir(&collect_dir)?;
     symlink("test.txt", "test.link")?;
-    
+
     // Verify symlink was created correctly
     let link_path = collect_dir.join("test.link");
     println!("Symlink exists: {}", link_path.exists());
@@ -315,7 +315,7 @@ fn command_tar_symlink() -> anyhow::Result<()> {
     if link_path.is_symlink() {
         println!("Symlink target: {:?}", fs::read_link(&link_path)?);
     }
-    
+
     std::env::set_current_dir(temp_dir.path())?;
 
     // Run tar command
@@ -329,7 +329,11 @@ fn command_tar_symlink() -> anyhow::Result<()> {
         .success();
 
     // Verify package contents
-    let tar_file = fs::File::open(temp_dir.path().join(format!("test.{}.tar.gz", cbp::get_os_type()?)))?;
+    let tar_file = fs::File::open(
+        temp_dir
+            .path()
+            .join(format!("test.{}.tar.gz", cbp::get_os_type()?)),
+    )?;
     let gz = flate2::read::GzDecoder::new(tar_file);
     let mut archive = tar::Archive::new(gz);
     let entries: Vec<_> = archive.entries()?.collect::<Result<_, _>>()?;

@@ -158,14 +158,12 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         .status()?;
 
     // Update release notes
-    let pkg_tsv = format!(
-        "md5\tname\n{}",
-        packages
-            .iter()
-            .map(|p| format!("{}\t{}", p.md5, p.name))
-            .collect::<Vec<String>>()
-            .join("\n")
-    );
+    let pkg_tsv = packages
+        .iter()
+        .map(|p| format!("{}\t{}", p.md5, p.name))
+        .collect::<Vec<String>>()
+        .join("\n")
+        .to_string();
 
     let new_notes = format!(
         "{}\n\n### MD5 Checksums\n\n```text\n{}\n```",
