@@ -27,14 +27,23 @@ Examples:
   cbp init
 
 * Custom installation directory
-  cbp init --dir /usr/local/cbp
+  cbp init /opt/cbp
 "###,
+        )
+        .arg(
+            clap::Arg::new("home")
+                .help("Custom home directory")
+                .value_name("DIR")
+                .index(1),
         )
         .arg(
             clap::Arg::new("dir")
                 .long("dir")
-                .help("Custom installation directory")
-                .value_name("DIR"),
+                .short('d')
+                .num_args(1)
+                .value_name("DIR")
+                .help("Change working directory")
+                .hide(true),
         )
 }
 
@@ -42,9 +51,9 @@ pub fn execute(matches: &ArgMatches) -> Result<()> {
     //----------------------------
     // Args
     //----------------------------
-    // Extract custom directory from command line arguments
-    let custom_dir_path = if let Some(custom_dir) = matches.get_one::<String>("dir") {
-        Some(cbp::to_absolute_path(custom_dir)?)
+    // Extract custom home directory from command line arguments
+    let custom_home = if let Some(home_dir) = matches.get_one::<String>("home") {
+        Some(cbp::to_absolute_path(home_dir)?)
     } else {
         None
     };
@@ -52,9 +61,13 @@ pub fn execute(matches: &ArgMatches) -> Result<()> {
     // Get current executable path
     let current_exe = std::env::current_exe()?;
 
-    // Get home directory
-    let home = dirs::home_dir()
-        .ok_or_else(|| anyhow::anyhow!("Could not find home directory"))?;
+    // Get home directory (use --dir if specified)
+    let home = if let Some(test_dir) = matches.get_one::<String>("dir") {
+        PathBuf::from(test_dir)
+    } else {
+        dirs::home_dir()
+            .ok_or_else(|| anyhow::anyhow!("Could not find home directory"))?
+    };
 
     //----------------------------
     // Process
@@ -64,12 +77,12 @@ pub fn execute(matches: &ArgMatches) -> Result<()> {
     fs::create_dir_all(&cbp_config_dir)?;
 
     // Write config file with default or custom directory
-    let config_content = if let Some(ref path) = custom_dir_path {
+    let config_content = if let Some(ref home_path) = custom_home {
         format!(
             r#"# CBP configuration file
 home = "{}"
 "#,
-            path.display()
+            home_path.display()
         )
     } else {
         format!(
@@ -101,13 +114,20 @@ home = "{}"
     }
 
     // Update PATH in shell config files
-    let shell_configs = vec![".bashrc", ".bash_profile", ".zshrc"];
-
-    for config in shell_configs {
-        let config_path = home.join(config);
-        if config_path.exists() {
-            update_shell_config(&config_path, custom_dir_path.as_ref())?;
+    #[cfg(unix)]
+    {
+        let shell_configs = vec![".bashrc", ".bash_profile", ".zshrc"];
+        for config in shell_configs {
+            let config_path = home.join(config);
+            if config_path.exists() {
+                update_shell_config(&config_path, custom_home.as_ref())?;
+            }
         }
+    }
+
+    #[cfg(windows)]
+    {
+        update_windows_path(&bin_dir)?;
     }
 
     println!("cbp initialization completed!");
@@ -116,8 +136,19 @@ home = "{}"
         "Package installation directory: {}",
         cbp_dirs.home.display()
     );
-    println!("\nTo make the environment variables take effect, run:");
-    println!("    source ~/.bashrc  # or restart your terminal");
+
+    #[cfg(unix)]
+    {
+        println!("\nTo make the environment variables take effect, run:");
+        println!("    source ~/.bashrc  # or restart your terminal");
+    }
+
+    #[cfg(windows)]
+    {
+        println!("\nTo make the environment variables take effect:");
+        println!("    Please restart your terminal or log out and log back in");
+    }
+
     println!("To verify installation:");
     println!("    cbp help");
 
@@ -183,9 +214,10 @@ fn update_shell_config(
 
 #[cfg(windows)]
 fn update_windows_path(bin_dir: &PathBuf) -> anyhow::Result<()> {
+    use anyhow::Context;
     use std::process::Command;
 
-    // 先检查路径是否已存在
+    // Check if path already exists
     let check_output = Command::new("powershell")
         .args([
             "-Command",
@@ -195,26 +227,45 @@ fn update_windows_path(bin_dir: &PathBuf) -> anyhow::Result<()> {
                 bin_dir.display()
             ),
         ])
-        .output()?;
+        .output()
+        .context("Failed to check PATH environment variable")?;
 
-    // 如果输出包含 "True"，说明路径已存在
+    if !check_output.status.success() {
+        return Err(anyhow::anyhow!(
+            "PowerShell command failed: {}",
+            String::from_utf8_lossy(&check_output.stderr)
+        ));
+    }
+
+    // If path already exists, return
     if String::from_utf8_lossy(&check_output.stdout).trim() == "True" {
         return Ok(());
     }
 
-    // 路径不存在，添加到 PATH
-    Command::new("powershell")
+    // Add path to PATH
+    let output = Command::new("powershell")
         .args([
             "-Command",
             &format!(
-                "[Environment]::SetEnvironmentVariable('Path', \
-                [Environment]::GetEnvironmentVariable('Path', \
-                [EnvironmentVariableTarget]::User) + ';{}', \
+                "$path = [Environment]::GetEnvironmentVariable('Path', \
+                [EnvironmentVariableTarget]::User); \
+                if ($path.EndsWith(';')) {{ $path = $path + '{}' }} \
+                else {{ $path = $path + ';{}' }}; \
+                [Environment]::SetEnvironmentVariable('Path', $path, \
                 [EnvironmentVariableTarget]::User)",
+                bin_dir.display(),
                 bin_dir.display()
             ),
         ])
-        .output()?;
+        .output()
+        .context("Failed to update PATH environment variable")?;
+
+    if !output.status.success() {
+        return Err(anyhow::anyhow!(
+            "Failed to update PATH: {}",
+            String::from_utf8_lossy(&output.stderr)
+        ));
+    }
 
     Ok(())
 }
