@@ -115,50 +115,6 @@ pub fn is_system_file(path: &str) -> bool {
     path.contains("/System Volume Information/") // Windows system directory
 }
 
-/// Install package from a tar.gz file
-pub fn install_package(
-    pkg_name: &str,
-    pkg_file: &Path,
-    cbp_dirs: &crate::CbpDirs,
-) -> anyhow::Result<()> {
-    println!("==> Installing {}", pkg_name);
-
-    // Open and decode tar.gz file
-    let file = std::fs::File::open(pkg_file)?;
-    let gz = flate2::read::GzDecoder::new(file);
-    let mut archive = tar::Archive::new(gz);
-
-    // List files in package
-    let record_file = cbp_dirs.records.join(format!("{}.files", pkg_name));
-    let mut file_list = String::new();
-    {
-        let entries = archive.entries()?;
-        for entry in entries {
-            let entry = entry?;
-            if let Some(path) = entry.path()?.to_str() {
-                file_list.push_str(path);
-                file_list.push('\n');
-            }
-        }
-    }
-
-    // Save file list
-    std::fs::write(&record_file, file_list)?;
-
-    // Extract files (need to reopen archive as entries were consumed)
-    let file = std::fs::File::open(pkg_file)?;
-    let gz = flate2::read::GzDecoder::new(file);
-    let mut archive = tar::Archive::new(gz);
-
-    if let Err(e) = archive.unpack(&cbp_dirs.home) {
-        std::fs::remove_file(record_file)?;
-        return Err(anyhow::anyhow!("    Failed to extract {}: {}", pkg_name, e));
-    }
-
-    println!("    Done");
-    Ok(())
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -231,34 +187,4 @@ mod tests {
         Ok(())
     }
 
-    #[test]
-    fn test_install_real_package() -> anyhow::Result<()> {
-        let temp_dir = tempfile::tempdir()?;
-        let cbp_dirs = crate::CbpDirs::from(temp_dir.path().to_path_buf())?;
-
-        // 使用 CARGO_MANIFEST_DIR 获取项目根目录
-        let manifest_dir = env!("CARGO_MANIFEST_DIR");
-        let test_file =
-            std::path::Path::new(manifest_dir).join("tests/zlib.macos.tar.gz");
-
-        // 复制测试包文件
-        let pkg_file = temp_dir.path().join("zlib.macos.tar.gz");
-        std::fs::copy(test_file, &pkg_file)?;
-
-        // 测试包安装
-        install_package("zlib", &pkg_file, &cbp_dirs)?;
-
-        // 验证文件列表
-        let record_file = cbp_dirs.records.join("zlib.files");
-        assert!(record_file.exists());
-        let file_list = std::fs::read_to_string(record_file)?;
-        assert!(file_list.contains("include/zlib.h"));
-        assert!(file_list.contains("lib/libz.a"));
-
-        // 验证关键文件存在
-        assert!(cbp_dirs.home.join("include/zlib.h").exists());
-        assert!(cbp_dirs.home.join("lib/libz.a").exists());
-
-        Ok(())
-    }
 }

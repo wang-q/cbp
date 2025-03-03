@@ -1,5 +1,6 @@
 use serde::Deserialize;
 use std::path::PathBuf;
+use std::path::Path;
 
 /// Represents CBP directory structure
 ///
@@ -40,10 +41,12 @@ impl HomeDirProvider for DefaultHomeDirProvider {
     }
 }
 
+#[cfg(test)]
 pub struct MockHomeDirProvider {
     home_dir_result: Option<PathBuf>,
 }
 
+#[cfg(test)]
 impl MockHomeDirProvider {
     pub fn new() -> Self {
         Self {
@@ -57,6 +60,7 @@ impl MockHomeDirProvider {
     }
 }
 
+#[cfg(test)]
 impl HomeDirProvider for MockHomeDirProvider {
     fn home_dir(&self) -> Option<PathBuf> {
         self.home_dir_result.clone()
@@ -125,6 +129,51 @@ impl CbpDirs {
         std::fs::create_dir_all(&dirs.records)?;
 
         Ok(dirs)
+    }
+
+    /// Install package from a tar.gz file
+    ///
+    /// # Arguments
+    ///
+    /// * `pkg_name` - Name of the package
+    /// * `pkg_file` - Path to the package tar.gz file
+    pub fn install_package(&self, pkg_name: &str, pkg_file: &Path) -> anyhow::Result<()> {
+        println!("==> Installing {}", pkg_name);
+
+        // Open and decode tar.gz file
+        let file = std::fs::File::open(pkg_file)?;
+        let gz = flate2::read::GzDecoder::new(file);
+        let mut archive = tar::Archive::new(gz);
+
+        // List files in package
+        let record_file = self.records.join(format!("{}.files", pkg_name));
+        let mut file_list = String::new();
+        {
+            let entries = archive.entries()?;
+            for entry in entries {
+                let entry = entry?;
+                if let Some(path) = entry.path()?.to_str() {
+                    file_list.push_str(path);
+                    file_list.push('\n');
+                }
+            }
+        }
+
+        // Save file list
+        std::fs::write(&record_file, file_list)?;
+
+        // Extract files (need to reopen archive as entries were consumed)
+        let file = std::fs::File::open(pkg_file)?;
+        let gz = flate2::read::GzDecoder::new(file);
+        let mut archive = tar::Archive::new(gz);
+
+        if let Err(e) = archive.unpack(&self.home) {
+            std::fs::remove_file(record_file)?;
+            return Err(anyhow::anyhow!("    Failed to extract {}: {}", pkg_name, e));
+        }
+
+        println!("    Done");
+        Ok(())
     }
 }
 
@@ -315,6 +364,32 @@ mod tests {
 
             assert_eq!(result_components, expected_components);
         }
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_install_real_package() -> anyhow::Result<()> {
+        let temp_dir = tempfile::tempdir()?;
+        let cbp_dirs = crate::CbpDirs::from(temp_dir.path().to_path_buf())?;
+
+        // 使用测试包文件
+        let test_file = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("tests/zlib.macos.tar.gz");
+
+        // 测试包安装
+        cbp_dirs.install_package("zlib", &test_file)?;
+
+        // 验证文件列表
+        let record_file = cbp_dirs.records.join("zlib.files");
+        assert!(record_file.exists());
+        let file_list = std::fs::read_to_string(record_file)?;
+        assert!(file_list.contains("include/zlib.h"));
+        assert!(file_list.contains("lib/libz.a"));
+
+        // 验证关键文件存在
+        assert!(cbp_dirs.home.join("include/zlib.h").exists());
+        assert!(cbp_dirs.home.join("lib/libz.a").exists());
 
         Ok(())
     }

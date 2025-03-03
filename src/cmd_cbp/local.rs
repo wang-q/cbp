@@ -91,7 +91,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             ));
         };
 
-        cbp::install_package(pkg, &pkg_file, &cbp_dirs)?;
+        cbp_dirs.install_package(pkg, &pkg_file)?;
     }
 
     Ok(())

@@ -102,7 +102,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         std::fs::rename(&temp_file, &cache_file)?;
 
         // Install package
-        cbp::install_package(pkg, &cache_file, &cbp_dirs)?;
+        cbp_dirs.install_package(pkg, &cache_file)?;
     }
 
     Ok(())
