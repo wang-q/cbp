@@ -62,12 +62,12 @@ pub fn format_packages(packages: &[String]) -> String {
 }
 
 /// Find files in directory with optional pattern
-/// Returns sorted relative paths
+/// Returns sorted relative paths with forward slashes
 pub fn find_files(dir: &Path, pattern: Option<&str>) -> anyhow::Result<Vec<String>> {
     let pattern = pattern.unwrap_or("*");
     let walker = walkdir::WalkDir::new(dir).into_iter().filter_entry(|e| {
         if !e.file_type().is_file() {
-            return true; // 允许继续遍历目录
+            return true; // Continue traversing directories
         }
         match glob::Pattern::new(pattern) {
             Ok(pat) => pat.matches(e.file_name().to_str().unwrap_or_default()),
@@ -86,7 +86,7 @@ pub fn find_files(dir: &Path, pattern: Option<&str>) -> anyhow::Result<Vec<Strin
                     .strip_prefix(dir)
                     .ok()
                     .and_then(|p| p.to_str())
-                    .map(|s| s.to_string())
+                    .map(|s| s.replace('\\', "/")) // Convert backslashes to forward slashes
             })
         })
         .collect();
