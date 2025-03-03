@@ -470,3 +470,63 @@ fn command_init_custom_dir() -> anyhow::Result<()> {
     std::env::set_var("HOME", original_home);
     Ok(())
 }
+
+#[test]
+fn command_prefix() -> anyhow::Result<()> {
+    use tempfile::TempDir;
+
+    // Create temporary home directory
+    let temp_home = TempDir::new()?;
+    let original_home = std::env::var("HOME")?;
+    std::env::set_var("HOME", temp_home.path());
+
+    // Create CBP directories
+    let cbp_home = temp_home.path().join(".cbp");
+    let dirs = cbp::CbpDirs::new()?;
+
+    // Test default behavior (no args)
+    let output = Command::cargo_bin("cbp")?.arg("prefix").output()?;
+    let stdout = String::from_utf8(output.stdout)?;
+    assert_eq!(stdout.trim(), dirs.home.to_string_lossy().trim());
+
+    // Create paths with longer lifetime
+    let include_path = dirs.home.join("include");
+    let lib_path = dirs.home.join("lib");
+    let exe_path = cbp_home.join("bin/cbp");
+
+    // Test all directory options
+    let test_cases = [
+        ("bin", dirs.bin.to_string_lossy()),
+        ("cache", dirs.cache.to_string_lossy()),
+        ("records", dirs.records.to_string_lossy()),
+        ("config", cbp_home.to_string_lossy()),
+        ("include", include_path.to_string_lossy()),
+        ("lib", lib_path.to_string_lossy()),
+        ("exe", exe_path.to_string_lossy()),
+    ];
+
+    for (dir_type, expected_path) in test_cases {
+        let output = Command::cargo_bin("cbp")?
+            .arg("prefix")
+            .arg(dir_type)
+            .output()?;
+        let stdout = String::from_utf8(output.stdout)?;
+        assert_eq!(
+            stdout.trim(),
+            expected_path.trim(),
+            "Failed for directory type: {}",
+            dir_type
+        );
+    }
+
+    // Test invalid directory type
+    Command::cargo_bin("cbp")?
+        .arg("prefix")
+        .arg("invalid")
+        .assert()
+        .failure();
+
+    // Restore original home
+    std::env::set_var("HOME", original_home);
+    Ok(())
+}
