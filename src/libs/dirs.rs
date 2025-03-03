@@ -1,6 +1,6 @@
 use serde::Deserialize;
-use std::path::PathBuf;
 use std::path::Path;
+use std::path::PathBuf;
 
 /// Represents CBP directory structure
 ///
@@ -137,7 +137,11 @@ impl CbpDirs {
     ///
     /// * `pkg_name` - Name of the package
     /// * `pkg_file` - Path to the package tar.gz file
-    pub fn install_package(&self, pkg_name: &str, pkg_file: &Path) -> anyhow::Result<()> {
+    pub fn install_package(
+        &self,
+        pkg_name: &str,
+        pkg_file: &Path,
+    ) -> anyhow::Result<()> {
         println!("==> Installing {}", pkg_name);
 
         // Open and decode tar.gz file
