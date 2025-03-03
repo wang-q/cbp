@@ -3,25 +3,21 @@ use std::path::Path;
 use std::path::PathBuf;
 
 /// Represents CBP directory structure
-///
-/// # Examples
-///
-/// ```
-/// use cbp::CbpDirs;
-///
-/// let dirs = CbpDirs::new().unwrap();
-/// assert!(dirs.home.exists());
-/// assert!(dirs.bin.exists());
-/// ```
 pub struct CbpDirs {
-    /// Root directory (~/.cbp)
+    /// Installation directory, can be configured via config.toml
+    /// Default: ~/.cbp
     pub home: PathBuf,
-    /// Binary directory (~/.cbp/bin)
+    /// Binary directory under installation directory
+    /// Default: <home>/bin
     pub bin: PathBuf,
-    /// Cache directory (~/.cbp/cache)
+    /// Cache directory under installation directory
+    /// Default: <home>/cache
     pub cache: PathBuf,
-    /// Package records directory (~/.cbp/records)
+    /// Package records directory under installation directory
+    /// Default: <home>/records
     pub records: PathBuf,
+    /// Configuration directory, always ~/.cbp regardless of installation directory
+    pub config: PathBuf,
 }
 
 #[derive(Deserialize, Default)]
@@ -90,8 +86,9 @@ impl CbpDirs {
             .home_dir()
             .ok_or_else(|| anyhow::anyhow!("Could not determine home directory"))?;
 
+        let config = home.join(".cbp");
         // Read configuration file
-        let config_path = home.join(".cbp/config.toml");
+        let config_path = config.join("config.toml");
         let custom_home = if config_path.exists() {
             let content = std::fs::read_to_string(&config_path)?;
             let config: Config = toml::from_str(&content)?;
@@ -101,24 +98,16 @@ impl CbpDirs {
         };
 
         // Use configured installation directory or default
-        let cbp_home = custom_home.unwrap_or_else(|| home.join(".cbp"));
-        Self::from(cbp_home)
+        let cbp_home = custom_home.unwrap_or_else(|| config.clone());
+        Self::from_with_config(cbp_home, config)
     }
 
-    /// Creates a new CbpDirs instance with specified home directory
-    ///
-    /// # Arguments
-    ///
-    /// * `home` - The root directory for CBP installation
-    ///
-    /// # Errors
-    ///
-    /// Returns error if directory creation fails
-    pub fn from(home: PathBuf) -> anyhow::Result<Self> {
+    fn from_with_config(home: PathBuf, config: PathBuf) -> anyhow::Result<Self> {
         let dirs = Self {
             bin: home.join("bin"),
             cache: home.join("cache"),
             records: home.join("records"),
+            config,
             home,
         };
 
@@ -127,8 +116,23 @@ impl CbpDirs {
         std::fs::create_dir_all(&dirs.bin)?;
         std::fs::create_dir_all(&dirs.cache)?;
         std::fs::create_dir_all(&dirs.records)?;
+        std::fs::create_dir_all(&dirs.config)?;
 
         Ok(dirs)
+    }
+
+    pub fn from(home: PathBuf) -> anyhow::Result<Self> {
+        Self::from_with_config(home.clone(), home)
+    }
+
+    /// Returns the CBP home directory as a string
+    pub fn get_home(&self) -> String {
+        self.home.to_string_lossy().into_owned()
+    }
+
+    /// Returns the CBP configuration directory as a string
+    pub fn get_config_dir(&self) -> String {
+        self.config.to_string_lossy().into_owned()
     }
 
     /// Install package from a tar.gz file
@@ -179,36 +183,6 @@ impl CbpDirs {
         println!("    Done");
         Ok(())
     }
-}
-
-/// Returns the CBP home directory as a string
-///
-/// # Errors
-///
-/// Returns error if:
-/// - Home directory cannot be determined
-/// - Config file exists but cannot be read or parsed
-pub fn get_cbp_home() -> anyhow::Result<String> {
-    get_cbp_home_with_provider(&DefaultHomeDirProvider)
-}
-
-fn get_cbp_home_with_provider(provider: &dyn HomeDirProvider) -> anyhow::Result<String> {
-    CbpDirs::new_with_provider(provider)
-        .map(|dirs| dirs.home.to_string_lossy().into_owned())
-}
-
-/// Returns the CBP configuration directory
-pub fn get_cbp_config_dir() -> anyhow::Result<PathBuf> {
-    get_cbp_config_dir_with_provider(&DefaultHomeDirProvider)
-}
-
-fn get_cbp_config_dir_with_provider(
-    provider: &dyn HomeDirProvider,
-) -> anyhow::Result<PathBuf> {
-    provider
-        .home_dir()
-        .map(|home| home.join(".cbp"))
-        .ok_or_else(|| anyhow::anyhow!("Could not determine home directory"))
 }
 
 /// Convert relative path to absolute path
@@ -287,13 +261,29 @@ mod tests {
     }
 
     #[test]
-    fn test_get_cbp_config_dir() -> anyhow::Result<()> {
+    fn test_get_home() -> anyhow::Result<()> {
         let temp_home = tempfile::tempdir()?;
         let mock = MockHomeDirProvider::new()
             .expect_home_dir(Some(temp_home.path().to_path_buf()));
 
-        let config_dir = get_cbp_config_dir_with_provider(&mock)?;
-        assert_eq!(config_dir, temp_home.path().join(".cbp"));
+        let dirs = CbpDirs::new_with_provider(&mock)?;
+        let home = dirs.get_home();
+        assert_eq!(home, temp_home.path().join(".cbp").to_string_lossy());
+        assert!(temp_home.path().join(".cbp").exists());
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_get_config_dir() -> anyhow::Result<()> {
+        let temp_home = tempfile::tempdir()?;
+        let mock = MockHomeDirProvider::new()
+            .expect_home_dir(Some(temp_home.path().to_path_buf()));
+
+        let dirs = CbpDirs::new_with_provider(&mock)?;
+        let config_dir = dirs.get_config_dir();
+        assert_eq!(config_dir, temp_home.path().join(".cbp").to_string_lossy());
+        assert!(temp_home.path().join(".cbp").exists());
 
         Ok(())
     }
@@ -315,19 +305,6 @@ mod tests {
         // Should fall back to default directory
         let dirs = CbpDirs::new_with_provider(&mock)?;
         assert_eq!(dirs.home, cbp_dir);
-
-        Ok(())
-    }
-
-    #[test]
-    fn test_get_cbp_home() -> anyhow::Result<()> {
-        let temp_home = tempfile::tempdir()?;
-        let mock = MockHomeDirProvider::new()
-            .expect_home_dir(Some(temp_home.path().to_path_buf()));
-
-        let home = get_cbp_home_with_provider(&mock)?;
-        assert_eq!(home, temp_home.path().join(".cbp").to_string_lossy());
-        assert!(temp_home.path().join(".cbp").exists());
 
         Ok(())
     }

@@ -476,45 +476,49 @@ fn command_init_custom_dir() -> anyhow::Result<()> {
 fn command_prefix() -> anyhow::Result<()> {
     use tempfile::TempDir;
 
-    // Create temporary home directory
-    let temp_home = TempDir::new()?;
-    let original_home = std::env::var("HOME")?;
-    std::env::set_var("HOME", temp_home.path());
-
-    // Create CBP directories
-    let cbp_home = temp_home.path().join(".cbp");
-    let dirs = cbp::CbpDirs::new()?;
+    let temp = TempDir::new()?;
+    let cbp_home = temp.path();
 
     // Test default behavior (no args)
-    let output = Command::cargo_bin("cbp")?.arg("prefix").output()?;
+    let output = Command::cargo_bin("cbp")?
+        .arg("prefix")
+        .arg("--dir")
+        .arg(cbp_home)
+        .output()?;
     let stdout = String::from_utf8(output.stdout)?;
-    assert_eq!(stdout.trim(), dirs.home.to_string_lossy().trim());
+    assert_eq!(stdout.trim(), cbp_home.to_string_lossy().trim());
 
-    // Create paths with longer lifetime
-    let include_path = dirs.home.join("include");
-    let lib_path = dirs.home.join("lib");
-    let exe_path = cbp_home.join("bin/cbp");
+    // 创建所有路径的字符串表示
+    let bin_path = cbp_home.join("bin").to_string_lossy().into_owned();
+    let cache_path = cbp_home.join("cache").to_string_lossy().into_owned();
+    let records_path = cbp_home.join("records").to_string_lossy().into_owned();
+    let config_path = cbp_home.to_string_lossy().into_owned();
+    let include_path = cbp_home.join("include").to_string_lossy().into_owned();
+    let lib_path = cbp_home.join("lib").to_string_lossy().into_owned();
+    let exe_path = cbp_home.join("bin/cbp").to_string_lossy().into_owned();
 
     // Test all directory options
     let test_cases = [
-        ("bin", dirs.bin.to_string_lossy()),
-        ("cache", dirs.cache.to_string_lossy()),
-        ("records", dirs.records.to_string_lossy()),
-        ("config", cbp_home.to_string_lossy()),
-        ("include", include_path.to_string_lossy()),
-        ("lib", lib_path.to_string_lossy()),
-        ("exe", exe_path.to_string_lossy()),
+        ("bin", bin_path.as_str()),
+        ("cache", cache_path.as_str()),
+        ("records", records_path.as_str()),
+        ("config", config_path.as_str()),
+        ("include", include_path.as_str()),
+        ("lib", lib_path.as_str()),
+        ("exe", exe_path.as_str()),
     ];
 
     for (dir_type, expected_path) in test_cases {
         let output = Command::cargo_bin("cbp")?
             .arg("prefix")
+            .arg("--dir")
+            .arg(cbp_home)
             .arg(dir_type)
             .output()?;
         let stdout = String::from_utf8(output.stdout)?;
         assert_eq!(
             stdout.trim(),
-            expected_path.trim(),
+            expected_path,
             "Failed for directory type: {}",
             dir_type
         );
@@ -523,11 +527,11 @@ fn command_prefix() -> anyhow::Result<()> {
     // Test invalid directory type
     Command::cargo_bin("cbp")?
         .arg("prefix")
+        .arg("--dir")
+        .arg(cbp_home)
         .arg("invalid")
         .assert()
         .failure();
 
-    // Restore original home
-    std::env::set_var("HOME", original_home);
     Ok(())
 }
