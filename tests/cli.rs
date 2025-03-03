@@ -655,3 +655,41 @@ fn command_avail() -> anyhow::Result<()> {
 
     Ok(())
 }
+
+#[test]
+fn command_install() -> anyhow::Result<()> {
+    let temp_dir = tempfile::TempDir::new()?;
+    
+    // 创建模拟服务器
+    let mut server = mockito::Server::new();
+    
+    // 准备测试包数据
+    let test_package = include_bytes!("zlib.macos.tar.gz");
+    
+    // 设置模拟端点
+    let _m = server.mock("GET", "/wang-q/cbp/releases/download/Binaries/zlib.macos.tar.gz")
+        .with_status(200)
+        .with_header("content-type", "application/gzip")
+        .with_body(test_package)
+        .create();
+
+    // 使用环境变量临时覆盖 GitHub URL
+    let mut cmd = Command::cargo_bin("cbp")?;
+    cmd.env("GITHUB_RELEASE_URL", &server.url())
+        .arg("install")
+        .arg("--dir")
+        .arg(temp_dir.path())
+        .arg("zlib");
+
+    cmd.assert()
+        .success()
+        .stdout(predicate::str::contains("==> Downloading zlib"))
+        .stdout(predicate::str::contains("Done"));
+
+    // 验证安装结果
+    assert!(temp_dir.path().join("include/zlib.h").exists());
+    assert!(temp_dir.path().join("lib/libz.a").exists());
+    assert!(temp_dir.path().join("records/zlib.files").exists());
+
+    Ok(())
+}

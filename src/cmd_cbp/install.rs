@@ -90,8 +90,11 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         std::fs::create_dir_all(&cbp_dirs.cache)?;
 
         // Download from GitHub
+        let base_url = std::env::var("GITHUB_RELEASE_URL")
+            .unwrap_or_else(|_| "https://github.com".to_string());
         let url = format!(
-            "https://github.com/wang-q/cbp/releases/download/Binaries/{}",
+            "{}/wang-q/cbp/releases/download/Binaries/{}",
+            base_url,
             pkg_file
         );
         let mut file = std::fs::File::create(&temp_file)?;
