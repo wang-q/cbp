@@ -453,7 +453,6 @@ fn command_init_custom_dir() -> anyhow::Result<()> {
     let custom_dir = temp_home.path().join("custom_cbp");
     let mut cmd = Command::cargo_bin("cbp")?;
     cmd.arg("init")
-        .arg("--dir")
         .arg(&custom_dir)
         .assert()
         .success();
@@ -473,7 +472,6 @@ fn command_init_custom_dir() -> anyhow::Result<()> {
         // Run init again to test idempotency
         Command::cargo_bin("cbp")?
             .arg("init")
-            .arg("--dir")
             .arg(&custom_dir)
             .assert()
             .success();
