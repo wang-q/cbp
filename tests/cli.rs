@@ -79,13 +79,30 @@ fn setup_test_data() -> anyhow::Result<tempfile::TempDir> {
     Ok(temp_dir)
 }
 
+fn list_dir_contents(dir: &std::path::Path, level: usize) -> anyhow::Result<()> {
+    for entry in std::fs::read_dir(dir)? {
+        let entry = entry?;
+        let path = entry.path();
+        println!(
+            "{:indent$}{}",
+            "",
+            path.strip_prefix(dir)?.display(),
+            indent = level * 2
+        );
+        if path.is_dir() {
+            list_dir_contents(&path, level + 1)?;
+        }
+    }
+    Ok(())
+}
+
 #[test]
 fn command_list_empty() -> anyhow::Result<()> {
     let temp_dir = setup_test_data()?;
     Command::cargo_bin("cbp")?
         .arg("list")
         .arg("--dir")
-        .arg(temp_dir.path().join("cbp_macos"))
+        .arg(temp_dir.path())
         .assert()
         .success()
         .stdout(predicate::str::contains("==> Installed packages:"));
@@ -96,11 +113,13 @@ fn command_list_empty() -> anyhow::Result<()> {
 #[test]
 fn command_list_packages() -> anyhow::Result<()> {
     let temp_dir = setup_test_data()?;
+    list_dir_contents(temp_dir.path(), 0)?;
+
     let mut cmd = Command::cargo_bin("cbp")?;
     let output = cmd
         .arg("list")
         .arg("--dir")
-        .arg(temp_dir.path().join("cbp_macos"))
+        .arg(temp_dir.path())
         .output()
         .unwrap();
     let stdout = String::from_utf8(output.stdout).unwrap();
@@ -116,11 +135,12 @@ fn command_list_packages() -> anyhow::Result<()> {
 #[test]
 fn command_list_specific_package() -> anyhow::Result<()> {
     let temp_dir = setup_test_data()?;
+
     let mut cmd = Command::cargo_bin("cbp")?;
     let output = cmd
         .arg("list")
         .arg("--dir")
-        .arg(temp_dir.path().join("cbp_macos"))
+        .arg(temp_dir.path())
         .arg("zlib")
         .output()
         .unwrap();
@@ -133,7 +153,7 @@ fn command_list_specific_package() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin("cbp")?;
     cmd.arg("list")
         .arg("--dir")
-        .arg("tests/cbp_macos")
+        .arg(temp_dir.path())
         .arg("nonexistent")
         .assert()
         .success()
@@ -151,7 +171,7 @@ fn command_check() -> anyhow::Result<()> {
     let output = cmd
         .arg("check")
         .arg("--dir")
-        .arg(temp_dir.path().join("cbp_macos"))
+        .arg(temp_dir.path())
         .output()
         .unwrap();
     let stdout = String::from_utf8(output.stdout).unwrap();
@@ -165,7 +185,7 @@ fn command_check() -> anyhow::Result<()> {
 #[test]
 fn command_remove() -> anyhow::Result<()> {
     let temp_dir = setup_test_data()?;
-    let dest_dir = temp_dir.path().join("cbp_macos");
+    let dest_dir = temp_dir.path();
 
     // Test removing non-existent package
     Command::cargo_bin("cbp")?
@@ -212,7 +232,7 @@ fn command_local() -> anyhow::Result<()> {
     let os_type = cbp::get_os_type()?;
     let pkg_file = format!("zlib.{}.tar.gz", os_type);
     std::fs::copy(
-        temp_dir.path().join("cbp_macos/cache/zlib.macos.tar.gz"),
+        temp_dir.path().join("cache/zlib.macos.tar.gz"),
         cbp_home.join("cache").join(&pkg_file),
     )?;
 
