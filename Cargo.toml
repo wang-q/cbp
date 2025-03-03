@@ -23,7 +23,7 @@ regex = "1.9.5"
 
 flate2 = "1.0.27"
 tar = "0.4.40"
-dirs = "5.0.1"
+dirs = "6.0.0"
 toml = "0.8.20"
 
 tempfile = "3.8.0"
@@ -41,6 +41,7 @@ chrono = "0.4.40"
 [dev-dependencies]
 assert_cmd = "2.0.12"
 predicates = "3.0.3"
+mockall = "0.13.1"
 
 [profile.release]
 lto = true
