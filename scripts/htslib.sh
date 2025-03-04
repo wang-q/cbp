@@ -15,7 +15,6 @@ CFLAGS="-I$HOME/.cbp/include" \
 LDFLAGS="-L$HOME/.cbp/lib" \
     ./configure \
     --prefix="${TEMP_DIR}/collect" \
-    --bindir="${TEMP_DIR}/collect" \
     --with-libdeflate \
     --disable-bz2 \
     --disable-lzma \
