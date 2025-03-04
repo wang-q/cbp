@@ -3,7 +3,7 @@ use clap::*;
 /// Create the check subcommand
 pub fn make_subcommand() -> Command {
     Command::new("check")
-        .about("Check for unmanaged files in ~/.cbp")
+        .about("Check for unmanaged files")
         .after_help(
             r###"
 Scan ~/.cbp directory for files not managed by any package.

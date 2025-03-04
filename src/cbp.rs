@@ -25,11 +25,10 @@ fn main() -> anyhow::Result<()> {
         .after_help(
             r###"
 Package Manager Features:
-    * Cross-platform support (Linux/macOS/Windows)
-    * Pre-built static binaries
+    * Pre-built binaries without dependencies
     * GitHub release integration
     * Local package support
-    * Package tracking
+    * Customizable installation paths
 
 Directory Structure:
     ~/.cbp/

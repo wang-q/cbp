@@ -11,7 +11,7 @@ This command downloads and installs pre-built binary packages from GitHub.
 It checks for existing installations to avoid duplicates and handles
 platform-specific package selection automatically.
 
-[Package Source](https://github.com/wang-q/cbp/releases/tag/Binaries)
+[Release page](https://github.com/wang-q/cbp/releases/tag/Binaries)
 
 Examples:
 * Basic usage
@@ -60,7 +60,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     // Args
     //----------------------------
     let packages = args.get_many::<String>("packages").unwrap();
-    
+
     // Set up HTTP agent with optional proxy
     let opt_proxy_url = args.get_one::<String>("proxy");
     let agent = cbp::create_http_agent(opt_proxy_url)?;
