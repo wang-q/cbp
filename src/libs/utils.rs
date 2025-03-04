@@ -115,6 +115,25 @@ pub fn is_system_file(path: &str) -> bool {
     path.contains("/System Volume Information/") // Windows system directory
 }
 
+/// Create an HTTP agent with optional proxy support
+/// Priority: command line proxy > ALL_PROXY > HTTP_PROXY > all_proxy > http_proxy
+pub fn create_http_agent(proxy_url: Option<&String>) -> anyhow::Result<ureq::Agent> {
+    let proxy_url = proxy_url
+        .cloned()
+        .or_else(|| std::env::var("ALL_PROXY").ok())
+        .or_else(|| std::env::var("HTTP_PROXY").ok())
+        .or_else(|| std::env::var("all_proxy").ok())
+        .or_else(|| std::env::var("http_proxy").ok())
+        .map(|url| url.replace("socks5h://", "socks5://"));
+
+    Ok(if let Some(proxy_url) = proxy_url {
+        let proxy = ureq::Proxy::new(&proxy_url)?;
+        ureq::AgentBuilder::new().proxy(proxy).build()
+    } else {
+        ureq::AgentBuilder::new().build()
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

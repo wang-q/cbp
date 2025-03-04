@@ -8,21 +8,29 @@ pub fn make_subcommand() -> Command {
             r###"
 Query and list available packages from GitHub release repository.
 
-The command will:
-* Query GitHub release assets via API
-* Filter by platform (macos/linux)
-* Group packages by first letter
-* Format output in columns
+This command queries the GitHub API to retrieve package information, supporting
+platform-specific filtering for macOS, Linux, and Windows. Results are displayed
+in a formatted table, grouped alphabetically for better readability. For users
+behind firewalls, various proxy options are supported through command line
+arguments or environment variables.
 
 [Release page](https://github.com/wang-q/cbp/releases/tag/Binaries)
 
-Options:
+Examples:
 * Platform filtering
-  cbp avail macos
-  cbp avail linux
+  cbp avail             # List all packages
+  cbp avail linux       # Linux packages only
 
 * Network proxy support
+  # Priority (high to low):
+  # 1. --proxy argument
   cbp avail --proxy socks5://127.0.0.1:7890
+  # 2. Environment variables (in order):
+  #    ALL_PROXY
+  #    HTTP_PROXY
+  #    all_proxy
+  #    http_proxy
+
 "###,
         )
         .arg(
@@ -43,17 +51,22 @@ Options:
 
 /// Execute avail command
 pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
-    // Query GitHub releases using ureq
-    let agent = if let Some(proxy_url) = args.get_one::<String>("proxy") {
-        let proxy = ureq::Proxy::new(proxy_url)?;
-        ureq::AgentBuilder::new().proxy(proxy).build()
-    } else {
-        ureq::AgentBuilder::new().build()
-    };
+    //----------------------------
+    // Args
+    //----------------------------
+    let opt_platform = args.get_one::<String>("platform");
+    let opt_proxy_url = args.get_one::<String>("proxy");
+
+    // Set up HTTP agent with optional proxy
+    let agent = cbp::create_http_agent(opt_proxy_url)?;
 
     let api_url = std::env::var("GITHUB_API_URL")
         .unwrap_or_else(|_| "https://api.github.com".to_string());
 
+    //----------------------------
+    // Processing
+    //----------------------------
+    // Query GitHub releases using ureq
     let resp: serde_json::Value = agent
         .get(&format!(
             "{}/repos/wang-q/cbp/releases/tags/Binaries",
@@ -65,10 +78,10 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
     // Extract and filter package names
     let mut packages: Vec<String> = Vec::new();
-    let pattern = if let Some(platform) = args.get_one::<String>("platform") {
+    let pattern = if let Some(platform) = opt_platform {
         format!("\\.{}\\.tar\\.gz$", platform)
     } else {
-        String::from("\\.(linux|macos)\\.tar\\.gz$")
+        String::from("\\.(linux|macos|windows)\\.tar\\.gz$")
     };
 
     let re = regex::Regex::new(&pattern)?;
