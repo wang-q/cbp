@@ -22,7 +22,9 @@ Upload package files to GitHub release and update checksums.
 
 Requirements:
 * GitHub CLI (gh) must be installed and authenticated
-* Set HTTPS_PROXY if needed (e.g., export HTTPS_PROXY=http://127.0.0.1:7890)
+* For proxy support, use HTTPS_PROXY environment variable
+  # Different from other commands' proxy settings
+  export HTTPS_PROXY=http://127.0.0.1:7890
 
 The command will:
 * Calculate MD5 checksums
@@ -35,6 +37,7 @@ Examples:
 
 2. Upload multiple files:
    cbp upload binaries/*.tar.gz
+
 "###,
         )
         .arg(
