@@ -7,24 +7,26 @@ pub fn make_subcommand() -> Command {
             r###"
 Download and install packages from GitHub release repository.
 
-Features:
-* Installation status checking
-* Automatic package downloading
-* Platform-specific selection
-* Proxy support for restricted networks
-* Multiple package installation
+This command downloads and installs pre-built binary packages from GitHub.
+It checks for existing installations to avoid duplicates and handles
+platform-specific package selection automatically.
 
 [Package Source](https://github.com/wang-q/cbp/releases/tag/Binaries)
 
 Examples:
-* Single package
-  cbp install zlib
+* Basic usage
+  cbp install zlib            # single package
+  cbp install zlib bzip2      # multiple packages
 
-* Multiple packages
-  cbp install zlib bzip2
-
-* With proxy
+* Network proxy support
+  # Priority (high to low):
+  # 1. --proxy argument
   cbp install --proxy socks5://127.0.0.1:7890 zlib
+  # 2. Environment variables:
+  #    ALL_PROXY
+  #    HTTP_PROXY
+  #    all_proxy
+  #    http_proxy
 "###,
         )
         .arg(
@@ -63,13 +65,9 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
     let os_type = cbp::get_os_type()?;
 
-    // Setup HTTP client
-    let agent = if let Some(proxy_url) = args.get_one::<String>("proxy") {
-        let proxy = ureq::Proxy::new(proxy_url)?;
-        ureq::AgentBuilder::new().proxy(proxy).build()
-    } else {
-        ureq::AgentBuilder::new().build()
-    };
+    // Set up HTTP agent with optional proxy
+    let opt_proxy_url = args.get_one::<String>("proxy");
+    let agent = cbp::create_http_agent(opt_proxy_url)?;
 
     // Process packages
     for pkg in args.get_many::<String>("packages").unwrap() {

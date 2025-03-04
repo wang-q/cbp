@@ -10,9 +10,7 @@ Query and list available packages from GitHub release repository.
 
 This command queries the GitHub API to retrieve package information, supporting
 platform-specific filtering for macOS, Linux, and Windows. Results are displayed
-in a formatted table, grouped alphabetically for better readability. For users
-behind firewalls, various proxy options are supported through command line
-arguments or environment variables.
+in a formatted table, grouped alphabetically for better readability.
 
 [Release page](https://github.com/wang-q/cbp/releases/tag/Binaries)
 
@@ -25,7 +23,7 @@ Examples:
   # Priority (high to low):
   # 1. --proxy argument
   cbp avail --proxy socks5://127.0.0.1:7890
-  # 2. Environment variables (in order):
+  # 2. Environment variables:
   #    ALL_PROXY
   #    HTTP_PROXY
   #    all_proxy
@@ -35,7 +33,7 @@ Examples:
         )
         .arg(
             Arg::new("platform")
-                .help("Target platform (macos/linux)")
+                .help("Target platform (linux/macos/windows)")
                 .num_args(0..=1)
                 .index(1)
                 .value_name("PLATFORM"),
