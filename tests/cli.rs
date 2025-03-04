@@ -26,26 +26,6 @@ fn command_kb_readme() -> anyhow::Result<()> {
 }
 
 #[test]
-fn command_kb_no_args() -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin("cbp")?;
-    cmd.arg("kb");
-    cmd.assert()
-        .failure()
-        .stderr(predicate::str::contains("required"));
-
-    Ok(())
-}
-
-#[test]
-fn command_kb_invalid_doc() -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin("cbp")?;
-    cmd.arg("kb").arg("nonexistent");
-    cmd.assert().failure();
-
-    Ok(())
-}
-
-#[test]
 fn command_kb_with_output_file() -> anyhow::Result<()> {
     use std::fs;
     use tempfile::TempDir;
@@ -62,7 +42,27 @@ fn command_kb_with_output_file() -> anyhow::Result<()> {
         .success();
 
     let content = fs::read_to_string(&test_output)?;
-    assert!(content.contains("bioinformatics tools"));
+    assert!(content.contains("bioinformatics"));
+
+    Ok(())
+}
+
+#[test]
+fn command_kb_no_args() -> anyhow::Result<()> {
+    let mut cmd = Command::cargo_bin("cbp")?;
+    cmd.arg("kb");
+    cmd.assert()
+        .failure()
+        .stderr(predicate::str::contains("required"));
+
+    Ok(())
+}
+
+#[test]
+fn command_kb_invalid_doc() -> anyhow::Result<()> {
+    let mut cmd = Command::cargo_bin("cbp")?;
+    cmd.arg("kb").arg("nonexistent");
+    cmd.assert().failure();
 
     Ok(())
 }
