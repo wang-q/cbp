@@ -57,6 +57,8 @@ bash scripts/libxcrypt.sh
 
 bash scripts/gsl.sh
 
+bash scripts/c-ares.sh -t
+
 ```
 
 ## Common tools
@@ -80,9 +82,9 @@ bash scripts/jq.sh -t macos  # This will fail on Linux
 ```
 
 ```bash
-bash scripts/ninja.sh linux  
-bash scripts/ninja.sh macos  
-bash scripts/ninja.sh windows  
+bash scripts/ninja.sh linux
+bash scripts/ninja.sh macos
+bash scripts/ninja.sh windows
 
 bash scripts/tsv-utils.sh
 

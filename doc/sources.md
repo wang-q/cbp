@@ -54,6 +54,8 @@ curl -L https://github.com/besser82/libxcrypt/releases/download/v4.4.38/libxcryp
 
 curl -o sources/gsl.tar.gz -L https://ftp.gnu.org/gnu/gsl/gsl-2.8.tar.gz
 
+curl -o sources/c-ares.tar.gz -L https://github.com/c-ares/c-ares/releases/download/v1.34.4/c-ares-1.34.4.tar.gz
+
 # curl -L https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/openmp-19.1.7.src.tar.xz |
 #     tar xvfJ - &&
 #     mv openmp-19.1.7.src libomp &&
@@ -64,7 +66,7 @@ curl -o sources/gsl.tar.gz -L https://ftp.gnu.org/gnu/gsl/gsl-2.8.tar.gz
 
 ```
 
-## `Makefile` 
+## `Makefile`
 
 ```bash
 curl -o sources/pigz.tar.gz -L https://github.com/madler/pigz/archive/refs/tags/v2.8.tar.gz
