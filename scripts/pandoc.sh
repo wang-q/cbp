@@ -30,7 +30,11 @@ else
 fi
 
 # Collect binaries
-collect_bins pandoc-*/pandoc*
+if [ "$OS_TYPE" == "windows" ]; then
+    collect_bins pandoc-*/pandoc*
+else
+    collect_bins pandoc-*/bin/pandoc*
+fi
 
 # Run test if requested
 if [ "${RUN_TEST}" = "test" ]; then
