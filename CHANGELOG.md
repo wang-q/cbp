@@ -2,6 +2,11 @@
 
 ## Unreleased - ReleaseDate
 
+- Added `init` command for initializing the package manager
+- Add Windows support
+- Improved proxy support
+- Improved core utilities
+
 ## 0.3.1 - 2025-03-02
 
 - Fixed symlink handling in `tar` command
