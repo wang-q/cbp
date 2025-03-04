@@ -40,30 +40,31 @@ Directory Structure:
 
 Common Commands:
 1. Initial Setup:
-   cbp init                                          # default setup
-   cbp init /opt/cbp                                 # custom location
+   cbp init                    # default setup
+   cbp init /opt/cbp           # custom location
 
 2. Package Installation:
-   cbp install zlib                                  # from GitHub
-   cbp install --proxy socks5://127.0.0.1:7890 zlib  # with proxy
-   cbp local zlib                                    # from local files
+   cbp install zlib            # from GitHub
+   cbp local zlib              # from local files
+   # Use --proxy for restricted networks
+   # cbp install --proxy socks5://127.0.0.1:7890 zlib
 
 3. Package Management:
-   cbp list                                          # list all packages
-   cbp list zlib                                     # show package contents
-   cbp remove zlib                                   # remove package
-   cbp check                                         # find unmanaged files
+   cbp list                    # list all packages
+   cbp list zlib               # show package contents
+   cbp remove zlib             # remove package
+   cbp check                   # find unmanaged files
 
 4. Package Discovery:
-   cbp avail                                         # list all packages
-   cbp avail macos                                   # platform specific
+   cbp avail                   # list all packages
+   cbp avail macos             # platform specific
 
 5. Development Tools:
-   cbp tar -o pkg.tar.gz src/                        # create package
-   cbp prefix                                        # show install paths
+   cbp tar -o pkg.tar.gz src/  # create package
+   cbp prefix                  # show install paths
 
 6. Documentation:
-   cbp kb readme                                     # view documentation
+   cbp kb readme               # view documentation
 "###,
         );
 
