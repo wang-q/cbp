@@ -125,6 +125,21 @@ build_tar() {
 }
 
 # Collect specified binaries
+#
+# This function handles various binary file scenarios:
+# 1. Non-Windows:
+#    - Input: program        -> Output: program
+#    - Input: libcrypto.a    -> Output: libcrypto.a
+#
+# 2. Windows:
+#    - Input: program        -> Output: program.exe
+#    - Input: program.exe    -> Output: program.exe
+#    - Input: program.dll    -> Output: program.dll
+#    - Input: libcrypto.lib  -> Output: libcrypto.lib
+#    - Input: libcrypto.a    -> Output: libcrypto.a
+#
+# Note: For Windows, if 'program' is provided but 'program.exe' exists,
+#       the function will use 'program.exe' as the source file.
 collect_bins() {
     local bins=("$@")
 
@@ -141,7 +156,13 @@ collect_bins() {
     for bin in "${bins[@]}"; do
         # Handle binary name with suffix
         local source_bin="${bin}"
-        local target_bin="$(basename ${bin})${BIN_SUFFIX}"
+        local base_name=$(basename "${bin}")
+        local target_bin="${base_name}"
+
+        # Only add suffix for executables on Windows, and only if they don't already have an extension
+        if [ -n "${BIN_SUFFIX}" ] && [[ ! "${base_name}" =~ \.(exe|dll|lib|a)$ ]]; then
+            target_bin="${base_name}${BIN_SUFFIX}"
+        fi
 
         # Check if source binary has suffix
         if [ -n "${BIN_SUFFIX}" ] && [ -f "${bin}${BIN_SUFFIX}" ]; then
