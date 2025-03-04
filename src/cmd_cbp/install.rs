@@ -55,6 +55,15 @@ Examples:
 }
 
 pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
+    //----------------------------
+    // Args
+    //----------------------------
+    let packages = args.get_many::<String>("packages").unwrap();
+    
+    // Set up HTTP agent with optional proxy
+    let opt_proxy_url = args.get_one::<String>("proxy");
+    let agent = cbp::create_http_agent(opt_proxy_url)?;
+
     let cbp_dirs = if args.contains_id("dir") {
         let home =
             std::path::Path::new(args.get_one::<String>("dir").unwrap()).to_path_buf();
@@ -65,12 +74,10 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
     let os_type = cbp::get_os_type()?;
 
-    // Set up HTTP agent with optional proxy
-    let opt_proxy_url = args.get_one::<String>("proxy");
-    let agent = cbp::create_http_agent(opt_proxy_url)?;
-
-    // Process packages
-    for pkg in args.get_many::<String>("packages").unwrap() {
+    //----------------------------
+    // Processing
+    //----------------------------
+    for pkg in packages {
         // Check if already installed
         let record_file = cbp_dirs.records.join(format!("{}.files", pkg));
         if record_file.exists() {
