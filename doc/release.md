@@ -6,6 +6,7 @@ This section describes the binary packages distributed through the "Binaries" re
 
 * Linux: x86_64 with glibc 2.17+ (CentOS 7 compatible)
 * macOS: ARM64 (Apple Silicon)
+* Windows: x86_64
 
 ### Package Format
 
@@ -13,6 +14,7 @@ All packages are distributed as gzipped tarballs with the following naming conve
 
 * Linux: package.linux.tar.gz
 * macOS: package.macos.tar.gz
+* Windows: package.windows.tar.gz
 
 ### Installation
 

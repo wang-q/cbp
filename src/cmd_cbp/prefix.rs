@@ -3,7 +3,7 @@ use clap::*;
 
 pub fn make_subcommand() -> Command {
     Command::new("prefix")
-        .about("Display CBP installation directories")
+        .about("Display cbp installation directories")
         .after_help(
             r###"
 Display CBP directory paths.
