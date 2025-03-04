@@ -1,18 +1,46 @@
 # Prebuilds from the official repositories
 
+## Common tools
+
 ```bash
+# Download and package binary for current system
+bash scripts/jq.sh
+
+# Download, package and test binary
+bash scripts/jq.sh -t
+
+# Download and package for specific OS
+bash scripts/jq.sh linux     # Download Linux x86_64 binary
+bash scripts/jq.sh macos     # Download macOS ARM64 binary
+bash scripts/jq.sh windows   # Download Windows x86_64 binary
+
+# Note: Tests will fail when downloading for different OS
+# as binaries cannot be executed on incompatible architectures
+bash scripts/jq.sh -t macos  # This will fail on Linux
+
+bash scripts/ninja.sh -t linux  
+bash scripts/ninja.sh macos  
+bash scripts/ninja.sh windows  
+
+bash scripts/tsv-utils.sh linux
+bash scripts/tsv-utils.sh macos
+
 bash scripts/pandoc.sh -t linux
 bash scripts/pandoc.sh macos
 bash scripts/pandoc.sh windows
 
+#bash scripts/pup.sh
 
+```
+
+## Bioinformatics tools
+
+```bash
 bash scripts/muscle.sh -t linux
 bash scripts/reseek.sh -t linux
 bash scripts/usearch.sh -t linux
 
 bash scripts/mosdepth.sh -t linux
-
-#bash scripts/pup.sh
 
 bash scripts/iqtree2.sh -t linux
 bash scripts/iqtree2.sh macos

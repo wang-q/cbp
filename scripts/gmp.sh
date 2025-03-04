@@ -17,21 +17,23 @@ CXX="zig c++ -target ${TARGET_ARCH}" \
     --disable-silent-rules \
     --disable-shared \
     --enable-static \
+    --enable-cxx \
+    --with-pic \
+    --without-readline \
     || exit 1
 make -j 8 || exit 1
+# if [ "${RUN_TEST}" = "test" ]; then
+#     make check || exit 1
+# fi
 make install || exit 1
 
 # eza "${TEMP_DIR}/collect"
-# ldd "${TEMP_DIR}/collect/bin/gsl-randist"
 
 # Run test if requested
 if [ "${RUN_TEST}" = "test" ]; then
-    test_bin() {
-        local output=$("${TEMP_DIR}/collect/bin/gsl-randist" 0 20 cauchy 30)
-        echo "${output}"
-        [ -n "${output}" ] && echo "PASSED"
-    }
-    run_test test_bin
+    source "${BASH_DIR}/tests/gmp.sh"
+    create_and_build_test
+    run_test "${TEMP_DIR}/test"
 fi
 
 # Use build_tar function from common.sh
