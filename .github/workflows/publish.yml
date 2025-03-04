@@ -10,31 +10,26 @@ permissions:
   contents: write
 
 jobs:
-  linux-gnu:
+  linux-musl:
     runs-on: ubuntu-latest
     steps:
-      - name: Show GLIBC
-        run: ldd --version
-
-      - name: Checkout sources
-        uses: actions/checkout@v4
-
-      - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
+      - uses: hecrj/setup-rust-action@v1
         with:
-          profile: minimal
-          toolchain: stable
-          override: true
-
+          rust-version: stable
+          targets: x86_64-unknown-linux-musl
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Build
-        run: cargo build --verbose --release
+        run: cargo build --verbose --release --target x86_64-unknown-linux-musl
       - name: Upload binaries to releases
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: target/release/cbp
+          file: target/x86_64-unknown-linux-musl/release/cbp
           asset_name: cbp.linux
           tag: ${{ github.ref }}
+          overwrite: true
   macos:
     runs-on: macOS-latest
     steps:
