@@ -2,6 +2,8 @@
 
 ## Unreleased - ReleaseDate
 
+## 0.3.2 - 2025-03-04
+
 - Added `init` command for initializing the package manager
 - Added `prefix` command for getting the package manager prefix
 - Added Windows support
