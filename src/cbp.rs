@@ -11,17 +11,17 @@ fn main() -> anyhow::Result<()> {
         .propagate_version(true)
         .arg_required_else_help(true)
         .color(ColorChoice::Auto)
+        .subcommand(cmd_cbp::init::make_subcommand())
         .subcommand(cmd_cbp::install::make_subcommand())
+        .subcommand(cmd_cbp::local::make_subcommand())
         .subcommand(cmd_cbp::list::make_subcommand())
         .subcommand(cmd_cbp::remove::make_subcommand())
         .subcommand(cmd_cbp::avail::make_subcommand())
-        .subcommand(cmd_cbp::init::make_subcommand())
-        .subcommand(cmd_cbp::kb::make_subcommand())
         .subcommand(cmd_cbp::check::make_subcommand())
-        .subcommand(cmd_cbp::local::make_subcommand())
         .subcommand(cmd_cbp::tar::make_subcommand())
-        .subcommand(cmd_cbp::upload::make_subcommand())
         .subcommand(cmd_cbp::prefix::make_subcommand())
+        .subcommand(cmd_cbp::kb::make_subcommand())
+        .subcommand(cmd_cbp::upload::make_subcommand())
         .after_help(
             r###"
 Package Manager Features:
@@ -53,13 +53,13 @@ Common Commands:
    cbp list                    # list all packages
    cbp list zlib               # show package contents
    cbp remove zlib             # remove package
-   cbp check                   # find unmanaged files
 
 4. Package Discovery:
    cbp avail                   # list all packages
    cbp avail macos             # platform specific
 
 5. Development Tools:
+   cbp check                   # find unmanaged files
    cbp tar -o pkg.tar.gz src/  # create package
    cbp prefix                  # show install paths
 
