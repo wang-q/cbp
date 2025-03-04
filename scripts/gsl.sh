@@ -21,8 +21,18 @@ CXX="zig c++ -target ${TARGET_ARCH}" \
 make -j 8 || exit 1
 make install || exit 1
 
-# tree "${TEMP_DIR}/collect"
+# eza "${TEMP_DIR}/collect"
 # ldd "${TEMP_DIR}/collect/bin/gsl-randist"
+
+# Run test if requested
+if [ "${RUN_TEST}" = "test" ]; then
+    test_bin() {
+        local output=$("${TEMP_DIR}/collect/bin/gsl-randist" 0 20 cauchy 30)
+        echo "${output}"
+        [ -n "${output}" ] && echo "PASSED"
+    }
+    run_test test_bin
+fi
 
 # Use build_tar function from common.sh
 build_tar

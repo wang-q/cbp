@@ -55,7 +55,7 @@ bash scripts/libpng.sh
 bash scripts/argtable.sh
 bash scripts/libxcrypt.sh
 
-bash scripts/gsl.sh
+bash scripts/gsl.sh -t
 
 bash scripts/c-ares.sh -t
 
