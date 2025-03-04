@@ -28,7 +28,7 @@ internal workings.
 
 ### Requirements
 
-* Zig compiler (>= 0.13.0)
+* Zig compiler (>= 0.14.0)
 * Rust toolchain (stable)
 * Git (with LFS support)
 * `gh` command (GitHub CLI)
@@ -50,7 +50,9 @@ mkdir -p $HOME/share
 cd $HOME/share
 
 # linux
-curl -L https://ziglang.org/download/0.13.0/zig-linux-x86_64-0.13.0.tar.xz > zig.tar.xz
+# need 0.14 for pthread on x86_64-windows-gnu
+# https://github.com/ziglang/zig/issues/10989
+curl -L https://ziglang.org/builds/zig-linux-x86_64-0.14.0-dev.3462+edabcf619.tar.xz > zig.tar.xz
 tar xvfJ zig.tar.xz
 mv zig-linux-x86_64* zig
 ln -s $HOME/share/zig/zig $HOME/bin/zig
@@ -255,7 +257,7 @@ gh release create Binaries \
     # 2. Upload files to GitHub Release
     # 3. Update release notes with new hashes
     cbp upload binaries/zlib.*.tar.gz
-    
+
     # Or upload manually with gh command
     # Note: This method does not update MD5 hashes
     gh release upload Binaries binaries/zlib.*.tar.gz --clobber
