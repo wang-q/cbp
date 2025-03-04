@@ -6,52 +6,67 @@
 [![Lines of code](https://www.aschey.tech/tokei/github/wang-q/cbp)](https://github.com//wang-q/cbp)
 [![License](https://img.shields.io/github/license/wang-q/builds)](https://github.com/wang-q/builds/blob/main/LICENSE)
 
-`cbp` is a **C**ross-platform **B**inary **P**ackage manager for bioinformatics tools, focusing on
-glibc 2.17 (CentOS 7) compatibility and Apple Silicon support. Pre-built binaries are cross-compiled
-with Zig for consistent builds across platforms.
+`cbp` is a **C**ross-platform **B**inary **P**ackage manager that simplifies the distribution of CLI
+tools, with a focus on bioinformatics software. It ensures compatibility with older Linux systems
+(glibc 2.17+), Windows (x86_64), and provides native support for Apple Silicon, using Zig for
+reliable cross-platform builds.
 
-The name `cbp` is inspired by DNA's "constant base pairing" - a fundamental principle in molecular
-biology where A always pairs with T, and G always pairs with C. Just as these base pairs maintain
-reliable and consistent DNA structure, `cbp` aims to provide consistent and reliable binary packages
-across different platforms.
+The name `cbp` draws inspiration from DNA's *c*onstant *b*ase *p*airing - nature's most precise
+pairing system where A pairs with T, and G pairs with C. Similarly, `cbp` ensures consistent binary
+compatibility across different platforms, making software distribution as reliable as DNA
+replication.
 
 ## Features
 
 * Cross-platform compatibility
-  - Linux (glibc 2.17+)
-  - macOS (Apple Silicon)
-  - Windows WSL
+    - Linux (glibc 2.17+)
+    - macOS (Apple Silicon)
+    - Windows (x86_64)
 * Minimal dependencies
-  - Bash shell
-  - curl
+    - Only requires a terminal (Bash/PowerShell)
 * Package management
-  - GitHub release integration
-  - Local package support
-  - Package tracking
-  - Proxy support
+    - Pre-built binaries without dependencies
+    - GitHub release integration
+    - Local package support
+    - Customizable installation paths
 
 ## Quick Start
 
+* Linux/macOS
+
 ```bash
 # Install cbp
-curl -L https://raw.githubusercontent.com/wang-q/cbp/main/scripts/init.sh | bash
-
+curl -LO https://github.com/wang-q/cbp/releases/latest/download/cbp.linux
+chmod +x cbp.linux
+cbp.linux init
 source ~/.bashrc
 
 # List available packages
 cbp avail
 
 # Install packages
-cbp install zlib
-cbp install --proxy socks5://127.0.0.1:7890 zlib   # with proxy
+cbp install fd jq
 
 # Manage packages
-cbp list                    # list installed packages
-cbp list zlib              # show package contents
-cbp remove zlib            # remove package
+cbp list                 # list installed packages
+cbp list fd              # show package contents
+cbp remove fd            # remove package
+
 ```
 
-> ⚠️ Windows user should run in WSL
+* Windows
+
+```powershell
+# Install cbp
+iwr "https://github.com/wang-q/cbp/releases/latest/download/cbp.windows.exe" -OutFile cbp.windows.exe
+.\cbp.windows.exe init
+
+# Restart terminal
+# The rest is the same as Linux/macOS
+
+```
+
+> ⚠️ Windows WSL is Linux.
 
 ## `cbp help`
 
@@ -60,15 +75,18 @@ Current release: 0.3.1
 ```text
 `cbp` is a Cross-platform Binary Package manager
 
-Usage: cbp [COMMAND]
+Usage: cbp.exe [COMMAND]
 
 Commands:
+  init     Initialize cbp environment
   install  Download and install packages from GitHub
+  local    Install packages from local binaries
   list     List installed packages and their contents
   remove   Remove installed packages
   avail    List available packages from GitHub
-  local    Install packages from local binaries
   check    Check for unmanaged files in ~/.cbp
+  tar      Create compressed archive
+  prefix   Display cbp installation directories
   kb       Display project documentation
   help     Print this message or the help of the given subcommand(s)
 
@@ -78,7 +96,7 @@ Options:
 
 
 Package Manager Features:
-    * Cross-platform support (macOS/Linux)
+    * Cross-platform support (Linux/macOS/Windows)
     * Pre-built static binaries
     * GitHub release integration
     * Local package support
@@ -92,24 +110,40 @@ Directory Structure:
     └── include/, lib/, share/ - Installed files
 
 Common Commands:
-1. Package Installation:
-   cbp install zlib                                   # from GitHub
-   cbp install --proxy socks5://127.0.0.1:7890 zlib   # with proxy
-   cbp local zlib                                     # from local files
+1. Initial Setup:
+   cbp init                    # default setup
+   cbp init /opt/cbp           # custom location
 
-2. Package Management:
-   cbp list                                           # list all packages
-   cbp list zlib                                      # show package contents
-   cbp remove zlib                                    # remove package
+2. Package Installation:
+   cbp install zlib            # from GitHub
+   cbp local zlib              # from local files
+   # Use --proxy for restricted networks
+   # cbp install --proxy socks5://127.0.0.1:7890 zlib
 
-3. Package Discovery:
-   cbp avail                                          # list available packages
-   cbp check                                          # find unmanaged files
+3. Package Management:
+   cbp list                    # list all packages
+   cbp list zlib               # show package contents
+   cbp remove zlib             # remove package
 
-4. Documentation:
-   cbp kb readme                                      # view documentation
+4. Package Discovery:
+   cbp avail                   # list all packages
+   cbp avail macos             # platform specific
+
+5. Development Tools:
+   cbp check                   # find unmanaged files
+   cbp tar -o pkg.tar.gz src/  # create package
+   cbp prefix                  # show install paths
+
+6. Documentation:
+   cbp kb readme               # view documentation
 
 ```
+
+## Supported Packages
+
+Current supported packages can be viewed using `cbp avail`.
+
+Or visit the [Release page](https://github.com/wang-q/cbp/releases/tag/Binaries).
 
 ## Architecture
 
@@ -127,30 +161,37 @@ Common Commands:
 
 3. Directory Layout
     * Runtime
-      - `~/.cbp/`  - User installation directory
-      - `bin/`     - Executable files
-      - `cache/`   - Downloaded packages
-      - `records/` - Package file lists
-    * Development
-      - `src/`     - Package manager source
-      - `tests/`   - Test suites
-      - `scripts/` - Build automation
-    * Distribution
-      - `sources/` - Upstream packages
-      - `binaries/` - Pre-built packages
+        - `~/.cbp/`  - User installation directory
+        - `bin/`     - Executable files
+        - `cache/`   - Downloaded packages
+        - `records/` - Package file lists
+    * Packages
+        - `scripts/` - Build automation
+        - `sources/` - Upstream packages
+        - `binaries/` - Pre-built packages
     * `src/`, `tests/` - Rust source code
 
 4. Core Components
     * Package manager (Rust)
-      - Installation and removal
-      - File tracking
-      - Cache management
-    * Build system (Bash)
-      - Cross-compilation
-      - Package creation
-      - Testing framework
+        - Installation and removal
+        - File tracking
+        - Cache management
+    * Build system (Zig cc)
+        - Cross-compilation
+        - Package creation
+        - Testing framework
 
-For detailed information about development and build process, see the [Developer Guide](doc/developer.md).
+For detailed information about development and build process, see
+the [Developer Guide](doc/developer.md).
+
+## Contributing
+
+We welcome contributions! Here's how you can help:
+
+1. Report issues
+2. Request new packages
+3. Submit pull requests
+4. Improve documentation
 
 ## License
 
