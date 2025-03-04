@@ -58,6 +58,8 @@ curl -o sources/gmp.tar.gz -L https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.gz
 
 curl -o sources/c-ares.tar.gz -L https://github.com/c-ares/c-ares/releases/download/v1.34.4/c-ares-1.34.4.tar.gz
 
+curl -o sources/pkgconf.tar.gz -L https://distfiles.ariadne.space/pkgconf/pkgconf-2.3.0.tar.gz
+
 # curl -L https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/openmp-19.1.7.src.tar.xz |
 #     tar xvfJ - &&
 #     mv openmp-19.1.7.src libomp &&

@@ -39,6 +39,7 @@ Examples:
                 .num_args(1..)
                 .value_name("PACKAGES"),
         )
+        // TODO: add --type to install other os-type packages
         .arg(
             Arg::new("dir")
                 .long("dir")

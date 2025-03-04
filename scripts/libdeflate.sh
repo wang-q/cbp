@@ -9,7 +9,7 @@ extract_source
 # cmake -LH .
 
 # Configure CMake with compiler settings
-if [ "$OS_TYPE" != "macos" ]; then
+if [ "$OS_TYPE" == "linux" ]; then
     ASM="zig cc" \
     CC="zig cc" \
     CXX="zig c++" \
@@ -18,6 +18,20 @@ if [ "$OS_TYPE" != "macos" ]; then
         -DCMAKE_C_COMPILER_TARGET="${TARGET_ARCH}" \
         -DCMAKE_CXX_COMPILER_TARGET="${TARGET_ARCH}" \
         -DCMAKE_INSTALL_PREFIX="${TEMP_DIR}/collect" \
+        -DLIBDEFLATE_BUILD_SHARED_LIB=OFF \
+        -S . -B build
+elif [ "$OS_TYPE" == "windows" ]; then
+    ASM="zig cc" \
+    CC="zig cc" \
+    CXX="zig c++" \
+    cmake \
+        -DCMAKE_ASM_COMPILER_TARGET="${TARGET_ARCH}" \
+        -DCMAKE_C_COMPILER_TARGET="${TARGET_ARCH}" \
+        -DCMAKE_CXX_COMPILER_TARGET="${TARGET_ARCH}" \
+        -DCMAKE_INSTALL_PREFIX="${TEMP_DIR}/collect" \
+        -DCMAKE_SYSTEM_NAME=Windows \
+        -DCMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION=10.0 \
+        -DCMAKE_SYSTEM_VERSION=10.0 \
         -DLIBDEFLATE_BUILD_SHARED_LIB=OFF \
         -S . -B build
 else
