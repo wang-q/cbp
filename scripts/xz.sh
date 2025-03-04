@@ -9,16 +9,33 @@ extract_source
 # ./configure --help
 
 # Build with the specified target architecture
-CC="zig cc -target ${TARGET_ARCH}" \
-CXX="zig c++ -target ${TARGET_ARCH}" \
-LDFLAGS="-static" \
-    ./configure \
-    --prefix="${TEMP_DIR}/collect" \
-    --disable-debug \
-    --disable-dependency-tracking \
-    --disable-silent-rules \
-    --disable-nls \
-    || exit 1
+if [ "$OS_TYPE" == "windows" ]; then
+    ASM="zig cc -target ${TARGET_ARCH}" \
+    CC="zig cc -target ${TARGET_ARCH}" \
+    CXX="zig c++ -target ${TARGET_ARCH}" \
+    LDFLAGS="-static" \
+        ./configure \
+        --prefix="${TEMP_DIR}/collect" \
+        --disable-debug \
+        --disable-dependency-tracking \
+        --disable-silent-rules \
+        --disable-nls \
+        --disable-threads \
+        --disable-symbol-versions \
+        || exit 1
+else
+    ASM="zig cc -target ${TARGET_ARCH}" \
+    CC="zig cc -target ${TARGET_ARCH}" \
+    CXX="zig c++ -target ${TARGET_ARCH}" \
+    LDFLAGS="-static" \
+        ./configure \
+        --prefix="${TEMP_DIR}/collect" \
+        --disable-debug \
+        --disable-dependency-tracking \
+        --disable-silent-rules \
+        --disable-nls \
+        || exit 1
+fi
 make -j 8 || exit 1
 make install || exit 1
 
