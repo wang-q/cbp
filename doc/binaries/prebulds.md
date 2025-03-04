@@ -1,6 +1,11 @@
 # Prebuilds from the official repositories
 
 ```bash
+bash scripts/pandoc.sh -t linux
+bash scripts/pandoc.sh macos
+bash scripts/pandoc.sh windows
+
+
 bash scripts/muscle.sh -t linux
 bash scripts/reseek.sh -t linux
 bash scripts/usearch.sh -t linux
