@@ -3,7 +3,8 @@
 ## Unreleased - ReleaseDate
 
 - Added `init` command for initializing the package manager
-- Add Windows support
+- Added `prefix` command for getting the package manager prefix
+- Added Windows support
 - Improved proxy support
 - Improved core utilities
 
