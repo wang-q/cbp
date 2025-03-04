@@ -13,7 +13,7 @@ Initialize CBP environment and configure shell settings.
 Operations:
 * Create ~/.cbp directory structure
 * Install cbp executable
-* Updates $PATH on all supported platforms
+* Updates $PATH on Bash, Zsh or Windows
 
 Configuration:
 * Default: Uses ~/.cbp for everything
@@ -27,6 +27,7 @@ Examples:
 
 * Custom package directory
   cbp init /opt/cbp
+
 "###,
         )
         .arg(

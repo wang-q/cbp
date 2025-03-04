@@ -27,6 +27,7 @@ Auto-ignored:
   - desktop.ini
 
 Purpose: Helps identify and clean up redundant files in ~/.cbp directory.
+
 "###,
         )
         .arg(

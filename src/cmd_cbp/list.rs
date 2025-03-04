@@ -24,6 +24,7 @@ Examples:
 * Show package contents
   cbp list zlib
   cbp list zlib bzip2
+
 "###,
         )
         .arg(

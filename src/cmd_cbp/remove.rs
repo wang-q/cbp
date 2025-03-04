@@ -7,18 +7,11 @@ pub fn make_subcommand() -> Command {
             r###"
 Remove installed packages and their associated files.
 
-Features:
-* Complete package removal
-* Resource fork cleanup
-* Safe directory handling
-* Symlink support
-* Missing file tolerance
-
-Safety Measures:
-* Directories are preserved
-* Non-package files are untouched
-* Missing files are skipped
-* Package record verification
+This command safely removes installed packages and their associated files,
+including resource forks and symbolic links. It preserves directory structure
+and skips missing files to maintain system integrity. The removal process is
+guided by package records to ensure only managed files are affected, leaving
+other files untouched.
 
 Examples:
 * Single package
@@ -28,6 +21,7 @@ Examples:
   cbp remove zlib bzip2
 
 Warning: This operation cannot be undone.
+
 "###,
         )
         .arg(

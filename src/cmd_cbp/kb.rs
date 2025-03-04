@@ -22,6 +22,7 @@ Output Options:
 * Save to file
   cbp kb readme -o readme.md
   cbp kb developer -o dev-guide.md
+
 "###,
         )
         .arg(

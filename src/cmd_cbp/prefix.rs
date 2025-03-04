@@ -14,6 +14,7 @@ Usage:
   cbp prefix lib     # Show library directory
   cbp prefix include # Show include directory
   cbp prefix exe     # Show cbp executable path
+
 "###,
         )
         .arg(

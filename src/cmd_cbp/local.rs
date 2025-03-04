@@ -29,6 +29,7 @@ Examples:
 
 * Multiple packages
   cbp local zlib bzip2
+
 "###,
         )
         .arg(

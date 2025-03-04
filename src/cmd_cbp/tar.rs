@@ -28,6 +28,7 @@ Examples:
 
 4. Clean up docs:
    cbp tar path/to/dir --cleanup
+
 "###,
         )
         .arg(
