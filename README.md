@@ -7,13 +7,13 @@
 [![License](https://img.shields.io/github/license/wang-q/builds)](https://github.com/wang-q/builds/blob/main/LICENSE)
 
 `cbp` is a **C**ross-platform **B**inary **P**ackage manager that simplifies the distribution of CLI
-tools, with a focus on bioinformatics software. It ensures compatibility with older Linux systems
-(glibc 2.17+), Windows (x86_64), and provides native support for Apple Silicon, using Zig for
+tools, with a focus on bioinformatics software. It ensures compatibility with older Linux systems (
+glibc 2.17+), Windows (x86_64), and provides native support for Apple Silicon, using Zig for
 reliable cross-platform builds.
 
-The name `cbp` draws inspiration from DNA's *c*onstant *b*ase *p*airing - nature's most precise
-pairing system where A pairs with T, and G pairs with C. Similarly, `cbp` ensures consistent binary
-compatibility across different platforms, making software distribution as reliable as DNA
+The name `cbp` draws inspiration from DNA's **c**onstant **b**ase **p**airing - nature's most
+precise pairing system where A pairs with T, and G pairs with C. Similarly, `cbp` ensures consistent
+binary compatibility across different platforms, making software distribution as reliable as DNA
 replication.
 
 ## Features
