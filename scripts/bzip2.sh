@@ -7,25 +7,40 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 extract_source
 
 # Build with the specified target architecture
-make \
-    CC="zig cc -target ${TARGET_ARCH}" \
-    AR="zig ar" \
-    RANLIB="zig ranlib" \
-    || exit 1
+if [ "$OS_TYPE" == "windows" ]; then
+    make \
+        CC="zig cc -target ${TARGET_ARCH} -o \$*.o" \
+        AR="zig ar" \
+        RANLIB="zig ranlib" \
+        CFLAGS="-Wall -Winline -O2" \
+        || exit 1
+else
+    make \
+        CC="zig cc -target ${TARGET_ARCH}" \
+        AR="zig ar" \
+        RANLIB="zig ranlib" \
+        || exit 1
+fi
 
-# Install to collect directory
-make install PREFIX="${TEMP_DIR}/collect"
+# # Install to collect directory
+# make install PREFIX="${TEMP_DIR}/collect"
 
-# Create symlinks
-cd "${TEMP_DIR}/collect/bin"
-ln -sf bzdiff bzcmp
-ln -sf bzgrep bzegrep
-ln -sf bzgrep bzfgrep
-ln -sf bzmore bzless
+# Custom install
+mkdir -p "${TEMP_DIR}/collect/"{bin,lib,include}
+cp bzip2 "${TEMP_DIR}/collect/bin/bzip2${BIN_SUFFIX}"
+cp bzip2recover "${TEMP_DIR}/collect/bin/bzip2recover${BIN_SUFFIX}"
+cp bzlib.h "${TEMP_DIR}/collect/include/"
+cp libbz2.a "${TEMP_DIR}/collect/lib/"
 
-# Clean up and reorganize
-cd "${TEMP_DIR}/collect"
-rm -rf "${TEMP_DIR}/collect/man"
+eza -T ${TEMP_DIR}/collect/
+
+# Useless
+# # Create symlinks
+# cd "${TEMP_DIR}/collect/bin"
+# ln -sf bzdiff bzcmp
+# ln -sf bzgrep bzegrep
+# ln -sf bzgrep bzfgrep
+# ln -sf bzmore bzless
 
 # Run test if requested
 if [ "${RUN_TEST}" = "test" ]; then
