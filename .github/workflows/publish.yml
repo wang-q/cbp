@@ -17,11 +17,14 @@ jobs:
         with:
           rust-version: stable
           targets: x86_64-unknown-linux-musl
+      - uses: goto-bus-stop/setup-zig@v2
+      - name: Install cargo-zigbuild
+        run: cargo install cargo-zigbuild
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
       - name: Build
-        run: cargo build --verbose --release --target x86_64-unknown-linux-musl
+        run: cargo zigbuild --verbose --release --target x86_64-unknown-linux-musl
       - name: Upload binaries to releases
         uses: svenstaro/upload-release-action@v2
         with:
