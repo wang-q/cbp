@@ -45,8 +45,6 @@ Common Commands:
 2. Package Installation:
    cbp install zlib            # from GitHub
    cbp local zlib              # from local files
-   # Use --proxy for restricted networks
-   # cbp install --proxy socks5://127.0.0.1:7890 zlib
 
 3. Package Management:
    cbp list                    # list all packages
@@ -64,6 +62,7 @@ Common Commands:
 
 6. Documentation:
    cbp kb readme               # view documentation
+
 "###,
         );
 
