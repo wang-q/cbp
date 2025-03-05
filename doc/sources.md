@@ -291,6 +291,8 @@ curl -o sources/tokei.tar.gz -L https://github.com/XAMPPRocky/tokei/archive/refs
 
 curl -o sources/eza.tar.gz -L https://github.com/eza-community/eza/archive/refs/tags/v0.20.23.tar.gz
 
+curl -o sources/jnv.tar.gz -L https://github.com/ynqa/jnv/archive/refs/tags/v0.5.0.tar.gz
+
 ```
 
 ### My bioinformatics utilities
