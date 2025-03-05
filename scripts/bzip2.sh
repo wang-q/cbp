@@ -10,7 +10,7 @@ extract_source
 if [ "$OS_TYPE" == "windows" ]; then
     # Modify Makefile to force .o extension for object files
     # Replace '$(CFLAGS) -c' with '$(CFLAGS) -c -o $*.o'
-    perl -pi -e 's/\$\(CFLAGS\) -c/\$(CFLAGS) -c -o \$*.o/g' Makefile
+    perl -pi -e 's{\$\(CFLAGS\) -c}{\$(CFLAGS) -c -o \$*.o}g' Makefile
 fi
 
 # Build with the specified target architecture
