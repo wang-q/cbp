@@ -12,8 +12,8 @@ extract_source
 CC="zig cc -target ${TARGET_ARCH}" \
 CXX="zig c++ -target ${TARGET_ARCH}" \
 AR="zig ar" \
-CFLAGS="-I$HOME/.cbp/include" \
-LDFLAGS="-L$HOME/.cbp/lib -static -largtable2" \
+CFLAGS="-I${CBP_INCLUDE}" \
+LDFLAGS="-L${CBP_LIB} -static -largtable2" \
     ./configure \
     --prefix="${TEMP_DIR}/collect" \
     --disable-dependency-tracking \

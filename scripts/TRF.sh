@@ -16,7 +16,7 @@ CC="zig cc -target ${TARGET_ARCH}" \
 make || exit 1
 make install || exit 1
 
-#tree ${TEMP_DIR}/collect/
+eza -T ${TEMP_DIR}/collect/
 rm ${TEMP_DIR}/collect/bin/trf4.*.exe
 
 ## Use build_tar function from common.sh

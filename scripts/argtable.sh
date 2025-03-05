@@ -21,5 +21,7 @@ LDFLAGS="-static" \
 make -j 8 || exit 1
 make install || exit 1
 
+# eza -T "${TEMP_DIR}/collect"
+
 # Use build_tar function from common.sh
 build_tar
