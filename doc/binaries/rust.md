@@ -8,7 +8,7 @@ platform-specific `.tar.gz` archives for distribution through GitHub releases.
 ## Prerequisites
 
 * Rust toolchain
-* Zig 
+* Zig
 * cargo-zigbuild
 
 ## Builds on Linux
@@ -20,12 +20,8 @@ bash scripts/rust.sh ripgrep
 bash scripts/rust.sh hyperfine
 bash scripts/rust.sh tealdeer
 bash scripts/rust.sh tokei
+bash scripts/rust.sh jnv
 
-bash scripts/rust.sh fd windows
-bash scripts/rust.sh ripgrep windows
-bash scripts/rust.sh hyperfine windows
-bash scripts/rust.sh tealdeer windows
-bash scripts/rust.sh tokei windows
 
 ```
 
@@ -38,6 +34,24 @@ bash scripts/rust.sh ripgrep macos
 bash scripts/rust.sh hyperfine macos
 bash scripts/rust.sh tealdeer macos
 bash scripts/rust.sh tokei macos
+bash scripts/rust.sh jnv macos
+
+```
+
+## Builds on Windows
+
+```powershell
+winget install 7zip.7zip
+
+.\scripts\rust.ps1 eza
+.\scripts\rust.ps1 fd
+.\scripts\rust.ps1 ripgrep
+.\scripts\rust.ps1 hyperfine
+.\scripts\rust.ps1 tealdeer
+.\scripts\rust.ps1 tokei
+.\scripts\rust.ps1 jnv
+
+cbp local -l eza
 
 ```
 
