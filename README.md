@@ -75,7 +75,7 @@ Current release: 0.3.2
 ```text
 `cbp` is a Cross-platform Binary Package manager
 
-Usage: cbp.exe [COMMAND]
+Usage: cbp [COMMAND]
 
 Commands:
   init     Initialize cbp environment
@@ -84,7 +84,7 @@ Commands:
   list     List installed packages and their contents
   remove   Remove installed packages
   avail    List available packages from GitHub
-  check    Check for unmanaged files in ~/.cbp
+  check    Check for unmanaged files
   tar      Create compressed archive
   prefix   Display cbp installation directories
   kb       Display project documentation
@@ -96,11 +96,10 @@ Options:
 
 
 Package Manager Features:
-    * Cross-platform support (Linux/macOS/Windows)
-    * Pre-built static binaries
+    * Pre-built binaries without dependencies
     * GitHub release integration
     * Local package support
-    * Package tracking
+    * Customizable installation paths
 
 Directory Structure:
     ~/.cbp/
