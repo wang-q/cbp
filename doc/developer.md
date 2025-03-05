@@ -121,7 +121,6 @@ git lfs track "sources/*.tar.gz"
 ```bash
 cargo install --path . --force # --offline
 
-# Concurrent tests may trigger sqlite locking
 cargo test -- --test-threads=1
 
 # build under WSL 2
