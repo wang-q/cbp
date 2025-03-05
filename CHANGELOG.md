@@ -2,6 +2,8 @@
 
 ## Unreleased - ReleaseDate
 
+## 0.3.3 - 2025-03-05
+
 - Improved Windows support
   - Cross compilation with Zig 0.14.0
   - Added PowerShell build scripts
