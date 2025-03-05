@@ -50,7 +50,14 @@ Developer Options:
                 .num_args(1)
                 .value_name("OS_TYPE")
                 .help("Install packages for specified OS")
-                .value_parser(["macos", "linux", "windows"])
+                .value_parser(["macos", "linux", "windows"]),
+        )
+        .arg(
+            Arg::new("list")
+                .long("list")
+                .short('l')
+                .help("List contents of packages without installing")
+                .action(ArgAction::SetTrue),
         )
         .arg(
             Arg::new("dir")
@@ -79,15 +86,10 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         cbp::get_os_type()?
     };
 
+    let list_only = args.get_flag("list");
+
     // Process packages
     for pkg in args.get_many::<String>("packages").unwrap() {
-        // Check if package is already installed
-        let record_file = cbp_dirs.records.join(format!("{}.files", pkg));
-        if record_file.exists() {
-            println!("==> Package {} is already installed", pkg);
-            continue;
-        }
-
         // Try local binaries directory first
         let local_file =
             std::path::Path::new("binaries").join(format!("{}.{}.tar.gz", pkg, os_type));
@@ -108,6 +110,20 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                 os_type
             ));
         };
+
+        if list_only {
+            println!("==> Contents of package {}:", pkg);
+            let contents = cbp::list_archive_files(&pkg_file)?;
+            print!("{}", contents);
+            continue;
+        }
+
+        // Check if package is already installed
+        let record_file = cbp_dirs.records.join(format!("{}.files", pkg));
+        if record_file.exists() {
+            println!("==> Package {} is already installed", pkg);
+            continue;
+        }
 
         cbp_dirs.install_package(pkg, &pkg_file)?;
     }
