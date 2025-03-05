@@ -149,7 +149,6 @@ Or visit the [Release page](https://github.com/wang-q/cbp/releases/tag/Binaries)
 1. Package Management
     * Command-line interface
     * Package status tracking
-    * File-based record keeping
     * Network proxy support
 
 2. Build System
