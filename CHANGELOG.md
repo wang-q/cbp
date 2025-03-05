@@ -4,11 +4,12 @@
 
 - Improved Windows support
   - Cross compilation with Zig 0.14.0
+  - Added PowerShell build scripts
+  - Enhanced binary handling for Windows executables
 - Added `--list` and `--type` options to view package contents
+  - Support cross-platform package installation
+  - Added package content preview
 - Added new packages
-  - c-ares
-  - gmp
-  - pandoc
 - Reorganized documentation
 
 ## 0.3.2 - 2025-03-04
