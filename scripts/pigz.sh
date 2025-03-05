@@ -7,11 +7,17 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 extract_source
 
 # Build the project with the specified target architecture and flags
+if [ "$OS_TYPE" == "windows" ]; then
+    # Modify Makefile to force .o extension for object files
+    # Replace '$(CFLAGS) -c' with '$(CFLAGS) -c -o $*.o'
+    perl -pi -e 's{\$\(CFLAGS\) -c}{\$(CFLAGS) -c -o \$*.o}g' Makefile
+fi
+
 make pigz \
     -j 8 \
     CC="zig cc -target ${TARGET_ARCH}" \
-    CFLAGS="-I$HOME/.cbp/include -O3 -Wall -Wextra -Wno-unknown-pragmas -Wcast-qual" \
-    LDFLAGS="-L$HOME/.cbp/lib" \
+    CFLAGS="-I${CBP_INCLUDE} -O3 -Wall -Wextra -Wno-unknown-pragmas -Wcast-qual" \
+    LDFLAGS="-L${CBP_LIB}" \
     || exit 1
 
 # Collect binaries and create tarball

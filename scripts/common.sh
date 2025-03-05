@@ -89,6 +89,10 @@ TEMP_DIR=$(mktemp -d)
 trap 'rm -rf ${TEMP_DIR}' EXIT
 cd ${TEMP_DIR}  || { echo "Error: Failed to enter temp directory"; exit 1; }
 
+# Compiling flags
+CBP_INCLUDE="$(cbp prefix include)"
+CBP_LIB="$(cbp prefix lib)"
+
 # ====================
 # Utility functions
 # ====================
