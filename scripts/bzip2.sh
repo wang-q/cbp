@@ -8,14 +8,14 @@ extract_source
 
 # Set make options based on OS type
 if [ "$OS_TYPE" == "windows" ]; then
-    # Force output files to use .o extension instead of Windows default .obj
-    # This is necessary because the Makefile expects .o files
-    CC_EXTRA="-o \$*.o"
+    # Modify Makefile to force .o extension for object files
+    # Replace '$(CFLAGS) -c' with '$(CFLAGS) -c -o $*.o'
+    perl -pi -e 's/\$\(CFLAGS\) -c/\$(CFLAGS) -c -o \$*.o/g' Makefile
 fi
 
 # Build with the specified target architecture
 make \
-    CC="zig cc -target ${TARGET_ARCH} ${CC_EXTRA}" \
+    CC="zig cc -target ${TARGET_ARCH}" \
     AR="zig ar" \
     RANLIB="zig ranlib" \
     || exit 1
@@ -31,14 +31,6 @@ cp bzlib.h "${TEMP_DIR}/collect/include/"
 cp libbz2.a "${TEMP_DIR}/collect/lib/"
 
 # eza -T ${TEMP_DIR}/collect/
-
-# Useless
-# # Create symlinks
-# cd "${TEMP_DIR}/collect/bin"
-# ln -sf bzdiff bzcmp
-# ln -sf bzgrep bzegrep
-# ln -sf bzgrep bzfgrep
-# ln -sf bzmore bzless
 
 # Run test if requested
 if [ "${RUN_TEST}" = "test" ]; then
