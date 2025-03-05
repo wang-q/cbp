@@ -6,21 +6,19 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 # Extract source code
 extract_source
 
-# Build with the specified target architecture
+# Set make options based on OS type
 if [ "$OS_TYPE" == "windows" ]; then
-    make \
-        CC="zig cc -target ${TARGET_ARCH} -o \$*.o" \
-        AR="zig ar" \
-        RANLIB="zig ranlib" \
-        CFLAGS="-Wall -Winline -O2" \
-        || exit 1
-else
-    make \
-        CC="zig cc -target ${TARGET_ARCH}" \
-        AR="zig ar" \
-        RANLIB="zig ranlib" \
-        || exit 1
+    # Force output files to use .o extension instead of Windows default .obj
+    # This is necessary because the Makefile expects .o files
+    CC_EXTRA="-o \$*.o"
 fi
+
+# Build with the specified target architecture
+make \
+    CC="zig cc -target ${TARGET_ARCH} ${CC_EXTRA}" \
+    AR="zig ar" \
+    RANLIB="zig ranlib" \
+    || exit 1
 
 # # Install to collect directory
 # make install PREFIX="${TEMP_DIR}/collect"
@@ -32,7 +30,7 @@ cp bzip2recover "${TEMP_DIR}/collect/bin/bzip2recover${BIN_SUFFIX}"
 cp bzlib.h "${TEMP_DIR}/collect/include/"
 cp libbz2.a "${TEMP_DIR}/collect/lib/"
 
-eza -T ${TEMP_DIR}/collect/
+# eza -T ${TEMP_DIR}/collect/
 
 # Useless
 # # Create symlinks
