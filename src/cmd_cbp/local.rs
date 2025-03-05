@@ -15,7 +15,7 @@ Search Locations:
 Package Format:
 * Naming: <package_name>.<os_type>.tar.gz
 * Type: Pre-built binary archives
-* OS: Platform-specific (macos/linux)
+* OS: Platform-specific (linux/macos/windows)
 
 Features:
 * Installation status checking
@@ -30,6 +30,10 @@ Examples:
 * Multiple packages
   cbp local zlib bzip2
 
+Developer Options:
+* Install cross-platform packages (use with caution)
+  cbp local --type windows zlib
+
 "###,
         )
         .arg(
@@ -39,7 +43,15 @@ Examples:
                 .num_args(1..)
                 .value_name("PACKAGES"),
         )
-        // TODO: add --type to install other os-type packages
+        .arg(
+            Arg::new("type")
+                .long("type")
+                .short('t')
+                .num_args(1)
+                .value_name("OS_TYPE")
+                .help("Install packages for specified OS")
+                .value_parser(["macos", "linux", "windows"])
+        )
         .arg(
             Arg::new("dir")
                 .long("dir")
@@ -61,7 +73,11 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         cbp::CbpDirs::new()?
     };
 
-    let os_type = cbp::get_os_type()?;
+    let os_type = if args.contains_id("type") {
+        args.get_one::<String>("type").unwrap().to_string()
+    } else {
+        cbp::get_os_type()?
+    };
 
     // Process packages
     for pkg in args.get_many::<String>("packages").unwrap() {

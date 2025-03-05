@@ -34,6 +34,6 @@ bash scripts/bzip2.sh windows
 bash scripts/libdeflate.sh windows
 bash scripts/xz.sh windows
 
-# cbp local zlib bzip2 libdeflate xz
+cbp local --type windows zlib bzip2 libdeflate xz
 
 ```
