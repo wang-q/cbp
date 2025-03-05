@@ -97,22 +97,22 @@ pub fn find_files(dir: &Path, pattern: Option<&str>) -> anyhow::Result<Vec<Strin
 
 /// Check if a file is managed by cbp itself
 pub fn is_cbp_file(path: &str) -> bool {
-    path == "config.toml" || 
-    path == "bin/cbp" || 
-    path == "bin/cbp.exe" || 
-    path.starts_with("records/") || 
-    path.starts_with("cache/")
+    path == "config.toml"
+        || path == "bin/cbp"
+        || path == "bin/cbp.exe"
+        || path.starts_with("records/")
+        || path.starts_with("cache/")
 }
 
 /// Check if a file should be ignored based on system patterns
 pub fn is_system_file(path: &str) -> bool {
     // Skip system generated files
     path.ends_with(".DS_Store") ||      // macOS system files
-    path.contains("/__MACOSX/") ||      
-    path.ends_with(".AppleDouble") ||   
+    path.contains("/__MACOSX/") ||
+    path.ends_with(".AppleDouble") ||
     path.split('/').last().is_some_and(|f| f.starts_with("._")) || // macOS resource fork files
     path.ends_with("Thumbs.db") ||      // Windows system files
-    path.ends_with("desktop.ini") ||    
+    path.ends_with("desktop.ini") ||
     path.ends_with("~") ||              // Linux hidden files
     path.ends_with(".swp") ||
     path.ends_with(".lnk") ||           // Windows shortcuts
@@ -136,6 +136,33 @@ pub fn create_http_agent(proxy_url: Option<&String>) -> anyhow::Result<ureq::Age
     } else {
         ureq::AgentBuilder::new().build()
     })
+}
+
+/// List files in a tar.gz archive
+///
+/// # Arguments
+///
+/// * `archive_path` - Path to the tar.gz file
+///
+/// # Returns
+///
+/// A list of file paths in the archive, one per line
+pub fn list_archive_files(archive_path: &Path) -> anyhow::Result<String> {
+    let file = std::fs::File::open(archive_path)?;
+    let gz = flate2::read::GzDecoder::new(file);
+    let mut archive = tar::Archive::new(gz);
+
+    let mut file_list = String::new();
+    let entries = archive.entries()?;
+    for entry in entries {
+        let entry = entry?;
+        if let Some(path) = entry.path()?.to_str() {
+            file_list.push_str(path);
+            file_list.push('\n');
+        }
+    }
+
+    Ok(file_list)
 }
 
 #[cfg(test)]

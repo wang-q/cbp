@@ -148,29 +148,14 @@ impl CbpDirs {
     ) -> anyhow::Result<()> {
         println!("==> Installing {}", pkg_name);
 
-        // Open and decode tar.gz file
-        let file = std::fs::File::open(pkg_file)?;
-        let gz = flate2::read::GzDecoder::new(file);
-        let mut archive = tar::Archive::new(gz);
-
         // List files in package
         let record_file = self.records.join(format!("{}.files", pkg_name));
-        let mut file_list = String::new();
-        {
-            let entries = archive.entries()?;
-            for entry in entries {
-                let entry = entry?;
-                if let Some(path) = entry.path()?.to_str() {
-                    file_list.push_str(path);
-                    file_list.push('\n');
-                }
-            }
-        }
+        let file_list = crate::list_archive_files(pkg_file)?;
 
         // Save file list
         std::fs::write(&record_file, file_list)?;
 
-        // Extract files (need to reopen archive as entries were consumed)
+        // Extract files
         let file = std::fs::File::open(pkg_file)?;
         let gz = flate2::read::GzDecoder::new(file);
         let mut archive = tar::Archive::new(gz);
