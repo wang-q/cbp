@@ -16,7 +16,6 @@ LDFLAGS="-static" \
     ./configure \
     --prefix="${TEMP_DIR}/collect" \
     --disable-dependency-tracking \
-    --disable-silent-rules \
     || exit 1
 make -j 8 || exit 1
 make install || exit 1

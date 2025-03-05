@@ -90,6 +90,7 @@ trap 'rm -rf ${TEMP_DIR}' EXIT
 cd ${TEMP_DIR}  || { echo "Error: Failed to enter temp directory"; exit 1; }
 
 # Compiling flags
+CBP_HOME="$(cbp prefix)"
 CBP_INCLUDE="$(cbp prefix include)"
 CBP_LIB="$(cbp prefix lib)"
 
@@ -100,8 +101,17 @@ CBP_LIB="$(cbp prefix lib)"
 # Extract source code function
 extract_source() {
     echo "Extracting ${PROJ}.tar.gz..."
-    tar xvfz "${BASH_DIR}"/../sources/${PROJ}.tar.gz ||
-        { echo "Error: Failed to extract source"; exit 1; }
+
+    if [ "$OS_TYPE" == "windows" ]; then
+        # Windows: use 7z for better symlink handling
+        7z x "${BASH_DIR}"/../sources/${PROJ}.tar.gz -so |
+            7z x -aoa -si -ttar ||
+            { echo "Error: Failed to extract source"; exit 1; }
+    else
+        # Linux/macOS: normal extraction
+        tar xvfz "${BASH_DIR}"/../sources/${PROJ}.tar.gz ||
+            { echo "Error: Failed to extract source"; exit 1; }
+    fi
 
     cd ${PROJ} 2>/dev/null ||
         cd ${PROJ}-* 2>/dev/null ||

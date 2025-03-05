@@ -36,7 +36,13 @@ int main() {
 EOF
 
     # Compile test program
-    zig cc -target ${TARGET_ARCH} \
+    if [ "$OS_TYPE" == "windows" ]; then
+        CC="gcc"
+    else
+        CC="zig cc -target ${TARGET_ARCH}"
+    fi
+
+    ${CC} \
         -I${TEMP_DIR}/collect/include \
         ${TEMP_DIR}/test.c \
         ${TEMP_DIR}/collect/lib/libz.a \

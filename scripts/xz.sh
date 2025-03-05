@@ -10,20 +10,23 @@ extract_source
 
 # Set configure options based on OS type
 if [ "$OS_TYPE" == "windows" ]; then
-    EXTRA_OPT="--disable-symbol-versions"
+    EXTRA_OPT="--enable-threads=no"
+else
+    ASM="zig cc -target ${TARGET_ARCH}"
+    CC="zig cc -target ${TARGET_ARCH}"
+    CXX="zig c++ -target ${TARGET_ARCH}"
 fi
 
 # Build with the specified target architecture
-ASM="zig cc -target ${TARGET_ARCH}" \
-CC="zig cc -target ${TARGET_ARCH}" \
-CXX="zig c++ -target ${TARGET_ARCH}" \
-LDFLAGS="-static" \
-    ./configure \
+./configure \
     --prefix="${TEMP_DIR}/collect" \
     --disable-debug \
     --disable-dependency-tracking \
     --disable-silent-rules \
+    --disable-shared \
+    --enable-static \
     --disable-nls \
+    --disable-doc \
     ${EXTRA_OPT} \
     || exit 1
 

@@ -7,10 +7,16 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 extract_source
 
 # Set compiler for non-macOS systems
-if [ "$OS_TYPE" != "macos" ]; then
+if [ "$OS_TYPE" == "linux" ]; then
+    CC="zig cc -target ${TARGET_ARCH}"
+    CXX="zig c++ -target ${TARGET_ARCH}"
+elif [ "$OS_TYPE" == "windows" ]; then
+    CFLAGS="-Wno-implicit-function-declaration"
+    CPPFLAGS="-I/usr/include/w32api"
+else
+    # with zig
     # ../ncurses/./tinfo/lib_baudrate.c:82:10: fatal error: 'sys/ttydev.h' file not found
-    export CC="zig cc -target ${TARGET_ARCH}"
-    export CXX="zig c++ -target ${TARGET_ARCH}"
+    EXTRA_OPT==""
 fi
 
 # Common configure options
@@ -19,9 +25,9 @@ fi
     --disable-dependency-tracking \
     --disable-silent-rules \
     --disable-shared \
-    --enable-static \
     --enable-sigwinch \
     --enable-widec \
+    --enable-static \
     --with-shared=no \
     --with-cxx-shared=no \
     --with-gpm=no \

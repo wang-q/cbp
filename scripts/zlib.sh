@@ -7,8 +7,15 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 extract_source
 
 # Build with the specified target architecture
-CC="zig cc -target ${TARGET_ARCH}" \
-    ./configure \
+if [ "$OS_TYPE" == "windows" ]; then
+    EXTRA_OPT=""
+else
+    ASM="zig cc -target ${TARGET_ARCH}"
+    CC="zig cc -target ${TARGET_ARCH}"
+    CXX="zig c++ -target ${TARGET_ARCH}"
+fi
+
+./configure \
     --static \
     --prefix="${TEMP_DIR}/collect"
 make

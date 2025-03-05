@@ -10,14 +10,14 @@ extract_source
 
 # Build with the specified target architecture
 CC="zig cc -target ${TARGET_ARCH}" \
-CFLAGS="-I$HOME/.cbp/include" \
-LDFLAGS="-L$HOME/.cbp/lib" \
-CPPFLAGS="-I$HOME/.cbp/include" \
+CFLAGS="-I${CBP_INCLUDE}" \
+LDFLAGS="-L${CBP_LIB}" \
+CPPFLAGS="-I${CBP_INCLUDE}" \
     ./configure \
     --prefix="${TEMP_DIR}/collect" \
     --disable-dependency-tracking \
     --disable-silent-rules \
-    --with-zlib-prefix="${HOME}/.cbp" \
+    --with-zlib-prefix="${CBP_HOME}" \
     --disable-shared \
     --enable-static \
     || exit 1
