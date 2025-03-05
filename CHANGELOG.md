@@ -2,6 +2,15 @@
 
 ## Unreleased - ReleaseDate
 
+- Improved Windows support
+  - Cross compilation with Zig 0.14.0
+- Added `--list` and `--type` options to view package contents
+- Added new packages
+  - c-ares
+  - gmp
+  - pandoc
+- Reorganized documentation
+
 ## 0.3.2 - 2025-03-04
 
 - Added `init` command for initializing the package manager
