@@ -61,6 +61,22 @@ set(CMAKE_CXX_COMPILER_TARGET x86_64-linux-gnu.2.17)
 set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE ${CMAKE_CURRENT_LIST_DIR}/zig-toolchain.cmake)
 EOF
 
+cat > $VCPKG_ROOT/triplets/community/arm64-macos-zig.cmake <<'EOF'
+set(VCPKG_TARGET_ARCHITECTURE arm64)
+set(VCPKG_CRT_LINKAGE static)
+set(VCPKG_LIBRARY_LINKAGE static)
+
+set(VCPKG_CMAKE_SYSTEM_NAME Darwin)
+set(VCPKG_OSX_ARCHITECTURES arm64)
+set(VCPKG_BUILD_TYPE release)
+
+# Set target architecture for zig
+set(CMAKE_C_COMPILER_TARGET aarch64-macos-none)
+set(CMAKE_CXX_COMPILER_TARGET aarch64-macos-none)
+
+set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE ${CMAKE_CURRENT_LIST_DIR}/zig-toolchain.cmake)
+EOF
+
 # Create zig toolchain file
 cat > $VCPKG_ROOT/triplets/community/zig-toolchain.cmake <<'EOF'
 # Configure compilers
@@ -116,5 +132,8 @@ vcpkg install --debug hdf5:x64-linux-zig
 # vcpkg install zlib:x64-linux-zig \
 #     --cmake-args="-DCMAKE_C_COMPILER_TARGET=aarch64-macos-none" \
 #     --cmake-args="-DCMAKE_CXX_COMPILER_TARGET=aarch64-macos-none"
+
+vcpkg install --debug zlib:x64-macos-zig
+vcpkg install --debug bzip2:x64-macos-zig
 
 ```
