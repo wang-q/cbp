@@ -94,10 +94,10 @@ set(CMAKE_AR zig-ar)
 set(CMAKE_RANLIB zig-ranlib)
 
 # Configure static library creation and indexing commands
-set(CMAKE_C_ARCHIVE_CREATE "<CMAKE_AR> -crs <TARGET> <OBJECTS>")
+set(CMAKE_C_ARCHIVE_CREATE   "<CMAKE_AR> -crs <TARGET> <OBJECTS>")
 set(CMAKE_CXX_ARCHIVE_CREATE "<CMAKE_AR> -crs <TARGET> <OBJECTS>")
 
-set(CMAKE_C_ARCHIVE_FINISH "<CMAKE_RANLIB> <TARGET>")
+set(CMAKE_C_ARCHIVE_FINISH   "<CMAKE_RANLIB> <TARGET>")
 set(CMAKE_CXX_ARCHIVE_FINISH "<CMAKE_RANLIB> <TARGET>")
 
 # Disable compiler checks
@@ -133,7 +133,17 @@ vcpkg install --debug hdf5:x64-linux-zig
 #     --cmake-args="-DCMAKE_C_COMPILER_TARGET=aarch64-macos-none" \
 #     --cmake-args="-DCMAKE_CXX_COMPILER_TARGET=aarch64-macos-none"
 
-vcpkg install --debug zlib:x64-macos-zig
-vcpkg install --debug bzip2:x64-macos-zig
+```
+
+
+```bash
+cbp install cmake ninja
+
+brew install pkg-config
+
+vcpkg install --debug bzip2:arm64-osx
+
+vcpkg install --debug zlib:arm64-macos-zig
+vcpkg install --debug bzip2:arm64-macos-zig
 
 ```
