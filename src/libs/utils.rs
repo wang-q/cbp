@@ -98,10 +98,11 @@ pub fn find_files(dir: &Path, pattern: Option<&str>) -> anyhow::Result<Vec<Strin
 /// Check if a file is managed by cbp itself
 pub fn is_cbp_file(path: &str) -> bool {
     path == "config.toml"
-        || path == "bin/cbp"
-        || path == "bin/cbp.exe"
+        || path.starts_with("bin/cbp")
+        || path.starts_with("bin/zig-")
         || path.starts_with("records/")
         || path.starts_with("cache/")
+        || path.starts_with("triplets/")
 }
 
 /// Check if a file should be ignored based on system patterns
