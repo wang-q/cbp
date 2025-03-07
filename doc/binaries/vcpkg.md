@@ -142,6 +142,8 @@ vcpkg install --debug hdf5:x64-linux-zig
 #     --cmake-args="-DCMAKE_C_COMPILER_TARGET=aarch64-macos-none" \
 #     --cmake-args="-DCMAKE_CXX_COMPILER_TARGET=aarch64-macos-none"
 
+vcpkg install --debug --overlay-ports=ports bwa:x64-linux-zig
+
 ```
 
 
