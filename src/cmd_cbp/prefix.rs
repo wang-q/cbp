@@ -22,6 +22,7 @@ Usage:
                 .help("Directory to display")
                 .value_parser([
                     "bin", "cache", "records", "config", "include", "lib", "exe",
+                    "triplets",
                 ])
                 .num_args(0..=1),
         )
@@ -53,6 +54,16 @@ pub fn execute(matches: &ArgMatches) -> Result<()> {
         Some("include") => println!("{}", cbp_dirs.home.join("include").display()),
         Some("lib") => println!("{}", cbp_dirs.home.join("lib").display()),
         Some("exe") => println!("{}", cbp_dirs.config.join("bin/cbp").display()),
+        Some("triplets") => {
+            let triplets_dir = cbp_dirs.config.join("triplets");
+            if triplets_dir.exists() {
+                println!("{}", triplets_dir.display());
+            } else {
+                return Err(anyhow::anyhow!(
+                    "Triplets directory does not exist. Run 'cbp init --dev' to create it."
+                ));
+            }
+        }
         None => println!("{}", cbp_dirs.home.display()),
         _ => unreachable!(),
     }

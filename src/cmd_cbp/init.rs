@@ -37,6 +37,12 @@ Examples:
                 .index(1),
         )
         .arg(
+            clap::Arg::new("dev")
+                .long("dev")
+                .help("Install development tools")
+                .action(clap::ArgAction::SetTrue),
+        )
+        .arg(
             clap::Arg::new("dir")
                 .long("dir")
                 .short('d')
@@ -101,6 +107,12 @@ home = "{}"
     // Create bin directory in config location
     let bin_dir = cbp_config_dir.join("bin");
     fs::create_dir_all(&bin_dir)?;
+
+    // Install development tools if --dev is specified
+    if matches.get_flag("dev") {
+        create_compiler_shims(&bin_dir)?;
+        create_triplet_files(&cbp_config_dir)?;
+    }
 
     // Copy executable to bin directory
     #[cfg(windows)]
@@ -272,6 +284,73 @@ fn update_windows_path(bin_dir: &PathBuf) -> anyhow::Result<()> {
             String::from_utf8_lossy(&output.stderr)
         ));
     }
+
+    Ok(())
+}
+
+// Add new function for creating compiler shims
+#[cfg(windows)]
+fn create_compiler_shims(bin_dir: &PathBuf) -> Result<()> {
+    let shims = [
+        ("zig-cc.cmd", "@echo off\nzig cc %*"),
+        ("zig-c++.cmd", "@echo off\nzig c++ %*"),
+        ("zig-ar.cmd", "@echo off\nzig ar %*"),
+        ("zig-ranlib.cmd", "@echo off\nzig ranlib %*"),
+    ];
+
+    for (filename, content) in shims {
+        fs::write(bin_dir.join(filename), content)?;
+    }
+
+    Ok(())
+}
+
+#[cfg(unix)]
+fn create_compiler_shims(bin_dir: &PathBuf) -> Result<()> {
+    let shims = [
+        ("zig-cc", "#!/bin/bash\nexec zig cc \"$@\""),
+        ("zig-c++", "#!/bin/bash\nexec zig c++ \"$@\""),
+        ("zig-ar", "#!/bin/bash\nexec zig ar \"$@\""),
+        ("zig-ranlib", "#!/bin/bash\nexec zig ranlib \"$@\""),
+    ];
+
+    for (filename, content) in shims {
+        let file_path = bin_dir.join(filename);
+        fs::write(&file_path, content)?;
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            fs::set_permissions(&file_path, fs::Permissions::from_mode(0o755))?;
+        }
+    }
+
+    Ok(())
+}
+
+fn create_triplet_files(config_dir: &PathBuf) -> Result<()> {
+    let triplets_dir = config_dir.join("triplets");
+    fs::create_dir_all(&triplets_dir)?;
+
+    const ARM64_MACOS_ZIG_CMAKE: &str =
+        include_str!("../../doc/triplets/arm64-macos-zig.cmake");
+    const X64_LINUX_ZIG_CMAKE: &str =
+        include_str!("../../doc/triplets/x64-linux-zig.cmake");
+    const X64_WINDOWS_ZIG_CMAKE: &str =
+        include_str!("../../doc/triplets/x64-windows-zig.cmake");
+
+    // Write triplet files
+    fs::write(
+        triplets_dir.join("arm64-macos-zig.cmake"),
+        ARM64_MACOS_ZIG_CMAKE,
+    )?;
+    fs::write(
+        triplets_dir.join("x64-linux-zig.cmake"),
+        X64_LINUX_ZIG_CMAKE,
+    )?;
+    fs::write(
+        triplets_dir.join("x64-windows-zig.cmake"),
+        X64_WINDOWS_ZIG_CMAKE,
+    )?;
 
     Ok(())
 }
