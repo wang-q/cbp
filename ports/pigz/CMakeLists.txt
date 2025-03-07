@@ -38,12 +38,17 @@ target_compile_options(pigz PRIVATE
     -Wcast-qual
 )
 
-if(WIN32)
-    install(
-        TARGETS pigz
-        DESTINATION tools/pigz
-        RENAME pigz.exe
-    )
-else()
-    install(TARGETS pigz DESTINATION tools/pigz)
+if (WIN32)
+    set_target_properties(pigz PROPERTIES SUFFIX ".bin")
 endif()
+
+# if(WIN32)
+#     install(
+#         TARGETS pigz
+#         DESTINATION tools/pigz
+#         RENAME pigz.exe
+#     )
+# else()
+#     install(TARGETS pigz DESTINATION tools/pigz)
+# endif()
+install(TARGETS pigz)
