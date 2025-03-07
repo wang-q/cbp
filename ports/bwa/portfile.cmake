@@ -1,5 +1,8 @@
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/../../sources/bwa.tar.gz" DESTINATION "${CURRENT_BUILDTREES_DIR}")
 
+# Suppress warning about empty include directory
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${CURRENT_BUILDTREES_DIR}/bwa.tar.gz"
@@ -12,9 +15,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DCMAKE_C_FLAGS=-O2"
-        "-DCMAKE_EXE_LINKER_FLAGS=-static"
-    OPTIONS_RELEASE
-        "-DCMAKE_BUILD_TYPE=Release"
 )
 
 vcpkg_cmake_install()

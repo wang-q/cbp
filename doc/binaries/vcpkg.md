@@ -66,6 +66,7 @@ set(CMAKE_C_COMPILER_TARGET x86_64-linux-gnu.2.17)
 set(CMAKE_CXX_COMPILER_TARGET x86_64-linux-gnu.2.17)
 
 set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE ${CMAKE_CURRENT_LIST_DIR}/zig-toolchain.cmake)
+
 EOF
 
 cat > $VCPKG_ROOT/triplets/community/arm64-macos-zig.cmake <<'EOF'
@@ -82,33 +83,35 @@ set(CMAKE_C_COMPILER_TARGET aarch64-macos-none)
 set(CMAKE_CXX_COMPILER_TARGET aarch64-macos-none)
 
 set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE ${CMAKE_CURRENT_LIST_DIR}/zig-toolchain.cmake)
+
 EOF
 
 # Create zig toolchain file
 cat > $VCPKG_ROOT/triplets/community/zig-toolchain.cmake <<'EOF'
 # Configure compilers
-set(CMAKE_C_COMPILER zig-cc)
-set(CMAKE_CXX_COMPILER zig-c++)
+set(CMAKE_C_COMPILER "zig-cc")
+set(CMAKE_CXX_COMPILER "zig-c++")
 
 # Specify compiler details
-set(CMAKE_C_COMPILER_ID Clang)
-set(CMAKE_CXX_COMPILER_ID Clang)
-set(CMAKE_C_COMPILER_FRONTEND_VARIANT GNU)
-set(CMAKE_CXX_COMPILER_FRONTEND_VARIANT GNU)
+set(CMAKE_C_COMPILER_ID "Clang")
+set(CMAKE_CXX_COMPILER_ID "Clang")
+set(CMAKE_C_COMPILER_FRONTEND_VARIANT "GNU")
+set(CMAKE_CXX_COMPILER_FRONTEND_VARIANT "GNU")
 
 # Configure toolchain programs
-set(CMAKE_AR zig-ar)
-set(CMAKE_RANLIB zig-ranlib)
+set(CMAKE_AR "zig-ar")
+set(CMAKE_RANLIB "zig-ranlib")
 
 # Configure static library creation and indexing commands
-set(CMAKE_C_ARCHIVE_CREATE   "<CMAKE_AR> -crs <TARGET> <OBJECTS>")
+set(CMAKE_C_ARCHIVE_CREATE "<CMAKE_AR> -crs <TARGET> <OBJECTS>")
 set(CMAKE_CXX_ARCHIVE_CREATE "<CMAKE_AR> -crs <TARGET> <OBJECTS>")
 
-set(CMAKE_C_ARCHIVE_FINISH   "<CMAKE_RANLIB> <TARGET>")
+set(CMAKE_C_ARCHIVE_FINISH "<CMAKE_RANLIB> <TARGET>")
 set(CMAKE_CXX_ARCHIVE_FINISH "<CMAKE_RANLIB> <TARGET>")
 
 # Disable compiler checks
 set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
+
 EOF
 
 ```
@@ -171,6 +174,8 @@ vcpkg install --debug sqlite3[core,tool,fts3,fts4,fts5,math,rtree,json1]:arm64-m
 vcpkg install --debug htslib[deflate]:arm64-macos-zig
 
 cat $VCPKG_ROOT/installed/vcpkg/info/zlib_arm64-macos-zig.list
+
+vcpkg install --debug --overlay-ports=ports bwa:arm64-macos-zig
 
 ```
 
