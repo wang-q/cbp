@@ -91,6 +91,24 @@ rustup target add x86_64-pc-windows-gnu
 
 ```
 
+* vcpkg
+
+```bash
+cd
+# Download and extract vcpkg
+curl -L https://github.com/microsoft/vcpkg/archive/refs/tags/2025.02.14.tar.gz |
+    tar xvz &&
+    mv vcpkg-* vcpkg
+
+cd vcpkg
+./bootstrap-vcpkg.sh -disableMetrics
+
+# Set environment variables
+export VCPKG_ROOT=$HOME/vcpkg
+export PATH=$VCPKG_ROOT:$PATH
+
+```
+
 ### Other tools
 
 ```bash

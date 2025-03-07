@@ -3,19 +3,6 @@
 ## Basic libraries
 
 ```bash
-curl -o sources/zlib.tar.gz -L https://zlib.net/zlib-1.3.1.tar.gz
-
-curl -L https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz |
-    tar xvfz - \
-        --exclude='manual.*' &&
-    mv bzip2-1.0.8 bzip2 &&
-    tar -czf sources/bzip2.tar.gz bzip2/ &&
-    rm -rf bzip2/
-
-curl -o sources/xz.tar.gz -L https://github.com/tukaani-project/xz/releases/download/v5.6.4/xz-5.6.4.tar.gz
-
-curl -o sources/libdeflate.tar.gz -L https://github.com/ebiggers/libdeflate/archive/refs/tags/v1.23.tar.gz
-
 curl -o sources/ncurses.tar.gz -L https://ftp.gnu.org/gnu/ncurses/ncurses-6.5.tar.gz
 
 curl -o sources/readline.tar.gz -L https://ftp.gnu.org/gnu/readline/readline-8.2.tar.gz
