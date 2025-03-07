@@ -3,43 +3,6 @@
 ## Basic libraries
 
 ```bash
-curl -o sources/ncurses.tar.gz -L https://ftp.gnu.org/gnu/ncurses/ncurses-6.5.tar.gz
-
-curl -o sources/readline.tar.gz -L https://ftp.gnu.org/gnu/readline/readline-8.2.tar.gz
-
-curl -o sources/sqlite.tar.gz -L https://www.sqlite.org/2025/sqlite-autoconf-3490100.tar.gz
-
-curl -o sources/gdbm.tar.gz -L https://ftp.gnu.org/gnu/gdbm/gdbm-1.24.tar.gz
-
-curl -o sources/expat.tar.gz -L https://github.com/libexpat/libexpat/releases/download/R_2_6_4/expat-2.6.4.tar.gz
-
-# curl -L https://download.oracle.com/berkeley-db/db-5.3.28.tar.gz |
-#     tar xvfz - &&
-#     mv db-5.3.28 berkeley-db &&
-#     rm -fr berkeley-db/docs/ &&
-#     rm -fr berkeley-db/examples/ &&
-#     rm -fr berkeley-db/lang/ &&
-#     rm -fr berkeley-db/tests/ &&
-#     tar -czf sources/berkeley-db.tar.gz berkeley-db/ &&
-#     rm -rf berkeley-db
-
-curl -o sources/libpng.tar.gz -L https://sourceforge.net/projects/libpng/files/libpng16/1.6.47/libpng-1.6.47.tar.gz/download
-
-curl -o sources/pixman.tar.gz -L https://cairographics.org/releases/pixman-0.44.2.tar.gz
-
-curl -L https://downloads.sourceforge.net/project/argtable/argtable/argtable-2.13/argtable2-13.tar.gz |
-    tar xvfz - &&
-    mv argtable2-13 argtable &&
-    tar -czf sources/argtable.tar.gz argtable/ &&
-    rm -rf argtable
-
-curl -L https://github.com/besser82/libxcrypt/releases/download/v4.4.38/libxcrypt-4.4.38.tar.xz |
-    tar xvfJ - &&
-    mv libxcrypt-4.4.38 libxcrypt &&
-    tar -czf sources/libxcrypt.tar.gz libxcrypt/ &&
-    rm -rf libxcrypt
-
-curl -o sources/gsl.tar.gz -L https://ftp.gnu.org/gnu/gsl/gsl-2.8.tar.gz
 
 curl -o sources/gmp.tar.gz -L https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.gz
 
