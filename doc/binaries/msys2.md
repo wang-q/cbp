@@ -54,24 +54,10 @@ pacman -S mingw-w64-clang-x86_64-meson
 cd
 curl -LO https://github.com/wang-q/cbp/releases/latest/download/cbp.windows.exe
 
-cbp.windows.exe init
+./cbp.windows.exe init --dev
 
-echo "export PATH=/c/Users/$USER/.cbp/bin:$PATH" >> ~/.bashrc
+echo "export PATH=/c/Users/$USER/.cbp/bin:/c/Users/$USER/vcpkg:$PATH" >> ~/.bashrc
 source ~/.bashrc
-
-```
-
-## Core Libraries
-
-```bash
-cd /c/Users/$USER/Scripts/cbp
-
-bash scripts/zlib.sh -t
-bash scripts/bzip2.sh -t
-bash scripts/libdeflate.sh -t
-bash scripts/xz.sh -t
-
-cbp local zlib bzip2 libdeflate xz
 
 ```
 
@@ -79,9 +65,9 @@ cbp local zlib bzip2 libdeflate xz
 ## Other Libraries
 
 ```bash
-# bash scripts/ncurses.sh
+cd /c/Users/$USER/Scripts/cbp
+# bash scripts/vcpkg.sh liblzma[tools]
 
-bash scripts/argtable.sh
 
 ```
 ## `Makefile`

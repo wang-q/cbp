@@ -11,8 +11,8 @@ make \
     -j 8 \
     CC="zig cc -target ${TARGET_ARCH}" \
     AR="zig ar" \
-    CFLAGS="-I$HOME/.cbp/include -Wall -pedantic -DVERSION=1.33" \
-    LDFLAGS="-L$HOME/.cbp/lib" \
+    CFLAGS="-I${CBP_INCLUDE} -Wall -pedantic -DVERSION=1.33" \
+    LDFLAGS="-L${CBP_LIB}" \
     || exit 1
 
 # Collect binaries and create tarball
