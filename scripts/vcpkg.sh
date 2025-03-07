@@ -55,6 +55,7 @@ fi
 
 # Install the package using vcpkg
 vcpkg install --debug --recurse \
+    --clean-buildtrees-after-build --clean-packages-after-build \
     --overlay-ports=ports \
     --overlay-triplets="$(cbp prefix triplets)" \
     --x-install-root="$(cbp prefix cache)" \
@@ -80,6 +81,11 @@ done
 
 # Create archive from the package list
 cbp collect "${LIST_FILE}" "${COPY_ARGS[@]}" || exit 1
+
+# Remove the package from cache
+vcpkg remove --recurse \
+    --x-install-root="$(cbp prefix cache)" \
+    "${BASE_PROJ}:${TRIPLET}"
 
 # Move archive to the binaries directory
 mv "${BASE_PROJ}.${OS_TYPE}.tar.gz" binaries/

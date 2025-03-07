@@ -32,7 +32,6 @@ internal workings.
 * Rust toolchain (stable)
 * Git (with LFS support)
 * `gh` command (GitHub CLI)
-* `file` command
 * Python 3 (>= 3.7)
 * Build tools
     * cmake
@@ -106,22 +105,6 @@ cd vcpkg
 # Set environment variables
 export VCPKG_ROOT=$HOME/vcpkg
 export PATH=$VCPKG_ROOT:$PATH
-
-```
-
-```powershell
-# Download and extract vcpkg
-cd $env:USERPROFILE
-iwr -Uri "https://github.com/microsoft/vcpkg/archive/refs/tags/2025.02.14.tar.gz" -OutFile "vcpkg.tar.gz"
-tar xf vcpkg.tar.gz
-Move-Item -Path "vcpkg-*" -Destination "vcpkg"
-
-cd vcpkg
-.\bootstrap-vcpkg.bat -disableMetrics
-
-# Set environment variables
-$env:VCPKG_ROOT = "$env:USERPROFILE\vcpkg"
-$env:Path += ";$env:VCPKG_ROOT"
 
 ```
 
