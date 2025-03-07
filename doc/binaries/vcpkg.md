@@ -3,6 +3,13 @@
 ## Linux/macOS
 
 ```bash
+vcpkg install --debug \
+    --overlay-ports=ports --overlay-triplets=doc/triplets \
+    pigz:x64-linux-zig
+
+```
+
+```bash
 cbp install cmake ninja
 
 brew install autoconf automake autoconf-archive
