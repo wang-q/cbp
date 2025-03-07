@@ -179,39 +179,6 @@ rm -rf ${REPO}
 
 ## Projects requiring specific build environments
 
-* Built on a CentOS 7 VM with gcc 4.8
-
-```bash
-curl -L https://archives.boost.io/release/1.74.0/source/boost_1_74_0.tar.gz |
-    tar xvfz - \
-        --exclude='libs/math/test/*' \
-        --exclude='libs/geometry/test/*' \
-        --exclude='libs/gil/test/*' \
-        --exclude='libs/multiprecision/test/*' \
-        --exclude='libs/beast/test/*' \
-        --exclude='libs/*/example/*' \
-        --exclude='libs/*/doc/*' \
-        --exclude='*.html' \
-        --exclude='*.htm' \
-        --exclude='*.pdf' \
-        --exclude='*.png' \
-        --exclude='*.jpg' \
-        --exclude='*.gif' \
-        --exclude='*.bmp' \
-        --exclude='*.css' \
-        --exclude='*.js' \
-        --exclude='*.txt' \
-        --exclude='*.dat' \
-        --exclude='*.dat' \
-        --exclude='*.qbk' \
-        --exclude='*.svg' \
-        --exclude='*.xml' &&
-    mv boost_1_74_0 boost &&
-    tar -czf sources/boost.tar.gz boost/ &&
-    rm -rf boost
-
-```
-
 * Built on a CentOS 7 VM using system libgomp
 
 ```bash

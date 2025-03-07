@@ -6,44 +6,38 @@ This file contains build instructions for each component. Note that:
 2. Build artifacts are packaged into .tar.gz files and stored in the `binaries/` directory
 3. Each build is performed in a temporary directory to avoid polluting the project's directories
 
-## Core Libraries
-
-These libraries are fundamental dependencies and will be extensively used by other components. Each library comes with:
-1. A build script in `scripts/`
-2. Additional tests in `scripts/tests/`
-3. Tests should be run on native platform only, as cross-compiled binaries cannot be executed on the build machine
+## `vcpkg` libraries
 
 ```bash
-bash scripts/zlib.sh -t
-bash scripts/bzip2.sh -t
-bash scripts/libdeflate.sh -t
-bash scripts/xz.sh -t
+# List all available features for a package
+vcpkg search bzip2
+
+bash scripts/vcpkg.sh zlib linux
+bash scripts/vcpkg.sh bzip2[tool] linux
+bash scripts/vcpkg.sh libdeflate linux
+bash scripts/vcpkg.sh liblzma[tools] linux
 
 cbp local zlib bzip2 libdeflate xz
 
+bash scripts/vcpkg.sh ncurses linux
+bash scripts/vcpkg.sh readline linux
+
+bash scripts/vcpkg.sh argtable2 linux
+bash scripts/vcpkg.sh expat linux
+
+bash scripts/vcpkg.sh gsl linux
+# bash scripts/vcpkg.sh gmp linux
+
 ```
 
-## Other Libraries
+## `vcpkg` utilities
+
 
 ```bash
-bash scripts/ncurses.sh
-cbp local ncurses
-bash scripts/readline.sh
-cbp local readline
-bash scripts/sqlite.sh
+# avoid icu from sqlite3[*]
+bash scripts/vcpkg.sh sqlite3[core,tool,dbstat,fts3,fts4,fts5,json1,math,rtree,soundex,zlib] linux
 
-bash scripts/gdbm.sh
-bash scripts/expat.sh
-
-bash scripts/pixman.sh
-bash scripts/libpng.sh
-
-bash scripts/argtable.sh
-bash scripts/libxcrypt.sh
-
-bash scripts/gsl.sh -t
-
-bash scripts/c-ares.sh -t
+bash scripts/vcpkg.sh "curl[ssl,http2,websockets,tool]" linux
 
 ```
 
@@ -126,13 +120,6 @@ bash scripts/bcalm.sh
 ```
 
 ## Projects requiring specific build environments
-
-* Built on a CentOS 7 VM with gcc 4.8
-
-```bash
-bash scripts/boost.sh
-
-```
 
 * Built on a CentOS 7 VM using system libgomp
 
