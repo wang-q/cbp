@@ -11,6 +11,12 @@ This file contains build instructions for each component. Note that:
 ```bash
 # List all available features for a package
 vcpkg search bzip2
+# To remove a vcpkg package
+vcpkg remove --x-install-root="$(cbp prefix cache)" pkgconf:x64-linux-zig
+# Install zlib with custom target
+# vcpkg install zlib:x64-linux-zig \
+#     --cmake-args="-DCMAKE_C_COMPILER_TARGET=aarch64-macos-none" \
+#     --cmake-args="-DCMAKE_CXX_COMPILER_TARGET=aarch64-macos-none"
 
 bash scripts/vcpkg.sh zlib linux
 bash scripts/vcpkg.sh bzip2[tool] linux
@@ -35,15 +41,23 @@ bash scripts/vcpkg.sh gsl linux
 
 ```bash
 # avoid icu from sqlite3[*]
-bash scripts/vcpkg.sh sqlite3[core,tool,dbstat,fts3,fts4,fts5,json1,math,rtree,soundex,zlib] linux
+bash scripts/vcpkg.sh "sqlite3[core,tool,dbstat,fts3,fts4,fts5,json1,math,rtree,soundex,zlib]" linux
 
-bash scripts/vcpkg.sh "curl[ssl,http2,websockets,tool]" linux
+bash scripts/vcpkg.sh "openssl[core,tools]" linux
+
+bash scripts/vcpkg.sh "curl[core,tool,ssl,http2,websockets]" linux
+
+bash scripts/vcpkg.sh pkgconf linux pkgconf=pkg-config
+
+# bash scripts/vcpkg.sh graphviz linux
+# gdal
 
 ```
 
 ## `Makefile`
 
 ```bash
+cbp local zlib
 bash scripts/pigz.sh
 
 bash scripts/bwa.sh
