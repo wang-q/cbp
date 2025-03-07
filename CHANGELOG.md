@@ -2,6 +2,8 @@
 
 ## Unreleased - ReleaseDate
 
+## 0.3.4 - 2025-03-07
+
 - Migrated to vcpkg-based build system
   - Added custom triplets for cross-compilation
   - Added vcpkg overlay ports support
