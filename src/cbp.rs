@@ -22,6 +22,7 @@ fn main() -> anyhow::Result<()> {
         .subcommand(cmd_cbp::prefix::make_subcommand())
         .subcommand(cmd_cbp::kb::make_subcommand())
         .subcommand(cmd_cbp::upload::make_subcommand())
+        .subcommand(cmd_cbp::collect::make_subcommand())
         .after_help(
             r###"
 Package Manager Features:
@@ -79,6 +80,7 @@ Common Commands:
         Some(("tar", sub_matches)) => cmd_cbp::tar::execute(sub_matches),
         Some(("upload", sub_matches)) => cmd_cbp::upload::execute(sub_matches),
         Some(("prefix", sub_matches)) => cmd_cbp::prefix::execute(sub_matches),
+        Some(("collect", sub_matches)) => cmd_cbp::collect::execute(sub_matches),
         _ => unreachable!(),
     }?;
 

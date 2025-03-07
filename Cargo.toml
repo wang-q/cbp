@@ -29,6 +29,7 @@ toml = "0.8.20"
 tempfile = "3.8.0"
 walkdir = "2.5.0"
 glob = "0.3.2"
+cmd_lib = "1.9.3"
 
 ureq = { version = "2.12.1" , features = ["json", "socks-proxy"]}
 serde = { version = "1.0.218", features = ["derive"] }
