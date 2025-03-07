@@ -6,9 +6,10 @@ cd "${BASH_DIR}"/..
 
 # Check if the package name is provided
 if [ -z "$1" ]; then
-    echo "Usage: $0 <PACKAGE_NAME> [OS_TYPE]"
+    echo "Usage: $0 <PACKAGE_NAME> [OS_TYPE] [COPY_PAIRS...]"
     echo "Supported OS_TYPE: linux, macos, windows"
     echo "Example: $0 zlib linux"
+    echo "Example with copy: $0 pkgconf linux pkgconf=pkg-config"
     exit 1
 fi
 
@@ -53,7 +54,7 @@ elif [ "$OS_TYPE" == "windows" ]; then
 fi
 
 # Install the package using vcpkg
-vcpkg install --debug \
+vcpkg install --debug --recurse \
     --overlay-ports=ports \
     --overlay-triplets="$(cbp prefix triplets)" \
     --x-install-root="$(cbp prefix cache)" \
@@ -70,8 +71,15 @@ else
     echo "Found package list: ${LIST_FILE}"
 fi
 
+# Process copy arguments
+COPY_ARGS=()
+shift 2  # Skip package name and OS type
+for copy_pair in "$@"; do
+    COPY_ARGS+=(--copy "$copy_pair")
+done
+
 # Create archive from the package list
-cbp collect "${LIST_FILE}" || exit 1
+cbp collect "${LIST_FILE}" "${COPY_ARGS[@]}" || exit 1
 
 # Move archive to the binaries directory
 mv "${BASE_PROJ}.${OS_TYPE}.tar.gz" binaries/
