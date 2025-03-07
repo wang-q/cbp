@@ -2,25 +2,42 @@
 
 ## Unreleased - ReleaseDate
 
+- Migrated to vcpkg-based build system
+  - Added custom triplets for cross-compilation
+  - Added vcpkg overlay ports support
+- Added development environment setup
+  - Added `--dev` option to `init` command
+  - Added compiler shims for cross-compilation
+  - Added vcpkg triplet configurations
+- Added `collect` command for package management
+- Enhanced Windows support
+  - Added MSYS2 building environment
+  - Improved toolchain configurations
+- Reorganized documentation and build scripts
+  - Moved legacy scripts to doc/attempts/
+  - Added vcpkg usage guides
+
 ## 0.3.3 - 2025-03-05
 
 - Improved Windows support
   - Cross compilation with Zig 0.14.0
   - Added PowerShell build scripts
   - Enhanced binary handling for Windows executables
-- Added `--list` and `--type` options to view package contents
-  - Support cross-platform package installation
+- Added package content management
+  - Added `--list` option to view installed packages
+  - Added `--type` option to filter package types
   - Added package content preview
 - Added new packages
 - Reorganized documentation
 
 ## 0.3.2 - 2025-03-04
 
-- Added `init` command for initializing the package manager
-- Added `prefix` command for getting the package manager prefix
+- Added package manager initialization
+  - Added `init` command for environment setup
+  - Added `prefix` command for installation paths
 - Added Windows support
 - Improved proxy support
-- Improved core utilities
+- Enhanced core utilities
 
 ## 0.3.1 - 2025-03-02
 
