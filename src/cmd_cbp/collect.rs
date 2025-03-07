@@ -11,6 +11,13 @@ pub fn make_subcommand() -> Command {
                 .action(ArgAction::Set),
         )
         .arg(
+            Arg::new("copy")
+                .long("copy")
+                .help("Create file aliases (e.g., --copy libzlib.a=libz.a)")
+                .action(ArgAction::Append)
+                .num_args(1),
+        )
+        .arg(
             Arg::new("output")
                 .short('o')
                 .long("output")
@@ -30,6 +37,23 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
     if !list_file.exists() || list_file.extension().unwrap_or_default() != "list" {
         anyhow::bail!("Invalid list file: {}", list_path);
     }
+
+    // Parse copy aliases
+    let copy_map: std::collections::HashMap<String, Vec<String>> = matches
+        .get_many::<String>("copy")
+        .map(|copies| {
+            let mut map = std::collections::HashMap::new();
+            for copy_pair in copies {
+                let parts: Vec<&str> = copy_pair.split('=').collect();
+                if parts.len() == 2 {
+                    map.entry(parts[0].to_string())
+                        .or_insert_with(Vec::new)
+                        .push(parts[1].to_string());
+                }
+            }
+            map
+        })
+        .unwrap_or_default();
 
     // output name
     let output: String =
@@ -99,7 +123,21 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
             #[cfg(unix)]
             if parts[0] == "tools" {
                 use std::os::unix::fs::PermissionsExt;
-                std::fs::set_permissions(&dest_path, std::fs::Permissions::from_mode(0o755))?;
+                std::fs::set_permissions(
+                    &dest_path,
+                    std::fs::Permissions::from_mode(0o755),
+                )?;
+            }
+
+            // Handle file aliases
+            if let Some(file_name) = dest_path.file_name().and_then(|n| n.to_str()) {
+                if let Some(aliases) = copy_map.get(file_name) {
+                    if let Some(parent) = dest_path.parent() {
+                        for alias in aliases {
+                            std::fs::copy(&dest_path, parent.join(alias))?;
+                        }
+                    }
+                }
             }
         }
     }
