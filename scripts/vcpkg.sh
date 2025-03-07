@@ -12,7 +12,9 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
+# Get base package name without features
 PROJ=$1
+BASE_PROJ=$(echo $PROJ | cut -d'[' -f1)
 
 # Set default OS type based on current system
 case "$OSTYPE" in
@@ -58,10 +60,11 @@ vcpkg install --debug \
     "${PROJ}:${TRIPLET}" || exit 1
 
 # Find the package list file
-LIST_FILE=$(find "$(cbp prefix cache)/vcpkg/info" -name "${PROJ}_*_${TRIPLET}.list" -type f | head -n 1)
+# Create archive from the package list
+LIST_FILE=$(find "$(cbp prefix cache)/vcpkg/info" -name "${BASE_PROJ}_*_${TRIPLET}.list" -type f | head -n 1)
 
 if [ -z "${LIST_FILE}" ]; then
-    echo "Error: Package list file not found for ${PROJ}:${TRIPLET}"
+    echo "Error: Package list file not found for ${BASE_PROJ}:${TRIPLET}"
     exit 1
 else
     echo "Found package list: ${LIST_FILE}"
@@ -71,4 +74,4 @@ fi
 cbp collect "${LIST_FILE}" || exit 1
 
 # Move archive to the binaries directory
-mv "${PROJ}.${OS_TYPE}.tar.gz" binaries/
+mv "${BASE_PROJ}.${OS_TYPE}.tar.gz" binaries/
