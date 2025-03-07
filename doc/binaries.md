@@ -122,8 +122,6 @@ bash scripts/diamond.sh
 
 bash scripts/newick-utils.sh # bison, flex
 
-bash scripts/eigen.sh
-
 ```
 
 ## Source codes from Git Repositories

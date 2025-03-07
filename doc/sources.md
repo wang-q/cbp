@@ -154,8 +154,6 @@ curl -L https://github.com/tjunier/newick_utils/archive/da121155a977197cab9fbb15
     tar -czf sources/newick-utils.tar.gz newick-utils/ &&
     rm -rf newick-utils
 
-curl -o sources/eigen.tar.gz -L https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz
-
 ```
 
 ## Source codes from Git Repositories
