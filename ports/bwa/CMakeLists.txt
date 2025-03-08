@@ -1,12 +1,19 @@
 cmake_minimum_required(VERSION 3.15)
 project(bwa C)
 
+find_package(ZLIB REQUIRED)
+
 # Core library source files
 set(LOBJS
     utils.c kthread.c kstring.c ksw.c bwt.c bntseq.c bwa.c bwamem.c
     bwamem_pair.c bwamem_extra.c malloc_wrap.c QSufSort.c bwt_gen.c
     rope.c rle.c is.c bwtindex.c
 )
+
+# Build static library
+add_library(libbwa STATIC ${LOBJS})
+set_target_properties(libbwa PROPERTIES OUTPUT_NAME bwa)
+target_link_libraries(libbwa PRIVATE ZLIB::ZLIB)
 
 # Additional source files
 set(AOBJS
@@ -20,16 +27,12 @@ set(AOBJS
 add_compile_definitions(HAVE_PTHREAD)
 add_compile_definitions(USE_MALLOC_WRAPPERS)
 
-# Build static library
-add_library(libbwa STATIC ${LOBJS})
-set_target_properties(libbwa PROPERTIES OUTPUT_NAME bwa)
-
 # Build executable
 add_executable(bwa main.c ${AOBJS})
 target_link_libraries(bwa PRIVATE
     libbwa
+    ZLIB::ZLIB
     m
-    z
     pthread
 )
 
