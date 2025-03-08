@@ -58,7 +58,8 @@ bash scripts/vcpkg.sh pkgconf linux pkgconf=pkg-config
 
 ```bash
 bash scripts/vcpkg.sh pigz linux
-
+bash scripts/vcpkg.sh sickle linux
+bash scripts/vcpkg.sh faops linux
 
 ```
 
@@ -70,8 +71,6 @@ bash scripts/minimap2.sh
 bash scripts/miniprot.sh
 
 bash scripts/lastz.sh
-bash scripts/sickle.sh
-bash scripts/faops.sh
 bash scripts/phylip.sh
 
 # bash scripts/mafft.sh # mafft has hard-coded paths
