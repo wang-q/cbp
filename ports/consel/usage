@@ -1,0 +1,15 @@
+The package consel provides the following executables:
+
+    consel - Main program for assessing the confidence of tree selection
+    makermt - Make bootstrap replicates
+    catpv - Show p-values
+    catci - Show confidence intervals
+    catrep - Show replicates
+    treeass - Tree assessment
+    randrep - Generate random replicates
+    catmt - Show MT output
+    seqmt - Sequence MT
+    makerep - Make replicates
+    catass - Show assessment
+
+For more information, visit: http://stat.sys.i.kyoto-u.ac.jp/prog/consel/

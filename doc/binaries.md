@@ -60,6 +60,7 @@ bash scripts/vcpkg.sh pkgconf linux pkgconf=pkg-config
 bash scripts/vcpkg.sh pigz linux
 bash scripts/vcpkg.sh sickle linux
 bash scripts/vcpkg.sh faops linux
+bash scripts/vcpkg.sh consel linux
 
 ```
 
@@ -77,7 +78,6 @@ bash scripts/phylip.sh
 
 bash scripts/phast.sh # build without CLAPACK
 
-bash scripts/consel.sh
 bash scripts/trimal.sh
 
 # use specific commit to ensure reproducibility
