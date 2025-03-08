@@ -88,6 +88,7 @@ ABI compatibility is not a concern.
 
 ```powershell
 .\scripts\vcpkg.ps1 pigz
+# .\scripts\vcpkg.ps1 faops
 
 Get-Command pigz
 (Get-Command pigz).Path

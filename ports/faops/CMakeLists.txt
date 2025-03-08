@@ -6,6 +6,9 @@ find_package(ZLIB REQUIRED)
 add_executable(faops faops.c)
 
 target_link_libraries(faops PRIVATE ZLIB::ZLIB)
+target_compile_definitions(faops PRIVATE
+    _GNU_SOURCE
+)
 target_compile_options(faops PRIVATE
     -O2
     -Wall
