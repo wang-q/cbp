@@ -73,6 +73,7 @@ vcpkg remove --debug --recurse \
 bash scripts/vcpkg.sh pigz linux
 bash scripts/vcpkg.sh sickle linux
 bash scripts/vcpkg.sh faops linux
+bash scripts/vcpkg.sh multiz linux
 
 bash scripts/vcpkg.sh bwa linux
 
@@ -108,7 +109,6 @@ bash scripts/FASTGA.sh
 cbp local zlib libdeflate htslib
 bash scripts/FASTK.sh
 
-bash scripts/multiz.sh
 bash scripts/paml.sh
 bash scripts/ASTER.sh
 
