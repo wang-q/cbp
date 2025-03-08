@@ -84,6 +84,8 @@ cbp collect "${LIST_FILE}" "${COPY_ARGS[@]}" || exit 1
 
 # Remove the package from cache
 vcpkg remove --recurse \
+    --overlay-ports=ports \
+    --overlay-triplets="$(cbp prefix triplets)" \
     --x-install-root="$(cbp prefix cache)" \
     "${BASE_PROJ}:${TRIPLET}"
 

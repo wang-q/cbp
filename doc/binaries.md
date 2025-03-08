@@ -57,6 +57,18 @@ bash scripts/vcpkg.sh pkgconf linux pkgconf=pkg-config
 ## My ports
 
 ```bash
+vcpkg install --debug --recurse \
+    --clean-buildtrees-after-build --clean-packages-after-build \
+    --overlay-ports=ports \
+    --overlay-triplets="$(cbp prefix triplets)" \
+    --x-install-root="$(cbp prefix cache)" \
+    zlib:x64-linux-zig
+vcpkg remove --debug --recurse \
+    --overlay-ports=ports \
+    --overlay-triplets="$(cbp prefix triplets)" \
+    --x-install-root="$(cbp prefix cache)" \
+    zlib:x64-linux-zig
+
 # Transform Makefile to CMakeLists.txt
 bash scripts/vcpkg.sh pigz linux
 bash scripts/vcpkg.sh sickle linux
