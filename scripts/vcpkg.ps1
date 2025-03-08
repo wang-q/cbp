@@ -10,19 +10,18 @@ if (-not $IsWindows) {
 
 # Check if package name is provided
 if ($args.Count -eq 0) {
-    Write-Host "Usage: $($MyInvocation.MyCommand.Name) <PACKAGE_NAME> [COPY_PAIRS...]"
+    Write-Host "Usage: $($MyInvocation.MyCommand.Name) <PACKAGE_NAME> [TRIPLET] [COPY_PAIRS...]"
     Write-Host "Example: $($MyInvocation.MyCommand.Name) zlib"
-    Write-Host "Example with copy: $($MyInvocation.MyCommand.Name) pkgconf pkgconf=pkg-config"
+    Write-Host "Example: $($MyInvocation.MyCommand.Name) zlib x64-windows-zig"
+    Write-Host "Example with copy: $($MyInvocation.MyCommand.Name) pkgconf x64-windows-zig pkgconf=pkg-config"
     exit 1
 }
 
-# Get base package name without features
+# Get package name and triplet
 $PROJ = $args[0]
 $BASE_PROJ = $PROJ -split '\[' | Select-Object -First 1
-
-# Windows only, so triplet is fixed
+$TRIPLET = if ($args.Count -gt 1) { $args[1] } else { "x64-windows-zig" }
 $OS_TYPE = "windows"
-$TRIPLET = "x64-windows-zig"
 
 # Install the package using vcpkg and clean after build
 vcpkg install --debug --recurse `
@@ -45,8 +44,8 @@ Write-Host "Found package list: $LIST_FILE"
 
 # Process copy arguments
 $COPY_ARGS = @()
-if ($args.Count -gt 1) {
-    $args[1..($args.Count-1)] | ForEach-Object {
+if ($args.Count -gt 2) {
+    $args[2..($args.Count-1)] | ForEach-Object {
         $COPY_ARGS += "--copy"
         $COPY_ARGS += $_
     }

@@ -1,5 +1,6 @@
 use clap::{Arg, ArgAction, Command};
 use cmd_lib::*;
+use std::io::Read;
 
 pub fn make_subcommand() -> Command {
     Command::new("collect")
@@ -120,6 +121,15 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
 
         if src_path.is_file() {
             std::fs::copy(&src_path, &dest_path)?;
+
+            // Check if it's a Windows executable in tools or bin directory
+            if (parts[0] == "tools" || parts[0] == "bin") && is_windows_executable(&src_path)? {
+                let dest_exe = dest_path.with_extension("exe");
+                if dest_path != dest_exe {
+                    std::fs::rename(&dest_path, &dest_exe)?;
+                }
+            }
+
             #[cfg(unix)]
             if parts[0] == "tools" {
                 use std::os::unix::fs::PermissionsExt;
@@ -149,4 +159,16 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
     )?;
 
     Ok(())
+}
+
+fn is_windows_executable(path: &std::path::Path) -> std::io::Result<bool> {
+    let mut file = std::fs::File::open(path)?;
+    let mut buffer = [0u8; 2];
+
+    if file.read_exact(&mut buffer).is_ok() {
+        // DOS MZ header magic number
+        Ok(buffer == [0x4D, 0x5A])
+    } else {
+        Ok(false)
+    }
 }

@@ -54,12 +54,17 @@ bash scripts/vcpkg.sh pkgconf linux pkgconf=pkg-config
 
 ```
 
+## My ports
+
+```bash
+bash scripts/vcpkg.sh pigz linux
+
+
+```
+
 ## `Makefile`
 
 ```bash
-cbp local zlib
-bash scripts/pigz.sh
-
 bash scripts/bwa.sh
 bash scripts/minimap2.sh
 bash scripts/miniprot.sh
