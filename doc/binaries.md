@@ -60,14 +60,17 @@ bash scripts/vcpkg.sh pkgconf linux pkgconf=pkg-config
 bash scripts/vcpkg.sh pigz linux
 bash scripts/vcpkg.sh sickle linux
 bash scripts/vcpkg.sh faops linux
+
+bash scripts/vcpkg.sh bwa linux
+
 bash scripts/vcpkg.sh consel linux
+bash scripts/vcpkg.sh trf linux
 
 ```
 
 ## `Makefile`
 
 ```bash
-bash scripts/bwa.sh
 bash scripts/minimap2.sh
 bash scripts/miniprot.sh
 
@@ -100,7 +103,6 @@ bash scripts/ASTER.sh
 ```bash
 bash scripts/datamash.sh
 
-bash scripts/TRF.sh
 bash scripts/hmmer.sh
 bash scripts/hmmer2.sh
 bash scripts/mummer.sh

@@ -96,7 +96,11 @@ curl -L https://github.com/chaoszhang/ASTER/archive/e8da7edf8adf4205cf5551630dc7
 ```bash
 curl -o sources/datamash.tar.gz -L https://ftp.gnu.org/gnu/datamash/datamash-1.8.tar.gz
 
-curl -o sources/TRF.tar.gz -L https://github.com/Benson-Genomics-Lab/TRF/archive/refs/tags/v4.09.1.tar.gz
+curl -L https://github.com/Benson-Genomics-Lab/TRF/archive/refs/tags/v4.09.1.tar.gz |
+    tar xvfz - &&
+    mv TRF-* trf &&
+    tar -czf sources/trf.tar.gz trf/ &&
+    rm -rf trf
 
 curl -o sources/hmmer.tar.gz -L http://eddylab.org/software/hmmer/hmmer-3.4.tar.gz
 

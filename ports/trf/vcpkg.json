@@ -1,0 +1,17 @@
+{
+    "name": "trf",
+    "version": "4.10.0",
+    "description": "Tandem Repeats Finder: a program to analyze DNA sequences",
+    "homepage": "https://tandem.bu.edu/trf/trf.html",
+    "license": "AGPL-3.0",
+    "dependencies": [
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        },
+        {
+            "name": "vcpkg-cmake-config",
+            "host": true
+        }
+    ]
+}
