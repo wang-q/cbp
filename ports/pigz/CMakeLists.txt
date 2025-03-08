@@ -39,7 +39,7 @@ target_compile_options(pigz PRIVATE
 )
 
 if (WIN32)
-    set_target_properties(pigz PROPERTIES SUFFIX ".bin")
+    set_target_properties(pigz PROPERTIES SUFFIX ".exe")
 endif()
 
 # if(WIN32)
