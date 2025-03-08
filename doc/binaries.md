@@ -57,6 +57,7 @@ bash scripts/vcpkg.sh pkgconf linux pkgconf=pkg-config
 ## My ports
 
 ```bash
+# Transform Makefile to CMakeLists.txt
 bash scripts/vcpkg.sh pigz linux
 bash scripts/vcpkg.sh sickle linux
 bash scripts/vcpkg.sh faops linux
@@ -64,7 +65,10 @@ bash scripts/vcpkg.sh faops linux
 bash scripts/vcpkg.sh bwa linux
 
 bash scripts/vcpkg.sh consel linux
+
+# ./configure
 bash scripts/vcpkg.sh trf linux
+bash scripts/vcpkg.sh datamash linux
 
 ```
 
@@ -101,8 +105,6 @@ bash scripts/ASTER.sh
 ## `./configure`
 
 ```bash
-bash scripts/datamash.sh
-
 bash scripts/hmmer.sh
 bash scripts/hmmer2.sh
 bash scripts/mummer.sh

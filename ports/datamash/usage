@@ -1,0 +1,3 @@
+The package datamash provides the following executables:
+
+    datamash - perform basic numeric, textual and statistical operations on input textual data files
