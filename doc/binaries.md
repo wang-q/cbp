@@ -12,7 +12,17 @@ This file contains build instructions for each component. Note that:
 # List all available features for a package
 vcpkg search bzip2
 # To remove a vcpkg package
-vcpkg remove --x-install-root="$(cbp prefix cache)" pkgconf:x64-linux-zig
+vcpkg install --debug --recurse \
+    --clean-buildtrees-after-build --clean-packages-after-build \
+    --overlay-ports=ports \
+    --overlay-triplets="$(cbp prefix triplets)" \
+    --x-install-root="$(cbp prefix cache)" \
+    zlib:x64-linux-zig
+vcpkg remove --debug --recurse \
+    --overlay-ports=ports \
+    --overlay-triplets="$(cbp prefix triplets)" \
+    --x-install-root="$(cbp prefix cache)" \
+    zlib:x64-linux-zig
 # Install zlib with custom target
 # vcpkg install zlib:x64-linux-zig \
 #     --cmake-args="-DCMAKE_C_COMPILER_TARGET=aarch64-macos-none" \
@@ -38,7 +48,6 @@ bash scripts/vcpkg.sh gsl linux
 
 ## `vcpkg` utilities
 
-
 ```bash
 # avoid icu from sqlite3[*]
 bash scripts/vcpkg.sh "sqlite3[core,tool,dbstat,fts3,fts4,fts5,json1,math,rtree,soundex,zlib]" linux
@@ -57,18 +66,6 @@ bash scripts/vcpkg.sh pkgconf linux pkgconf=pkg-config
 ## My ports
 
 ```bash
-vcpkg install --debug --recurse \
-    --clean-buildtrees-after-build --clean-packages-after-build \
-    --overlay-ports=ports \
-    --overlay-triplets="$(cbp prefix triplets)" \
-    --x-install-root="$(cbp prefix cache)" \
-    zlib:x64-linux-zig
-vcpkg remove --debug --recurse \
-    --overlay-ports=ports \
-    --overlay-triplets="$(cbp prefix triplets)" \
-    --x-install-root="$(cbp prefix cache)" \
-    zlib:x64-linux-zig
-
 # Transform Makefile to CMakeLists.txt
 bash scripts/vcpkg.sh pigz linux
 bash scripts/vcpkg.sh sickle linux
