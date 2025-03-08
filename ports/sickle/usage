@@ -1,0 +1,3 @@
+The package sickle provides the following executables:
+
+    sickle - A windowed adaptive trimming tool for FASTQ data
