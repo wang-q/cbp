@@ -104,11 +104,11 @@ curl -o sources/paml.tar.gz -L https://github.com/abacus-gene/paml/archive/01508
 
 curl -L https://github.com/chaoszhang/ASTER/archive/e8da7edf8adf4205cf5551630dc77bb81497092b.tar.gz |
     tar xvfz - &&
-    mv ASTER-* ASTER &&
-    rm -fr ASTER/example &&
-    rm ASTER/exe/* &&
-    tar -czf sources/ASTER.tar.gz ASTER/ &&
-    rm -rf ASTER
+    mv ASTER-* aster &&
+    rm -fr aster/example &&
+    rm aster/exe/* &&
+    tar -czf sources/aster.tar.gz aster/ &&
+    rm -rf aster
 
 ```
 
