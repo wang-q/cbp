@@ -34,14 +34,16 @@ esac
 OS_TYPE=${2:-$DEFAULT_OS}
 
 # Validate the OS type
-if [[ "$OS_TYPE" != "linux" && "$OS_TYPE" != "macos" && "$OS_TYPE" != "windows" ]]; then
+if [[ "$OS_TYPE" != "linux" && "$OS_TYPE" != "macos" && "$OS_TYPE" != "windows" && "$OS_TYPE" != "native" ]]; then
     echo "Unsupported os_type: $OS_TYPE"
-    echo "Supported os_type: linux, macos, windows"
+    echo "Supported os_type: linux, macos, windows, native"
     exit 1
 fi
 
 # Set the target architecture based on the OS type
-if [ "$OS_TYPE" == "linux" ]; then
+if [ "$OS_TYPE" == "native" ]; then
+    USE_NATIVE=1
+elif [ "$OS_TYPE" == "linux" ]; then
     TARGET_ARCH="x86_64-unknown-linux-gnu.2.17"
 elif [ "$OS_TYPE" == "macos" ]; then
     TARGET_ARCH="aarch64-apple-darwin"
@@ -74,13 +76,21 @@ else
 fi
 
 # Build the project with the specified target architecture
-cargo zigbuild --target ${TARGET_ARCH} --release || exit 1
+if [ "$USE_NATIVE" == "1" ]; then
+    cargo build --release || exit 1
+else
+    cargo zigbuild --target ${TARGET_ARCH} --release || exit 1
+fi
 
 # Strip .2.17 from TARGET_ARCH if present
 TARGET_ARCH="${TARGET_ARCH%.2.17}"
 
 # List the contents of the release directory
-ls $CARGO_TARGET_DIR/${TARGET_ARCH}/release/
+if [ "$USE_NATIVE" == "1" ]; then
+    ls $CARGO_TARGET_DIR/release/
+else
+    ls $CARGO_TARGET_DIR/${TARGET_ARCH}/release/
+fi
 
 # Extract the names of binary targets from Cargo.toml
 BINS=$(
@@ -92,9 +102,17 @@ BINS=$(
 mkdir -p collect/bin
 for BIN in $BINS; do
     if [ "$OS_TYPE" == "windows" ]; then
-        cp $CARGO_TARGET_DIR/${TARGET_ARCH}/release/$BIN.exe collect/bin/
+        if [ "$USE_NATIVE" == "1" ]; then
+            cp $CARGO_TARGET_DIR/release/$BIN.exe collect/bin/
+        else
+            cp $CARGO_TARGET_DIR/${TARGET_ARCH}/release/$BIN.exe collect/bin/
+        fi
     else
-        cp $CARGO_TARGET_DIR/${TARGET_ARCH}/release/$BIN collect/bin/
+        if [ "$USE_NATIVE" == "1" ]; then
+            cp $CARGO_TARGET_DIR/release/$BIN collect/bin/
+        else
+            cp $CARGO_TARGET_DIR/${TARGET_ARCH}/release/$BIN collect/bin/
+        fi
     fi
 done
 
