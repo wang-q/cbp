@@ -22,6 +22,10 @@ bash scripts/ninja.sh -t linux
 bash scripts/ninja.sh macos
 bash scripts/ninja.sh windows
 
+bash scripts/cmake.sh -t linux
+bash scripts/cmake.sh macos
+bash scripts/cmake.sh windows
+
 bash scripts/tsv-utils.sh linux
 bash scripts/tsv-utils.sh macos
 

@@ -45,6 +45,7 @@ bash scripts/vcpkg.sh gsl linux
 # bash scripts/vcpkg.sh gmp linux
 
 bash scripts/vcpkg.sh libpng[core,tools] linux
+bash scripts/vcpkg.sh pixman linux
 bash scripts/vcpkg.sh openjpeg linux
 
 # bash scripts/vcpkg.sh fontconfig[core,tools] linux
@@ -132,18 +133,18 @@ cbp local argtable2
 bash scripts/clustalo.sh
 
 cbp local libdeflate
-bash scripts/htslib.sh # --with-libdeflate
+# bash scripts/htslib.sh # --with-libdeflate
 
 # bundled htslib
-bash scripts/samtools.sh
-bash scripts/bcftools.sh
+# bash scripts/samtools.sh
+# bash scripts/bcftools.sh
 
 ```
 
 ## `cmake`
 
 ```bash
-bash scripts/bifrost.sh
+# bash scripts/bifrost.sh
 bash scripts/spoa.sh
 
 bash scripts/newick-utils.sh # bison, flex
@@ -162,6 +163,6 @@ bash scripts/bcalm.sh
 * Built on a CentOS 7 VM using system libgomp
 
 ```bash
-bash scripts/FastTree.sh
+# bash scripts/FastTree.sh
 
 ```

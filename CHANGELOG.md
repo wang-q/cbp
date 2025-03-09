@@ -2,6 +2,14 @@
 
 ## Unreleased - ReleaseDate
 
+- Refactored build system
+  - Added more vcpkg ports support
+  - Moved legacy build scripts to doc/attempts/
+  - Updated binaries.md documentation with vcpkg instructions
+- Updated development environment
+  - Enhanced source package management
+  - Improved symlink handling
+
 ## 0.3.4 - 2025-03-07
 
 - Migrated to vcpkg-based build system
