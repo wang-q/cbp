@@ -57,6 +57,8 @@ if ($LASTEXITCODE -ne 0) { throw "cbp collect failed" }
 
 # Remove the package from cache
 vcpkg remove --recurse `
+    --overlay-ports=ports `
+    --overlay-triplets="$(cbp prefix triplets)" `
     --x-install-root="$(cbp prefix cache)" `
     "${BASE_PROJ}:${TRIPLET}"
 
