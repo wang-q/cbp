@@ -80,6 +80,9 @@ bash scripts/vcpkg.sh consel linux
 bash scripts/vcpkg.sh trf linux
 bash scripts/vcpkg.sh datamash linux
 
+# cmake
+bash scripts/vcpkg.sh diamond linux
+
 ```
 
 ## `Makefile`
@@ -135,7 +138,6 @@ bash scripts/bcftools.sh
 ```bash
 bash scripts/bifrost.sh
 bash scripts/spoa.sh
-bash scripts/diamond.sh
 
 bash scripts/newick-utils.sh # bison, flex
 
