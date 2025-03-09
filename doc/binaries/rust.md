@@ -34,19 +34,19 @@ bash scripts/rust.sh anchr
 ## Builds on macOS
 
 ```bash
-bash scripts/rust.sh eza macos
-bash scripts/rust.sh fd macos
-bash scripts/rust.sh ripgrep macos
-bash scripts/rust.sh hyperfine macos
-bash scripts/rust.sh tealdeer macos
-bash scripts/rust.sh tokei macos
-bash scripts/rust.sh jnv macos
+bash scripts/rust.sh eza native
+bash scripts/rust.sh fd native
+bash scripts/rust.sh ripgrep native
+bash scripts/rust.sh hyperfine native
+bash scripts/rust.sh tealdeer native
+bash scripts/rust.sh tokei native
+bash scripts/rust.sh jnv native
 
-bash scripts/rust.sh intspan macos
-bash scripts/rust.sh nwr macos
-bash scripts/rust.sh hnsm macos
-bash scripts/rust.sh pgr macos
-bash scripts/rust.sh anchr macos
+bash scripts/rust.sh intspan native
+bash scripts/rust.sh nwr native
+bash scripts/rust.sh hnsm native
+bash scripts/rust.sh pgr native
+bash scripts/rust.sh anchr native
 
 ```
 
