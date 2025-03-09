@@ -30,6 +30,9 @@ done
 for f in sratoolkit.*/bin/*-orig; do
     mv "$f" "${f%-orig}"
 done
+for f in sratoolkit.*/bin/*-orig.exe; do
+    rm "$f"
+done
 
 # Collect binaries
 mkdir -p collect/
