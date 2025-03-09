@@ -33,6 +33,19 @@ $env:Path += ";$env:VCPKG_ROOT"
 
 ```
 
+```powershell
+# Default triplet (x64-windows): Dynamic linking with MSVC runtime
+vcpkg install --debug zlib
+
+# Static linking with MSVC runtime
+vcpkg install --debug zlib:x64-windows-static
+
+# Static linking with MinGW runtime (gcc-style)
+vcpkg install --debug zlib:x64-mingw-static
+vcpkg install --debug bzip2[tool]:x64-mingw-static
+
+```
+
 ## `vcpkg` libraries
 
 Most packages are built with x64-windows-zig triplet, which uses Zig as the C/C++ compiler:
