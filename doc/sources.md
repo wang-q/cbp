@@ -73,7 +73,11 @@ curl -L https://github.com/thegenemyers/DAZZ_DB/archive/be65e5991ec0aa4ebbfa926e
     tar -czf sources/dazzdb.tar.gz dazzdb/ &&
     rm -rf dazzdb
 
-curl -o sources/DALIGNER.tar.gz -L https://github.com/thegenemyers/DALIGNER/archive/a8e2f42f752f21d21c92fbc39c75b16b52c6cabe.tar.gz
+curl -L https://github.com/thegenemyers/DALIGNER/archive/a8e2f42f752f21d21c92fbc39c75b16b52c6cabe.tar.gz |
+    tar xvfz - &&
+    mv DALIGNER-* daligner &&
+    tar -czf sources/daligner.tar.gz daligner/ &&
+    rm -rf daligner
 
 curl -o sources/MERQURY.FK.tar.gz -L https://github.com/thegenemyers/MERQURY.FK/archive/a1005336b0eae8a1dd478017e3dbbae5366ccda5.tar.gz
 

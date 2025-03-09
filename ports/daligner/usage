@@ -1,0 +1,12 @@
+The package daligner provides the following executables:
+
+    daligner
+    HPC.daligner
+    LAsort
+    LAmerge
+    LAsplit
+    LAcat
+    LAshow
+    LA2ONE
+    LAcheck
+    ONE2LA

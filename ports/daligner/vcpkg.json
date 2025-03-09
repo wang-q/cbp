@@ -1,0 +1,16 @@
+{
+  "name": "daligner",
+  "version": "1.0",
+  "description": "DALIGNER: Find all significant local alignments between reads",
+  "homepage": "https://github.com/thegenemyers/DALIGNER",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
