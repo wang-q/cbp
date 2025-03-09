@@ -17,10 +17,17 @@ fi
 
 # Download binary
 echo "==> Downloading ${PROJ}..."
-curl -L "${DL_URL}" -o "${PROJ}.tar.gz" ||
-    { echo "Error: Failed to download ${PROJ}"; exit 1; }
-tar xvfz "${PROJ}.tar.gz" ||
-    { echo "Error: Failed to extract ${PROJ}"; exit 1; }
+if [ "$OS_TYPE" == "windows" ]; then
+    curl -L "${DL_URL}" -o "${PROJ}.zip" ||
+        { echo "Error: Failed to download ${PROJ}"; exit 1; }
+    unzip "${PROJ}.zip" ||
+        { echo "Error: Failed to extract ${PROJ}"; exit 1; }
+else
+    curl -L "${DL_URL}" -o "${PROJ}.tar.gz" ||
+        { echo "Error: Failed to download ${PROJ}"; exit 1; }
+    tar xvfz "${PROJ}.tar.gz" ||
+        { echo "Error: Failed to extract ${PROJ}"; exit 1; }
+fi
 
 # Remove symbolic links and rename binaries
 find sratoolkit.*/bin -type l -delete
