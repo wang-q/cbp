@@ -25,13 +25,13 @@ tar xvfz "${PROJ}.tar.gz" ||
 # Remove symbolic links and rename binaries
 find sratoolkit.*/bin -type l -delete
 for f in sratoolkit.*/bin/*.[0-9].[0-9].[0-9]; do
-    mv "$f" "${f%.[0-9].[0-9].[0-9]}"
+    [ -f "$f" ] && mv "$f" "${f%.[0-9].[0-9].[0-9]}"
 done
 for f in sratoolkit.*/bin/*-orig; do
-    mv "$f" "${f%-orig}"
+    [ -f "$f" ] && mv "$f" "${f%-orig}"
 done
 for f in sratoolkit.*/bin/*-orig.exe; do
-    rm "$f"
+    [ -f "$f" ] && rm "$f"
 done
 
 # Collect binaries
