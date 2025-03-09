@@ -32,18 +32,22 @@ esac
 
 # Use provided OS type or default
 OS_TYPE=${2:-$DEFAULT_OS}
+USE_NATIVE=0
+if [ "$OS_TYPE" == "native" ]; then
+    OS_TYPE=$DEFAULT_OS
+    USE_NATIVE=1
+fi
 
 # Validate the OS type
-if [[ "$OS_TYPE" != "linux" && "$OS_TYPE" != "macos" && "$OS_TYPE" != "windows" && "$OS_TYPE" != "native" ]]; then
+if [[ "$OS_TYPE" != "linux" && "$OS_TYPE" != "macos" && "$OS_TYPE" != "windows" ]]; then
     echo "Unsupported os_type: $OS_TYPE"
-    echo "Supported os_type: linux, macos, windows, native"
+    echo "Supported os_type: linux, macos, windows"
+    echo "Add 'native' to use native build"
     exit 1
 fi
 
 # Set the target architecture based on the OS type
-if [ "$OS_TYPE" == "native" ]; then
-    USE_NATIVE=1
-elif [ "$OS_TYPE" == "linux" ]; then
+if [ "$OS_TYPE" == "linux" ]; then
     TARGET_ARCH="x86_64-unknown-linux-gnu.2.17"
 elif [ "$OS_TYPE" == "macos" ]; then
     TARGET_ARCH="aarch64-apple-darwin"
