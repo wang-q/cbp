@@ -27,11 +27,15 @@ find sratoolkit.*/bin -type l -delete
 for f in sratoolkit.*/bin/*.[0-9].[0-9].[0-9]; do
     mv "$f" "${f%.[0-9].[0-9].[0-9]}"
 done
-find sratoolkit.*/bin -type f
+for f in sratoolkit.*/bin/*-orig; do
+    mv "$f" "${f%-orig}"
+done
 
 # Collect binaries
-mkdir -p collect/bin
-cp -R sratoolkit.*/bin/* collect/bin/
+mkdir -p collect/
+mv sratoolkit.*/bin collect/
+
+# eza -T .
 
 # Run test if requested
 if [ "${RUN_TEST}" = "test" ]; then
