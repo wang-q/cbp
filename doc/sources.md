@@ -79,7 +79,11 @@ curl -L https://github.com/thegenemyers/DALIGNER/archive/a8e2f42f752f21d21c92fbc
     tar -czf sources/daligner.tar.gz daligner/ &&
     rm -rf daligner
 
-curl -o sources/MERQURY.FK.tar.gz -L https://github.com/thegenemyers/MERQURY.FK/archive/a1005336b0eae8a1dd478017e3dbbae5366ccda5.tar.gz
+curl -L https://github.com/thegenemyers/MERQURY.FK/archive/a1005336b0eae8a1dd478017e3dbbae5366ccda5.tar.gz |
+    tar xvfz - &&
+    mv MERQURY.FK-* merquryfk &&
+    tar -czf sources/merquryfk.tar.gz merquryfk/ &&
+    rm -rf merquryfk
 
 curl -o sources/FASTGA.tar.gz -L https://github.com/thegenemyers/FASTGA/archive/e97c33ef4daeafdfbb7b5dda56d31eaac9a5e214.tar.gz
 

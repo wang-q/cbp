@@ -1,0 +1,17 @@
+{
+  "name": "merquryfk",
+  "version": "1.0",
+  "description": "MERQURY.FK: Evaluate genome assemblies with k-mers and more",
+  "homepage": "https://github.com/thegenemyers/MERQURY.FK",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}
