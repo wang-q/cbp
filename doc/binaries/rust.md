@@ -59,6 +59,7 @@ winget install 7zip.7zip
 .\scripts\rust.ps1 eza
 .\scripts\rust.ps1 fd
 .\scripts\rust.ps1 ripgrep
+.\scripts\rust.ps1 bat
 .\scripts\rust.ps1 hyperfine
 .\scripts\rust.ps1 tealdeer
 .\scripts\rust.ps1 tokei
