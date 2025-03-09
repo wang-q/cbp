@@ -37,6 +37,7 @@ bash scripts/rust.sh anchr
 bash scripts/rust.sh eza native
 bash scripts/rust.sh fd native
 bash scripts/rust.sh ripgrep native
+bash scripts/rust.sh bat native
 bash scripts/rust.sh hyperfine native
 bash scripts/rust.sh tealdeer native
 bash scripts/rust.sh tokei native
