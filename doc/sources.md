@@ -92,7 +92,11 @@ curl -L https://github.com/thegenemyers/FASTGA/archive/e97c33ef4daeafdfbb7b5dda5
     tar -czf sources/fastga.tar.gz fastga/ &&
     rm -rf fastga
 
-curl -o sources/FASTK.tar.gz -L https://github.com/thegenemyers/FASTK/archive/ddea6cf254f378db51d22c6eb21af775fa9e1f77.tar.gz
+curl -L https://github.com/thegenemyers/FASTK/archive/ddea6cf254f378db51d22c6eb21af775fa9e1f77.tar.gz |
+    tar xvfz - &&
+    mv FASTK-* fastk &&
+    tar -czf sources/fastk.tar.gz fastk/ &&
+    rm -rf fastk
 
 curl -o sources/multiz.tar.gz -L https://github.com/wang-q/multiz/archive/633c0f7814c887e9e7468ad42076d62496651cb8.tar.gz
 
