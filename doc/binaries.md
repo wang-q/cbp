@@ -33,7 +33,7 @@ bash scripts/vcpkg.sh bzip2[tool] linux
 bash scripts/vcpkg.sh libdeflate linux
 bash scripts/vcpkg.sh liblzma[tools] linux
 
-cbp local zlib bzip2 libdeflate xz
+cbp local zlib bzip2 libdeflate liblzma
 
 bash scripts/vcpkg.sh ncurses linux
 bash scripts/vcpkg.sh readline linux
@@ -43,6 +43,11 @@ bash scripts/vcpkg.sh expat linux
 
 bash scripts/vcpkg.sh gsl linux
 # bash scripts/vcpkg.sh gmp linux
+
+bash scripts/vcpkg.sh libpng[core,tools] linux
+bash scripts/vcpkg.sh openjpeg linux
+
+# bash scripts/vcpkg.sh fontconfig[core,tools] linux
 
 ```
 

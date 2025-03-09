@@ -41,9 +41,9 @@ Most packages are built with x64-windows-zig triplet, which uses Zig as the C/C+
 vcpkg remove --x-install-root="$( cbp prefix cache )" zlib:x64-windows-zig
 
 .\scripts\vcpkg.ps1 zlib x64-windows-zig libzlib.a=libz.a
-.\scripts\vcpkg.ps1 bzip2[tool]
+.\scripts\vcpkg.ps1 "bzip2[tool]"
 .\scripts\vcpkg.ps1 libdeflate
-# .\scripts\vcpkg.ps1 liblzma[tools]
+# .\scripts\vcpkg.ps1 "liblzma[tools]"
 
 cbp local zlib bzip2 libdeflate liblzma
 
@@ -92,5 +92,11 @@ ABI compatibility is not a concern.
 
 Get-Command pigz
 (Get-Command pigz).Path
+
+.\scripts\vcpkg.ps1 sickle
+
+.\scripts\vcpkg.ps1 multiz
+
+.\scripts\vcpkg.ps1 trf
 
 ```

@@ -18,9 +18,9 @@ bash scripts/jq.sh windows   # Download Windows x86_64 binary
 # as binaries cannot be executed on incompatible architectures
 bash scripts/jq.sh -t macos  # This will fail on Linux
 
-bash scripts/ninja.sh -t linux  
-bash scripts/ninja.sh macos  
-bash scripts/ninja.sh windows  
+bash scripts/ninja.sh -t linux
+bash scripts/ninja.sh macos
+bash scripts/ninja.sh windows
 
 bash scripts/tsv-utils.sh linux
 bash scripts/tsv-utils.sh macos
@@ -36,6 +36,14 @@ bash scripts/pandoc.sh windows
 ## Bioinformatics tools
 
 ```bash
+bash scripts/blast.sh -t linux
+bash scripts/blast.sh macos
+bash scripts/blast.sh windows
+
+bash scripts/sratoolkit.sh -t linux
+bash scripts/sratoolkit.sh macos
+bash scripts/sratoolkit.sh windows
+
 bash scripts/muscle.sh -t linux
 bash scripts/reseek.sh -t linux
 bash scripts/usearch.sh -t linux
