@@ -70,7 +70,6 @@ bash scripts/vcpkg.sh pkgconf linux pkgconf=pkg-config
 bash scripts/vcpkg.sh pigz linux
 bash scripts/vcpkg.sh sickle linux
 bash scripts/vcpkg.sh faops linux
-bash scripts/vcpkg.sh multiz linux
 
 bash scripts/vcpkg.sh bwa linux
 
@@ -81,6 +80,8 @@ bash scripts/vcpkg.sh dazzdb linux
 bash scripts/vcpkg.sh daligner linux
 bash scripts/vcpkg.sh merquryfk linux
 bash scripts/vcpkg.sh fastga linux
+
+bash scripts/vcpkg.sh multiz linux
 
 # ./configure
 bash scripts/vcpkg.sh trf linux
@@ -107,12 +108,11 @@ bash scripts/phast.sh # build without CLAPACK
 bash scripts/trimal.sh
 
 # use specific commit to ensure reproducibility
-
 cbp local zlib libdeflate htslib
-bash scripts/FASTK.sh
+bash scripts/fastk.sh
 
 bash scripts/paml.sh
-bash scripts/ASTER.sh
+bash scripts/aster.sh
 
 ```
 
