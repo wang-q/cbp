@@ -85,7 +85,12 @@ curl -L https://github.com/thegenemyers/MERQURY.FK/archive/a1005336b0eae8a1dd478
     tar -czf sources/merquryfk.tar.gz merquryfk/ &&
     rm -rf merquryfk
 
-curl -o sources/FASTGA.tar.gz -L https://github.com/thegenemyers/FASTGA/archive/e97c33ef4daeafdfbb7b5dda56d31eaac9a5e214.tar.gz
+curl -L https://github.com/thegenemyers/FASTGA/archive/e97c33ef4daeafdfbb7b5dda56d31eaac9a5e214.tar.gz |
+    tar xvfz - &&
+    mv FASTGA-* fastga &&
+    rm -fr fastga/EXAMPLE &&
+    tar -czf sources/fastga.tar.gz fastga/ &&
+    rm -rf fastga
 
 curl -o sources/FASTK.tar.gz -L https://github.com/thegenemyers/FASTK/archive/ddea6cf254f378db51d22c6eb21af775fa9e1f77.tar.gz
 

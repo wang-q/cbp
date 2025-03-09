@@ -1,0 +1,21 @@
+The package fastga provides the following executables:
+
+    FAtoGDB
+    GDBtoFA
+    GDBstat
+    GDBshow
+    GIXmake
+    GIXshow
+    GIXrm
+    GIXmv
+    GIXcp
+    FastGA
+    ALNshow
+    ALNtoPAF
+    ALNtoPSL
+    ALNreset
+    ALNplot
+    ALNchain
+    PAFtoALN
+    PAFtoPSL
+    ONEview

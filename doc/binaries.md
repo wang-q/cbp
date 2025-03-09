@@ -80,6 +80,7 @@ bash scripts/vcpkg.sh consel linux
 bash scripts/vcpkg.sh dazzdb linux
 bash scripts/vcpkg.sh daligner linux
 bash scripts/vcpkg.sh merquryfk linux
+bash scripts/vcpkg.sh fastga linux
 
 # ./configure
 bash scripts/vcpkg.sh trf linux
@@ -106,7 +107,6 @@ bash scripts/phast.sh # build without CLAPACK
 bash scripts/trimal.sh
 
 # use specific commit to ensure reproducibility
-bash scripts/FASTGA.sh
 
 cbp local zlib libdeflate htslib
 bash scripts/FASTK.sh
