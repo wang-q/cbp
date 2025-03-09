@@ -54,13 +54,13 @@ cd $HOME/share
 curl -L https://ziglang.org/builds/zig-linux-x86_64-0.14.0-dev.3462+edabcf619.tar.xz > zig.tar.xz
 tar xvfJ zig.tar.xz
 mv zig-linux-x86_64* zig
-ln -s $HOME/share/zig/zig $HOME/bin/zig
+ln -sf $HOME/share/zig/zig $HOME/bin/zig
 
 # macos
-curl -L https://ziglang.org/download/0.13.0/zig-macos-aarch64-0.13.0.tar.xz > zig.tar.xz
+curl -L https://ziglang.org/download/0.14.0/zig-macos-aarch64-0.14.0.tar.xz > zig.tar.xz
 tar xvfJ zig.tar.xz
 mv zig-macos-aarch64* zig
-ln -s $HOME/share/zig/zig $HOME/bin/zig
+ln -sf $HOME/share/zig/zig $HOME/bin/zig
 
 # Verify Zig target
 zig targets | jq .libc

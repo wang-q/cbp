@@ -128,7 +128,7 @@ bash scripts/hmmer.sh
 bash scripts/hmmer2.sh
 bash scripts/mummer.sh
 
-cbp local argtable
+cbp local argtable2
 bash scripts/clustalo.sh
 
 cbp local libdeflate
