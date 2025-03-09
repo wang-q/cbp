@@ -67,7 +67,11 @@ curl -L https://github.com/inab/trimal/archive/refs/tags/v1.5.0.tar.gz |
 #     rm -rf bedtools
 
 # use specific commit to ensure reproducibility
-curl -o sources/DAZZ_DB.tar.gz -L https://github.com/thegenemyers/DAZZ_DB/archive/be65e5991ec0aa4ebbfa926ea00e3680de7b5760.tar.gz
+curl -L https://github.com/thegenemyers/DAZZ_DB/archive/be65e5991ec0aa4ebbfa926ea00e3680de7b5760.tar.gz |
+    tar xvfz - &&
+    mv DAZZ_DB-* dazzdb &&
+    tar -czf sources/dazzdb.tar.gz dazzdb/ &&
+    rm -rf dazzdb
 
 curl -o sources/DALIGNER.tar.gz -L https://github.com/thegenemyers/DALIGNER/archive/a8e2f42f752f21d21c92fbc39c75b16b52c6cabe.tar.gz
 

@@ -1,0 +1,16 @@
+{
+  "name": "dazzdb",
+  "version": "1.0",
+  "description": "DAZZ DB: The Dazzler Data Base",
+  "homepage": "https://github.com/thegenemyers/DAZZ_DB",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

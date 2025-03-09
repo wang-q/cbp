@@ -1,0 +1,19 @@
+The package dazzdb provides the following executables:
+
+    fasta2DB
+    DB2fasta
+    DBsplit
+    DBdust
+    Catrack
+    DBshow
+    DBstats
+    DBrm
+    DBmv
+    DBcp
+    simulator
+    fasta2DAM
+    DAM2fasta
+    DBwipe
+    DBtrim
+    DB2ONE
+    rangen
