@@ -48,11 +48,11 @@ if [ -z "$TRIPLET" ]; then
 fi
 
 # Extract OS_TYPE from triplet
-if [[ "$TRIPLET" == *"-linux-"* ]]; then
+if [[ "$TRIPLET" == *"-linux"* ]]; then
     OS_TYPE="linux"
-elif [[ "$TRIPLET" == *"-macos-"* || "$TRIPLET" == *"-osx-"* ]]; then
+elif [[ "$TRIPLET" == *"-macos"* || "$TRIPLET" == *"-osx"* ]]; then
     OS_TYPE="macos"
-elif [[ "$TRIPLET" == *"-windows-"* ]]; then
+elif [[ "$TRIPLET" == *"-windows"* ]]; then
     OS_TYPE="windows"
 else
     echo "Error: Unsupported triplet: $TRIPLET"
