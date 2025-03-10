@@ -20,7 +20,6 @@ Examples:
 
 * Package types
   cbp install -t font arial   # install fonts
-  cbp install -t linux zlib   # cross-platform install
 
 * Network proxy support
   # Priority (high to low):
