@@ -123,7 +123,9 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
             std::fs::copy(&src_path, &dest_path)?;
 
             // Check if it's a Windows executable in tools or bin directory
-            if (parts[0] == "tools" || parts[0] == "bin") && is_windows_executable(&src_path)? {
+            if (parts[0] == "tools" || parts[0] == "bin")
+                && is_windows_executable(&src_path)?
+            {
                 let dest_exe = dest_path.with_extension("exe");
                 if dest_path != dest_exe {
                     std::fs::rename(&dest_path, &dest_exe)?;

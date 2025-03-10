@@ -18,6 +18,10 @@ Examples:
   cbp install zlib            # single package
   cbp install zlib bzip2      # multiple packages
 
+* Package types
+  cbp install -t font arial   # install fonts
+  cbp install -t linux zlib   # cross-platform install
+
 * Network proxy support
   # Priority (high to low):
   # 1. --proxy argument
@@ -43,6 +47,15 @@ Examples:
                 .help("Proxy server URL (e.g., socks5://127.0.0.1:7890)")
                 .num_args(1)
                 .value_name("URL"),
+        )
+        .arg(
+            Arg::new("type")
+                .long("type")
+                .short('t')
+                .help("Package type (font for fonts, default: platform specific)")
+                .num_args(1)
+                .value_name("TYPE")
+                .value_parser(["macos", "linux", "windows", "font"]),
         )
         .arg(
             Arg::new("dir")
@@ -74,6 +87,10 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     };
 
     let os_type = cbp::get_os_type()?;
+    let pkg_type = args
+        .get_one::<String>("type")
+        .map(|s| s.as_str())
+        .unwrap_or(&os_type);
 
     //----------------------------
     // Processing
@@ -88,7 +105,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
         // Download package
         println!("==> Downloading {}", pkg);
-        let pkg_file = format!("{}.{}.tar.gz", pkg, os_type);
+        let pkg_file = format!("{}.{}.tar.gz", pkg, pkg_type);
         let temp_file = cbp_dirs.cache.join(format!("{}.incomplete", pkg_file));
         let cache_file = cbp_dirs.cache.join(&pkg_file);
 
@@ -111,6 +128,15 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
         // Install package
         cbp_dirs.install_package(pkg, &cache_file)?;
+    }
+
+    // Font installation reminder
+    if pkg_type == "font" {
+        println!("==> Fonts installed to ~/.cbp/share/fonts");
+        print!(
+            "{}",
+            cbp::font_install_instructions(&os_type, &cbp_dirs.home.join("share/fonts"))
+        );
     }
 
     Ok(())

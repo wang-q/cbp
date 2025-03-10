@@ -238,3 +238,66 @@ mod tests {
         Ok(())
     }
 }
+
+/// Generate font installation instructions for the current OS
+pub fn font_install_instructions(os_type: &str, font_dir: &Path) -> String {
+    let mut result = String::new();
+    result.push_str("==> To install fonts for current user, run:\n\n");
+
+    match os_type {
+        "windows" => {
+            result.push_str(
+                "$fonts = (New-Object -ComObject Shell.Application).Namespace(0x14)\n",
+            );
+            result.push_str(&format!(
+                "Get-ChildItem \"{}\" -Include '*.ttf','*.ttc','*.otf' -Recurse | ForEach {{\n",
+                font_dir.display()
+            ));
+            result.push_str(
+                "    If (-not(Test-Path \"C:\\Windows\\Fonts\\$($_.Name)\") -and\n",
+            );
+            result.push_str("        -not(Test-Path \"$env:LOCALAPPDATA\\Microsoft\\Windows\\Fonts\\$($_.Name)\")) {\n");
+            result.push_str("        $fonts.CopyHere($_.FullName, 0x10)\n");
+            result.push_str("        Write-Host \"Installing $($_.Name)...\"\n");
+            result.push_str("    }\n");
+            result.push_str("}\n");
+        }
+        "macos" => {
+            result.push_str(&format!("for ext in ttf ttc otf; do\n",));
+            result.push_str(&format!(
+                "    find \"{}\" -type f -iname \"*.$ext\" -print0 | while IFS= read -r -d '' font; do\n",
+                font_dir.display()
+            ));
+            result.push_str("        basename=\"$(basename \"$font\")\"\n");
+            result.push_str(
+                "        if [ ! -f \"$HOME/Library/Fonts/$basename\" ]; then\n",
+            );
+            result.push_str("            cp \"$font\" \"$HOME/Library/Fonts/\"\n");
+            result.push_str("            echo \"Installing $basename...\"\n");
+            result.push_str("        fi\n");
+            result.push_str("    done\n");
+            result.push_str("done\n");
+        }
+        "linux" => {
+            result.push_str("mkdir -p \"$HOME/.local/share/fonts\"\n");
+            result.push_str(&format!("for ext in ttf ttc otf; do\n",));
+            result.push_str(&format!(
+                "    find \"{}\" -type f -iname \"*.$ext\" -print0 | while IFS= read -r -d '' font; do\n",
+                font_dir.display()
+            ));
+            result.push_str("        basename=\"$(basename \"$font\")\"\n");
+            result.push_str(
+                "        if [ ! -f \"$HOME/.local/share/fonts/$basename\" ]; then\n",
+            );
+            result.push_str("            cp \"$font\" \"$HOME/.local/share/fonts/\"\n");
+            result.push_str("            echo \"Installing $basename...\"\n");
+            result.push_str("        fi\n");
+            result.push_str("    done\n");
+            result.push_str("done\n");
+            result.push_str("fc-cache -f -v\n");
+        }
+        _ => {}
+    }
+
+    result
+}

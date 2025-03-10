@@ -13,9 +13,8 @@ Search Locations:
 * ~/.cbp/cache/   - Downloaded packages (fallback)
 
 Package Format:
-* Naming: <package_name>.<os_type>.tar.gz
-* Type: Pre-built binary archives
-* OS: Platform-specific (linux/macos/windows)
+* Naming: <package_name>.<type>.tar.gz
+* Type: Platform-specific (linux/macos/windows) or font
 
 Features:
 * Installation status checking
@@ -24,15 +23,19 @@ Features:
 * File extraction to ~/.cbp
 
 Examples:
-* Single package
-  cbp local zlib
+* Basic usage
+  cbp local zlib            # single package
+  cbp local zlib bzip2      # multiple packages
 
-* Multiple packages
-  cbp local zlib bzip2
+* Package types
+  cbp local -t font arial   # install fonts
+
+* List package contents
+  cbp local -l zlib         # show pkg contents without installing
 
 Developer Options:
 * Install cross-platform packages (use with caution)
-  cbp local --type windows zlib
+  cbp local -t windows zlib
 
 "###,
         )
@@ -47,10 +50,10 @@ Developer Options:
             Arg::new("type")
                 .long("type")
                 .short('t')
+                .help("Package type (font for fonts, default: platform specific)")
                 .num_args(1)
-                .value_name("OS_TYPE")
-                .help("Install packages for specified OS")
-                .value_parser(["macos", "linux", "windows"]),
+                .value_name("TYPE")
+                .value_parser(["macos", "linux", "windows", "font"]),
         )
         .arg(
             Arg::new("list")
@@ -80,22 +83,22 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         cbp::CbpDirs::new()?
     };
 
-    let os_type = if args.contains_id("type") {
-        args.get_one::<String>("type").unwrap().to_string()
-    } else {
-        cbp::get_os_type()?
-    };
+    let os_type = cbp::get_os_type()?;
+    let pkg_type = args
+        .get_one::<String>("type")
+        .map(|s| s.as_str())
+        .unwrap_or(&os_type);
 
     let list_only = args.get_flag("list");
 
     // Process packages
     for pkg in args.get_many::<String>("packages").unwrap() {
         // Try local binaries directory first
-        let local_file =
-            std::path::Path::new("binaries").join(format!("{}.{}.tar.gz", pkg, os_type));
+        let local_file = std::path::Path::new("binaries")
+            .join(format!("{}.{}.tar.gz", pkg, pkg_type));
 
         // Then try cache directory
-        let cache_file = cbp_dirs.cache.join(format!("{}.{}.tar.gz", pkg, os_type));
+        let cache_file = cbp_dirs.cache.join(format!("{}.{}.tar.gz", pkg, pkg_type));
 
         let pkg_file = if local_file.exists() {
             println!("==> Using locally built package from binaries/");
@@ -126,6 +129,15 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         }
 
         cbp_dirs.install_package(pkg, &pkg_file)?;
+    }
+
+    // Font installation reminder
+    if pkg_type == "font" {
+        println!("==> Fonts installed to ~/.cbp/share/fonts");
+        print!(
+            "{}",
+            cbp::font_install_instructions(&os_type, &cbp_dirs.home.join("share/fonts"))
+        );
     }
 
     Ok(())

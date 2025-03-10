@@ -18,6 +18,7 @@ Examples:
 * Platform filtering
   cbp avail             # List all packages
   cbp avail linux       # Linux packages only
+  cbp avail font        # Fonts
 
 * Network proxy support
   # Priority (high to low):
@@ -33,7 +34,7 @@ Examples:
         )
         .arg(
             Arg::new("platform")
-                .help("Target platform (linux/macos/windows)")
+                .help("Target platform (linux/macos/windows/font)")
                 .num_args(0..=1)
                 .index(1)
                 .value_name("PLATFORM"),
@@ -75,14 +76,14 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         .into_json()?;
 
     // Extract and filter package names
-    let mut packages: Vec<String> = Vec::new();
     let pattern = if let Some(platform) = opt_platform {
         format!("\\.{}\\.tar\\.gz$", platform)
     } else {
-        String::from("\\.(linux|macos|windows)\\.tar\\.gz$")
+        String::from("\\.(linux|macos|windows|font)\\.tar\\.gz$")
     };
-
     let re = regex::Regex::new(&pattern)?;
+
+    let mut packages: Vec<String> = Vec::new();
     if let Some(assets) = resp["assets"].as_array() {
         for asset in assets {
             if let Some(name) = asset["name"].as_str() {

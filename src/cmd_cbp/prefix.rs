@@ -22,7 +22,7 @@ Usage:
                 .help("Directory to display")
                 .value_parser([
                     "bin", "cache", "records", "config", "include", "lib", "exe",
-                    "triplets",
+                    "triplets", "font",
                 ])
                 .num_args(0..=1),
         )
@@ -53,6 +53,7 @@ pub fn execute(matches: &ArgMatches) -> Result<()> {
         Some("config") => println!("{}", cbp_dirs.config.display()),
         Some("include") => println!("{}", cbp_dirs.home.join("include").display()),
         Some("lib") => println!("{}", cbp_dirs.home.join("lib").display()),
+        Some("font") => println!("{}", cbp_dirs.home.join("share/fonts").display()),
         Some("exe") => println!("{}", cbp_dirs.config.join("bin/cbp").display()),
         Some("triplets") => {
             let triplets_dir = cbp_dirs.config.join("triplets");
