@@ -9,6 +9,9 @@
 - Updated development environment
   - Enhanced source package management
   - Improved symlink handling
+- Added font management support
+  - Added font installation instructions
+  - Added font package scripts
 
 ## 0.3.4 - 2025-03-07
 
