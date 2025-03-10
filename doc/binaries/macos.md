@@ -5,26 +5,26 @@ This document follows the same structure as `doc/binaries.md` for consistency an
 ## `vcpkg` libraries
 
 ```bash
-bash scripts/vcpkg.sh zlib macos
-bash scripts/vcpkg.sh bzip2[tool] macos
-bash scripts/vcpkg.sh libdeflate macos
-bash scripts/vcpkg.sh liblzma[tools] macos
+bash scripts/vcpkg.sh zlib
+bash scripts/vcpkg.sh bzip2[tool]
+bash scripts/vcpkg.sh libdeflate
+bash scripts/vcpkg.sh liblzma[tools]
 
 cbp local zlib bzip2 libdeflate liblzma
 
-# bash scripts/vcpkg.sh ncurses macos
-# bash scripts/vcpkg.sh readline macos
+# bash scripts/vcpkg.sh ncurses
+# bash scripts/vcpkg.sh readline
 
-bash scripts/vcpkg.sh argtable2 macos
-bash scripts/vcpkg.sh expat macos
+bash scripts/vcpkg.sh argtable2
+bash scripts/vcpkg.sh expat
 
-bash scripts/vcpkg.sh gsl macos
-# bash scripts/vcpkg.sh gmp macos
+bash scripts/vcpkg.sh gsl
+# bash scripts/vcpkg.sh gmp
 
-# bash scripts/vcpkg.sh libpng[core,tools] macos
-bash scripts/vcpkg.sh openjpeg macos
+# bash scripts/vcpkg.sh libpng[core,tools]
+bash scripts/vcpkg.sh openjpeg
 
-# bash scripts/vcpkg.sh fontconfig[core,tools] macos
+# bash scripts/vcpkg.sh fontconfig[core,tools]
 
 ```
 
@@ -32,17 +32,17 @@ bash scripts/vcpkg.sh openjpeg macos
 
 ```bash
 # avoid icu from sqlite3[*]
-bash scripts/vcpkg.sh "sqlite3[core,tool,dbstat,fts3,fts4,fts5,json1,math,rtree,soundex,zlib]" macos
+bash scripts/vcpkg.sh "sqlite3[core,tool,dbstat,fts3,fts4,fts5,json1,math,rtree,soundex,zlib]"
 
-# bash scripts/vcpkg.sh "openssl[core,tools]" macos
+# bash scripts/vcpkg.sh "openssl[core,tools]" arm64-osx-release
 
-# bash scripts/vcpkg.sh "curl[core,tool,ssl,http2,websockets]" macos
+# bash scripts/vcpkg.sh "curl[core,tool,ssl,http2,websockets]"
 
-bash scripts/vcpkg.sh pkgconf macos pkgconf=pkg-config
+bash scripts/vcpkg.sh pkgconf arm64-macos-zig pkgconf=pkg-config
 
-# bash scripts/vcpkg.sh cpuinfo[core,tools] macos
+# bash scripts/vcpkg.sh cpuinfo[core,tools]
 
-# bash scripts/vcpkg.sh graphviz macos
+# bash scripts/vcpkg.sh graphviz
 # gdal
 
 ```
@@ -51,28 +51,28 @@ bash scripts/vcpkg.sh pkgconf macos pkgconf=pkg-config
 
 ```bash
 # Transform Makefile to CMakeLists.txt
-bash scripts/vcpkg.sh pigz macos
-bash scripts/vcpkg.sh sickle macos
-bash scripts/vcpkg.sh faops macos
+bash scripts/vcpkg.sh pigz
+bash scripts/vcpkg.sh sickle
+bash scripts/vcpkg.sh faops
 
-bash scripts/vcpkg.sh bwa macos
+bash scripts/vcpkg.sh bwa
 
-bash scripts/vcpkg.sh consel macos
+bash scripts/vcpkg.sh consel
 
 # use specific commit to ensure reproducibility
-bash scripts/vcpkg.sh dazzdb macos
-bash scripts/vcpkg.sh daligner macos
-bash scripts/vcpkg.sh merquryfk macos
-bash scripts/vcpkg.sh fastga macos
+bash scripts/vcpkg.sh dazzdb
+bash scripts/vcpkg.sh daligner
+bash scripts/vcpkg.sh merquryfk
+bash scripts/vcpkg.sh fastga
 
-bash scripts/vcpkg.sh multiz macos
+bash scripts/vcpkg.sh multiz
 
 # ./configure
-bash scripts/vcpkg.sh trf macos
-bash scripts/vcpkg.sh datamash macos
+bash scripts/vcpkg.sh trf
+bash scripts/vcpkg.sh datamash
 
 # cmake
-# bash scripts/vcpkg.sh diamond macos
+# bash scripts/vcpkg.sh diamond
 
 ```
 

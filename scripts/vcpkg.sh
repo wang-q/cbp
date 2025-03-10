@@ -34,23 +34,30 @@ case "$OSTYPE" in
         ;;
 esac
 
-# Use provided OS type or default
-OS_TYPE=${2:-$DEFAULT_OS}
-
-# Validate the OS type
-if [[ "$OS_TYPE" != "linux" && "$OS_TYPE" != "macos" && "$OS_TYPE" != "windows" ]]; then
-    echo "Unsupported OS_TYPE: $OS_TYPE"
-    echo "Supported OS_TYPE: linux, macos, windows"
-    exit 1
+# Set the triplet based on OS type
+# Use provided triplet or default based on OS
+TRIPLET=${2}
+if [ -z "$TRIPLET" ]; then
+    if [ "$DEFAULT_OS" == "linux" ]; then
+        TRIPLET="x64-linux-zig"
+    elif [ "$DEFAULT_OS" == "macos" ]; then
+        TRIPLET="arm64-macos-zig"
+    elif [ "$DEFAULT_OS" == "windows" ]; then
+        TRIPLET="x64-windows-zig"
+    fi
 fi
 
-# Set the triplet based on OS type
-if [ "$OS_TYPE" == "linux" ]; then
-    TRIPLET="x64-linux-zig"
-elif [ "$OS_TYPE" == "macos" ]; then
-    TRIPLET="arm64-macos-zig"
-elif [ "$OS_TYPE" == "windows" ]; then
-    TRIPLET="x64-windows-zig"
+# Extract OS_TYPE from triplet
+if [[ "$TRIPLET" == *"-linux-"* ]]; then
+    OS_TYPE="linux"
+elif [[ "$TRIPLET" == *"-macos-"* || "$TRIPLET" == *"-osx-"* ]]; then
+    OS_TYPE="macos"
+elif [[ "$TRIPLET" == *"-windows-"* ]]; then
+    OS_TYPE="windows"
+else
+    echo "Error: Unsupported triplet: $TRIPLET"
+    echo "Triplet must contain one of: linux, macos/osx, windows"
+    exit 1
 fi
 
 # Install the package using vcpkg

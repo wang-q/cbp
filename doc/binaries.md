@@ -28,27 +28,27 @@ vcpkg remove --debug --recurse \
 #     --cmake-args="-DCMAKE_C_COMPILER_TARGET=aarch64-macos-none" \
 #     --cmake-args="-DCMAKE_CXX_COMPILER_TARGET=aarch64-macos-none"
 
-bash scripts/vcpkg.sh zlib linux
-bash scripts/vcpkg.sh bzip2[tool] linux
-bash scripts/vcpkg.sh libdeflate linux
-bash scripts/vcpkg.sh liblzma[tools] linux
+bash scripts/vcpkg.sh zlib
+bash scripts/vcpkg.sh bzip2[tool]
+bash scripts/vcpkg.sh libdeflate
+bash scripts/vcpkg.sh liblzma[tools]
 
 cbp local zlib bzip2 libdeflate liblzma
 
-bash scripts/vcpkg.sh ncurses linux
-bash scripts/vcpkg.sh readline linux
+bash scripts/vcpkg.sh ncurses
+bash scripts/vcpkg.sh readline
 
-bash scripts/vcpkg.sh argtable2 linux
-bash scripts/vcpkg.sh expat linux
+bash scripts/vcpkg.sh argtable2
+bash scripts/vcpkg.sh expat
 
-bash scripts/vcpkg.sh gsl linux
-# bash scripts/vcpkg.sh gmp linux
+bash scripts/vcpkg.sh gsl
+# bash scripts/vcpkg.sh gmp
 
-bash scripts/vcpkg.sh libpng[core,tools] linux
-bash scripts/vcpkg.sh pixman linux
-bash scripts/vcpkg.sh openjpeg linux
+bash scripts/vcpkg.sh libpng[core,tools]
+bash scripts/vcpkg.sh pixman
+bash scripts/vcpkg.sh openjpeg
 
-# bash scripts/vcpkg.sh fontconfig[core,tools] linux
+# bash scripts/vcpkg.sh fontconfig[core,tools]
 
 ```
 
@@ -56,17 +56,18 @@ bash scripts/vcpkg.sh openjpeg linux
 
 ```bash
 # avoid icu from sqlite3[*]
-bash scripts/vcpkg.sh "sqlite3[core,tool,dbstat,fts3,fts4,fts5,json1,math,rtree,soundex,zlib]" linux
+bash scripts/vcpkg.sh "sqlite3[core,tool,dbstat,fts3,fts4,fts5,json1,math,rtree,soundex,zlib]"
 
-bash scripts/vcpkg.sh "openssl[core,tools]" linux
+bash scripts/vcpkg.sh "openssl[core,tools]"
 
-bash scripts/vcpkg.sh "curl[core,tool,ssl,http2,websockets]" linux
+bash scripts/vcpkg.sh "curl[core,tool,ssl,http2,websockets]"
 
-bash scripts/vcpkg.sh pkgconf linux pkgconf=pkg-config
+bash scripts/vcpkg.sh pkgconf x64-linux-zig pkgconf=pkg-config
 
-# bash scripts/vcpkg.sh cpuinfo[core,tools] linux
+# syscall
+# bash scripts/vcpkg.sh cpuinfo[core,tools]
 
-# bash scripts/vcpkg.sh graphviz linux
+# bash scripts/vcpkg.sh graphviz
 # gdal
 
 ```
@@ -75,28 +76,28 @@ bash scripts/vcpkg.sh pkgconf linux pkgconf=pkg-config
 
 ```bash
 # Transform Makefile to CMakeLists.txt
-bash scripts/vcpkg.sh pigz linux
-bash scripts/vcpkg.sh sickle linux
-bash scripts/vcpkg.sh faops linux
+bash scripts/vcpkg.sh pigz
+bash scripts/vcpkg.sh sickle
+bash scripts/vcpkg.sh faops
 
-bash scripts/vcpkg.sh bwa linux
+bash scripts/vcpkg.sh bwa
 
-bash scripts/vcpkg.sh consel linux
+bash scripts/vcpkg.sh consel
 
 # use specific commit to ensure reproducibility
-bash scripts/vcpkg.sh dazzdb linux
-bash scripts/vcpkg.sh daligner linux
-bash scripts/vcpkg.sh merquryfk linux
-bash scripts/vcpkg.sh fastga linux
+bash scripts/vcpkg.sh dazzdb
+bash scripts/vcpkg.sh daligner
+bash scripts/vcpkg.sh merquryfk
+bash scripts/vcpkg.sh fastga
 
-bash scripts/vcpkg.sh multiz linux
+bash scripts/vcpkg.sh multiz
 
 # ./configure
-bash scripts/vcpkg.sh trf linux
-bash scripts/vcpkg.sh datamash linux
+bash scripts/vcpkg.sh trf
+bash scripts/vcpkg.sh datamash
 
 # cmake
-bash scripts/vcpkg.sh diamond linux
+bash scripts/vcpkg.sh diamond
 
 ```
 
