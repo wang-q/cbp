@@ -40,6 +40,8 @@ bash scripts/vcpkg.sh "sqlite3[core,tool,dbstat,fts3,fts4,fts5,json1,math,rtree,
 
 bash scripts/vcpkg.sh pkgconf macos pkgconf=pkg-config
 
+# bash scripts/vcpkg.sh cpuinfo[core,tools] macos
+
 # bash scripts/vcpkg.sh graphviz macos
 # gdal
 

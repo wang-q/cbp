@@ -64,6 +64,8 @@ bash scripts/vcpkg.sh "curl[core,tool,ssl,http2,websockets]" linux
 
 bash scripts/vcpkg.sh pkgconf linux pkgconf=pkg-config
 
+# bash scripts/vcpkg.sh cpuinfo[core,tools] linux
+
 # bash scripts/vcpkg.sh graphviz linux
 # gdal
 
