@@ -66,9 +66,12 @@ esac
 OS_TYPE=${1:-$DEFAULT_OS}
 
 # Validate the OS type
-if [[ "$OS_TYPE" != "linux" && "$OS_TYPE" != "macos" && "$OS_TYPE" != "windows" ]]; then
+if [[ "$OS_TYPE" != "linux" ]] &&
+   [[ "$OS_TYPE" != "macos" ]] &&
+   [[ "$OS_TYPE" != "windows" ]] &&
+   [[ "$OS_TYPE" != "font" ]]; then
     echo "Unsupported os_type: $OS_TYPE"
-    echo "Supported os_type: linux, macos, windows"
+    echo "Supported os_type: linux, macos, windows, font"
     exit 1
 fi
 
@@ -82,6 +85,9 @@ elif [ "$OS_TYPE" == "macos" ]; then
 elif [ "$OS_TYPE" == "windows" ]; then
     TARGET_ARCH="x86_64-windows-gnu"
     BIN_SUFFIX=".exe"
+elif [ "$OS_TYPE" == "font" ]; then
+    TARGET_ARCH=""
+    BIN_SUFFIX=""
 fi
 
 # Create temp directory

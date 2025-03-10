@@ -48,7 +48,16 @@ bash scripts/vcpkg.sh libpng[core,tools]
 bash scripts/vcpkg.sh pixman
 bash scripts/vcpkg.sh openjpeg
 
-# bash scripts/vcpkg.sh fontconfig[core,tools]
+bash scripts/vcpkg.sh "freetype[*]"
+bash scripts/vcpkg.sh "harfbuzz[core,freetype]"
+bash scripts/vcpkg.sh fontconfig
+
+bash scripts/vcpkg.sh "pcre2[core,jit,platform-default-features]"
+bash scripts/vcpkg.sh libffi
+bash scripts/vcpkg.sh glib
+
+# non-reproducible build (__DATE__ macro)
+# CFLAGS="-Wno-date-time -Wno-unused-function" bash scripts/vcpkg.sh "cairo[core,fontconfig,freetype,gobject]"
 
 ```
 
