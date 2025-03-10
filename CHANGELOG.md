@@ -2,6 +2,8 @@
 
 ## Unreleased - ReleaseDate
 
+## 0.3.5 - 2025-03-10
+
 - Refactored build system
   - Added more vcpkg ports support
   - Moved legacy build scripts to doc/attempts/
