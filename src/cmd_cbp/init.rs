@@ -306,7 +306,7 @@ fn create_compiler_shims(bin_dir: &PathBuf) -> Result<()> {
 }
 
 #[cfg(unix)]
-fn create_compiler_shims(bin_dir: &std::path::Path) -> Result<()> {
+fn create_compiler_shims(bin_dir: &PathBuf) -> Result<()> {
     let shims = [
         ("zig-cc", "#!/bin/bash\nexec zig cc \"$@\""),
         ("zig-c++", "#!/bin/bash\nexec zig c++ \"$@\""),
@@ -327,7 +327,7 @@ fn create_compiler_shims(bin_dir: &std::path::Path) -> Result<()> {
     Ok(())
 }
 
-fn create_triplet_files(config_dir: &std::path::Path) -> Result<()> {
+fn create_triplet_files(config_dir: &PathBuf) -> Result<()> {
     let triplets_dir = config_dir.join("triplets");
     fs::create_dir_all(&triplets_dir)?;
 
