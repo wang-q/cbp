@@ -33,6 +33,10 @@ bash scripts/pandoc.sh -t linux
 bash scripts/pandoc.sh macos
 bash scripts/pandoc.sh windows
 
+bash scripts/tectonic.sh -t linux
+bash scripts/tectonic.sh macos
+bash scripts/tectonic.sh windows
+
 #bash scripts/pup.sh
 
 ```
