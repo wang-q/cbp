@@ -84,12 +84,13 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
     // Update PATH in shell config files
     #[cfg(unix)]
     {
-        let shell_configs = vec![".bashrc", ".bash_profile", ".zshrc"];
+        let shell_rcs = vec![".bashrc", ".bash_profile", ".zshrc"];
         let home = dirs::home_dir()
             .ok_or_else(|| anyhow::anyhow!("Could not find home directory"))?;
-        for config in shell_configs {
-            if config_path.exists() {
-                update_shell_rc(&config_path, &cbp_dirs.bin)?;
+        for rc in shell_rcs {
+            let rc_path = home.join(rc);
+            if rc_path.exists() {
+                update_shell_rc(&rc_path, &cbp_dirs.bin)?;
             }
         }
     }
@@ -123,7 +124,7 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
 #[cfg(unix)]
 // Generate PATH configurations
 fn generate_path_configs(dir_path: &PathBuf) -> String {
-    format!("export PATH=\"{}/bin:$PATH\"", dir_path.display())
+    format!("export PATH=\"{}:$PATH\"", dir_path.display())
 }
 
 #[cfg(unix)]
