@@ -19,6 +19,13 @@ pub fn make_subcommand() -> Command {
                 .num_args(1),
         )
         .arg(
+            Arg::new("ignore")
+                .long("ignore")
+                .help("Ignore files matching the pattern (e.g., --ignore .dll)")
+                .action(ArgAction::Append)
+                .num_args(1),
+        )
+        .arg(
             Arg::new("output")
                 .short('o')
                 .long("output")
@@ -54,6 +61,12 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
             }
             map
         })
+        .unwrap_or_default();
+
+    // Parse ignore patterns
+    let ignore_patterns: Vec<String> = matches
+        .get_many::<String>("ignore")
+        .map(|ignores| ignores.map(|s| s.to_string()).collect())
         .unwrap_or_default();
 
     // output name
@@ -95,11 +108,17 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
 
     // Collect files
     for line in content.lines() {
+        // Check if path matches any ignore pattern
+        if ignore_patterns.iter().any(|pattern| line.contains(pattern)) {
+            continue;
+        }
+
         let src_path = vcpkg_installed.join(line);
         if !src_path.exists() {
             eprintln!("Warning: Source file not found: {}", src_path.display());
             continue;
         }
+
 
         // Skip the first directory component (triplet name)
         let parts: Vec<&str> = line.split('/').skip(1).collect();
