@@ -26,7 +26,8 @@ fn command_init_default() -> anyhow::Result<()> {
     let cbp_home = temp_home.path().join(".cbp");
     assert!(cbp_home.exists());
     assert!(cbp_home.join("bin").exists());
-    assert!(cbp_home.join("config.toml").exists());
+    assert!(cbp_home.join("cache").exists());
+    assert!(cbp_home.join("records").exists());
 
     // Verify shell config updates
     for config in [".bashrc", ".bash_profile", ".zshrc"] {
@@ -68,9 +69,10 @@ fn command_init_custom_dir() -> anyhow::Result<()> {
     cmd.arg("init").arg(&custom_dir).assert().success();
 
     // Verify custom directory setup
-    let cbp_home = temp_home.path().join(".cbp");
-    let config_content = fs::read_to_string(cbp_home.join("config.toml"))?;
-    assert!(config_content.contains(&format!("home = \"{}\"", custom_dir.display())));
+    assert!(custom_dir.exists());
+    assert!(custom_dir.join("bin").exists());
+    assert!(custom_dir.join("cache").exists());
+    assert!(custom_dir.join("records").exists());
 
     // Verify shell config updates
     for config in [".bashrc", ".bash_profile", ".zshrc"] {
@@ -104,41 +106,34 @@ fn command_init_custom_dir() -> anyhow::Result<()> {
 
 #[test]
 #[cfg(windows)]
-fn command_init_default() -> anyhow::Result<()> {
-    use std::fs;
+fn command_init() -> anyhow::Result<()> {
     use tempfile::TempDir;
 
-    // 创建临时测试目录
+    // Create temporary test directory
     let temp = TempDir::new()?;
     let test_dir = temp.path();
 
-    // 测试默认初始化
+    // Test default initialization
     let mut cmd = Command::cargo_bin("cbp")?;
     cmd.arg("init")
-        .arg("--dir")
         .arg(test_dir)
         .assert()
         .success();
 
-    // 验证目录结构
-    let cbp_home = test_dir.join(".cbp");
-    assert!(cbp_home.exists());
-    assert!(cbp_home.join("bin").exists());
-    assert!(cbp_home.join("config.toml").exists());
+    // Verify directory structure
+    assert!(test_dir.exists());
+    assert!(test_dir.join("bin").exists());
+    assert!(test_dir.join("cache").exists());
+    assert!(test_dir.join("records").exists());
 
-    // 验证配置文件内容
-    let config_content = fs::read_to_string(cbp_home.join("config.toml"))?;
-    println!("Config content:\n{}", config_content);
-    assert!(config_content.contains("# CBP configuration file"));
-
-    // 验证 PATH 环境变量更新
+    // Verify PATH environment variable update
     let check_output = std::process::Command::new("powershell")
         .args([
             "-Command",
             &format!(
                 "[Environment]::GetEnvironmentVariable('Path', \
                 [EnvironmentVariableTarget]::User) -split ';' -contains '{}'",
-                cbp_home.join("bin").display()
+                test_dir.join("bin").display()
             ),
         ])
         .output()?;
@@ -148,7 +143,7 @@ fn command_init_default() -> anyhow::Result<()> {
         "PATH environment variable was not updated correctly"
     );
 
-    // 清理环境变量
+    // Clean up environment variable
     std::process::Command::new("powershell")
         .args([
             "-Command",
@@ -158,7 +153,7 @@ fn command_init_default() -> anyhow::Result<()> {
                 $path = ($path -split ';' | Where-Object {{ $_ -ne '{}' }}) -join ';'; \
                 [Environment]::SetEnvironmentVariable('Path', $path, \
                 [EnvironmentVariableTarget]::User)",
-                cbp_home.join("bin").display()
+                test_dir.join("bin").display()
             ),
         ])
         .output()?;

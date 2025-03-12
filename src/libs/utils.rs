@@ -97,8 +97,7 @@ pub fn find_files(dir: &Path, pattern: Option<&str>) -> anyhow::Result<Vec<Strin
 
 /// Check if a file is managed by cbp itself
 pub fn is_cbp_file(path: &str) -> bool {
-    path == "config.toml"
-        || path.starts_with("bin/cbp")
+    path.starts_with("bin/cbp")
         || path.starts_with("bin/zig-")
         || path.starts_with("records/")
         || path.starts_with("cache/")

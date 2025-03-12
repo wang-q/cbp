@@ -21,8 +21,8 @@ Usage:
             Arg::new("directory")
                 .help("Directory to display")
                 .value_parser([
-                    "bin", "cache", "records", "config", "include", "lib", "exe",
-                    "triplets", "font",
+                    "bin", "cache", "records", "include", "lib", "exe", "triplets",
+                    "font",
                 ])
                 .num_args(0..=1),
         )
@@ -43,20 +43,25 @@ pub fn execute(matches: &ArgMatches) -> Result<()> {
             .to_path_buf();
         cbp::CbpDirs::from(home)?
     } else {
-        cbp::CbpDirs::new()?
+        cbp::CbpDirs::from_exe()?
     };
 
     match matches.get_one::<String>("directory").map(|s| s.as_str()) {
         Some("bin") => println!("{}", cbp_dirs.bin.display()),
         Some("cache") => println!("{}", cbp_dirs.cache.display()),
         Some("records") => println!("{}", cbp_dirs.records.display()),
-        Some("config") => println!("{}", cbp_dirs.config.display()),
         Some("include") => println!("{}", cbp_dirs.home.join("include").display()),
         Some("lib") => println!("{}", cbp_dirs.home.join("lib").display()),
         Some("font") => println!("{}", cbp_dirs.home.join("share/fonts").display()),
-        Some("exe") => println!("{}", cbp_dirs.config.join("bin/cbp").display()),
+        Some("exe") => println!(
+            "{}",
+            cbp_dirs
+                .bin
+                .join(if cfg!(windows) { "cbp.exe" } else { "cbp" })
+                .display()
+        ),
         Some("triplets") => {
-            let triplets_dir = cbp_dirs.config.join("triplets");
+            let triplets_dir = cbp_dirs.home.join("triplets");
             if triplets_dir.exists() {
                 println!("{}", triplets_dir.display());
             } else {

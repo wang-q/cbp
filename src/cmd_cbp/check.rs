@@ -47,7 +47,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             std::path::Path::new(args.get_one::<String>("dir").unwrap()).to_path_buf();
         cbp::CbpDirs::from(home)?
     } else {
-        cbp::CbpDirs::new()?
+        cbp::CbpDirs::from_exe()?
     };
 
     println!("==> Unmanaged files in {}:", cbp_dirs.home.display());

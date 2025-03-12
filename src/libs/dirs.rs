@@ -1,10 +1,9 @@
-use serde::Deserialize;
 use std::path::Path;
 use std::path::PathBuf;
 
 /// Represents CBP directory structure
 pub struct CbpDirs {
-    /// Installation directory, can be configured via config.toml
+    /// Installation directory
     /// Default: ~/.cbp
     pub home: PathBuf,
     /// Binary directory under installation directory
@@ -16,51 +15,6 @@ pub struct CbpDirs {
     /// Package records directory under installation directory
     /// Default: <home>/records
     pub records: PathBuf,
-    /// Configuration directory, always ~/.cbp regardless of installation directory
-    pub config: PathBuf,
-}
-
-#[derive(Deserialize, Default)]
-struct Config {
-    home: Option<String>,
-}
-
-pub trait HomeDirProvider {
-    fn home_dir(&self) -> Option<PathBuf>;
-}
-
-struct DefaultHomeDirProvider;
-
-impl HomeDirProvider for DefaultHomeDirProvider {
-    fn home_dir(&self) -> Option<PathBuf> {
-        dirs::home_dir()
-    }
-}
-
-#[cfg(test)]
-pub struct MockHomeDirProvider {
-    home_dir_result: Option<PathBuf>,
-}
-
-#[cfg(test)]
-impl MockHomeDirProvider {
-    pub fn new() -> Self {
-        Self {
-            home_dir_result: None,
-        }
-    }
-
-    pub fn expect_home_dir(mut self, result: Option<PathBuf>) -> Self {
-        self.home_dir_result = result;
-        self
-    }
-}
-
-#[cfg(test)]
-impl HomeDirProvider for MockHomeDirProvider {
-    fn home_dir(&self) -> Option<PathBuf> {
-        self.home_dir_result.clone()
-    }
 }
 
 impl CbpDirs {
@@ -78,61 +32,62 @@ impl CbpDirs {
     /// - Config file exists but cannot be read or parsed
     /// - Directory creation fails
     pub fn new() -> anyhow::Result<Self> {
-        Self::new_with_provider(&DefaultHomeDirProvider)
+        let home = dirs::home_dir()
+            .ok_or_else(|| anyhow::anyhow!("Could not determine home directory"))?
+            .join(".cbp");
+
+        Self::from(home)
     }
 
-    pub fn new_with_provider(provider: &dyn HomeDirProvider) -> anyhow::Result<Self> {
-        let home = provider
-            .home_dir()
-            .ok_or_else(|| anyhow::anyhow!("Could not determine home directory"))?;
-
-        let config = home.join(".cbp");
-        // Read configuration file
-        let config_path = config.join("config.toml");
-        let custom_home = if config_path.exists() {
-            let content = std::fs::read_to_string(&config_path)?;
-            let config: Config = toml::from_str(&content)?;
-            config.home.map(PathBuf::from)
-        } else {
-            None
-        };
-
-        // Use configured installation directory or default
-        let cbp_home = custom_home.unwrap_or_else(|| config.clone());
-        Self::from_with_config(cbp_home, config)
-    }
-
-    fn from_with_config(home: PathBuf, config: PathBuf) -> anyhow::Result<Self> {
-        let dirs = Self {
+    pub fn from(home: PathBuf) -> anyhow::Result<Self> {
+        let cbp = Self {
             bin: home.join("bin"),
             cache: home.join("cache"),
             records: home.join("records"),
-            config,
             home,
         };
 
         // Ensure all directories exist
-        std::fs::create_dir_all(&dirs.home)?;
-        std::fs::create_dir_all(&dirs.bin)?;
-        std::fs::create_dir_all(&dirs.cache)?;
-        std::fs::create_dir_all(&dirs.records)?;
-        std::fs::create_dir_all(&dirs.config)?;
+        std::fs::create_dir_all(&cbp.home)?;
+        std::fs::create_dir_all(&cbp.bin)?;
+        std::fs::create_dir_all(&cbp.cache)?;
+        std::fs::create_dir_all(&cbp.records)?;
 
-        Ok(dirs)
+        Ok(cbp)
     }
 
-    pub fn from(home: PathBuf) -> anyhow::Result<Self> {
-        Self::from_with_config(home.clone(), home)
+    /// Creates a new CbpDirs instance from the executable's path
+    ///
+    /// This function will:
+    /// 1. Get the executable's directory
+    /// 2. Use parent directory as CBP home
+    /// 3. Create all required directories if they don't exist
+    ///
+    /// # Errors
+    ///
+    /// Returns error if:
+    /// - Cannot get executable path
+    /// - Cannot get parent directory
+    /// - Directory creation fails
+    pub fn from_exe() -> anyhow::Result<Self> {
+        let exe_path = std::fs::canonicalize(std::env::current_exe()?)?;
+        Self::from_exe_path(&exe_path)
+    }
+
+    fn from_exe_path(exe_path: &Path) -> anyhow::Result<Self> {
+        let home = exe_path
+            .parent()
+            .ok_or_else(|| anyhow::anyhow!("Cannot get executable directory"))?
+            .parent()
+            .ok_or_else(|| anyhow::anyhow!("Cannot get CBP home directory"))?
+            .to_path_buf();
+
+        Self::from(home)
     }
 
     /// Returns the CBP home directory as a string
     pub fn get_home(&self) -> String {
         self.home.to_string_lossy().into_owned()
-    }
-
-    /// Returns the CBP configuration directory as a string
-    pub fn get_config_dir(&self) -> String {
-        self.config.to_string_lossy().into_owned()
     }
 
     /// Install package from a tar.gz file
@@ -183,15 +138,14 @@ pub fn to_absolute_path(path: &str) -> anyhow::Result<std::path::PathBuf> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::fs;
 
     #[test]
+    #[cfg(unix)]
     fn test_cbp_dirs_new() -> anyhow::Result<()> {
         let temp_home = tempfile::tempdir()?;
-        let mock = MockHomeDirProvider::new()
-            .expect_home_dir(Some(temp_home.path().to_path_buf()));
+        std::env::set_var("HOME", temp_home.path());
 
-        let dirs = CbpDirs::new_with_provider(&mock)?;
+        let dirs = CbpDirs::new()?;
         assert_eq!(dirs.home, temp_home.path().join(".cbp"));
         assert!(dirs.home.exists());
         assert!(dirs.bin.exists());
@@ -204,9 +158,15 @@ mod tests {
     #[test]
     fn test_cbp_dirs_from() -> anyhow::Result<()> {
         let temp_dir = tempfile::tempdir()?;
-
-        // Test custom directory structure
         let dirs = CbpDirs::from(temp_dir.path().to_path_buf())?;
+
+        // Verify directory structure
+        assert_eq!(dirs.home, temp_dir.path());
+        assert_eq!(dirs.bin, temp_dir.path().join("bin"));
+        assert_eq!(dirs.cache, temp_dir.path().join("cache"));
+        assert_eq!(dirs.records, temp_dir.path().join("records"));
+
+        // Verify directories exist
         assert!(dirs.home.exists());
         assert!(dirs.bin.exists());
         assert!(dirs.cache.exists());
@@ -216,80 +176,27 @@ mod tests {
     }
 
     #[test]
-    fn test_cbp_dirs_with_config() -> anyhow::Result<()> {
-        let temp_home = tempfile::tempdir()?;
-        let mock = MockHomeDirProvider::new()
-            .expect_home_dir(Some(temp_home.path().to_path_buf()));
+    fn test_cbp_dirs_from_exe() -> anyhow::Result<()> {
+        let temp_dir = tempfile::tempdir()?;
+        let bin_dir = temp_dir.path().join("bin");
+        std::fs::create_dir_all(&bin_dir)?;
 
-        // Create config directory and custom installation directory
-        let cbp_dir = temp_home.path().join(".cbp");
-        let custom_dir = temp_home.path().join("custom-cbp");
-        std::fs::create_dir_all(&cbp_dir)?;
+        let exe_path = bin_dir.join("cbp.exe");
+        std::fs::write(&exe_path, "dummy executable")?;
 
-        // Replace backslashes with forward slashes for TOML compatibility
-        let config_content = format!(
-            r#"
-            home = "{}"
-        "#,
-            custom_dir.display().to_string().replace('\\', "/")
-        );
-        std::fs::write(cbp_dir.join("config.toml"), config_content)?;
+        let dirs = CbpDirs::from_exe_path(&exe_path)?;
 
-        // Test custom directory structure
-        let dirs = CbpDirs::new_with_provider(&mock)?;
-        assert_eq!(dirs.home, custom_dir);
+        // Verify directory structure
+        assert_eq!(dirs.home, temp_dir.path());
+        assert_eq!(dirs.bin, bin_dir);
+        assert_eq!(dirs.cache, temp_dir.path().join("cache"));
+        assert_eq!(dirs.records, temp_dir.path().join("records"));
+
+        // Verify directories exist
+        assert!(dirs.home.exists());
         assert!(dirs.bin.exists());
         assert!(dirs.cache.exists());
         assert!(dirs.records.exists());
-
-        Ok(())
-    }
-
-    #[test]
-    fn test_get_home() -> anyhow::Result<()> {
-        let temp_home = tempfile::tempdir()?;
-        let mock = MockHomeDirProvider::new()
-            .expect_home_dir(Some(temp_home.path().to_path_buf()));
-
-        let dirs = CbpDirs::new_with_provider(&mock)?;
-        let home = dirs.get_home();
-        assert_eq!(home, temp_home.path().join(".cbp").to_string_lossy());
-        assert!(temp_home.path().join(".cbp").exists());
-
-        Ok(())
-    }
-
-    #[test]
-    fn test_get_config_dir() -> anyhow::Result<()> {
-        let temp_home = tempfile::tempdir()?;
-        let mock = MockHomeDirProvider::new()
-            .expect_home_dir(Some(temp_home.path().to_path_buf()));
-
-        let dirs = CbpDirs::new_with_provider(&mock)?;
-        let config_dir = dirs.get_config_dir();
-        assert_eq!(config_dir, temp_home.path().join(".cbp").to_string_lossy());
-        assert!(temp_home.path().join(".cbp").exists());
-
-        Ok(())
-    }
-
-    #[test]
-    fn test_cbp_dirs_with_invalid_config() -> anyhow::Result<()> {
-        let temp_home = tempfile::tempdir()?;
-        let mock = MockHomeDirProvider::new()
-            .expect_home_dir(Some(temp_home.path().to_path_buf()));
-
-        // Create invalid config file
-        let cbp_dir = temp_home.path().join(".cbp");
-        fs::create_dir_all(&cbp_dir)?;
-        fs::write(
-            cbp_dir.join("config.toml"),
-            r#"invalid = "this is valid TOML but has wrong key""#,
-        )?;
-
-        // Should fall back to default directory
-        let dirs = CbpDirs::new_with_provider(&mock)?;
-        assert_eq!(dirs.home, cbp_dir);
 
         Ok(())
     }
@@ -339,21 +246,21 @@ mod tests {
         let temp_dir = tempfile::tempdir()?;
         let cbp_dirs = crate::CbpDirs::from(temp_dir.path().to_path_buf())?;
 
-        // 使用测试包文件
+        // Use test package file
         let test_file = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("tests/zlib.macos.tar.gz");
 
-        // 测试包安装
+        // Test package installation
         cbp_dirs.install_package("zlib", &test_file)?;
 
-        // 验证文件列表
+        // Verify file list
         let record_file = cbp_dirs.records.join("zlib.files");
         assert!(record_file.exists());
         let file_list = std::fs::read_to_string(record_file)?;
         assert!(file_list.contains("include/zlib.h"));
         assert!(file_list.contains("lib/libz.a"));
 
-        // 验证关键文件存在
+        // Verify key files exist
         assert!(cbp_dirs.home.join("include/zlib.h").exists());
         assert!(cbp_dirs.home.join("lib/libz.a").exists());
 

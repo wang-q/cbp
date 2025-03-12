@@ -222,17 +222,19 @@ fn command_prefix() -> anyhow::Result<()> {
     let bin_path = cbp_home.join("bin").to_string_lossy().into_owned();
     let cache_path = cbp_home.join("cache").to_string_lossy().into_owned();
     let records_path = cbp_home.join("records").to_string_lossy().into_owned();
-    let config_path = cbp_home.to_string_lossy().into_owned();
     let include_path = cbp_home.join("include").to_string_lossy().into_owned();
     let lib_path = cbp_home.join("lib").to_string_lossy().into_owned();
-    let exe_path = cbp_home.join("bin/cbp").to_string_lossy().into_owned();
+    let exe_path = cbp_home
+        .join("bin")
+        .join(if cfg!(windows) { "cbp.exe" } else { "cbp" })
+        .to_string_lossy()
+        .into_owned();
 
     // Test all directory options
     let test_cases = [
         ("bin", bin_path.as_str()),
         ("cache", cache_path.as_str()),
         ("records", records_path.as_str()),
-        ("config", config_path.as_str()),
         ("include", include_path.as_str()),
         ("lib", lib_path.as_str()),
         ("exe", exe_path.as_str()),

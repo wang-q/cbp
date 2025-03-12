@@ -1,10 +1,8 @@
-use anyhow::Result;
-use clap::{ArgMatches, Command};
 use std::fs;
 use std::path::PathBuf;
 
-pub fn make_subcommand() -> Command {
-    Command::new("init")
+pub fn make_subcommand() -> clap::Command {
+    clap::Command::new("init")
         .about("Initialize cbp environment")
         .after_help(
             r###"
@@ -42,83 +40,37 @@ Examples:
                 .help("Install development tools")
                 .action(clap::ArgAction::SetTrue),
         )
-        .arg(
-            clap::Arg::new("dir")
-                .long("dir")
-                .short('d')
-                .num_args(1)
-                .value_name("DIR")
-                .help("Change working directory")
-                .hide(true),
-        )
 }
 
-pub fn execute(matches: &ArgMatches) -> Result<()> {
+pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
     //----------------------------
     // Args
     //----------------------------
-    // Extract custom home directory from command line arguments
-    let custom_home = if let Some(home_dir) = matches.get_one::<String>("home") {
-        Some(cbp::to_absolute_path(home_dir)?)
-    } else {
-        None
-    };
+    // Get current executable path and resolve symlinks
+    let current_exe = std::fs::canonicalize(std::env::current_exe()?)?;
 
-    // Get current executable path
-    let current_exe = std::env::current_exe()?;
-
-    // Get home directory (use --dir if specified)
-    let home = if let Some(test_dir) = matches.get_one::<String>("dir") {
-        PathBuf::from(test_dir)
+    // Create cbp directories
+    let cbp_dirs = if let Some(home_dir) = matches.get_one::<String>("home") {
+        let home = cbp::to_absolute_path(home_dir)?;
+        cbp::CbpDirs::from(home)?
     } else {
-        dirs::home_dir()
-            .ok_or_else(|| anyhow::anyhow!("Could not find home directory"))?
+        cbp::CbpDirs::new()?
     };
 
     //----------------------------
     // Process
     //----------------------------
-    // Create .cbp directory for config
-    let cbp_config_dir = home.join(".cbp");
-    fs::create_dir_all(&cbp_config_dir)?;
-
-    // Write config file with default or custom directory
-    let config_content = if let Some(ref home_path) = custom_home {
-        format!(
-            r#"# CBP configuration file
-home = "{}"
-"#,
-            home_path.display()
-        )
-    } else {
-        format!(
-            r#"# CBP configuration file
-# Uncomment and modify to customize installation directory
-# home = "/path/to/custom/dir"
-"#
-        )
-    };
-
-    fs::write(cbp_config_dir.join("config.toml"), config_content)?;
-
-    // Create cbp directories
-    let cbp_dirs = cbp::CbpDirs::new()?;
-
-    // Create bin directory in config location
-    let bin_dir = cbp_config_dir.join("bin");
-    fs::create_dir_all(&bin_dir)?;
-
     // Install development tools if --dev is specified
     if matches.get_flag("dev") {
-        create_compiler_shims(&bin_dir)?;
-        create_triplet_files(&cbp_config_dir)?;
+        create_compiler_shims(&cbp_dirs.bin)?;
+        create_triplet_files(&cbp_dirs.home)?;
     }
 
     // Copy executable to bin directory
     #[cfg(windows)]
-    let target_path = bin_dir.join("cbp.exe");
+    let target_path = cbp_dirs.bin.join("cbp.exe");
     #[cfg(not(windows))]
-    let target_path = bin_dir.join("cbp");
+    let target_path = cbp_dirs.bin.join("cbp");
 
     if current_exe != target_path {
         fs::copy(&current_exe, &target_path)?;
@@ -133,25 +85,23 @@ home = "{}"
     #[cfg(unix)]
     {
         let shell_configs = vec![".bashrc", ".bash_profile", ".zshrc"];
+        let home = dirs::home_dir()
+            .ok_or_else(|| anyhow::anyhow!("Could not find home directory"))?;
         for config in shell_configs {
             let config_path = home.join(config);
             if config_path.exists() {
-                update_shell_config(&config_path, custom_home.as_ref())?;
+                update_shell_config(&config_path, Some(&cbp_dirs.bin))?;
             }
         }
     }
 
     #[cfg(windows)]
     {
-        update_windows_path(&bin_dir)?;
+        update_windows_path(&cbp_dirs.bin)?;
     }
 
     println!("cbp initialization completed!");
-    println!("Configuration and executable: {}", cbp_config_dir.display());
-    println!(
-        "Package installation directory: {}",
-        cbp_dirs.home.display()
-    );
+    println!("cbp home directory: {}", cbp_dirs.home.display());
 
     #[cfg(unix)]
     {
@@ -290,7 +240,7 @@ fn update_windows_path(bin_dir: &PathBuf) -> anyhow::Result<()> {
 
 // Add new function for creating compiler shims
 #[cfg(windows)]
-fn create_compiler_shims(bin_dir: &PathBuf) -> Result<()> {
+fn create_compiler_shims(bin_dir: &PathBuf) -> anyhow::Result<()> {
     let shims = [
         ("zig-cc.cmd", "@echo off\nzig cc %*"),
         ("zig-c++.cmd", "@echo off\nzig c++ %*"),
@@ -306,7 +256,7 @@ fn create_compiler_shims(bin_dir: &PathBuf) -> Result<()> {
 }
 
 #[cfg(unix)]
-fn create_compiler_shims(bin_dir: &PathBuf) -> Result<()> {
+fn create_compiler_shims(bin_dir: &PathBuf) -> anyhow::Result<()> {
     let shims = [
         ("zig-cc", "#!/bin/bash\nexec zig cc \"$@\""),
         ("zig-c++", "#!/bin/bash\nexec zig c++ \"$@\""),
@@ -327,7 +277,7 @@ fn create_compiler_shims(bin_dir: &PathBuf) -> Result<()> {
     Ok(())
 }
 
-fn create_triplet_files(config_dir: &PathBuf) -> Result<()> {
+fn create_triplet_files(config_dir: &PathBuf) -> anyhow::Result<()> {
     let triplets_dir = config_dir.join("triplets");
     fs::create_dir_all(&triplets_dir)?;
 
