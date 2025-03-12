@@ -51,9 +51,9 @@ cd $HOME/share
 # linux
 # need 0.14 for pthread on x86_64-windows-gnu
 # https://github.com/ziglang/zig/issues/10989
-curl -L https://ziglang.org/builds/zig-linux-x86_64-0.14.0-dev.3462+edabcf619.tar.xz > zig.tar.xz
-tar xvfJ zig.tar.xz
-mv zig-linux-x86_64* zig
+curl -L https://ziglang.org/builds/zig-linux-x86-0.15.0-dev.45+24db007cd.tar.xz |
+    tar xvJ &&
+    mv zig-* zig
 ln -sf $HOME/share/zig/zig $HOME/bin/zig
 
 # macos
@@ -93,7 +93,9 @@ rustup target add x86_64-pc-windows-gnu
 * vcpkg
 
 ```bash
-cd
+mkdir -p $HOME/share
+cd $HOME/share
+
 # Download and extract vcpkg
 curl -L https://github.com/microsoft/vcpkg/archive/refs/tags/2025.02.14.tar.gz |
     tar xvz &&
@@ -103,7 +105,7 @@ cd vcpkg
 ./bootstrap-vcpkg.sh -disableMetrics
 
 # Set environment variables
-export VCPKG_ROOT=$HOME/vcpkg
+export VCPKG_ROOT=$HOME/share/vcpkg
 export PATH=$VCPKG_ROOT:$PATH
 
 ```
