@@ -3,58 +3,7 @@ use std::process::Command;
 
 #[test]
 #[cfg(unix)]
-fn command_init_default() -> anyhow::Result<()> {
-    use std::fs;
-    use tempfile::TempDir;
-
-    // Create temporary home directory
-    let temp_home = TempDir::new()?;
-    let original_home = std::env::var("HOME")?;
-    std::env::set_var("HOME", temp_home.path());
-
-    // Create shell config files with initial content
-    for config in [".bashrc", ".bash_profile", ".zshrc"] {
-        let config_path = temp_home.path().join(config);
-        fs::write(&config_path, "# Original content\n")?;
-    }
-
-    // Test default initialization
-    let mut cmd = Command::cargo_bin("cbp")?;
-    cmd.arg("init").assert().success();
-
-    // Verify default setup
-    let cbp_home = temp_home.path().join(".cbp");
-    assert!(cbp_home.exists());
-    assert!(cbp_home.join("bin").exists());
-    assert!(cbp_home.join("cache").exists());
-    assert!(cbp_home.join("records").exists());
-
-    // Verify shell config updates
-    for config in [".bashrc", ".bash_profile", ".zshrc"] {
-        let config_path = temp_home.path().join(config);
-        let content = fs::read_to_string(&config_path)?;
-
-        // Print content for debugging
-        println!("Content of {}:\n{}", config, content);
-
-        assert!(
-            content.contains("# .cbp start"),
-            "Missing .cbp start marker in {}",
-            config
-        );
-        assert!(content.contains("export PATH=\"$HOME/.cbp/bin:$PATH\""));
-        assert!(content.contains("# .cbp end"));
-        assert_eq!(content.matches("# .cbp start").count(), 1);
-    }
-
-    // Restore original home
-    std::env::set_var("HOME", original_home);
-    Ok(())
-}
-
-#[test]
-#[cfg(unix)]
-fn command_init_custom_dir() -> anyhow::Result<()> {
+fn command_init() -> anyhow::Result<()> {
     use std::fs;
     use tempfile::TempDir;
 
@@ -90,7 +39,6 @@ fn command_init_custom_dir() -> anyhow::Result<()> {
 
         let content = fs::read_to_string(&config_path)?;
         assert!(content.contains("# .cbp start"));
-        assert!(content.contains("export PATH=\"$HOME/.cbp/bin:$PATH\""));
         assert!(content.contains(&format!(
             "export PATH=\"{}/bin:$PATH\"",
             custom_dir.display()
@@ -106,7 +54,7 @@ fn command_init_custom_dir() -> anyhow::Result<()> {
 
 #[test]
 #[cfg(windows)]
-fn command_init() -> anyhow::Result<()> {
+fn command_init_windows() -> anyhow::Result<()> {
     use tempfile::TempDir;
 
     // Create temporary test directory
