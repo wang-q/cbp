@@ -70,6 +70,9 @@ bash scripts/megahit.sh -t linux
 bash scripts/mmseqs.sh -t linux
 bash scripts/mmseqs.sh macos
 
+bash scripts/bowtie2.sh -t linux
+bash scripts/bowtie2.sh macos
+
 bash scripts/raxml-ng.sh -t linux
 bash scripts/raxml-ng.sh macos
 
