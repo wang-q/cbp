@@ -88,9 +88,8 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let home = dirs::home_dir()
             .ok_or_else(|| anyhow::anyhow!("Could not find home directory"))?;
         for config in shell_configs {
-            let config_path = home.join(config);
             if config_path.exists() {
-                update_shell_config(&config_path, Some(&cbp_dirs.bin))?;
+                update_shell_rc(&config_path, &cbp_dirs.bin)?;
             }
         }
     }
@@ -123,21 +122,17 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
 
 #[cfg(unix)]
 // Generate PATH configurations
-fn generate_path_configs(custom_dir_path: Option<&PathBuf>) -> Vec<String> {
-    let mut configs = vec!["export PATH=\"$HOME/.cbp/bin:$PATH\"".to_string()];
-    if let Some(dir_path) = custom_dir_path {
-        configs.push(format!("export PATH=\"{}/bin:$PATH\"", dir_path.display()));
-    }
-    configs
+fn generate_path_configs(dir_path: &PathBuf) -> String {
+    format!("export PATH=\"{}/bin:$PATH\"", dir_path.display())
 }
 
 #[cfg(unix)]
 // Update PATH in shell config files
-fn update_shell_config(
-    config_path: &PathBuf,
-    custom_dir_path: Option<&PathBuf>,
+fn update_shell_rc(
+    rc_path: &PathBuf,
+    bin_dir: &PathBuf,
 ) -> anyhow::Result<()> {
-    let content = fs::read_to_string(config_path)?;
+    let content = fs::read_to_string(rc_path)?;
     let mut new_content = Vec::new();
     let mut in_cbp_section = false;
     let mut has_cbp_section = false;
@@ -149,7 +144,7 @@ fn update_shell_config(
                 has_cbp_section = true;
                 in_cbp_section = true;
                 new_content.push(line.to_string());
-                new_content.extend(generate_path_configs(custom_dir_path));
+                new_content.push(generate_path_configs(bin_dir));
             }
             "# .cbp end" => {
                 in_cbp_section = false;
@@ -166,7 +161,7 @@ fn update_shell_config(
             new_content.push(String::new());
         }
         new_content.push("# .cbp start".to_string());
-        new_content.extend(generate_path_configs(custom_dir_path));
+        new_content.push(generate_path_configs(bin_dir));
         new_content.push("# .cbp end".to_string());
     }
 
@@ -176,7 +171,7 @@ fn update_shell_config(
     }
 
     // Write new content
-    fs::write(config_path, new_content.join("\n") + "\n")?;
+    fs::write(rc_path, new_content.join("\n") + "\n")?;
     Ok(())
 }
 
