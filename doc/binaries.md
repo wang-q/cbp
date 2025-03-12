@@ -29,9 +29,9 @@ vcpkg remove --debug --recurse \
 #     --cmake-args="-DCMAKE_CXX_COMPILER_TARGET=aarch64-macos-none"
 
 bash scripts/vcpkg.sh zlib
-bash scripts/vcpkg.sh bzip2[tool]
+bash scripts/vcpkg.sh "bzip2[tool]"
 bash scripts/vcpkg.sh libdeflate
-bash scripts/vcpkg.sh liblzma[tools]
+bash scripts/vcpkg.sh "liblzma[tools]"
 
 cbp local zlib bzip2 libdeflate liblzma
 
@@ -43,21 +43,35 @@ bash scripts/vcpkg.sh expat
 
 bash scripts/vcpkg.sh gsl
 # bash scripts/vcpkg.sh gmp
+bash scripts/vcpkg.sh simde
 
-bash scripts/vcpkg.sh libpng[core,tools]
-bash scripts/vcpkg.sh pixman
-bash scripts/vcpkg.sh openjpeg
+bash scripts/vcpkg.sh "libxml2[core,iconv,lzma,zlib]"
 
-bash scripts/vcpkg.sh "freetype[*]"
-bash scripts/vcpkg.sh "harfbuzz[core,freetype]"
-bash scripts/vcpkg.sh fontconfig
+```
 
-bash scripts/vcpkg.sh "pcre2[core,jit,platform-default-features]"
-bash scripts/vcpkg.sh libffi
-bash scripts/vcpkg.sh glib
+* glib related
 
-# non-reproducible build (__DATE__ macro)
-# CFLAGS="-Wno-date-time -Wno-unused-function" bash scripts/vcpkg.sh "cairo[core,fontconfig,freetype,gobject]"
+```bash
+# bash scripts/vcpkg.sh "libpng[core,tools]"
+# bash scripts/vcpkg.sh pixman
+# bash scripts/vcpkg.sh openjpeg
+# bash scripts/vcpkg.sh libjpeg-turbo
+# bash scripts/vcpkg.sh "tiff[core,jpeg,lzma,zip]"
+
+# bash scripts/vcpkg.sh "freetype[*]"
+# bash scripts/vcpkg.sh "harfbuzz[core,freetype]"
+# bash scripts/vcpkg.sh fontconfig
+
+# bash scripts/vcpkg.sh "libgd[tools]"
+
+# bash scripts/vcpkg.sh "pcre2[core,jit,platform-default-features]"
+# bash scripts/vcpkg.sh libffi
+# bash scripts/vcpkg.sh glib
+
+# # non-reproducible build (__DATE__ macro)
+# # CFLAGS="-Wno-date-time -Wno-unused-function" bash scripts/vcpkg.sh "cairo[core,fontconfig,freetype,gobject]"
+
+# bash scripts/vcpkg.sh librsvg
 
 ```
 
@@ -76,7 +90,6 @@ bash scripts/vcpkg.sh pkgconf x64-linux-zig pkgconf=pkg-config
 # syscall
 # bash scripts/vcpkg.sh cpuinfo[core,tools]
 
-# bash scripts/vcpkg.sh graphviz
 # gdal
 
 ```
@@ -149,7 +162,7 @@ cbp local libdeflate
 
 # bundled htslib
 # bash scripts/samtools.sh
-# bash scripts/bcftools.sh
+bash scripts/bcftools.sh
 
 ```
 
@@ -172,9 +185,41 @@ bash scripts/bcalm.sh
 
 ## Projects requiring specific build environments
 
-* Built on a CentOS 7 VM using system libgomp
+* Built on a Ubuntu box via CentOS 7 container using system libgomp
+* `singularity` brings the host $HOME directory to the container
+* `cbp/` can't be a symlink
 
 ```bash
+singularity pull docker://wangq/vcpkg-centos:master
+
+mv vcpkg-centos_master.sif vcpkg/vcpkg-centos.sif
+
+# glib -Wno-missing-prototypes -Wno-strict-prototypes
+# fontconfig[tools] -std=gnu99
+# pkgconf -D_GNU_SOURCE
+
+singularity run \
+    --env CFLAGS="-D_GNU_SOURCE -std=gnu99 -Wno-missing-prototypes -Wno-strict-prototypes" \
+    vcpkg/vcpkg-centos.sif \
+/opt/vcpkg/vcpkg install --debug --recurse \
+    --clean-buildtrees-after-build \
+    --x-buildtrees-root=vcpkg/buildtrees \
+    --downloads-root=vcpkg/downloads \
+    --x-install-root=vcpkg/installed \
+    --x-packages-root=vcpkg/packages \
+    graphviz:x64-linux-release
+
+singularity run vcpkg/vcpkg-centos.sif \
+    ldd -v vcpkg/installed/x64-linux-release/tools/graphviz/dot
+
+singularity run vcpkg/vcpkg-centos.sif \
+    ldd -v vcpkg/installed/x64-linux-release/tools/glib/gio
+
+cbp collect --ignore tools/graphviz/graphviz/libgvplugin \
+    vcpkg/installed/vcpkg/info/graphviz_*_x64-linux-release.list
+
+mv graphviz.linux.tar.gz binaries/
+
 # bash scripts/FastTree.sh
 
 ```
