@@ -141,3 +141,4 @@ Cargo.lock
 *.tsv
 
 /binaries/
+/vcpkg/
