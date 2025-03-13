@@ -63,10 +63,7 @@ fn command_init_windows() -> anyhow::Result<()> {
 
     // Test default initialization
     let mut cmd = Command::cargo_bin("cbp")?;
-    cmd.arg("init")
-        .arg(test_dir)
-        .assert()
-        .success();
+    cmd.arg("init").arg(test_dir).assert().success();
 
     // Verify directory structure
     assert!(test_dir.exists());

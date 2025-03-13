@@ -70,7 +70,7 @@ impl CbpDirs {
     /// - Cannot get parent directory
     /// - Directory creation fails
     pub fn from_exe() -> anyhow::Result<Self> {
-        let exe_path = std::fs::canonicalize(std::env::current_exe()?)?;
+        let exe_path = dunce::canonicalize(std::env::current_exe()?)?;
         Self::from_exe_path(&exe_path)
     }
 

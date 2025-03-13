@@ -119,7 +119,6 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
             continue;
         }
 
-
         // Skip the first directory component (triplet name)
         let parts: Vec<&str> = line.split('/').skip(1).collect();
         if parts.is_empty() {
