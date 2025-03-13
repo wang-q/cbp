@@ -21,6 +21,7 @@ bash scripts/rust.sh hyperfine
 bash scripts/rust.sh tealdeer
 bash scripts/rust.sh tokei
 bash scripts/rust.sh jnv
+bash scripts/rust.sh resvg
 
 # My bioinformatics utilities
 bash scripts/rust.sh intspan
@@ -65,6 +66,7 @@ winget install 7zip.7zip
 .\scripts\rust.ps1 tealdeer
 .\scripts\rust.ps1 tokei
 .\scripts\rust.ps1 jnv
+.\scripts\rust.ps1 resvg
 
 cbp local -l eza
 
