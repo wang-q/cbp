@@ -215,7 +215,11 @@ mkdir -p FastTree &&
 ### CLI utilities
 
 ```bash
+curl -o sources/eza.tar.gz -L https://github.com/eza-community/eza/archive/refs/tags/v0.20.23.tar.gz
+
 curl -o sources/fd.tar.gz -L https://github.com/sharkdp/fd/archive/refs/tags/v10.2.0.tar.gz
+
+curl -o sources/dust.tar.gz -L https://github.com/bootandy/dust/archive/refs/tags/v1.1.2.tar.gz
 
 curl -o sources/ripgrep.tar.gz -L https://github.com/BurntSushi/ripgrep/archive/refs/tags/14.1.1.tar.gz
 
@@ -226,8 +230,6 @@ curl -o sources/hyperfine.tar.gz -L https://github.com/sharkdp/hyperfine/archive
 curl -o sources/tealdeer.tar.gz -L https://github.com/tealdeer-rs/tealdeer/archive/refs/tags/v1.7.1.tar.gz
 
 curl -o sources/tokei.tar.gz -L https://github.com/XAMPPRocky/tokei/archive/refs/tags/v12.1.2.tar.gz
-
-curl -o sources/eza.tar.gz -L https://github.com/eza-community/eza/archive/refs/tags/v0.20.23.tar.gz
 
 curl -o sources/jnv.tar.gz -L https://github.com/ynqa/jnv/archive/refs/tags/v0.5.0.tar.gz
 

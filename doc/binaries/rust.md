@@ -16,6 +16,7 @@ platform-specific `.tar.gz` archives for distribution through GitHub releases.
 # CLI utilities
 bash scripts/rust.sh eza
 bash scripts/rust.sh fd
+bash scripts/rust.sh dust
 bash scripts/rust.sh ripgrep
 bash scripts/rust.sh hyperfine
 bash scripts/rust.sh tealdeer
@@ -37,6 +38,7 @@ bash scripts/rust.sh anchr
 ```bash
 bash scripts/rust.sh eza native
 bash scripts/rust.sh fd native
+bash scripts/rust.sh dust native
 bash scripts/rust.sh ripgrep native
 bash scripts/rust.sh bat native
 bash scripts/rust.sh hyperfine native
@@ -60,6 +62,7 @@ winget install 7zip.7zip
 
 .\scripts\rust.ps1 eza
 .\scripts\rust.ps1 fd
+.\scripts\rust.ps1 dust
 .\scripts\rust.ps1 ripgrep
 .\scripts\rust.ps1 bat
 .\scripts\rust.ps1 hyperfine
