@@ -185,9 +185,11 @@ bash scripts/bcalm.sh
 
 ## Projects requiring specific build environments
 
-* Built on a Ubuntu box via CentOS 7 container using system libgomp
-* `singularity` brings the host $HOME directory to the container
-* `cbp/` can't be a symlink
+* Build on Ubuntu host using CentOS 7 container to utilize system libgomp
+* Use singularity container which automatically mounts host's $HOME directory
+* Working directory constraints:
+    * cbp/ must be a real directory, not a symbolic link
+    * Do not place cbp/ under /mnt/c/ in WSL to avoid performance issues
 
 ```bash
 singularity pull docker://wangq/vcpkg-centos:master
