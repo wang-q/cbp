@@ -98,25 +98,32 @@ fi
 
 # Extract the names of binary targets from Cargo.toml
 BINS=$(
-    cargo read-manifest |
-        jq --raw-output '.targets[] | select( .kind[0] == "bin" ) | .name '
+    cargo metadata --no-deps --format-version 1 |
+        jq --raw-output '.packages[] | .targets[] | select( .kind[0] == "bin" ) | .name '
 )
 
 # Copy the built binaries to the current directory
 mkdir -p collect/bin
 for BIN in $BINS; do
-    if [ "$OS_TYPE" == "windows" ]; then
-        if [ "$USE_NATIVE" == "1" ]; then
-            cp $CARGO_TARGET_DIR/release/$BIN.exe collect/bin/
-        else
-            cp $CARGO_TARGET_DIR/${TARGET_ARCH}/release/$BIN.exe collect/bin/
-        fi
+    # Determine binary directory based on OS and build type
+    if [ "$USE_NATIVE" == "1" ]; then
+        BIN_DIR="$CARGO_TARGET_DIR/release"
     else
-        if [ "$USE_NATIVE" == "1" ]; then
-            cp $CARGO_TARGET_DIR/release/$BIN collect/bin/
-        else
-            cp $CARGO_TARGET_DIR/${TARGET_ARCH}/release/$BIN collect/bin/
-        fi
+        BIN_DIR="$CARGO_TARGET_DIR/${TARGET_ARCH}/release"
+    fi
+
+    # Add .exe extension for Windows
+    if [ "$OS_TYPE" == "windows" ]; then
+        BIN_NAME="$BIN.exe"
+    else
+        BIN_NAME="$BIN"
+    fi
+
+    # Check and copy file
+    if [ -f "$BIN_DIR/$BIN_NAME" ]; then
+        cp "$BIN_DIR/$BIN_NAME" collect/bin/
+    else
+        echo "Warning: Binary $BIN_NAME not found in $BIN_DIR"
     fi
 done
 
