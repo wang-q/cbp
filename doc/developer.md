@@ -51,7 +51,7 @@ cd $HOME/share
 # linux
 # need 0.14 for pthread on x86_64-windows-gnu
 # https://github.com/ziglang/zig/issues/10989
-curl -L https://ziglang.org/builds/zig-linux-x86-0.15.0-dev.45+24db007cd.tar.xz |
+curl -L https://ziglang.org/builds/zig-linux-x86_64-0.15.0-dev.45+24db007cd.tar.xz |
     tar xvJ &&
     mv zig-* zig
 ln -sf $HOME/share/zig/zig $HOME/bin/zig
