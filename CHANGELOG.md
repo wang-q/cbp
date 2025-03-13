@@ -2,6 +2,16 @@
 
 ## Unreleased - ReleaseDate
 
+- Improved path handling
+  - `dunce` for Windows path normalization
+  - Simplified executable path resolution
+- Enhanced build system
+  - Added CentOS 7 container support
+  - Improved vcpkg script handling
+  - Improved rust handling
+- Added new packages
+- Updated documentations
+
 ## 0.3.5 - 2025-03-10
 
 - Refactored build system
