@@ -6,25 +6,24 @@ This document follows the same structure as `doc/binaries.md` for consistency an
 
 ```bash
 bash scripts/vcpkg.sh zlib
-bash scripts/vcpkg.sh bzip2[tool]
+bash scripts/vcpkg.sh "bzip2[tool]"
 bash scripts/vcpkg.sh libdeflate
-bash scripts/vcpkg.sh liblzma[tools]
+bash scripts/vcpkg.sh "liblzma[tools]"
 
 cbp local zlib bzip2 libdeflate liblzma
 
-# bash scripts/vcpkg.sh ncurses
-# bash scripts/vcpkg.sh readline
+bash scripts/vcpkg.sh ncurses arm64-osx-release
+bash scripts/vcpkg.sh readline-unix arm64-osx-release
+mv binaries/readline-unix.macos.tar.gz binaries/readline.macos.tar.gz
 
 bash scripts/vcpkg.sh argtable2
 bash scripts/vcpkg.sh expat
 
 bash scripts/vcpkg.sh gsl
 # bash scripts/vcpkg.sh gmp
+bash scripts/vcpkg.sh simde
 
-# bash scripts/vcpkg.sh libpng[core,tools]
-bash scripts/vcpkg.sh openjpeg
-
-# bash scripts/vcpkg.sh fontconfig[core,tools]
+bash scripts/vcpkg.sh "libxml2[core,iconv,lzma,zlib]"
 
 ```
 
