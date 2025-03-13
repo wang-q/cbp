@@ -2,6 +2,8 @@
 
 ## Unreleased - ReleaseDate
 
+## 0.3.6 - 2025-03-13
+
 - Improved path handling
   - `dunce` for Windows path normalization
   - Simplified executable path resolution
