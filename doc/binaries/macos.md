@@ -33,9 +33,9 @@ bash scripts/vcpkg.sh "libxml2[core,iconv,lzma,zlib]"
 # avoid icu from sqlite3[*]
 bash scripts/vcpkg.sh "sqlite3[core,tool,dbstat,fts3,fts4,fts5,json1,math,rtree,soundex,zlib]"
 
-# bash scripts/vcpkg.sh "openssl[core,tools]" arm64-osx-release
+bash scripts/vcpkg.sh "openssl[core,tools]" arm64-osx-release
 
-# bash scripts/vcpkg.sh "curl[core,tool,ssl,http2,websockets]"
+bash scripts/vcpkg.sh "curl[core,tool,ssl,http2,websockets]" arm64-osx-release
 
 bash scripts/vcpkg.sh pkgconf arm64-macos-zig pkgconf=pkg-config
 
@@ -71,7 +71,7 @@ bash scripts/vcpkg.sh trf
 bash scripts/vcpkg.sh datamash
 
 # cmake
-# bash scripts/vcpkg.sh diamond
+# bash scripts/vcpkg.sh diamond # need sse3
 
 ```
 
