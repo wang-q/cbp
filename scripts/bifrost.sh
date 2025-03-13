@@ -15,7 +15,7 @@ extract_source
 # sed -i '/target_include_directories.*dynamic/d' src/CMakeLists.txt
 # sed -i '/target_link_libraries.*dynamic/d' src/CMakeLists.txt
 # sed -i '/install.*dynamic/d' src/CMakeLists.txt
-sed -i 's/target_link_libraries(Bifrost bifrost_dynamic)/target_link_libraries(Bifrost bifrost_static)/' src/CMakeLists.txt
+sed -i.bak 's/target_link_libraries(Bifrost bifrost_dynamic)/target_link_libraries(Bifrost bifrost_static)/' src/CMakeLists.txt
 
 # Configure CMake with Zig compiler
 ASM="zig cc" \
