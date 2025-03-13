@@ -48,8 +48,9 @@ try {
     Get-ChildItem "target\release"
 
     # Get binary targets from Cargo.toml
-    $BINS = cargo read-manifest |
+    $BINS = cargo metadata --no-deps --format-version 1 |
         ConvertFrom-Json |
+        Select-Object -ExpandProperty packages |
         Select-Object -ExpandProperty targets |
         Where-Object { $_.kind[0] -eq "bin" } |
         Select-Object -ExpandProperty name
@@ -57,7 +58,12 @@ try {
     # Copy binaries
     New-Item -ItemType Directory -Path "collect\bin" -Force
     foreach ($BIN in $BINS) {
-        Copy-Item "target\release\$BIN.exe" "collect\bin\"
+        $BinPath = "target\release\$BIN.exe"
+        if (Test-Path $BinPath) {
+            Copy-Item $BinPath "collect\bin\"
+        } else {
+            Write-Warning "Binary $BIN.exe not found in target\release"
+        }
     }
 
     # Create and move archive
