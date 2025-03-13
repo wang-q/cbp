@@ -205,10 +205,10 @@ rm -rf ${REPO}
 * Built on a CentOS 7 VM using system libgomp
 
 ```bash
-mkdir -p FastTree &&
-    curl -o FastTree/FastTree.c -L https://raw.githubusercontent.com/morgannprice/fasttree/refs/heads/main/old/FastTree-2.1.11.c &&
-    tar -czf sources/FastTree.tar.gz FastTree/ &&
-    rm -fr FastTree
+mkdir -p fasttree &&
+    curl -o fasttree/FastTree.c -L https://raw.githubusercontent.com/morgannprice/fasttree/refs/heads/main/old/FastTree-2.1.11.c &&
+    tar -czf sources/fasttree.tar.gz fasttree/ &&
+    rm -fr fasttree
 
 ```
 
