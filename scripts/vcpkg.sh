@@ -89,6 +89,11 @@ done
 # Create archive from the package list
 cbp collect "${LIST_FILE}" "${COPY_ARGS[@]}" || exit 1
 
+# Rename .osx.tar.gz to .macos.tar.gz if needed
+if [ -f "${BASE_PROJ}.osx.tar.gz" ]; then
+    mv "${BASE_PROJ}.osx.tar.gz" "${BASE_PROJ}.macos.tar.gz"
+fi
+
 # Remove the package from cache
 vcpkg remove --recurse \
     --overlay-ports=ports \
