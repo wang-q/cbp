@@ -231,6 +231,8 @@ curl -o sources/eza.tar.gz -L https://github.com/eza-community/eza/archive/refs/
 
 curl -o sources/jnv.tar.gz -L https://github.com/ynqa/jnv/archive/refs/tags/v0.5.0.tar.gz
 
+curl -o sources/resvg.tar.gz -L https://github.com/linebender/resvg/archive/refs/tags/0.45.0.tar.gz
+
 ```
 
 ### My bioinformatics utilities

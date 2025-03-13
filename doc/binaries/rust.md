@@ -42,6 +42,7 @@ bash scripts/rust.sh hyperfine native
 bash scripts/rust.sh tealdeer native
 bash scripts/rust.sh tokei native
 bash scripts/rust.sh jnv native
+bash scripts/rust.sh resvg native
 
 bash scripts/rust.sh intspan native
 bash scripts/rust.sh nwr native
