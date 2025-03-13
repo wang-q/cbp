@@ -41,6 +41,8 @@ bash scripts/vcpkg.sh readline
 bash scripts/vcpkg.sh argtable2
 bash scripts/vcpkg.sh expat
 
+CFLAGS="-Wno-language-extension-token" bash scripts/vcpkg.sh libxcrypt
+
 bash scripts/vcpkg.sh gsl
 # bash scripts/vcpkg.sh gmp
 bash scripts/vcpkg.sh simde
@@ -167,9 +169,6 @@ bash scripts/mummer.sh
 
 cbp local argtable2
 bash scripts/clustalo.sh
-
-cbp local libdeflate
-# bash scripts/htslib.sh # --with-libdeflate
 
 # bundled htslib
 # bash scripts/samtools.sh
