@@ -11,6 +11,7 @@ extract_source
 # Build with the specified target architecture
 CC="zig cc -target ${TARGET_ARCH}" \
 CXX="zig c++ -target ${TARGET_ARCH}" \
+CFLAGS="-Wno-date-time" \
 LDFLAGS="-static" \
     ./configure \
     --prefix="${TEMP_DIR}/collect" \

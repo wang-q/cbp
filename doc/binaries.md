@@ -123,6 +123,17 @@ bash scripts/vcpkg.sh diamond
 
 ```
 
+## Libraries
+
+```bash
+# ./configure
+bash scripts/gdbm.sh
+
+cbp local libdeflate
+# bash scripts/htslib.sh # --with-libdeflate
+
+```
+
 ## `Makefile`
 
 ```bash
