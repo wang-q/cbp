@@ -7,12 +7,12 @@ vcpkg_extract_source_archive(
     ARCHIVE "${CURRENT_BUILDTREES_DIR}/bifrost.tar.gz"
 )
 
-# Comment out all shared library related commands
-vcpkg_replace_string(
-    "${SOURCE_PATH}/src/CMakeLists.txt"
-    "add_library(bifrost_dynamic SHARED"
-    "# add_library(bifrost_dynamic SHARED"
-)
+# # Comment out all shared library related commands
+# vcpkg_replace_string(
+#     "${SOURCE_PATH}/src/CMakeLists.txt"
+#     "add_library(bifrost_dynamic SHARED"
+#     "# add_library(bifrost_dynamic SHARED"
+# )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
