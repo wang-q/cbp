@@ -162,6 +162,17 @@ curl -L https://github.com/samtools/bcftools/releases/download/1.21/bcftools-1.2
     tar -czf sources/bcftools.tar.gz bcftools-1.21/ &&
     rm -rf bcftools-1.21
 
+# mcl
+curl -L https://micans.org/mcl/src/cimfomfa-22-273.tar.gz |
+    tar xz &&
+    mv cimfomfa-* cimfomfa &&
+    curl -L https://micans.org/mcl/src/mcl-22-282.tar.gz |
+    tar xz &&
+    mv mcl-* mcl &&
+    mv cimfomfa mcl/ &&
+    tar -czf sources/mcl.tar.gz mcl/ &&
+    rm -rf mcl
+
 ```
 
 ## `cmake`
