@@ -241,7 +241,7 @@ curl -o sources/resvg.tar.gz -L https://github.com/linebender/resvg/archive/refs
 
 ```
 
-### My bioinformatics utilities
+### Bioinformatics utilities
 
 ```bash
 curl -o sources/nwr.tar.gz -L https://github.com/wang-q/nwr/archive/refs/tags/v0.7.7.tar.gz
@@ -253,5 +253,7 @@ curl -o sources/hnsm.tar.gz -L https://github.com/wang-q/hnsm/archive/refs/tags/
 curl -o sources/pgr.tar.gz -L https://github.com/wang-q/pgr/archive/refs/tags/v0.1.0.tar.gz
 
 curl -o sources/anchr.tar.gz -L https://github.com/wang-q/anchr/archive/fadc09fe502e7b31cf6bbd9fa29b7188bf42ae3a.tar.gz
+
+curl -o sources/wgatools.tar.gz -L https://github.com/wjwei-handsome/wgatools/archive/refs/tags/v1.0.0.tar.gz
 
 ```

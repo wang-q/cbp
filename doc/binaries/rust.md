@@ -24,12 +24,14 @@ bash scripts/rust.sh tokei
 bash scripts/rust.sh jnv
 bash scripts/rust.sh resvg
 
-# My bioinformatics utilities
+# Bioinformatics utilities
 bash scripts/rust.sh intspan
 bash scripts/rust.sh nwr
 bash scripts/rust.sh hnsm
 bash scripts/rust.sh pgr
 bash scripts/rust.sh anchr
+
+bash scripts/rust.sh wgatools
 
 ```
 
@@ -52,6 +54,8 @@ bash scripts/rust.sh nwr native
 bash scripts/rust.sh hnsm native
 bash scripts/rust.sh pgr native
 bash scripts/rust.sh anchr native
+
+bash scripts/rust.sh wgatools native
 
 ```
 
@@ -78,6 +82,8 @@ cbp local -l eza
 .\scripts\rust.ps1 hnsm
 .\scripts\rust.ps1 pgr
 .\scripts\rust.ps1 anchr
+
+.\scripts\rust.ps1 wgatools
 
 $files = Get-ChildItem "binaries\*.tar.gz" | Select-Object -ExpandProperty FullName
 cbp upload $files
