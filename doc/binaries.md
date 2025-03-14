@@ -91,8 +91,10 @@ bash scripts/vcpkg.sh fastga
 bash scripts/vcpkg.sh multiz
 
 # ./configure
-bash scripts/vcpkg.sh trf
 bash scripts/vcpkg.sh datamash
+bash scripts/vcpkg.sh pv
+
+bash scripts/vcpkg.sh trf
 
 # cmake
 bash scripts/vcpkg.sh diamond

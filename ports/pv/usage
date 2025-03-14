@@ -1,0 +1,3 @@
+The package pv provides the following executables:
+
+    pv - monitor data's progress through a pipe
