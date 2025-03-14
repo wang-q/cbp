@@ -20,53 +20,23 @@ curl -o sources/gdbm.tar.gz -L https://ftp.gnu.org/gnu/gdbm/gdbm-1.24.tar.gz
 
 ```
 
-## `Makefile`
+## My ports
 
 ```bash
+# Transform Makefile to CMakeLists.txt
 curl -o sources/pigz.tar.gz -L https://github.com/madler/pigz/archive/refs/tags/v2.8.tar.gz
-
-curl -o sources/bwa.tar.gz -L https://github.com/lh3/bwa/archive/refs/tags/v0.7.18.tar.gz
-
-curl -o sources/minimap2.tar.gz -L https://github.com/lh3/minimap2/archive/refs/tags/v2.28.tar.gz
-
-curl -o sources/miniprot.tar.gz -L https://github.com/lh3/miniprot/archive/refs/tags/v0.13.tar.gz
-
-curl -o sources/lastz.tar.gz -L https://github.com/lastz/lastz/archive/refs/tags/1.04.41.tar.gz
 
 curl -o sources/sickle.tar.gz -L https://github.com/najoshi/sickle/archive/refs/tags/v1.33.tar.gz
 
 curl -o sources/faops.tar.gz -L https://github.com/wang-q/faops/archive/refs/tags/0.8.22.tar.gz
 
-curl -o sources/phylip.tar.gz -L https://phylipweb.github.io/phylip/download/phylip-3.697.tar.gz
-
-curl -o sources/mafft.tar.gz -L https://gitlab.com/sysimm/mafft/-/archive/v7.526/mafft-v7.526.tar.gz
-
-curl -o sources/phast.tar.gz -L https://github.com/CshlSiepelLab/phast/archive/refs/tags/v1.7.tar.gz
+curl -o sources/bwa.tar.gz -L https://github.com/lh3/bwa/archive/refs/tags/v0.7.18.tar.gz
 
 # just .tar file
 curl -L http://stat.sys.i.kyoto-u.ac.jp/prog/consel/pub/cnsls020.tgz |
     tar xvf - &&
     tar -czf sources/consel.tar.gz consel/ &&
     rm -fr consel
-
-# remove unnecessary files to reduce source size
-curl -L https://github.com/inab/trimal/archive/refs/tags/v1.5.0.tar.gz |
-    tar xvfz - &&
-    rm -fr trimal-1.5.0/dataset/ &&
-    rm -fr trimal-1.5.0/docs/ &&
-    tar -czf sources/trimal.tar.gz trimal-1.5.0/ &&
-    rm -rf trimal-1.5.0
-
-# curl -L https://github.com/arq5x/bedtools2/archive/refs/tags/v2.31.1.tar.gz |
-#     tar xvfz - \
-#         --exclude='*/docs*' \
-#         --exclude='*/data*' \
-#         --exclude='*/genomes*' \
-#         --exclude='*/tes*t' \
-#         --exclude='*/tutorial*' &&
-#     mv bedtools2-2.31.1 bedtools &&
-#     tar -czf sources/bedtools.tar.gz bedtools/ &&
-#     rm -rf bedtools
 
 # use specific commit to ensure reproducibility
 curl -L https://github.com/thegenemyers/DAZZ_DB/archive/be65e5991ec0aa4ebbfa926ea00e3680de7b5760.tar.gz |
@@ -94,13 +64,71 @@ curl -L https://github.com/thegenemyers/FASTGA/archive/e97c33ef4daeafdfbb7b5dda5
     tar -czf sources/fastga.tar.gz fastga/ &&
     rm -rf fastga
 
+curl -o sources/multiz.tar.gz -L https://github.com/wang-q/multiz/archive/633c0f7814c887e9e7468ad42076d62496651cb8.tar.gz
+
+# ./configure
+curl -o sources/datamash.tar.gz -L https://ftp.gnu.org/gnu/datamash/datamash-1.8.tar.gz
+
+curl -o sources/pv.tar.gz -L https://www.ivarch.com/programs/sources/pv-1.9.31.tar.gz
+
+curl -L https://github.com/Benson-Genomics-Lab/TRF/archive/refs/tags/v4.09.1.tar.gz |
+    tar xvfz - &&
+    mv TRF-* trf &&
+    tar -czf sources/trf.tar.gz trf/ &&
+    rm -rf trf
+
+curl -L https://github.com/aria2/aria2/releases/download/release-1.37.0/aria2-1.37.0.tar.xz |
+    tar xvfJ - &&
+    mv aria2-* aria2 &&
+    tar -czf sources/aria2.tar.gz aria2/ &&
+    rm -rf aria2
+
+# cmake
+curl -o sources/diamond.tar.gz -L https://github.com/bbuchfink/diamond/archive/refs/tags/v2.1.11.tar.gz
+
+```
+
+## `Makefile`
+
+```bash
+curl -o sources/minimap2.tar.gz -L https://github.com/lh3/minimap2/archive/refs/tags/v2.28.tar.gz
+
+curl -o sources/miniprot.tar.gz -L https://github.com/lh3/miniprot/archive/refs/tags/v0.13.tar.gz
+
+curl -o sources/lastz.tar.gz -L https://github.com/lastz/lastz/archive/refs/tags/1.04.41.tar.gz
+
+curl -o sources/phylip.tar.gz -L https://phylipweb.github.io/phylip/download/phylip-3.697.tar.gz
+
+curl -o sources/mafft.tar.gz -L https://gitlab.com/sysimm/mafft/-/archive/v7.526/mafft-v7.526.tar.gz
+
+curl -o sources/phast.tar.gz -L https://github.com/CshlSiepelLab/phast/archive/refs/tags/v1.7.tar.gz
+
+
+# remove unnecessary files to reduce source size
+curl -L https://github.com/inab/trimal/archive/refs/tags/v1.5.0.tar.gz |
+    tar xvfz - &&
+    rm -fr trimal-1.5.0/dataset/ &&
+    rm -fr trimal-1.5.0/docs/ &&
+    tar -czf sources/trimal.tar.gz trimal-1.5.0/ &&
+    rm -rf trimal-1.5.0
+
+# curl -L https://github.com/arq5x/bedtools2/archive/refs/tags/v2.31.1.tar.gz |
+#     tar xvfz - \
+#         --exclude='*/docs*' \
+#         --exclude='*/data*' \
+#         --exclude='*/genomes*' \
+#         --exclude='*/tes*t' \
+#         --exclude='*/tutorial*' &&
+#     mv bedtools2-2.31.1 bedtools &&
+#     tar -czf sources/bedtools.tar.gz bedtools/ &&
+#     rm -rf bedtools
+
+# use specific commit to ensure reproducibility
 curl -L https://github.com/thegenemyers/FASTK/archive/ddea6cf254f378db51d22c6eb21af775fa9e1f77.tar.gz |
     tar xvfz - &&
     mv FASTK-* fastk &&
     tar -czf sources/fastk.tar.gz fastk/ &&
     rm -rf fastk
-
-curl -o sources/multiz.tar.gz -L https://github.com/wang-q/multiz/archive/633c0f7814c887e9e7468ad42076d62496651cb8.tar.gz
 
 curl -o sources/paml.tar.gz -L https://github.com/abacus-gene/paml/archive/01508dd10b6e7c746a0768ee3cddadb5c28d5ae0.tar.gz
 
@@ -117,16 +145,6 @@ curl -L https://github.com/chaoszhang/ASTER/archive/e8da7edf8adf4205cf5551630dc7
 ## `./configure`
 
 ```bash
-curl -o sources/datamash.tar.gz -L https://ftp.gnu.org/gnu/datamash/datamash-1.8.tar.gz
-
-curl -o sources/pv.tar.gz -L https://www.ivarch.com/programs/sources/pv-1.9.31.tar.gz
-
-curl -L https://github.com/Benson-Genomics-Lab/TRF/archive/refs/tags/v4.09.1.tar.gz |
-    tar xvfz - &&
-    mv TRF-* trf &&
-    tar -czf sources/trf.tar.gz trf/ &&
-    rm -rf trf
-
 curl -o sources/hmmer.tar.gz -L http://eddylab.org/software/hmmer/hmmer-3.4.tar.gz
 
 # hmmer2: rename package to avoid conflict with hmmer3
@@ -181,8 +199,6 @@ curl -L https://micans.org/mcl/src/cimfomfa-22-273.tar.gz |
 curl -o sources/bifrost.tar.gz -L https://github.com/pmelsted/bifrost/archive/refs/tags/v1.3.5.tar.gz
 
 curl -o sources/spoa.tar.gz -L https://github.com/rvaser/spoa/archive/refs/tags/4.1.4.tar.gz
-
-curl -o sources/diamond.tar.gz -L https://github.com/bbuchfink/diamond/archive/refs/tags/v2.1.11.tar.gz
 
 # Remove large files
 curl -L https://github.com/tjunier/newick_utils/archive/da121155a977197cab9fbb15953ca1b40b11eb87.tar.gz |
