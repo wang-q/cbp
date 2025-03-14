@@ -5,7 +5,7 @@ This section describes the binary packages distributed through the "Binaries" re
 ### Platform Support
 
 * Linux: x86_64 with glibc 2.17+ (CentOS 7 compatible)
-* macOS: ARM64 (Apple Silicon)
+* macOS: arm64 (Apple Silicon)
 * Windows: x86_64
 
 ### Package Format
@@ -15,6 +15,7 @@ All packages are distributed as gzipped tarballs with the following naming conve
 * Linux: package.linux.tar.gz
 * macOS: package.macos.tar.gz
 * Windows: package.windows.tar.gz
+* Fonts: package.font.tar.gz
 
 ### Installation
 
@@ -25,5 +26,5 @@ possible but not recommended.
 
 * All binaries are statically linked where possible
 * Dynamic dependencies are limited to system libraries
-* Binaries are built with Zig for consistent cross-platform compatibility
-* This is a rolling release - packages are updated independently of `cbp` versions
+* Most binaries are built using Zig to ensure cross-platform compatibility
+* Packages follow a rolling release model and are updated independently of cbp versions
