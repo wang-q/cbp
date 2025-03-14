@@ -43,37 +43,11 @@ bash scripts/vcpkg.sh expat
 
 CFLAGS="-Wno-language-extension-token" bash scripts/vcpkg.sh libxcrypt
 
+bash scripts/vcpkg.sh "libxml2[core,iconv,lzma,zlib]"
+
 bash scripts/vcpkg.sh gsl
 # bash scripts/vcpkg.sh gmp
 bash scripts/vcpkg.sh simde
-
-bash scripts/vcpkg.sh "libxml2[core,iconv,lzma,zlib]"
-
-```
-
-* glib related
-
-```bash
-# bash scripts/vcpkg.sh "libpng[core,tools]"
-# bash scripts/vcpkg.sh pixman
-# bash scripts/vcpkg.sh openjpeg
-# bash scripts/vcpkg.sh libjpeg-turbo
-# bash scripts/vcpkg.sh "tiff[core,jpeg,lzma,zip]"
-
-# bash scripts/vcpkg.sh "freetype[*]"
-# bash scripts/vcpkg.sh "harfbuzz[core,freetype]"
-# bash scripts/vcpkg.sh fontconfig
-
-# bash scripts/vcpkg.sh "libgd[tools]"
-
-# bash scripts/vcpkg.sh "pcre2[core,jit,platform-default-features]"
-# bash scripts/vcpkg.sh libffi
-# bash scripts/vcpkg.sh glib
-
-# # non-reproducible build (__DATE__ macro)
-# # CFLAGS="-Wno-date-time -Wno-unused-function" bash scripts/vcpkg.sh "cairo[core,fontconfig,freetype,gobject]"
-
-# bash scripts/vcpkg.sh librsvg
 
 ```
 
@@ -205,6 +179,18 @@ bash scripts/bcalm.sh
 singularity pull docker://wangq/vcpkg-centos:master
 
 mv vcpkg-centos_master.sif vcpkg/vcpkg-centos.sif
+
+singularity run \
+    vcpkg/vcpkg-centos.sif \
+/opt/vcpkg/vcpkg install --debug --recurse \
+    --clean-buildtrees-after-build \
+    --x-buildtrees-root=vcpkg/buildtrees \
+    --downloads-root=vcpkg/downloads \
+    --x-install-root=vcpkg/installed \
+    --x-packages-root=vcpkg/packages \
+    lapack-reference[core,cblas]:x64-linux-release
+
+cbp collect vcpkg/installed/vcpkg/info/lapack-reference_*_x64-linux-release.list
 
 # glib -Wno-missing-prototypes -Wno-strict-prototypes
 # fontconfig[tools] -std=gnu99
