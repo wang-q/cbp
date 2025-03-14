@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Source common build environment
-source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../common.sh"
 
 # Set download URL based on OS type
 DL_URL="https://practicaltypography.com/fonts/Charter%20210112.zip"

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Source common build environment
-source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../common.sh"
 
 # Check if cabextract is available
 if ! type cabextract >/dev/null 2>&1; then

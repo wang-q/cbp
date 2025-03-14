@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Source common build environment
-source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../common.sh"
 
 # Set download URL based on OS type
 DL_URL="https://github.com/mozilla/Fira/archive/4.202.tar.gz"

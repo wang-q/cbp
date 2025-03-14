@@ -28,7 +28,7 @@ fi
 # ${BASH_SOURCE[1]} is the path of the script that sourced this file
 # When common.sh is sourced by another script (e.g., zlib.sh),
 # ${BASH_SOURCE[1]} refers to zlib.sh's path
-BASH_DIR=$( cd "$( dirname "${BASH_SOURCE[1]}" )" && pwd )
+BASH_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 PROJ=$(basename "${BASH_SOURCE[1]}" .sh)
 
 # Process command line options
