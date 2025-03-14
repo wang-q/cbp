@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # Source common build environment
-source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../common.sh"
 
 # Set download URL based on OS type
 if [ "$OS_TYPE" == "linux" ]; then
-    DL_URL="https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.15.0/tectonic-0.15.0-x86_64-unknown-linux-musl.tar.gz"
+    DL_URL="https://github.com/jgm/pandoc/releases/download/3.6.3/pandoc-3.6.3-linux-amd64.tar.gz"
 elif [ "$OS_TYPE" == "macos" ]; then
-    DL_URL="https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.15.0/tectonic-0.15.0-aarch64-apple-darwin.tar.gz"
+    DL_URL="https://github.com/jgm/pandoc/releases/download/3.6.3/pandoc-3.6.3-arm64-macOS.zip"
 elif [ "$OS_TYPE" == "windows" ]; then
-    DL_URL="https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.15.0/tectonic-0.15.0-x86_64-pc-windows-msvc.zip"
+    DL_URL="https://github.com/jgm/pandoc/releases/download/3.6.3/pandoc-3.6.3-windows-x86_64.zip"
 else
     echo "Error: ${PROJ} does not support ${OS_TYPE}"
     exit 1
@@ -31,15 +31,15 @@ fi
 
 # Collect binaries
 if [ "$OS_TYPE" == "windows" ]; then
-    collect_bins tectonic.exe
+    collect_bins pandoc-*/pandoc*
 else
-    collect_bins tectonic
+    collect_bins pandoc-*/bin/pandoc*
 fi
 
 # Run test if requested
 if [ "${RUN_TEST}" = "test" ]; then
     test_bin() {
-        local output=$("collect/bin/tectonic" --version)
+        local output=$("collect/bin/pandoc" --version)
         echo "${output}"
         [ -n "${output}" ] && echo "PASSED"
     }

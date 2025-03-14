@@ -1,15 +1,13 @@
 #!/bin/bash
 
 # Source common build environment
-source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../common.sh"
 
 # Set download URL based on OS type
 if [ "$OS_TYPE" == "linux" ]; then
-    DL_URL="https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.16.0/ncbi-blast-2.16.0+-x64-linux.tar.gz"
+    DL_URL="https://github.com/soedinglab/MMseqs2/releases/download/17-b804f/mmseqs-linux-avx2.tar.gz"
 elif [ "$OS_TYPE" == "macos" ]; then
-    DL_URL="https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.16.0/ncbi-blast-2.16.0+-aarch64-macosx.tar.gz"
-elif [ "$OS_TYPE" == "windows" ]; then
-    DL_URL="https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.16.0/ncbi-blast-2.16.0+-x64-win64.tar.gz"
+    DL_URL="https://github.com/soedinglab/MMseqs2/releases/download/17-b804f/mmseqs-osx-universal.tar.gz"
 else
     echo "Error: ${PROJ} does not support ${OS_TYPE}"
     exit 1
@@ -23,12 +21,12 @@ tar xvfz "${PROJ}.tar.gz" ||
     { echo "Error: Failed to extract ${PROJ}"; exit 1; }
 
 # Collect binaries
-collect_bins ncbi-blast-*/bin/*
+collect_bins mmseqs/bin/*
 
 # Run test if requested
 if [ "${RUN_TEST}" = "test" ]; then
     test_bin() {
-        local output=$("collect/bin/blastn" -version)
+        local output=$("collect/bin/mmseqs" --help)
         echo "${output}"
         [ -n "${output}" ] && echo "PASSED"
     }

@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # Source common build environment
-source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../common.sh"
 
 # Set download URL based on OS type
 if [ "$OS_TYPE" == "linux" ]; then
-    DL_URL="https://github.com/iqtree/iqtree2/releases/download/v2.4.0/iqtree-2.4.0-Linux-intel.tar.gz"
+    DL_URL="https://ftp.ncbi.nlm.nih.gov/sra/sdk/3.2.0/sratoolkit.3.2.0-centos_linux64.tar.gz"
 elif [ "$OS_TYPE" == "macos" ]; then
-    DL_URL="https://github.com/iqtree/iqtree2/releases/download/v2.4.0/iqtree-2.4.0-macOS.zip"
+    DL_URL="https://ftp.ncbi.nlm.nih.gov/sra/sdk/3.2.0/sratoolkit.3.2.0-mac-arm64.tar.gz"
 elif [ "$OS_TYPE" == "windows" ]; then
-    DL_URL="https://github.com/iqtree/iqtree2/releases/download/v2.4.0/iqtree-2.4.0-Windows.zip"
+    DL_URL="https://ftp.ncbi.nlm.nih.gov/sra/sdk/3.2.0/sratoolkit.3.2.0-win64.zip"
 else
     echo "Error: ${PROJ} does not support ${OS_TYPE}"
     exit 1
@@ -17,7 +17,7 @@ fi
 
 # Download binary
 echo "==> Downloading ${PROJ}..."
-if [[ "${DL_URL}" == *.zip ]]; then
+if [ "$OS_TYPE" == "windows" ]; then
     curl -L "${DL_URL}" -o "${PROJ}.zip" ||
         { echo "Error: Failed to download ${PROJ}"; exit 1; }
     unzip "${PROJ}.zip" ||
@@ -29,13 +29,28 @@ else
         { echo "Error: Failed to extract ${PROJ}"; exit 1; }
 fi
 
+# Remove symbolic links and rename binaries
+find sratoolkit.*/bin -type l -delete
+for f in sratoolkit.*/bin/*.[0-9].[0-9].[0-9]; do
+    [ -f "$f" ] && mv "$f" "${f%.[0-9].[0-9].[0-9]}"
+done
+for f in sratoolkit.*/bin/*-orig; do
+    [ -f "$f" ] && mv "$f" "${f%-orig}"
+done
+for f in sratoolkit.*/bin/*-orig.exe; do
+    [ -f "$f" ] && rm "$f"
+done
+
 # Collect binaries
-collect_bins iqtree-*/bin/*
+mkdir -p collect/
+mv sratoolkit.*/bin collect/
+
+# eza -T .
 
 # Run test if requested
 if [ "${RUN_TEST}" = "test" ]; then
     test_bin() {
-        local output=$("collect/bin/iqtree2" --version)
+        local output=$("collect/bin/fastq-dump" --version)
         echo "${output}"
         [ -n "${output}" ] && echo "PASSED"
     }

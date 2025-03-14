@@ -4,85 +4,85 @@
 
 ```bash
 # Download and package binary for current system
-bash scripts/jq.sh
+bash scripts/prebuilds/jq.sh
 
 # Download, package and test binary
-bash scripts/jq.sh -t
+bash scripts/prebuilds/jq.sh -t
 
 # Download and package for specific OS
-bash scripts/jq.sh linux     # Download Linux x86_64 binary
-bash scripts/jq.sh macos     # Download macOS ARM64 binary
-bash scripts/jq.sh windows   # Download Windows x86_64 binary
+bash scripts/prebuilds/jq.sh linux     # Download Linux x86_64 binary
+bash scripts/prebuilds/jq.sh macos     # Download macOS ARM64 binary
+bash scripts/prebuilds/jq.sh windows   # Download Windows x86_64 binary
 
 # Note: Tests will fail when downloading for different OS
 # as binaries cannot be executed on incompatible architectures
-bash scripts/jq.sh -t macos  # This will fail on Linux
+bash scripts/prebuilds/jq.sh -t macos  # This will fail on Linux
 
-bash scripts/ninja.sh -t linux
-bash scripts/ninja.sh macos
-bash scripts/ninja.sh windows
+bash scripts/prebuilds/ninja.sh -t linux
+bash scripts/prebuilds/ninja.sh macos
+bash scripts/prebuilds/ninja.sh windows
 
-bash scripts/cmake.sh -t linux
-bash scripts/cmake.sh macos
-bash scripts/cmake.sh windows
+bash scripts/prebuilds/cmake.sh -t linux
+bash scripts/prebuilds/cmake.sh macos
+bash scripts/prebuilds/cmake.sh windows
 
-bash scripts/tsv-utils.sh linux
-bash scripts/tsv-utils.sh macos
+bash scripts/prebuilds/tsv-utils.sh linux
+bash scripts/prebuilds/tsv-utils.sh macos
 
-bash scripts/pandoc.sh -t linux
-bash scripts/pandoc.sh macos
-bash scripts/pandoc.sh windows
+bash scripts/prebuilds/pandoc.sh -t linux
+bash scripts/prebuilds/pandoc.sh macos
+bash scripts/prebuilds/pandoc.sh windows
 
-bash scripts/tectonic.sh -t linux
-bash scripts/tectonic.sh macos
-bash scripts/tectonic.sh windows
+bash scripts/prebuilds/tectonic.sh -t linux
+bash scripts/prebuilds/tectonic.sh macos
+bash scripts/prebuilds/tectonic.sh windows
 
-#bash scripts/pup.sh
+#bash scripts/prebuilds/pup.sh
 
 ```
 
 ## Bioinformatics tools
 
 ```bash
-bash scripts/blast.sh -t linux
-bash scripts/blast.sh macos
-bash scripts/blast.sh windows
+bash scripts/prebuilds/blast.sh -t linux
+bash scripts/prebuilds/blast.sh macos
+bash scripts/prebuilds/blast.sh windows
 
-bash scripts/sratoolkit.sh -t linux
-bash scripts/sratoolkit.sh macos
-bash scripts/sratoolkit.sh windows
+bash scripts/prebuilds/sratoolkit.sh -t linux
+bash scripts/prebuilds/sratoolkit.sh macos
+bash scripts/prebuilds/sratoolkit.sh windows
 
-bash scripts/muscle.sh -t linux
-bash scripts/reseek.sh -t linux
-bash scripts/usearch.sh -t linux
+bash scripts/prebuilds/muscle.sh -t linux
+bash scripts/prebuilds/reseek.sh -t linux
+bash scripts/prebuilds/usearch.sh -t linux
 
-bash scripts/mosdepth.sh -t linux
+bash scripts/prebuilds/mosdepth.sh -t linux
 
-bash scripts/iqtree2.sh -t linux
-bash scripts/iqtree2.sh macos
-bash scripts/iqtree2.sh windows
+bash scripts/prebuilds/iqtree2.sh -t linux
+bash scripts/prebuilds/iqtree2.sh macos
+bash scripts/prebuilds/iqtree2.sh windows
 
-bash scripts/mash.sh -t linux
-bash scripts/mash.sh macos
+bash scripts/prebuilds/mash.sh -t linux
+bash scripts/prebuilds/mash.sh macos
 
-bash scripts/megahit.sh -t linux
+bash scripts/prebuilds/megahit.sh -t linux
 
-bash scripts/mmseqs.sh -t linux
-bash scripts/mmseqs.sh macos
+bash scripts/prebuilds/mmseqs.sh -t linux
+bash scripts/prebuilds/mmseqs.sh macos
 
-bash scripts/bowtie2.sh -t linux
-bash scripts/bowtie2.sh macos
+bash scripts/prebuilds/bowtie2.sh -t linux
+bash scripts/prebuilds/bowtie2.sh macos
 
-bash scripts/raxml-ng.sh -t linux
-bash scripts/raxml-ng.sh macos
+bash scripts/prebuilds/raxml-ng.sh -t linux
+bash scripts/prebuilds/raxml-ng.sh macos
 
-bash scripts/freebayes.sh -t linux
+bash scripts/prebuilds/freebayes.sh -t linux
 
 # java
-bash scripts/fastqc.sh linux
-bash scripts/fastqc.sh macos
+bash scripts/prebuilds/fastqc.sh linux
+bash scripts/prebuilds/fastqc.sh macos
 
-bash scripts/picard.sh linux
-bash scripts/picard.sh macos
+bash scripts/prebuilds/picard.sh linux
+bash scripts/prebuilds/picard.sh macos
 
 ```
