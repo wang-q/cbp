@@ -25,10 +25,13 @@ $OS_TYPE = "windows"
 
 # Install the package using vcpkg and clean after build
 vcpkg install --debug --recurse `
-    --clean-buildtrees-after-build --clean-packages-after-build `
+    --clean-buildtrees-after-build `
     --overlay-ports=ports `
     --overlay-triplets="$(cbp prefix triplets)" `
-    --x-install-root="$(cbp prefix cache)" `
+    --x-buildtrees-root=vcpkg/buildtrees `
+    --downloads-root=vcpkg/downloads `
+    --x-install-root=vcpkg/installed `
+    --x-packages-root=vcpkg/packages `
     "${PROJ}:${TRIPLET}"
 if ($LASTEXITCODE -ne 0) { throw "vcpkg install failed" }
 
@@ -55,12 +58,12 @@ if ($args.Count -gt 2) {
 cbp collect $LIST_FILE $COPY_ARGS
 if ($LASTEXITCODE -ne 0) { throw "cbp collect failed" }
 
-# Remove the package from cache
-vcpkg remove --recurse `
-    --overlay-ports=ports `
-    --overlay-triplets="$(cbp prefix triplets)" `
-    --x-install-root="$(cbp prefix cache)" `
-    "${BASE_PROJ}:${TRIPLET}"
+# # Remove the package from cache
+# vcpkg remove --recurse `
+#     --overlay-ports=ports `
+#     --overlay-triplets="$(cbp prefix triplets)" `
+#     --x-install-root="$(cbp prefix cache)" `
+#     "${BASE_PROJ}:${TRIPLET}"
 
 # Move archive to the binaries directory
 Move-Item -Force "${BASE_PROJ}.${OS_TYPE}.tar.gz" binaries/

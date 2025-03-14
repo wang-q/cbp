@@ -110,6 +110,8 @@ Get-Command pigz
 
 .\scripts\vcpkg.ps1 multiz
 
+# .\scripts\vcpkg.ps1 aria2
+
 .\scripts\vcpkg.ps1 trf
 
 ```
