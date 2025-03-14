@@ -223,6 +223,10 @@ singularity run \
     --x-packages-root=vcpkg/packages \
     gnuplot:x64-linux-release
 
+cbp collect vcpkg/installed/vcpkg/info/gnuplot_*_x64-linux-release.list
+
+mv gnuplot.linux.tar.gz binaries/
+
 # bash scripts/FastTree.sh
 
 ```
