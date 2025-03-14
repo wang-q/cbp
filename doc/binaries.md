@@ -210,6 +210,19 @@ cbp collect --ignore tools/graphviz/graphviz/libgvplugin \
 
 mv graphviz.linux.tar.gz binaries/
 
+# gnuplot
+singularity run \
+    --env CFLAGS="-D_GNU_SOURCE -std=gnu99 -Wno-missing-prototypes -Wno-strict-prototypes" \
+    vcpkg/vcpkg-centos.sif \
+/opt/vcpkg/vcpkg install --debug --recurse \
+    --clean-buildtrees-after-build \
+    --overlay-ports=ports \
+    --x-buildtrees-root=vcpkg/buildtrees \
+    --downloads-root=vcpkg/downloads \
+    --x-install-root=vcpkg/installed \
+    --x-packages-root=vcpkg/packages \
+    gnuplot:x64-linux-release
+
 # bash scripts/FastTree.sh
 
 ```

@@ -83,6 +83,8 @@ curl -L https://github.com/aria2/aria2/releases/download/release-1.37.0/aria2-1.
     tar -czf sources/aria2.tar.gz aria2/ &&
     rm -rf aria2
 
+curl -o sources/gnuplot.tar.gz -L https://downloads.sourceforge.net/project/gnuplot/gnuplot/6.0.2/gnuplot-6.0.2.tar.gz
+
 # cmake
 curl -o sources/diamond.tar.gz -L https://github.com/bbuchfink/diamond/archive/refs/tags/v2.1.11.tar.gz
 
