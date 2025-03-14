@@ -185,21 +185,9 @@ singularity run \
 
 cbp collect vcpkg/installed/vcpkg/info/gmp_*_x64-linux-release.list
 
-singularity run \
-    vcpkg/vcpkg-centos.sif \
-/opt/vcpkg/vcpkg install --debug --recurse \
-    --clean-buildtrees-after-build \
-    --overlay-ports=ports \
-    --x-buildtrees-root=vcpkg/buildtrees \
-    --downloads-root=vcpkg/downloads \
-    --x-install-root=vcpkg/installed \
-    --x-packages-root=vcpkg/packages \
-    aria2:x64-linux-release
-
 # glib -Wno-missing-prototypes -Wno-strict-prototypes
 # fontconfig[tools] -std=gnu99
 # pkgconf -D_GNU_SOURCE
-
 singularity run \
     --env CFLAGS="-D_GNU_SOURCE -std=gnu99 -Wno-missing-prototypes -Wno-strict-prototypes" \
     vcpkg/vcpkg-centos.sif \
