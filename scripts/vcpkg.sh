@@ -65,7 +65,10 @@ vcpkg install --debug --recurse \
     --clean-buildtrees-after-build --clean-packages-after-build \
     --overlay-ports=ports \
     --overlay-triplets="$(cbp prefix triplets)" \
-    --x-install-root="$(cbp prefix cache)" \
+    --x-buildtrees-root=vcpkg/buildtrees \
+    --downloads-root=vcpkg/downloads \
+    --x-install-root=vcpkg/installed \
+    --x-packages-root=vcpkg/packages \
     "${PROJ}:${TRIPLET}" || exit 1
 
 # Find the package list file
@@ -98,7 +101,10 @@ fi
 vcpkg remove --recurse \
     --overlay-ports=ports \
     --overlay-triplets="$(cbp prefix triplets)" \
-    --x-install-root="$(cbp prefix cache)" \
+    --x-buildtrees-root=vcpkg/buildtrees \
+    --downloads-root=vcpkg/downloads \
+    --x-install-root=vcpkg/installed \
+    --x-packages-root=vcpkg/packages \
     "${BASE_PROJ}:${TRIPLET}"
 
 # Move archive to the binaries directory

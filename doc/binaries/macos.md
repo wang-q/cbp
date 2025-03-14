@@ -19,11 +19,11 @@ mv binaries/readline-unix.macos.tar.gz binaries/readline.macos.tar.gz
 bash scripts/vcpkg.sh argtable2
 bash scripts/vcpkg.sh expat
 
+bash scripts/vcpkg.sh "libxml2[core,iconv,lzma,zlib]"
+
 bash scripts/vcpkg.sh gsl
 # bash scripts/vcpkg.sh gmp
 bash scripts/vcpkg.sh simde
-
-bash scripts/vcpkg.sh "libxml2[core,iconv,lzma,zlib]"
 
 ```
 
@@ -38,11 +38,6 @@ bash scripts/vcpkg.sh "openssl[core,tools]" arm64-osx-release
 bash scripts/vcpkg.sh "curl[core,tool,ssl,http2,websockets]" arm64-osx-release
 
 bash scripts/vcpkg.sh pkgconf arm64-macos-zig pkgconf=pkg-config
-
-# bash scripts/vcpkg.sh cpuinfo[core,tools]
-
-# bash scripts/vcpkg.sh graphviz
-# gdal
 
 ```
 
@@ -67,11 +62,25 @@ bash scripts/vcpkg.sh fastga
 bash scripts/vcpkg.sh multiz
 
 # ./configure
-bash scripts/vcpkg.sh trf
 bash scripts/vcpkg.sh datamash
+# bash scripts/vcpkg.sh pv arm64-osx-release
+
+bash scripts/vcpkg.sh trf
 
 # cmake
 # bash scripts/vcpkg.sh diamond # need sse3
+
+```
+
+## Libraries
+
+```bash
+# ./configure
+bash scripts/gdbm.sh
+
+zvm use 0.13.0
+cbp local libdeflate
+bash scripts/htslib.sh # --with-libdeflate
 
 ```
 
@@ -109,11 +118,8 @@ bash scripts/hmmer.sh
 cbp local argtable2
 # bash scripts/clustalo.sh
 
-cbp local libdeflate
-bash scripts/htslib.sh # --with-libdeflate
-
 # bundled htslib
-# bash scripts/samtools.sh
+bash scripts/samtools.sh
 # bash scripts/bcftools.sh
 
 ```
@@ -121,8 +127,9 @@ bash scripts/htslib.sh # --with-libdeflate
 ## `cmake`
 
 ```bash
+zvm use 0.13.0
 # bash scripts/bifrost.sh
-# bash scripts/spoa.sh
+bash scripts/spoa.sh
 
 # bash scripts/newick-utils.sh # bison, flex
 
@@ -137,9 +144,16 @@ bash scripts/htslib.sh # --with-libdeflate
 
 ## Projects requiring specific build environments
 
-* Built on a CentOS 7 VM using system libgomp
-
 ```bash
 # bash scripts/FastTree.sh
+
+# fatal error: 'iostream' file not found
+vcpkg install --debug --recurse \
+    --clean-buildtrees-after-build \
+    --x-buildtrees-root=vcpkg/buildtrees \
+    --downloads-root=vcpkg/downloads \
+    --x-install-root=vcpkg/installed \
+    --x-packages-root=vcpkg/packages \
+    libgd
 
 ```
