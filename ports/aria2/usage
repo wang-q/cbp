@@ -1,0 +1,3 @@
+The package aria2 provides the following executables:
+
+    aria2c - download utility with resuming and segmented downloading
