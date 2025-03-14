@@ -107,8 +107,9 @@ bash scripts/vcpkg.sh diamond
 # ./configure
 bash scripts/gdbm.sh
 
+zvm use 0.13.0
 cbp local libdeflate
-# bash scripts/htslib.sh # --with-libdeflate
+bash scripts/htslib.sh # --with-libdeflate
 
 ```
 
@@ -147,7 +148,7 @@ cbp local argtable2
 bash scripts/clustalo.sh
 
 # bundled htslib
-# bash scripts/samtools.sh
+bash scripts/samtools.sh
 bash scripts/bcftools.sh
 
 ```
@@ -155,7 +156,8 @@ bash scripts/bcftools.sh
 ## `cmake`
 
 ```bash
-# bash scripts/bifrost.sh
+zvm use 0.13.0
+bash scripts/bifrost.sh
 bash scripts/spoa.sh
 
 bash scripts/newick-utils.sh # bison, flex

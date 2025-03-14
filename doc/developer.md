@@ -49,12 +49,20 @@ mkdir -p $HOME/share
 cd $HOME/share
 
 # linux
+# zvm
+curl https://raw.githubusercontent.com/tristanisham/zvm/master/install.sh | bash
+source /home/wangq/.bashrc
+
 # need 0.14 for pthread on x86_64-windows-gnu
 # https://github.com/ziglang/zig/issues/10989
-curl -L https://ziglang.org/builds/zig-linux-x86_64-0.15.0-dev.45+24db007cd.tar.xz |
-    tar xvJ &&
-    mv zig-* zig
-ln -sf $HOME/share/zig/zig $HOME/bin/zig
+zvm install 0.13.0
+zvm install 0.14.0
+
+# # zigup
+# curl -L https://github.com/marler8997/zigup/releases/download/v2025_01_02/zigup-x86_64-linux.tar.gz |
+#     tar xz &&
+#     mv zigup ~/bin/
+# zigup fetch 0.14.0
 
 # macos
 curl -L https://ziglang.org/download/0.14.0/zig-macos-aarch64-0.14.0.tar.xz > zig.tar.xz

@@ -221,8 +221,8 @@ fix_shebang() {
     if head -n1 "$file" | grep -q '^#!'; then
         perl -pi -e '
             if ($. == 1) {
-                s{^#!.*perl}{#!/usr/bin/env perl} and print STDERR "==> Fixed perl shebang in '.$file.'\n";
-                s{^#!.*python}{#!/usr/bin/env python3} and print STDERR "==> Fixed python shebang in '.$file.'\n";
+                s{^#!.*perl}{#!/usr/bin/env perl} and print STDERR "==> Fixed perl shebang in '$file'\n";
+                s{^#!.*python}{#!/usr/bin/env python3} and print STDERR "==> Fixed python shebang in '$file'\n";
             }
         ' "$file"
     fi
