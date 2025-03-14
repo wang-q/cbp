@@ -9,25 +9,6 @@ This file contains build instructions for each component. Note that:
 ## `vcpkg` libraries
 
 ```bash
-# List all available features for a package
-vcpkg search bzip2
-# To remove a vcpkg package
-vcpkg install --debug --recurse \
-    --clean-buildtrees-after-build --clean-packages-after-build \
-    --overlay-ports=ports \
-    --overlay-triplets="$(cbp prefix triplets)" \
-    --x-install-root="$(cbp prefix cache)" \
-    zlib:x64-linux-zig
-vcpkg remove --debug --recurse \
-    --overlay-ports=ports \
-    --overlay-triplets="$(cbp prefix triplets)" \
-    --x-install-root="$(cbp prefix cache)" \
-    zlib:x64-linux-zig
-# Install zlib with custom target
-# vcpkg install zlib:x64-linux-zig \
-#     --cmake-args="-DCMAKE_C_COMPILER_TARGET=aarch64-macos-none" \
-#     --cmake-args="-DCMAKE_CXX_COMPILER_TARGET=aarch64-macos-none"
-
 bash scripts/vcpkg.sh zlib
 bash scripts/vcpkg.sh "bzip2[tool]"
 bash scripts/vcpkg.sh libdeflate
@@ -62,11 +43,6 @@ bash scripts/vcpkg.sh "openssl[core,tools]"
 bash scripts/vcpkg.sh "curl[core,tool,ssl,http2,websockets]"
 
 bash scripts/vcpkg.sh pkgconf x64-linux-zig pkgconf=pkg-config
-
-# syscall
-# bash scripts/vcpkg.sh cpuinfo[core,tools]
-
-# gdal
 
 ```
 

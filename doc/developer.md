@@ -48,10 +48,10 @@ internal workings.
 mkdir -p $HOME/share
 cd $HOME/share
 
-# linux
+# linux and macOS
 # zvm
 curl https://raw.githubusercontent.com/tristanisham/zvm/master/install.sh | bash
-source /home/wangq/.bashrc
+source $HOME/.bashrc
 
 # need 0.14 for pthread on x86_64-windows-gnu
 # https://github.com/ziglang/zig/issues/10989
@@ -63,12 +63,6 @@ zvm install 0.14.0
 #     tar xz &&
 #     mv zigup ~/bin/
 # zigup fetch 0.14.0
-
-# macos
-curl -L https://ziglang.org/download/0.14.0/zig-macos-aarch64-0.14.0.tar.xz > zig.tar.xz
-tar xvfJ zig.tar.xz
-mv zig-macos-aarch64* zig
-ln -sf $HOME/share/zig/zig $HOME/bin/zig
 
 # Verify Zig target
 zig targets | jq .libc
@@ -115,6 +109,32 @@ cd vcpkg
 # Set environment variables
 export VCPKG_ROOT=$HOME/share/vcpkg
 export PATH=$VCPKG_ROOT:$PATH
+
+# List all available features for a package
+vcpkg search bzip2
+# To remove a vcpkg package
+vcpkg install --debug --recurse \
+    --clean-buildtrees-after-build --clean-packages-after-build \
+    --overlay-ports=ports \
+    --overlay-triplets="$(cbp prefix triplets)" \
+    --x-buildtrees-root=vcpkg/buildtrees \
+    --downloads-root=vcpkg/downloads \
+    --x-install-root=vcpkg/installed \
+    --x-packages-root=vcpkg/packages \
+    zlib:x64-linux-zig
+
+vcpkg remove --debug --recurse \
+    --overlay-ports=ports \
+    --overlay-triplets="$(cbp prefix triplets)" \
+    --x-buildtrees-root=vcpkg/buildtrees \
+    --downloads-root=vcpkg/downloads \
+    --x-install-root=vcpkg/installed \
+    --x-packages-root=vcpkg/packages \
+    zlib:x64-linux-zig
+# Install zlib with custom target
+# vcpkg install zlib:x64-linux-zig \
+#     --cmake-args="-DCMAKE_C_COMPILER_TARGET=aarch64-macos-none" \
+#     --cmake-args="-DCMAKE_CXX_COMPILER_TARGET=aarch64-macos-none"
 
 ```
 
