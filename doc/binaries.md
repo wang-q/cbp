@@ -27,7 +27,6 @@ CFLAGS="-Wno-language-extension-token" bash scripts/vcpkg.sh libxcrypt
 bash scripts/vcpkg.sh "libxml2[core,iconv,lzma,zlib]"
 
 bash scripts/vcpkg.sh gsl
-# bash scripts/vcpkg.sh gmp
 bash scripts/vcpkg.sh simde
 
 ```
@@ -171,6 +170,18 @@ singularity run \
     lapack-reference[core,cblas]:x64-linux-release
 
 cbp collect vcpkg/installed/vcpkg/info/lapack-reference_*_x64-linux-release.list
+
+singularity run \
+    vcpkg/vcpkg-centos.sif \
+/opt/vcpkg/vcpkg install --debug --recurse \
+    --clean-buildtrees-after-build \
+    --x-buildtrees-root=vcpkg/buildtrees \
+    --downloads-root=vcpkg/downloads \
+    --x-install-root=vcpkg/installed \
+    --x-packages-root=vcpkg/packages \
+    gmp:x64-linux-release
+
+cbp collect vcpkg/installed/vcpkg/info/gmp_*_x64-linux-release.list
 
 # glib -Wno-missing-prototypes -Wno-strict-prototypes
 # fontconfig[tools] -std=gnu99
