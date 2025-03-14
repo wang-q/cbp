@@ -73,7 +73,7 @@ vcpkg install --debug --recurse \
 
 # Find the package list file
 # Create archive from the package list
-LIST_FILE=$(find vcpkg/installed/vcpkg/info" -name "${BASE_PROJ}_*_${TRIPLET}.list" -type f | head -n 1)
+LIST_FILE=$(find vcpkg/installed/vcpkg/info -name "${BASE_PROJ}_*_${TRIPLET}.list" -type f | head -n 1)
 
 if [ -z "${LIST_FILE}" ]; then
     echo "Error: Package list file not found for ${BASE_PROJ}:${TRIPLET}"
