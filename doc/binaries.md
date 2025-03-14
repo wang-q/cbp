@@ -43,6 +43,10 @@ bash scripts/vcpkg.sh "curl[core,tool,ssl,http2,websockets]"
 
 bash scripts/vcpkg.sh pkgconf x64-linux-zig pkgconf=pkg-config
 
+# zvm use 0.14.0
+# CFLAGS="-Wno-date-time" \
+#     bash scripts/vcpkg.sh python3
+
 ```
 
 ## My ports
@@ -207,7 +211,6 @@ singularity run vcpkg/vcpkg-centos.sif \
 
 cbp collect --ignore tools/graphviz/graphviz/libgvplugin \
     vcpkg/installed/vcpkg/info/graphviz_*_x64-linux-release.list
-
 mv graphviz.linux.tar.gz binaries/
 
 # gnuplot
@@ -224,8 +227,22 @@ singularity run \
     gnuplot:x64-linux-release
 
 cbp collect vcpkg/installed/vcpkg/info/gnuplot_*_x64-linux-release.list
-
 mv gnuplot.linux.tar.gz binaries/
+
+# python3
+singularity run \
+    vcpkg/vcpkg-centos.sif \
+/opt/vcpkg/vcpkg install --debug --recurse \
+    --clean-buildtrees-after-build \
+    --overlay-ports=ports \
+    --x-buildtrees-root=vcpkg/buildtrees \
+    --downloads-root=vcpkg/downloads \
+    --x-install-root=vcpkg/installed \
+    --x-packages-root=vcpkg/packages \
+    python3[core,extensions]:x64-linux-release
+
+cbp collect vcpkg/installed/vcpkg/info/python3_*_x64-linux-release.list
+mv python3.linux.tar.gz binaries/python3.11.linux.tar.gz
 
 # bash scripts/FastTree.sh
 

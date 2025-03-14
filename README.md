@@ -144,6 +144,23 @@ Current supported packages can be viewed using `cbp avail`.
 
 Or visit the [Release page](https://github.com/wang-q/cbp/releases/tag/Binaries).
 
+## Python 3
+
+`cbp` provides a minimal Python installation. To use Python effectively:
+
+```bash
+# Install Python 3
+cbp install python3.11
+
+# Set up pip
+python -m ensurepip --upgrade
+python3 -m pip install --upgrade pip setuptools wheel pysocks
+
+# Install Python packages
+pip3 install numpy matplotlib
+
+```
+
 ## Architecture
 
 1. Package Management
