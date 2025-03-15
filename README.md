@@ -153,7 +153,7 @@ Or visit the [Release page](https://github.com/wang-q/cbp/releases/tag/Binaries)
 cbp install python3.11
 
 # Set up pip
-python -m ensurepip --upgrade
+python3 -m ensurepip --upgrade
 python3 -m pip install --upgrade pip setuptools wheel pysocks
 
 # Install Python packages
