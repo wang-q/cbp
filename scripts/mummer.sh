@@ -15,6 +15,14 @@ LDFLAGS="-static" \
     --disable-dependency-tracking \
     --disable-silent-rules \
     || exit 1
+
+# Remove -bind_at_load flag from libtool files on macOS
+if [[ "$OS_TYPE" == "macos" ]]; then
+    # rg 'bind_at_load'
+    sed -i.bak 's/$wl-bind_at_load//' libtool
+    find . -name ltmain.sh -exec sed -i.bak 's/$wl-bind_at_load//' {} \;
+fi
+
 make -j 8 || exit 1
 make install || exit 1
 

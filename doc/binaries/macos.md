@@ -118,7 +118,7 @@ bash scripts/aster.sh
 ```bash
 bash scripts/hmmer.sh
 # bash scripts/hmmer2.sh
-# bash scripts/mummer.sh
+bash scripts/mummer.sh
 
 zvm use 0.13.0
 cbp local argtable2
@@ -128,6 +128,8 @@ bash scripts/clustalo.sh
 zvm use 0.13.0
 bash scripts/samtools.sh
 bash scripts/bcftools.sh
+
+bash scripts/mcl.sh
 
 ```
 

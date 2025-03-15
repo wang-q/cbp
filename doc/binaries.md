@@ -244,6 +244,6 @@ singularity run \
 cbp collect vcpkg/installed/vcpkg/info/python3_*_x64-linux-release.list
 mv python3.linux.tar.gz binaries/python3.11.linux.tar.gz
 
-# bash scripts/FastTree.sh
+bash scripts/fasttree.sh
 
 ```
