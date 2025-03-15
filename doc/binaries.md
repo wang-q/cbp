@@ -21,10 +21,9 @@ bash scripts/vcpkg.sh readline
 
 bash scripts/vcpkg.sh argtable2
 bash scripts/vcpkg.sh expat
+bash scripts/vcpkg.sh "libxml2[core,iconv,lzma,zlib]"
 
 CFLAGS="-Wno-language-extension-token" bash scripts/vcpkg.sh libxcrypt
-
-bash scripts/vcpkg.sh "libxml2[core,iconv,lzma,zlib]"
 
 bash scripts/vcpkg.sh gsl
 bash scripts/vcpkg.sh simde
@@ -43,6 +42,7 @@ bash scripts/vcpkg.sh "curl[core,tool,ssl,http2,websockets]"
 
 bash scripts/vcpkg.sh pkgconf x64-linux-zig pkgconf=pkg-config
 
+# static python can't load shared libraries
 # zvm use 0.14.0
 # CFLAGS="-Wno-date-time" \
 #     bash scripts/vcpkg.sh python3

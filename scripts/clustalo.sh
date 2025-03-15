@@ -9,21 +9,29 @@ extract_source
 # ./configure --help
 
 # Build mummer with the specified target architecture
-if [ "$OS_TYPE" == "windows" ]; then
-    CC="gcc"
-    CXX="g++"
-else
-    CC="zig cc -target ${TARGET_ARCH}"
-    CXX="zig c++ -target ${TARGET_ARCH}"
-fi
-
-CFLAGS="-I${CBP_INCLUDE}" \
-CPPFLAGS="-I${CBP_INCLUDE}" \
-LDFLAGS="-L${CBP_LIB} -static -largtable2" \
+CC="zig cc -target ${TARGET_ARCH}" \
+CXX="zig c++ -target ${TARGET_ARCH}" \
+AR="zig ar" \
+RANLIB="zig ranlib" \
+CFLAGS="-I${CBP_INCLUDE} -Wno-deprecated-declarations -Wno-date-time" \
+CPPFLAGS="-I${CBP_INCLUDE} -Wno-deprecated-declarations -Wno-date-time" \
+CXXFLAGS="-I${CBP_INCLUDE} -Wno-deprecated-declarations -Wno-date-time" \
+LDFLAGS="-L${CBP_LIB}" \
+LIBS="-largtable2" \
     ./configure \
     --prefix="${TEMP_DIR}/collect" \
     --disable-dependency-tracking \
+    --disable-shared \
+    --enable-static \
     || exit 1
+
+# Remove -bind_at_load flag from libtool files on macOS
+if [[ "$OS_TYPE" == "macos" ]]; then
+    # rg 'bind_at_load'
+    sed -i.bak 's/${wl}-bind_at_load//' libtool
+    find . -name ltmain.sh -exec sed -i.bak 's/${wl}-bind_at_load//' {} \;
+fi
+
 make || exit 1
 make install || exit 1
 

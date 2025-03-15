@@ -18,8 +18,9 @@ mv binaries/readline-unix.macos.tar.gz binaries/readline.macos.tar.gz
 
 bash scripts/vcpkg.sh argtable2
 bash scripts/vcpkg.sh expat
-
 bash scripts/vcpkg.sh "libxml2[core,iconv,lzma,zlib]"
+
+# macOS has libxcrypt
 
 bash scripts/vcpkg.sh gsl
 # bash scripts/vcpkg.sh gmp
@@ -38,6 +39,9 @@ bash scripts/vcpkg.sh "openssl[core,tools]" arm64-osx-release
 bash scripts/vcpkg.sh "curl[core,tool,ssl,http2,websockets]" arm64-osx-release
 
 bash scripts/vcpkg.sh pkgconf arm64-macos-zig pkgconf=pkg-config
+
+bash scripts/vcpkg.sh python3 arm64-osx-release
+mv binaries/python3.macos.tar.gz binaries/python3.11.macos.tar.gz
 
 ```
 
@@ -116,12 +120,14 @@ bash scripts/hmmer.sh
 # bash scripts/hmmer2.sh
 # bash scripts/mummer.sh
 
+zvm use 0.13.0
 cbp local argtable2
-# bash scripts/clustalo.sh
+bash scripts/clustalo.sh
 
 # bundled htslib
+zvm use 0.13.0
 bash scripts/samtools.sh
-# bash scripts/bcftools.sh
+bash scripts/bcftools.sh
 
 ```
 
