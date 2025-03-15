@@ -43,6 +43,8 @@ bash scripts/vcpkg.sh pkgconf arm64-macos-zig pkgconf=pkg-config
 bash scripts/vcpkg.sh python3 arm64-osx-release
 mv binaries/python3.macos.tar.gz binaries/python3.11.macos.tar.gz
 
+# bash scripts/vcpkg.sh gnuplot
+
 ```
 
 ## My ports
