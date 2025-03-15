@@ -1,6 +1,6 @@
 use clap::{Arg, ArgAction, Command};
 use cmd_lib::*;
-use std::io::Read;
+use std::io::{Read, Seek, SeekFrom};
 
 pub fn make_subcommand() -> Command {
     Command::new("collect")
@@ -183,11 +183,34 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
 
 fn is_windows_executable(path: &std::path::Path) -> std::io::Result<bool> {
     let mut file = std::fs::File::open(path)?;
-    let mut buffer = [0u8; 2];
+    let mut buffer = [0u8; 0x40];
 
     if file.read_exact(&mut buffer).is_ok() {
-        // DOS MZ header magic number
-        Ok(buffer == [0x4D, 0x5A])
+        // Check DOS MZ signature (0x4D5A)
+        // Returns false if not a PE file
+        if buffer[0..2] != [0x4D, 0x5A] {
+            return Ok(false);
+        }
+
+        // Get PE header offset from DOS header at 0x3C
+        // and read PE header (24 bytes)
+        let pe_offset = u32::from_le_bytes(buffer[0x3C..0x40].try_into().unwrap()) as u64;
+        let mut pe_header = [0u8; 24];
+        file.seek(SeekFrom::Start(pe_offset))?;
+        if file.read_exact(&mut pe_header).is_err() {
+            return Ok(false);
+        }
+
+        // Verify PE signature ("PE\0\0" = 0x50450000)
+        if pe_header[0..4] != [0x50, 0x45, 0x00, 0x00] {
+            return Ok(false);
+        }
+
+        // Get characteristics from PE header (offset 22)
+        // IMAGE_FILE_DLL = 0x2000
+        // Returns true if not a DLL
+        let characteristics = u16::from_le_bytes(pe_header[22..24].try_into().unwrap());
+        Ok((characteristics & 0x2000) == 0)
     } else {
         Ok(false)
     }
