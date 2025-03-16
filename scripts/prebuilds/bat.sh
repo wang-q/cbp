@@ -31,11 +31,11 @@ fi
 
 # Collect binaries
 if [ "$OS_TYPE" == "linux" ]; then
-    collect_bins bat
+    collect_bins bat-*/bat
 elif [ "$OS_TYPE" == "macos" ]; then
-    collect_bins bat
+    collect_bins bat-*/bat
 elif [ "$OS_TYPE" == "windows" ]; then
-    collect_bins bat.exe
+    collect_bins bat-*/bat.exe
 fi
 
 # Run test if requested
