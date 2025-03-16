@@ -41,7 +41,7 @@ fi
 # Run test if requested
 if [ "${RUN_TEST}" = "test" ]; then
     test_bin() {
-        local output=$("collect/bin/uv" --version)
+        local output=$("collect/bin/bat" --version)
         echo "${output}"
         [ -n "${output}" ] && echo "PASSED"
     }
