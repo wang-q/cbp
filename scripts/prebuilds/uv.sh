@@ -30,10 +30,12 @@ else
 fi
 
 # Collect binaries
-if [ "$OS_TYPE" == "windows" ]; then
+if [ "$OS_TYPE" == "linux" ]; then
+    collect_bins uv-x86_64-unknown-linux-musl/uv uv-x86_64-unknown-linux-musl/uvx
+elif [ "$OS_TYPE" == "macos" ]; then
+    collect_bins uv-aarch64-apple-darwin/uv uv-aarch64-apple-darwin/uvx
+elif [ "$OS_TYPE" == "windows" ]; then
     collect_bins uv.exe uvx.exe
-else
-    collect_bins uv uvx
 fi
 
 # Run test if requested
