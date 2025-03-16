@@ -56,7 +56,7 @@ vcpkg remove --x-install-root="$( cbp prefix cache )" zlib:x64-windows-zig
 .\scripts\vcpkg.ps1 zlib x64-windows-zig libzlib.a=libz.a
 .\scripts\vcpkg.ps1 "bzip2[tool]"
 .\scripts\vcpkg.ps1 libdeflate
-# .\scripts\vcpkg.ps1 "liblzma[tools]"
+.\scripts\vcpkg.ps1 "liblzma[tools]" x64-mingw-static
 
 cbp local zlib bzip2 libdeflate liblzma
 
@@ -68,6 +68,7 @@ cbp local zlib bzip2 libdeflate liblzma
 .\scripts\vcpkg.ps1 expat
 
 .\scripts\vcpkg.ps1 gsl
+.\scripts\vcpkg.ps1 simde
 
 .\scripts\vcpkg.ps1 libpng
 .\scripts\vcpkg.ps1 openjpeg
@@ -93,7 +94,14 @@ ABI compatibility is not a concern.
 # .\scripts\vcpkg.ps1 gdal x64-windows-static-release
 
 # !static
-.\scripts\vcpkg.ps1 graphviz x64-windows-release
+.\scripts\vcpkg.ps1 graphviz x64-windows-static-release
+
+# .\scripts\vcpkg.ps1 gnuplot x64-windows-static-release
+
+# Get-Content "ports\python3\patches\001-unify-site-base.patch" |
+#     patch -p1 "C:\Users\wangq\vcpkg\ports\python3\vcpkg-port-config.cmake"
+
+# .\scripts\vcpkg.ps1 python3 x64-windows-release
 
 ```
 
