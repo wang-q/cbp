@@ -39,6 +39,10 @@ bash scripts/prebuilds/tectonic.sh windows
 
 #bash scripts/prebuilds/pup.sh
 
+bash scripts/prebuilds/uv.sh -t linux
+bash scripts/prebuilds/uv.sh macos
+bash scripts/prebuilds/uv.sh windows
+
 ```
 
 ## Bioinformatics tools
