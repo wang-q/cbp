@@ -150,14 +150,14 @@ Or visit the [Release page](https://github.com/wang-q/cbp/releases/tag/Binaries)
 
 ```bash
 # Install Python 3
-cbp install python3.11
+cbp install python3.11 uv
 
 # Set up pip
 python3 -m ensurepip --upgrade
-python3 -m pip install --upgrade pip setuptools wheel pysocks
+python3 -m pip install --upgrade pip setuptools wheel
 
 # Install Python packages
-pip3 install numpy matplotlib
+uv pip install --system numpy matplotlib
 
 ```
 
