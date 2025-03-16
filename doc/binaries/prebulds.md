@@ -43,6 +43,10 @@ bash scripts/prebuilds/uv.sh -t linux
 bash scripts/prebuilds/uv.sh macos
 bash scripts/prebuilds/uv.sh windows
 
+bash scripts/prebuilds/bat.sh -t linux
+bash scripts/prebuilds/bat.sh macos
+bash scripts/prebuilds/bat.sh windows
+
 ```
 
 ## Bioinformatics tools

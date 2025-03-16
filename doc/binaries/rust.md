@@ -42,7 +42,6 @@ bash scripts/rust.sh eza native
 bash scripts/rust.sh fd native
 bash scripts/rust.sh dust native
 bash scripts/rust.sh ripgrep native
-bash scripts/rust.sh bat native
 bash scripts/rust.sh hyperfine native
 bash scripts/rust.sh tealdeer native
 bash scripts/rust.sh tokei native
@@ -68,7 +67,6 @@ winget install 7zip.7zip
 .\scripts\rust.ps1 fd
 .\scripts\rust.ps1 dust
 .\scripts\rust.ps1 ripgrep
-.\scripts\rust.ps1 bat
 .\scripts\rust.ps1 hyperfine
 .\scripts\rust.ps1 tealdeer
 .\scripts\rust.ps1 tokei
