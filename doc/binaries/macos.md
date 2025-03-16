@@ -157,7 +157,7 @@ bash scripts/spoa.sh
 ## Projects requiring specific build environments
 
 ```bash
-# bash scripts/FastTree.sh
+bash scripts/fasttree.sh
 
 # fatal error: 'iostream' file not found
 vcpkg install --debug --recurse \
