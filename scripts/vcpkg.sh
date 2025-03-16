@@ -61,7 +61,7 @@ else
 fi
 
 # Install the package using vcpkg
-vcpkg install --debug --recurse \
+vcpkg install --debug --recurse --allow-unsupported \
     --clean-buildtrees-after-build \
     --overlay-ports=ports \
     --overlay-triplets="$(cbp prefix triplets)" \
