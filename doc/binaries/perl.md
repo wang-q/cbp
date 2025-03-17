@@ -3,10 +3,12 @@
 Build on a CentOS 7 VM
 
 ```bash
+# zvm
 curl https://raw.githubusercontent.com/tristanisham/zvm/master/install.sh | bash
 source $HOME/.bashrc
 zvm install 0.13.0
 
+# cbp
 curl -LO https://github.com/wang-q/cbp/releases/latest/download/cbp.linux
 chmod +x cbp.linux
 ./cbp.linux init --dev
@@ -15,10 +17,12 @@ source ~/.bashrc
 
 cbp install zlib bzip2 libxcrypt
 
+# system perl
 curl -L https://cpanmin.us | perl - --sudo App::cpanminus
 
 cpanm --sudo IPC::Run3 Devel::PatchPerl Path::Tiny
 
+# build
 cd ~/Scripts/cbp
 
 curl -o sources/perl-5.34.3.tar.gz -L https://www.cpan.org/src/5.0/perl-5.34.3.tar.gz
