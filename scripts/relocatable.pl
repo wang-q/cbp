@@ -162,12 +162,30 @@ sub perl_build {
     my ($suffix) = $tarball =~ /\.(tar\.(?:gz|bz2|xz))$/;
     run [ "tar", $tar_option{$suffix}, $tarball, "-C", $tempdir ], $logfile;
 
-    my @Configure = (
-        "./Configure",         "-Dprefix=$prefix",
-        "-Duserelocatableinc", "-Dman1dir=none",
-        "-Dman3dir=none",      "-DDEBUGGING=-g",
-        "-des",
-    );
+    my @Configure = ( "./Configure", "-des", );
+
+    # Basic configuration
+    push @Configure,
+      (
+        "-Dprefix=$prefix", "-Duserelocatableinc",
+        "-Duselargefiles",  "-Dusethreads",
+        "-Dman1dir=none",   "-Dman3dir=none",
+        "-UDEBUGGING",
+      );
+
+    # Compiler configuration
+    push @Configure, qq(-Dcc=zig-cc);
+
+    my $cbp_include = `cbp prefix include`; chomp $cbp_include;
+    push @Configure, qq(-Accflags=-I${cbp_include});
+    push @Configure, qq(-Accflags=-Wno-macro-redefined);
+    push @Configure, qq(-Accflags=-Wno-compound-token-split-by-macro);
+
+    my $cbp_lib = `cbp prefix lib`; chomp $cbp_lib;
+    push @Configure, qq(-Aldflags=-L${cbp_lib});
+    my @libpth = ($cbp_lib);
+    push @Configure, "-Dlibpth=@libpth";
+
     if ( $^O eq "linux" ) {
 
         # ubuntu 18.04 does not have xlocale.h
@@ -175,24 +193,25 @@ sub perl_build {
         # see https://github.com/agracio/electron-edge-js/issues/16
         push @Configure, "-Ui_xlocale";
 
-   # RHEL8, Fedora28, CentOS8 does not have libnsl.so.1 by default; remove -lnsl
+        # RHEL8, Fedora28, CentOS8 does not have libnsl.so.1 by default
+        # remove -lnsl
         push @Configure, "-Dlibs=-lpthread -ldl -lm -lcrypt -lutil -lc";
 
- # RHEL9 removes libcrypt.so.1 by default; so we will link libcrypt.a statically
- # manually define d_crypt here
+        # RHEL9 removes libcrypt.so.1 by default; link libcrypt.a statically
+        # manually define d_crypt here
         push @Configure, "-Dd_crypt";
 
         # math.h in debian does not define _LIB_VERSION
         push @Configure, "-Ud_libm_lib_version";
 
-        my $arch   = (POSIX::uname)[4];
-        my @libpth = (
-            "/lib",                     "/lib/$arch-linux-gnu",
-            "/lib64",                   "/usr/lib",
-            "/usr/lib/$arch-linux-gnu", "/usr/lib64",
-            "/usr/local/lib",           "/usr/local/lib64",
-        );
-        push @Configure, "-Dlibpth=@libpth";
+        # my $arch   = (POSIX::uname)[4];
+        # my @libpth = (
+        #     "/lib",                     "/lib/$arch-linux-gnu",
+        #     "/lib64",                   "/usr/lib",
+        #     "/usr/lib/$arch-linux-gnu", "/usr/lib64",
+        #     "/usr/local/lib",           "/usr/local/lib64",
+        # );
+        # push @Configure, "-Dlibpth=@libpth";
     }
 
     chdir "$tempdir/perl-$perl_version" or die;
