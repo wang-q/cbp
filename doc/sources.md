@@ -149,6 +149,8 @@ curl -L https://github.com/chaoszhang/ASTER/archive/e8da7edf8adf4205cf5551630dc7
 ```bash
 curl -o sources/hmmer.tar.gz -L http://eddylab.org/software/hmmer/hmmer-3.4.tar.gz
 
+curl -o sources/easel.tar.gz -L https://github.com/EddyRivasLab/easel/archive/refs/tags/easel-0.49.tar.gz
+
 # hmmer2: rename package to avoid conflict with hmmer3
 curl -L http://eddylab.org/software/hmmer/2.4i/hmmer-2.4i.tar.gz |
     tar xvfz - &&
