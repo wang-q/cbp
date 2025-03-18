@@ -258,6 +258,8 @@ curl -o sources/dust.tar.gz -L https://github.com/bootandy/dust/archive/refs/tag
 
 curl -o sources/ripgrep.tar.gz -L https://github.com/BurntSushi/ripgrep/archive/refs/tags/14.1.1.tar.gz
 
+curl -o sources/skim.tar.gz -L https://github.com/skim-rs/skim/archive/refs/tags/v0.16.1.tar.gz
+
 curl -o sources/hyperfine.tar.gz -L https://github.com/sharkdp/hyperfine/archive/refs/tags/v1.19.0.tar.gz
 
 curl -o sources/tealdeer.tar.gz -L https://github.com/tealdeer-rs/tealdeer/archive/refs/tags/v1.7.1.tar.gz
