@@ -81,6 +81,9 @@ bash scripts/prebuilds/mmseqs.sh macos
 bash scripts/prebuilds/bowtie2.sh -t linux
 bash scripts/prebuilds/bowtie2.sh macos
 
+bash scripts/prebuilds/stringtie.sh -t linux
+bash scripts/prebuilds/stringtie.sh macos
+
 bash scripts/prebuilds/raxml-ng.sh -t linux
 bash scripts/prebuilds/raxml-ng.sh macos
 

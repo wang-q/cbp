@@ -120,6 +120,7 @@ bash scripts/aster.sh
 
 ```bash
 bash scripts/hmmer.sh
+bash scripts/easel.sh
 # bash scripts/hmmer2.sh
 bash scripts/mummer.sh
 
