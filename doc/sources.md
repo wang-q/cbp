@@ -184,6 +184,13 @@ curl -L https://github.com/samtools/bcftools/releases/download/1.21/bcftools-1.2
     tar -czf sources/bcftools.tar.gz bcftools-1.21/ &&
     rm -rf bcftools-1.21
 
+curl -L https://github.com/sanger-pathogens/snp-sites/archive/refs/tags/v2.5.1.tar.gz |
+    tar xvfz - &&
+    mv snp-sites-* snp-sites &&
+    rm -rf snp-sites/example_data/*.gz &&
+    tar -czf sources/snp-sites.tar.gz snp-sites/ &&
+    rm -rf snp-sites
+
 # mcl
 curl -L https://micans.org/mcl/src/cimfomfa-22-273.tar.gz |
     tar xz &&

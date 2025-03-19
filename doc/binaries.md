@@ -131,6 +131,7 @@ bash scripts/clustalo.sh
 bash scripts/samtools.sh
 bash scripts/bcftools.sh
 
+bash scripts/snp-sites.sh
 bash scripts/mcl.sh
 
 ```

@@ -133,6 +133,7 @@ zvm use 0.13.0
 bash scripts/samtools.sh
 bash scripts/bcftools.sh
 
+bash scripts/snp-sites.sh
 bash scripts/mcl.sh
 
 ```
