@@ -142,6 +142,12 @@ curl -L https://github.com/chaoszhang/ASTER/archive/e8da7edf8adf4205cf5551630dc7
     tar -czf sources/aster.tar.gz aster/ &&
     rm -rf aster
 
+curl -L https://github.com/hyattpd/Prodigal/archive/c1e2d361479cc1b18175ea79ebd8ff10411c46cb.tar.gz |
+    tar xvfz - &&
+    mv Prodigal-* prodigal &&
+    tar -czf sources/prodigal.tar.gz prodigal/ &&
+    rm -rf prodigal
+
 ```
 
 ## `./configure`

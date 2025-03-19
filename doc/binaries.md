@@ -114,6 +114,8 @@ bash scripts/fastk.sh
 bash scripts/paml.sh
 bash scripts/aster.sh
 
+bash scripts/prodigal.sh
+
 ```
 
 ## `./configure`
