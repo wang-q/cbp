@@ -1,0 +1,80 @@
+name: Test Binaries
+
+on:
+  release:
+    types: [edited]
+  schedule:
+    - cron: '0 0 * * *'  # Run daily
+  workflow_dispatch:
+
+jobs:
+  test-packages:
+    # Only run when Binaries release is updated
+    if: ${{ github.event_name != 'release' || github.event.release.tag_name == 'Binaries' }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            cbp_bin: cbp.linux
+          - os: macos-latest
+            cbp_bin: cbp.macos
+          - os: windows-latest
+            cbp_bin: cbp.windows.exe
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Download cbp
+        run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            curl.exe -LO https://github.com/wang-q/cbp/releases/latest/download/${{ matrix.cbp_bin }}
+          else
+            curl -LO https://github.com/wang-q/cbp/releases/latest/download/${{ matrix.cbp_bin }}
+            chmod +x ${{ matrix.cbp_bin }}
+          fi
+        shell: bash
+
+      - name: Initialize cbp
+        run: |
+          ./${{ matrix.cbp_bin }} init
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            echo "$HOME/.cbp/bin" >> $GITHUB_PATH
+          else
+            echo "PATH=$HOME/.cbp/bin:$PATH" >> $GITHUB_ENV
+          fi
+        shell: bash
+
+      - name: Test cbp installation
+        run: cbp --version || exit 1
+        shell: bash
+
+      - name: Get package list
+        id: packages
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const release = await github.rest.repos.getReleaseByTag({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag: 'Binaries'
+            });
+            const assets = release.data.assets;
+            const platform = '${{ matrix.os }}'.split('-')[0];
+            const packages = assets
+              .filter(asset => asset.name.includes(platform))
+              .map(asset => asset.name.split('.')[0]);
+            core.setOutput('list', packages.join(' '));
+
+      - name: Install and test packages
+        run: |
+          for pkg in ${{ steps.packages.outputs.list }}; do
+            if [ -f "test-binaries/$pkg.sh" ]; then
+              echo "Testing $pkg..."
+              ./${{ matrix.cbp_bin }} install $pkg
+              bash "test-binaries/$pkg.sh"
+            else
+              echo "Skipping $pkg: no test file found"
+            fi
+          done
+        shell: bash
