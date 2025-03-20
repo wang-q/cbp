@@ -21,7 +21,7 @@ EOF
 
 # Run test query
 echo "-> Running test query"
-RESULT=$(sqlite3 < "${TEMP_DIR}/school.sql")
+RESULT=$(sqlite3 < "${TEMP_DIR}/school.sql" | tr -d '\r')
 EXPECTED=$'Sue\nTim\nBob'
 
 if [ "$RESULT" = "$EXPECTED" ]; then
