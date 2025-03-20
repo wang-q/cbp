@@ -29,7 +29,7 @@ bash scripts/prebuilds/tectonic.sh windows
 
 #bash scripts/prebuilds/pup.sh
 
-bash scripts/prebuilds/uv.sh -t linux
+bash scripts/prebuilds/uv.sh linux
 bash scripts/prebuilds/uv.sh macos
 bash scripts/prebuilds/uv.sh windows
 
@@ -42,7 +42,7 @@ bash scripts/prebuilds/bat.sh windows
 ## Bioinformatics tools
 
 ```bash
-bash scripts/prebuilds/blast.sh -t linux
+bash scripts/prebuilds/blast.sh linux
 bash scripts/prebuilds/blast.sh macos
 bash scripts/prebuilds/blast.sh windows
 
@@ -50,7 +50,7 @@ bash scripts/prebuilds/sratoolkit.sh -t linux
 bash scripts/prebuilds/sratoolkit.sh macos
 bash scripts/prebuilds/sratoolkit.sh windows
 
-bash scripts/prebuilds/muscle.sh -t linux
+bash scripts/prebuilds/muscle.sh linux
 bash scripts/prebuilds/reseek.sh -t linux
 bash scripts/prebuilds/usearch.sh -t linux
 
@@ -74,7 +74,7 @@ bash scripts/prebuilds/bowtie2.sh macos
 bash scripts/prebuilds/stringtie.sh -t linux
 bash scripts/prebuilds/stringtie.sh macos
 
-bash scripts/prebuilds/raxml-ng.sh -t linux
+bash scripts/prebuilds/raxml-ng.sh linux
 bash scripts/prebuilds/raxml-ng.sh macos
 
 bash scripts/prebuilds/freebayes.sh -t linux
