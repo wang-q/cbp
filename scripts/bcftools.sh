@@ -19,5 +19,10 @@ LDFLAGS="-L$HOME/.cbp/lib" \
 make -j 8 || exit 1
 make install || exit 1
 
+# $ bcftools plugin -l
+
+# No functional bcftools plugins were found. The environment variable BCFTOOLS_PLUGINS is not set
+# and no usable plugins were found in /tmp/tmp.AFxLzJ0znf/collect/libexec/bcftools.
+
 # Use build_tar function from common.sh
 build_tar
