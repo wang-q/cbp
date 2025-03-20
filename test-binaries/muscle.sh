@@ -11,7 +11,7 @@ echo "==> Testing muscle installation"
 
 # Test version output
 echo "-> Testing version output"
-VERSION_OUTPUT=$(muscle -version)
+VERSION_OUTPUT=$($(cbp prefix bin)/muscle -version)
 
 if echo "$VERSION_OUTPUT" | grep -q "muscle"; then
     echo "Test PASSED"

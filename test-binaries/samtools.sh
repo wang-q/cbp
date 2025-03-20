@@ -19,7 +19,9 @@ EOF
 # Test faidx
 echo "-> Testing faidx indexing"
 cd "${TEMP_DIR}"
-samtools faidx test.fasta
+# Test samtools
+echo "-> Testing samtools"
+$(cbp prefix bin)/samtools faidx test.fasta
 
 # Check index content
 EXPECTED="U00096.2:1-70	70	15	70	71"

@@ -11,7 +11,7 @@ echo "==> Testing mcl installation"
 
 # Test help output
 echo "-> Testing help output"
-HELP_OUTPUT=$(mcl -h 2>&1)
+HELP_OUTPUT=$($(cbp prefix bin)/mcl -h 2>&1)
 
 if echo "$HELP_OUTPUT" | grep -q "iterands"; then
     echo "Test PASSED"

@@ -11,7 +11,7 @@ echo "==> Testing clustalo installation"
 
 # Test version output
 echo "-> Testing version output"
-VERSION_OUTPUT=$(clustalo --version)
+VERSION_OUTPUT=$($(cbp prefix bin)/clustalo --version)
 
 if [ -n "$VERSION_OUTPUT" ] && [[ "$VERSION_OUTPUT" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     echo "Test PASSED"

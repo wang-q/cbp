@@ -17,7 +17,7 @@ EOF
 
 # Test nw_stats
 echo "-> Testing nw_stats"
-STATS_OUTPUT=$(nw_stats "${TEMP_DIR}/HRV.nw")
+STATS_OUTPUT=$($(cbp prefix bin)/nw_stats "${TEMP_DIR}/HRV.nw")
 
 if echo "$STATS_OUTPUT" | grep -q "leaves:	30"; then
     echo "Test PASSED"

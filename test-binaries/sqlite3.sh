@@ -20,8 +20,8 @@ select name from students order by age asc;
 EOF
 
 # Run test query
-echo "-> Running test query"
-RESULT=$($(cbp prefix bin)/sqlite3 < "${TEMP_DIR}/school.sql" | tr -d '\r')
+echo "-> Testing SQLite3"
+RESULT=$(echo ".version" | $(cbp prefix bin)/sqlite3)
 EXPECTED=$'Sue\nTim\nBob'
 
 if [ "$RESULT" = "$EXPECTED" ]; then

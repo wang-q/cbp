@@ -19,7 +19,7 @@ EOF
 
 # Test htsfile
 echo "-> Testing htsfile"
-HTSFILE_OUTPUT=$(htsfile "${TEMP_DIR}/test.sam")
+HTSFILE_OUTPUT=$($(cbp prefix bin)/htsfile "${TEMP_DIR}/test.sam")
 if ! echo "$HTSFILE_OUTPUT" | grep -q "SAM"; then
     echo "htsfile test FAILED"
     exit 1
@@ -28,7 +28,7 @@ fi
 # Test bgzip
 echo "-> Testing bgzip"
 cd "${TEMP_DIR}"
-if ! bgzip -c test.sam > sam.gz; then
+if ! $(cbp prefix bin)/bgzip -c test.sam > sam.gz; then
     echo "bgzip test FAILED"
     exit 1
 fi
@@ -40,7 +40,7 @@ fi
 
 # Test tabix
 echo "-> Testing tabix"
-if ! tabix -p sam sam.gz; then
+if ! $(cbp prefix bin)/tabix -p sam sam.gz; then
     echo "tabix test FAILED"
     exit 1
 fi

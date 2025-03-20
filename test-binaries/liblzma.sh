@@ -17,7 +17,7 @@ ORIGINAL_CONTENT=$(cat "$TEST_FILE")
 
 # Test compression
 echo "-> Testing compression"
-xz "$TEST_FILE"
+$(cbp prefix bin)/xz "$TEST_FILE"
 if [ -f "$TEST_FILE" ]; then
     echo "Compression failed: original file still exists"
     exit 1
@@ -25,7 +25,7 @@ fi
 
 # Test decompression
 echo "-> Testing decompression"
-xz -d "${TEST_FILE}.xz"
+$(cbp prefix bin)/xz -d "${TEST_FILE}.xz"
 DECOMPRESSED_CONTENT=$(cat "$TEST_FILE")
 
 if [ "$ORIGINAL_CONTENT" = "$DECOMPRESSED_CONTENT" ]; then

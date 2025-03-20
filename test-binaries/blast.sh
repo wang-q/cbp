@@ -19,7 +19,7 @@ EOF
 # Test BLASTN
 echo "-> Testing blastn"
 cd "${TEMP_DIR}"
-BLASTN_OUTPUT=$(blastn -query test.fasta -subject test.fasta)
+BLASTN_OUTPUT=$($(cbp prefix bin)/blastn -query test.fasta -subject test.fasta)
 if ! echo "$BLASTN_OUTPUT" | grep -q "Identities = 70/70"; then
     echo "BLASTN test FAILED"
     exit 1
@@ -27,7 +27,7 @@ fi
 
 # Test makeblastdb
 echo "-> Testing makeblastdb"
-MAKEDB_OUTPUT=$(makeblastdb -in test.fasta -out testdb -dbtype nucl)
+MAKEDB_OUTPUT=$($(cbp prefix bin)/makeblastdb -in test.fasta -out testdb -dbtype nucl)
 if ! echo "$MAKEDB_OUTPUT" | grep -q "Adding sequences from FASTA"; then
     echo "makeblastdb test FAILED"
     exit 1
@@ -35,7 +35,7 @@ fi
 
 # Test blastdbcmd
 echo "-> Testing blastdbcmd"
-DBCMD_OUTPUT=$(blastdbcmd -info -db testdb)
+DBCMD_OUTPUT=$($(cbp prefix bin)/blastdbcmd -info -db testdb)
 if ! echo "$DBCMD_OUTPUT" | grep -q "Database: test"; then
     echo "blastdbcmd test FAILED"
     exit 1

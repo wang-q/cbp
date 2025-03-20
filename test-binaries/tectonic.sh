@@ -14,7 +14,7 @@ echo "==> Testing tectonic installation"
 
 # Test 1: Version check
 echo "-> Checking version"
-tectonic --version || {
+$(cbp prefix bin)/tectonic --version || {
     echo "FAILED: Version check failed"
     exit 1
 }
@@ -28,7 +28,7 @@ Hello, World!
 \end{document}
 EOF
 
-tectonic test.tex || {
+$(cbp prefix bin)/tectonic test.tex || {
     echo "FAILED: Basic compilation failed"
     exit 1
 }

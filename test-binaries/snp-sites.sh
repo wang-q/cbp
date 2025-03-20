@@ -11,7 +11,7 @@ echo "==> Testing snp-sites installation"
 
 # Test version output
 echo "-> Testing version output"
-VERSION_OUTPUT=$(snp-sites -V 2>&1)
+VERSION_OUTPUT=$($(cbp prefix bin)/snp-sites -V 2>&1)
 
 if [ -n "$VERSION_OUTPUT" ] && [[ "$VERSION_OUTPUT" =~ ^snp-sites\ [0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     echo "Test PASSED"

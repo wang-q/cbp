@@ -18,7 +18,7 @@ EOF
 
 # Test syntax highlighting
 echo "-> Testing syntax highlighting"
-RESULT=$(bat --color=never --style=plain "${TEMP_DIR}/test.txt" | tr -d '\r')
+RESULT=$($(cbp prefix bin)/bat --color=never --style=plain "${TEMP_DIR}/test.txt" | tr -d '\r')
 EXPECTED=$'Hello World\nThis is a test file'
 EXPECTED=$(echo "$EXPECTED" | tr -d '\r')
 

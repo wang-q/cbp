@@ -15,7 +15,7 @@ echo '{"foo":1, "bar":2}' > "${TEMP_DIR}/test.json"
 
 # Test JSON query
 echo "-> Testing JSON query"
-RESULT=$(jq .bar "${TEMP_DIR}/test.json")
+RESULT=$($(cbp prefix bin)/jq .bar "${TEMP_DIR}/test.json")
 EXPECTED="2"
 
 if [ "$RESULT" = "$EXPECTED" ]; then

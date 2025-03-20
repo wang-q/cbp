@@ -29,7 +29,7 @@ EOF
 # Test raxml-ng
 echo "-> Testing raxml-ng with GTR model"
 cd "${TEMP_DIR}"
-if raxml-ng --msa dna.phy --start --model GTR; then
+if $(cbp prefix bin)/raxml-ng --msa dna.phy --start --model GTR; then
     echo "Test PASSED"
     exit 0
 else

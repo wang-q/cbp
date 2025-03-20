@@ -24,7 +24,7 @@ Tigerbrew.</p>'
 
 # Convert markdown to HTML
 echo "-> Testing markdown to HTML conversion"
-RESULT=$(pandoc -f markdown -t html5 "${TEMP_DIR}/test.md" | tr -d '\r')
+RESULT=$($(cbp prefix bin)/pandoc -f markdown -t html5 "${TEMP_DIR}/test.md" | tr -d '\r')
 EXPECTED=$(echo "$EXPECTED" | tr -d '\r')
 
 if [ "$RESULT" = "$EXPECTED" ]; then
