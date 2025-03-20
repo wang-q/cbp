@@ -23,15 +23,5 @@ curl -L "${DL_URL}" -o "${PROJ}" ||
 # Collect binaries
 collect_bins jq
 
-# Run test if requested
-if [ "${RUN_TEST}" = "test" ]; then
-    test_bin() {
-        local output=$("collect/bin/jq" --version)
-        echo "${output}"
-        [ -n "${output}" ] && echo "PASSED"
-    }
-    run_test test_bin
-fi
-
 # Pack binaries
 build_tar

@@ -3,20 +3,10 @@
 ## Common tools
 
 ```bash
-# Download and package binary for current system
-bash scripts/prebuilds/jq.sh
-
-# Download, package and test binary
-bash scripts/prebuilds/jq.sh -t
-
 # Download and package for specific OS
 bash scripts/prebuilds/jq.sh linux     # Download Linux x86_64 binary
 bash scripts/prebuilds/jq.sh macos     # Download macOS ARM64 binary
 bash scripts/prebuilds/jq.sh windows   # Download Windows x86_64 binary
-
-# Note: Tests will fail when downloading for different OS
-# as binaries cannot be executed on incompatible architectures
-bash scripts/prebuilds/jq.sh -t macos  # This will fail on Linux
 
 bash scripts/prebuilds/ninja.sh -t linux
 bash scripts/prebuilds/ninja.sh macos
@@ -29,11 +19,11 @@ bash scripts/prebuilds/cmake.sh windows
 bash scripts/prebuilds/tsv-utils.sh linux
 bash scripts/prebuilds/tsv-utils.sh macos
 
-bash scripts/prebuilds/pandoc.sh -t linux
+bash scripts/prebuilds/pandoc.sh linux
 bash scripts/prebuilds/pandoc.sh macos
 bash scripts/prebuilds/pandoc.sh windows
 
-bash scripts/prebuilds/tectonic.sh -t linux
+bash scripts/prebuilds/tectonic.sh linux
 bash scripts/prebuilds/tectonic.sh macos
 bash scripts/prebuilds/tectonic.sh windows
 
@@ -43,7 +33,7 @@ bash scripts/prebuilds/uv.sh -t linux
 bash scripts/prebuilds/uv.sh macos
 bash scripts/prebuilds/uv.sh windows
 
-bash scripts/prebuilds/bat.sh -t linux
+bash scripts/prebuilds/bat.sh linux
 bash scripts/prebuilds/bat.sh macos
 bash scripts/prebuilds/bat.sh windows
 

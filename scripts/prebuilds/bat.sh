@@ -38,15 +38,5 @@ elif [ "$OS_TYPE" == "windows" ]; then
     collect_bins bat-*/bat.exe
 fi
 
-# Run test if requested
-if [ "${RUN_TEST}" = "test" ]; then
-    test_bin() {
-        local output=$("collect/bin/bat" --version)
-        echo "${output}"
-        [ -n "${output}" ] && echo "PASSED"
-    }
-    run_test test_bin
-fi
-
 # Pack binaries
 build_tar

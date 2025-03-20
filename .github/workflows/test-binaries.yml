@@ -73,8 +73,8 @@ jobs:
                [ -n "$all_pkgs" ] && [ -n "$platform_pkgs" ]; then
               break
             fi
-            echo "==> Failed attempt $attempt, waiting 10 seconds before retry..."
-            sleep 10
+            echo "==> Failed attempt $attempt, waiting 30 seconds before retry..."
+            sleep 30
             attempt=$((attempt + 1))
           done
 
