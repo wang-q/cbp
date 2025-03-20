@@ -82,11 +82,14 @@ jobs:
         run: |
           platform=$(echo "$RUNNER_OS" | tr '[:upper:]' '[:lower:]')
           test_results=""
+          
+          # Get available packages once
+          available_pkgs=$(cbp avail $platform | tr ' ' '\n')
 
           for pkg in ${{ steps.packages.outputs.list }}; do
             if [ -f "test-binaries/$pkg.sh" ]; then
               echo "==> Checking availability of $pkg for $platform..."
-              if cbp avail $platform | tr ' ' '\n' | grep -q "^$pkg\$"; then
+              if echo "$available_pkgs" | grep -q "^$pkg\$"; then
                 echo "Testing $pkg..."
                 if cbp install $pkg && \
                    cbp list $pkg && \
