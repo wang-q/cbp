@@ -72,19 +72,23 @@ jobs:
           platform_pkgs=$(cbp avail $platform | grep -v "^==>" | tr -s '[:space:]' '\n' | grep -v '^$' | sed 's/[[:space:]]*$//')
           test_results=""
 
+          # Mark packages not available for current platform
           for pkg in $all_pkgs; do
+            if ! echo "$platform_pkgs" | grep -q "^$pkg\$"; then
+              skipped_unavailable="${skipped_unavailable:-} $pkg"
+            fi
+          done
+
+          # Test available packages
+          for pkg in $platform_pkgs; do
             if [ -f "test-binaries/$pkg.sh" ]; then
-              if echo "$platform_pkgs" | grep -q "^$pkg\$"; then
-                echo "Testing $pkg..."
-                if cbp install $pkg && \
-                   cbp list $pkg && \
-                   bash "test-binaries/$pkg.sh"; then
-                  test_results="${test_results}✅ $pkg: PASSED\n"
-                else
-                  test_results="${test_results}❌ $pkg: FAILED\n"
-                fi
+              echo "Testing $pkg..."
+              if cbp install $pkg && \
+                 cbp list $pkg && \
+                 bash "test-binaries/$pkg.sh"; then
+                test_results="${test_results}✅ $pkg: PASSED\n"
               else
-                skipped_unavailable="${skipped_unavailable:-} $pkg"
+                test_results="${test_results}❌ $pkg: FAILED\n"
               fi
             else
               skipped_notest="${skipped_notest:-} $pkg"
