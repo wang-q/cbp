@@ -80,14 +80,20 @@ jobs:
 
       - name: Install and test packages
         run: |
+          platform=$(echo "$RUNNER_OS" | tr '[:upper:]' '[:lower:]')
           for pkg in ${{ steps.packages.outputs.list }}; do
             if [ -f "test-binaries/$pkg.sh" ]; then
-              echo "Testing $pkg..."
-              cbp install $pkg
-              echo "==> Package contents:"
-              cbp list $pkg
-              echo "==> Running tests:"
-              bash "test-binaries/$pkg.sh"
+              echo "==> Checking availability of $pkg for $platform..."
+              if cbp avail $platform | grep -q "^$pkg\$"; then
+                echo "Testing $pkg..."
+                cbp install $pkg
+                echo "==> Package contents:"
+                cbp list $pkg
+                echo "==> Running tests:"
+                bash "test-binaries/$pkg.sh"
+              else
+                echo "Skipping $pkg: not available for $platform"
+              fi
             else
               echo "Skipping $pkg: no test file found"
             fi
