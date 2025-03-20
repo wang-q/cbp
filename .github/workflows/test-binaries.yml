@@ -66,10 +66,10 @@ jobs:
           cbp avail
           echo "==> cbp avail $platform output:"
           cbp avail $platform
-          
+
           # Get all packages and platform-specific available packages
-          all_pkgs=$(cbp avail | grep -v "^==>" | tr -s '[:space:]' '\n' | grep -v '^$')
-          platform_pkgs=$(cbp avail $platform | grep -v "^==>" | tr -s '[:space:]' '\n' | grep -v '^$')
+          all_pkgs=$(cbp avail | grep -v "^==>" | tr -s '[:space:]' '\n' | grep -v '^$' | sed 's/[[:space:]]*$//')
+          platform_pkgs=$(cbp avail $platform | grep -v "^==>" | tr -s '[:space:]' '\n' | grep -v '^$' | sed 's/[[:space:]]*$//')
           test_results=""
 
           for pkg in $all_pkgs; do
