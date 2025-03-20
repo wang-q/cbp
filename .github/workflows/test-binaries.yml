@@ -62,14 +62,27 @@ jobs:
         run: |
           platform=$(echo "$RUNNER_OS" | tr '[:upper:]' '[:lower:]')
           echo "==> Current platform: $platform"
-          echo "==> cbp avail output:"
-          cbp avail
-          echo "==> cbp avail $platform output:"
-          cbp avail $platform
 
-          # Get all packages and platform-specific available packages
-          all_pkgs=$(cbp avail | grep -v "^==>" | tr -s '[:space:]' '\n' | grep -v '^$' | sed 's/[[:space:]]*$//')
-          platform_pkgs=$(cbp avail $platform | grep -v "^==>" | tr -s '[:space:]' '\n' | grep -v '^$' | sed 's/[[:space:]]*$//')
+          # Get all packages and platform-specific available packages with retry
+          max_attempts=3
+          attempt=1
+          while [ $attempt -le $max_attempts ]; do
+            echo "==> Attempt $attempt of $max_attempts to get package lists"
+            if all_pkgs=$(cbp avail 2>/dev/null | grep -v "^==>" | tr -s '[:space:]' '\n' | grep -v '^$' | sed 's/[[:space:]]*$//' ) && \
+               platform_pkgs=$(cbp avail $platform 2>/dev/null | grep -v "^==>" | tr -s '[:space:]' '\n' | grep -v '^$' | sed 's/[[:space:]]*$//' ) && \
+               [ -n "$all_pkgs" ] && [ -n "$platform_pkgs" ]; then
+              break
+            fi
+            echo "==> Failed attempt $attempt, waiting 5 seconds before retry..."
+            sleep 5
+            attempt=$((attempt + 1))
+          done
+
+          if [ $attempt -gt $max_attempts ]; then
+            echo "Error: Failed to get package lists after $max_attempts attempts"
+            exit 1
+          fi
+
           test_results=""
 
           # Mark packages not available for current platform
