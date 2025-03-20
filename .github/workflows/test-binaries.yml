@@ -48,7 +48,8 @@ jobs:
           if [ "$RUNNER_OS" == "Windows" ]; then
             echo "$HOME/.cbp/bin" >> $GITHUB_PATH
           else
-            echo "PATH=$HOME/.cbp/bin:$PATH" >> $GITHUB_ENV
+            echo "$HOME/.cbp/bin" >> $GITHUB_PATH
+            source ~/.bashrc
           fi
         shell: bash
 
@@ -69,7 +70,11 @@ jobs:
             const assets = release.data.assets;
             const platform = '${{ matrix.os }}'.split('-')[0];
             const packages = assets
-              .filter(asset => asset.name.includes(platform))
+              .filter(asset => {
+                const name = asset.name.toLowerCase();
+                return name.includes(platform.toLowerCase()) || 
+                       (platform === 'ubuntu' && name.includes('linux'));
+              })
               .map(asset => asset.name.split('.')[0]);
             core.setOutput('list', packages.join(' '));
 
