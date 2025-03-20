@@ -57,39 +57,19 @@ jobs:
         run: cbp --version || exit 1
         shell: bash
 
-      - name: Get package list
-        id: packages
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const release = await github.rest.repos.getReleaseByTag({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag: 'Binaries'
-            });
-            const assets = release.data.assets;
-            const platform = '${{ matrix.os }}'.split('-')[0];
-            const packages = assets
-              .filter(asset => {
-                const name = asset.name.toLowerCase();
-                return name.includes(platform.toLowerCase()) ||
-                       (platform === 'ubuntu' && name.includes('linux'));
-              })
-              .map(asset => asset.name.split('.')[0]);
-            core.setOutput('list', packages.join(' '));
-
       - name: Install and test packages
         run: |
           platform=$(echo "$RUNNER_OS" | tr '[:upper:]' '[:lower:]')
           test_results=""
           
-          # Get available packages once
-          available_pkgs=$(cbp avail $platform | tr ' ' '\n')
-
-          for pkg in ${{ steps.packages.outputs.list }}; do
+          # Get all packages and platform-specific available packages
+          all_pkgs=$(cbp avail | grep -v "^==>" | tr -s '[:space:]' '\n' | grep -v '^$')
+          platform_pkgs=$(cbp avail $platform | grep -v "^==>" | tr -s '[:space:]' '\n' | grep -v '^$')
+          test_results=""
+          
+          for pkg in $all_pkgs; do
             if [ -f "test-binaries/$pkg.sh" ]; then
-              echo "==> Checking availability of $pkg for $platform..."
-              if echo "$available_pkgs" | grep -q "^$pkg\$"; then
+              if echo "$platform_pkgs" | grep -q "^$pkg\$"; then
                 echo "Testing $pkg..."
                 if cbp install $pkg && \
                    cbp list $pkg && \
