@@ -72,7 +72,7 @@ jobs:
             const packages = assets
               .filter(asset => {
                 const name = asset.name.toLowerCase();
-                return name.includes(platform.toLowerCase()) || 
+                return name.includes(platform.toLowerCase()) ||
                        (platform === 'ubuntu' && name.includes('linux'));
               })
               .map(asset => asset.name.split('.')[0]);
@@ -83,7 +83,10 @@ jobs:
           for pkg in ${{ steps.packages.outputs.list }}; do
             if [ -f "test-binaries/$pkg.sh" ]; then
               echo "Testing $pkg..."
-              ./${{ matrix.cbp_bin }} install $pkg
+              cbp install $pkg
+              echo "==> Package contents:"
+              cbp list $pkg
+              echo "==> Running tests:"
               bash "test-binaries/$pkg.sh"
             else
               echo "Skipping $pkg: no test file found"
