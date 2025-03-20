@@ -16,6 +16,7 @@ jobs:
     # Only run when Binaries release is updated
     if: ${{ github.event_name != 'release' || github.event.release.tag_name == 'Binaries' }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         include:
@@ -61,12 +62,12 @@ jobs:
         run: |
           platform=$(echo "$RUNNER_OS" | tr '[:upper:]' '[:lower:]')
           test_results=""
-          
+
           # Get all packages and platform-specific available packages
           all_pkgs=$(cbp avail | grep -v "^==>" | tr -s '[:space:]' '\n' | grep -v '^$')
           platform_pkgs=$(cbp avail $platform | grep -v "^==>" | tr -s '[:space:]' '\n' | grep -v '^$')
           test_results=""
-          
+
           for pkg in $all_pkgs; do
             if [ -f "test-binaries/$pkg.sh" ]; then
               if echo "$platform_pkgs" | grep -q "^$pkg\$"; then
