@@ -10,7 +10,6 @@ vcpkg_extract_source_archive(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DMAX_KMER_SIZE=128
         "-DCMAKE_BUILD_TYPE=Release"
         "-DCMAKE_C_FLAGS_RELEASE=-O"
 )
