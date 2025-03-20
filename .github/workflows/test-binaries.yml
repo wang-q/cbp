@@ -84,7 +84,7 @@ jobs:
           for pkg in ${{ steps.packages.outputs.list }}; do
             if [ -f "test-binaries/$pkg.sh" ]; then
               echo "==> Checking availability of $pkg for $platform..."
-              if cbp avail $platform | grep -q "^$pkg\$"; then
+              if cbp avail $platform | tr ' ' '\n' | grep -q "^$pkg\$"; then
                 echo "Testing $pkg..."
                 cbp install $pkg
                 echo "==> Package contents:"
