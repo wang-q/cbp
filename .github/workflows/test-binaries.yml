@@ -96,15 +96,17 @@ jobs:
                   test_results="${test_results}❌ $pkg: FAILED\n"
                 fi
               else
-                test_results="${test_results}⏭️ $pkg: SKIPPED (not available)\n"
+                skipped_unavailable="${skipped_unavailable:-} $pkg"
               fi
             else
-              test_results="${test_results}⏭️ $pkg: SKIPPED (no test)\n"
+              skipped_notest="${skipped_notest:-} $pkg"
             fi
           done
 
           echo -e "\n==> Test Summary:"
           echo -e "$test_results"
+          [ -n "${skipped_unavailable:-}" ] && echo -e "⏭️ Skipped (not available):${skipped_unavailable}"
+          [ -n "${skipped_notest:-}" ] && echo -e "⏭️ Skipped (no test):${skipped_notest}"
 
           if echo "$test_results" | grep -q "FAILED"; then
             exit 1
