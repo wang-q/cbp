@@ -76,6 +76,7 @@ bash scripts/vcpkg.sh pv
 bash scripts/vcpkg.sh trf
 
 # cmake
+bash scripts/vcpkg.sh chainnet
 bash scripts/vcpkg.sh diamond
 
 ```

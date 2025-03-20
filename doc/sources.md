@@ -217,6 +217,8 @@ curl -o sources/bifrost.tar.gz -L https://github.com/pmelsted/bifrost/archive/re
 
 curl -o sources/spoa.tar.gz -L https://github.com/rvaser/spoa/archive/refs/tags/4.1.4.tar.gz
 
+curl -o sources/chainnet.tar.gz -L https://github.com/wang-q/chainnet/archive/4dcab3b12de4ef649e0927a8acbe55bf47683984.zip
+
 # Remove large files
 curl -L https://github.com/tjunier/newick_utils/archive/da121155a977197cab9fbb15953ca1b40b11eb87.tar.gz |
     tar xvfz - &&

@@ -76,6 +76,7 @@ bash scripts/vcpkg.sh datamash
 bash scripts/vcpkg.sh trf
 
 # cmake
+bash scripts/vcpkg.sh chainnet
 # bash scripts/vcpkg.sh diamond # need sse3
 
 ```
