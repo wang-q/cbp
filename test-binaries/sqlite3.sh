@@ -9,6 +9,16 @@ trap 'rm -rf "$TEMP_DIR"' EXIT
 
 echo "==> Testing sqlite3 installation"
 
+echo "-> Testing SQLite3 version"
+VERSION_OUTPUT=$(echo ".version" | $(cbp prefix bin)/sqlite3)
+if ! echo "$VERSION_OUTPUT" | grep -q "SQLite [0-9]\+\.[0-9]\+\.[0-9]\+"; then
+    echo "Version test FAILED"
+    echo "Expected version string containing 'SQLite X.Y.Z'"
+    echo "Got: $VERSION_OUTPUT"
+    exit 1
+fi
+echo "Version test PASSED"
+
 # Create test SQL file
 echo "-> Creating test database"
 cat > "${TEMP_DIR}/school.sql" << 'EOF'
@@ -20,8 +30,8 @@ select name from students order by age asc;
 EOF
 
 # Run test query
-echo "-> Testing SQLite3"
-RESULT=$(echo ".version" | $(cbp prefix bin)/sqlite3)
+echo "-> Running test query"
+RESULT=$($(cbp prefix bin)/sqlite3 < "${TEMP_DIR}/school.sql" | tr -d '\r')
 EXPECTED=$'Sue\nTim\nBob'
 
 if [ "$RESULT" = "$EXPECTED" ]; then

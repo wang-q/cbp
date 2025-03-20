@@ -27,15 +27,13 @@ cmake \
     -DCMAKE_EXE_LINKER_FLAGS="-static" \
     -DCMAKE_C_FLAGS="-fcommon" \
     -DCMAKE_CXX_FLAGS="-fcommon" \
-    -DCMAKE_INSTALL_PREFIX="${TEMP_DIR}/install" \
+    -DCMAKE_INSTALL_PREFIX="${TEMP_DIR}/collect" \
     -S . -B build
 
 cmake --build build -- -j 8 || exit 1
 cmake --install build
 
-# Create collect directory and copy binaries
-mkdir -p ${TEMP_DIR}/collect/
-cp ${TEMP_DIR}/install/bin/* ${TEMP_DIR}/collect/
+rm -fr ${TEMP_DIR}/collect/lib
 
 # Use build_tar function from common.sh
 build_tar

@@ -21,9 +21,9 @@ make \
     -j 8 \
     -f Makefile.unx \
     put \
-    EXEDIR="${TEMP_DIR}/collect"
+    EXEDIR="${TEMP_DIR}/collect/bin"
 
-cd "${TEMP_DIR}/collect"
+cd "${TEMP_DIR}/collect/bin"
 
 rm font*
 if [[ "${OS_TYPE}" == "macos" ]]; then
