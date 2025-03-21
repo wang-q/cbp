@@ -32,7 +32,7 @@ internal workings.
 * Rust toolchain (stable)
 * Git (with LFS support)
 * `gh` command (GitHub CLI)
-* Python 3 (>= 3.7)
+* Python 3 (>= 3.7) and uv
 * Build tools
     * cmake
     * ninja
@@ -143,9 +143,10 @@ vcpkg remove --debug --recurse \
 ```bash
 cbp install cmake
 cbp install ninja
+cbp install uv
 cbp install jq
 
-pip3 install meson
+uv pip install --system meson
 
 ```
 
@@ -339,8 +340,6 @@ https://github.com/wang-q/cbp/releases/download/Binaries/zlib.macos.tar.gz
 6. Submit a pull request
 
 ### Example build script templates:
-
-
 
 * Build from source:
 
