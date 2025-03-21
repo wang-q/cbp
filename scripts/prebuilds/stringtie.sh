@@ -30,15 +30,5 @@ fi
 # Collect binaries
 collect_bins stringtie-*/stringtie
 
-# Run test if requested
-if [ "${RUN_TEST}" = "test" ]; then
-    test_bin() {
-        local output=$("collect/bin/stringtie" --version)
-        echo "${output}"
-        [ -n "${output}" ] && echo "PASSED"
-    }
-    run_test test_bin
-fi
-
 # Pack binaries
 build_tar

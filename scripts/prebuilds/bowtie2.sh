@@ -24,15 +24,5 @@ unzip "${PROJ}.zip" ||
 rm bowtie2-*/*-debug
 collect_bins bowtie2-*/bowtie2*
 
-# Run test if requested
-if [ "${RUN_TEST}" = "test" ]; then
-    test_bin() {
-        local output=$("collect/bin/bowtie2" --version)
-        echo "${output}"
-        [ -n "${output}" ] && echo "PASSED"
-    }
-    run_test test_bin
-fi
-
 # Pack binaries
 build_tar

@@ -51,33 +51,33 @@ bash scripts/prebuilds/sratoolkit.sh macos
 bash scripts/prebuilds/sratoolkit.sh windows
 
 bash scripts/prebuilds/muscle.sh linux
-bash scripts/prebuilds/reseek.sh -t linux
+bash scripts/prebuilds/reseek.sh linux
 bash scripts/prebuilds/usearch.sh -t linux
 
-bash scripts/prebuilds/mosdepth.sh -t linux
+bash scripts/prebuilds/mosdepth.sh linux
 
-bash scripts/prebuilds/iqtree2.sh -t linux
+bash scripts/prebuilds/iqtree2.sh linux
 bash scripts/prebuilds/iqtree2.sh macos
 bash scripts/prebuilds/iqtree2.sh windows
 
-bash scripts/prebuilds/mash.sh -t linux
+bash scripts/prebuilds/mash.sh linux
 bash scripts/prebuilds/mash.sh macos
 
 bash scripts/prebuilds/megahit.sh -t linux
 
-bash scripts/prebuilds/mmseqs.sh -t linux
+bash scripts/prebuilds/mmseqs.sh linux
 bash scripts/prebuilds/mmseqs.sh macos
 
-bash scripts/prebuilds/bowtie2.sh -t linux
+bash scripts/prebuilds/bowtie2.sh linux
 bash scripts/prebuilds/bowtie2.sh macos
 
-bash scripts/prebuilds/stringtie.sh -t linux
+bash scripts/prebuilds/stringtie.sh linux
 bash scripts/prebuilds/stringtie.sh macos
 
 bash scripts/prebuilds/raxml-ng.sh linux
 bash scripts/prebuilds/raxml-ng.sh macos
 
-bash scripts/prebuilds/freebayes.sh -t linux
+bash scripts/prebuilds/freebayes.sh linux
 
 # java
 bash scripts/prebuilds/fastqc.sh linux

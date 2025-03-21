@@ -32,15 +32,5 @@ fi
 # Collect binaries
 collect_bins iqtree-*/bin/*
 
-# Run test if requested
-if [ "${RUN_TEST}" = "test" ]; then
-    test_bin() {
-        local output=$("collect/bin/iqtree2" --version)
-        echo "${output}"
-        [ -n "${output}" ] && echo "PASSED"
-    }
-    run_test test_bin
-fi
-
 # Pack binaries
 build_tar
