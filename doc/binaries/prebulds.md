@@ -8,11 +8,11 @@ bash scripts/prebuilds/jq.sh linux     # Download Linux x86_64 binary
 bash scripts/prebuilds/jq.sh macos     # Download macOS ARM64 binary
 bash scripts/prebuilds/jq.sh windows   # Download Windows x86_64 binary
 
-bash scripts/prebuilds/ninja.sh -t linux
+bash scripts/prebuilds/ninja.sh linux
 bash scripts/prebuilds/ninja.sh macos
 bash scripts/prebuilds/ninja.sh windows
 
-bash scripts/prebuilds/cmake.sh -t linux
+bash scripts/prebuilds/cmake.sh linux
 bash scripts/prebuilds/cmake.sh macos
 bash scripts/prebuilds/cmake.sh windows
 
@@ -46,7 +46,7 @@ bash scripts/prebuilds/blast.sh linux
 bash scripts/prebuilds/blast.sh macos
 bash scripts/prebuilds/blast.sh windows
 
-bash scripts/prebuilds/sratoolkit.sh -t linux
+bash scripts/prebuilds/sratoolkit.sh linux
 bash scripts/prebuilds/sratoolkit.sh macos
 bash scripts/prebuilds/sratoolkit.sh windows
 
