@@ -70,9 +70,6 @@ cbp local zlib bzip2 libdeflate liblzma
 .\scripts\vcpkg.ps1 gsl
 .\scripts\vcpkg.ps1 simde
 
-.\scripts\vcpkg.ps1 libpng
-.\scripts\vcpkg.ps1 openjpeg
-
 ```
 
 ## `vcpkg` utilities
