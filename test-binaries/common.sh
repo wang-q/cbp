@@ -44,9 +44,12 @@ test_version() {
     echo "-> Testing version output"
     check_command "${cmd}" || return 1
 
+    # Temporarily disable errexit
+    set +e
     local VERSION_OUTPUT
     VERSION_OUTPUT=$($(cbp prefix bin)/${cmd} ${version_arg} 2>&1)
     echo "${VERSION_OUTPUT}"
+    set -e
 
     if [ -n "${VERSION_OUTPUT}" ] && [[ "${VERSION_OUTPUT}" =~ ${pattern} ]]; then
         echo "Version test PASSED"
