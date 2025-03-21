@@ -130,6 +130,9 @@ bash scripts/mummer.sh
 cbp local argtable2
 bash scripts/clustalo.sh
 
+cbp local ncurses
+bash scripts/pv.sh
+
 # bundled htslib
 bash scripts/samtools.sh
 bash scripts/bcftools.sh

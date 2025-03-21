@@ -131,6 +131,9 @@ zvm use 0.13.0
 cbp local argtable2
 bash scripts/clustalo.sh
 
+cbp local ncurses
+bash scripts/pv.sh
+
 # bundled htslib
 zvm use 0.13.0
 bash scripts/samtools.sh
