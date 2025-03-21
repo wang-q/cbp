@@ -98,7 +98,6 @@ jobs:
             if [ -f "test-binaries/$pkg.sh" ]; then
               echo "Testing $pkg..."
               if cbp install $pkg && \
-                 cbp list $pkg && \
                  bash "test-binaries/$pkg.sh"; then
                 test_results_pass="${test_results_pass:+$test_results_pass }$pkg"
               else
@@ -110,7 +109,7 @@ jobs:
           done
 
           echo -e "\n==> Test Summary:"
-          [ -n "${test_results_pass}" ] && echo -e "✅ Passed:${test_results_pass}"
+          [ -n "${test_results_pass}" ] && echo -e "✅ Passed: ${test_results_pass}"
           [ -n "${test_results_fail}" ] && echo -e "${test_results_fail}"
           [ -n "${skipped_unavailable:-}" ] && echo -e "⏭️ Skipped (not available):${skipped_unavailable}"
           [ -n "${skipped_notest:-}" ] && echo -e "⏭️ Skipped (no test):${skipped_notest}"

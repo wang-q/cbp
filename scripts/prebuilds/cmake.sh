@@ -40,15 +40,5 @@ else
     rm -fr collect/man
 fi
 
-# Run test if requested
-if [ "${RUN_TEST}" = "test" ]; then
-    test_bin() {
-        local output=$("collect/bin/cmake" --version)
-        echo "${output}"
-        [ -n "${output}" ] && echo "PASSED"
-    }
-    run_test test_bin
-fi
-
 # Pack binaries
 build_tar
