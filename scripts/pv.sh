@@ -8,7 +8,7 @@ extract_source
 
 # ./configure --help
 
-# Build mummer with the specified target architecture
+# Build with the specified target architecture
 CC="zig cc -target ${TARGET_ARCH}" \
 AR="zig ar" \
 RANLIB="zig ranlib" \
