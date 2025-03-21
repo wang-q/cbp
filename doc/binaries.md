@@ -101,7 +101,7 @@ bash scripts/miniprot.sh
 bash scripts/lastz.sh
 bash scripts/phylip.sh
 
-# bash scripts/mafft.sh # mafft has hard-coded paths
+bash scripts/mafft.sh
 
 bash scripts/phast.sh # build without CLAPACK
 
