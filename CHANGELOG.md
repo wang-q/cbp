@@ -2,6 +2,13 @@
 
 ## Unreleased - ReleaseDate
 
+- Added automated binary testing workflow
+- Added Python 3 support with uv package manager
+- Added relocatable Perl 5 support
+- Added more vcpkg ports and packages
+- Added test scripts for various packages
+- Improved build system and documentation
+
 ## 0.3.6 - 2025-03-13
 
 - Improved path handling
