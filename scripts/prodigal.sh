@@ -16,8 +16,8 @@ make \
 
 make install INSTALLDIR=${TEMP_DIR}/collect/bin
 
-eza -T ${TEMP_DIR}/collect
-ldd ${TEMP_DIR}/collect/bin/prodigal
+# eza -T ${TEMP_DIR}/collect
+# ldd ${TEMP_DIR}/collect/bin/prodigal
 
 # Collect binaries and create tarball
 build_tar
