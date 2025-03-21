@@ -228,32 +228,6 @@ fix_shebang() {
     fi
 }
 
-# Run test program and verify results
-run_test() {
-    local test_prog="$1"
-    local name="${2:-${PROJ}}"
-
-    echo "==> Running ${name} tests..."
-
-    test_output=$(${test_prog})
-    test_status=$?
-
-    echo "${test_output}"
-
-    if [ $test_status -ne 0 ]; then
-        echo "==> Error: ${name} test failed with status ${test_status}"
-        exit 1
-    fi
-
-    if ! echo "${test_output}" | grep -q "PASSED"; then
-        echo "==> Error: ${name} test did not pass"
-        exit 1
-    fi
-
-    echo "==> All ${name} tests passed"
-}
-
 export -f extract_source build_tar
 export -f collect_bins collect_make_bins
 export -f fix_shebang
-export -f run_test

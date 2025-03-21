@@ -50,7 +50,6 @@ The script defines the following variables:
 | `fix_shebang file`            | Fixes shebang lines in script files:                           |
 |                               | - Perl: `#!/usr/bin/env perl`                                  |
 |                               | - Python: `#!/usr/bin/env python3`                             |
-| `run_test prog`               | Runs test program and verifies for "PASSED" in output          |
 
 ## Error Handling
 
