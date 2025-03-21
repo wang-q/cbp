@@ -83,14 +83,15 @@ jobs:
             exit 1
           fi
 
-          test_results=""
-
           # Mark packages not available for current platform
           for pkg in $all_pkgs; do
             if ! echo "$platform_pkgs" | grep -q "^$pkg\$"; then
               skipped_unavailable="${skipped_unavailable:-} $pkg"
             fi
           done
+
+          test_results_pass=""
+          test_results_fail=""
 
           # Test available packages
           for pkg in $platform_pkgs; do
@@ -99,9 +100,9 @@ jobs:
               if cbp install $pkg && \
                  cbp list $pkg && \
                  bash "test-binaries/$pkg.sh"; then
-                test_results="${test_results}✅ $pkg: PASSED\n"
+                test_results_pass="${test_results_pass:+$test_results_pass }$pkg"
               else
-                test_results="${test_results}❌ $pkg: FAILED\n"
+                test_results_fail="${test_results_fail}❌ Failed: $pkg\n"
               fi
             else
               skipped_notest="${skipped_notest:-} $pkg"
@@ -109,7 +110,8 @@ jobs:
           done
 
           echo -e "\n==> Test Summary:"
-          echo -e "$test_results"
+          [ -n "${test_results_pass}" ] && echo -e "✅ Passed:${test_results_pass}"
+          [ -n "${test_results_fail}" ] && echo -e "${test_results_fail}"
           [ -n "${skipped_unavailable:-}" ] && echo -e "⏭️ Skipped (not available):${skipped_unavailable}"
           [ -n "${skipped_notest:-}" ] && echo -e "⏭️ Skipped (no test):${skipped_notest}"
 
