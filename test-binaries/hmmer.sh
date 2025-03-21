@@ -1,17 +1,12 @@
 #!/bin/bash
 
-set -euo pipefail
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-# Create temp directory and ensure cleanup
-TEMP_DIR=$(mktemp -d)
-trap 'rm -rf "$TEMP_DIR"' EXIT
-
-echo "==> Testing HMMER installation"
+echo "==> Testing ${PROJ} installation"
 
 # Create test HMM file
 echo "-> Creating test HMM file"
-cat > "${TEMP_DIR}/M1.hmm" << 'EOF'
+cat > "M1.hmm" << 'EOF'
 HMMER3/e [3.0 | March 2010]
 NAME  M1
 LENG  1
@@ -40,14 +35,6 @@ EOF
 
 # Test hmmstat
 echo "-> Testing hmmstat"
-HMMSTAT_OUTPUT=$($(cbp prefix bin)/hmmstat "${TEMP_DIR}/M1.hmm")
+HMMSTAT_OUTPUT=$($(cbp prefix bin)/hmmstat "M1.hmm")
 
-if echo "$HMMSTAT_OUTPUT" | grep -q "M1"; then
-    echo "Test PASSED"
-    exit 0
-else
-    echo "Test FAILED"
-    echo "Expected 'M1' in output"
-    echo "Got: $HMMSTAT_OUTPUT"
-    exit 1
-fi
+assert 'echo "${HMMSTAT_OUTPUT}" | grep -q "M1"' "Expected 'M1' in output"

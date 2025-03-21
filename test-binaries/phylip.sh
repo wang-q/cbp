@@ -1,17 +1,11 @@
 #!/bin/bash
 
-set -euo pipefail
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-# Create temp directory and ensure cleanup
-TEMP_DIR=$(mktemp -d)
-trap 'rm -rf "$TEMP_DIR"' EXIT
-
-echo "==> Testing PHYLIP installation"
+echo "==> Testing ${PROJ} installation"
 
 # Create test input file
 echo "-> Creating test input file"
-cd "${TEMP_DIR}"
 cat > infile << 'EOF'
 7         6
 Alpha1    110110
@@ -28,18 +22,6 @@ echo "-> Testing pars"
 EXPECTED="(((Epsilon:0.00,Delta:3.00):2.00,Gamma1:0.00):1.00,(Beta2:0.00,Beta1:0.00):2.00,Alpha2:0.00,Alpha1:0.00);"
 echo "Y" | $(cbp prefix bin)/pars > /dev/null
 
-if [ ! -f "outtree" ]; then
-    echo "Test FAILED: outtree file not found"
-    exit 1
-fi
-
+assert '[ -f "outtree" ]' "outtree file not found"
 RESULT=$(cat outtree)
-if [ "$RESULT" = "$EXPECTED" ]; then
-    echo "Test PASSED"
-    exit 0
-else
-    echo "Test FAILED"
-    echo "Expected: $EXPECTED"
-    echo "Got: $RESULT"
-    exit 1
-fi
+assert_eq "${RESULT}" "${EXPECTED}" "Tree output mismatch"

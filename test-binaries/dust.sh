@@ -1,15 +1,8 @@
 #!/bin/bash
 
-set -euo pipefail
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-# Create temp directory and ensure cleanup
-TEMP_DIR=$(mktemp -d)
-trap 'rm -rf "$TEMP_DIR"' EXIT
-
-echo "==> Testing dust installation"
-
-cd "${TEMP_DIR}"
+echo "==> Testing ${PROJ} installation"
 
 # Create test directory structure
 echo "-> Creating test directory structure"
@@ -30,12 +23,4 @@ fi
 echo "-> Testing dust"
 RESULT=$($(cbp prefix bin)/dust --no-percent-bars dir1 | grep -E "^[0-9.]+(M|K)" | wc -l)
 
-if [ "$RESULT" -ge 2 ]; then
-    echo "Test PASSED"
-    exit 0
-else
-    echo "Test FAILED"
-    echo "Expected at least 2 size entries"
-    echo "Got: $RESULT"
-    exit 1
-fi
+assert '[ "${RESULT}" -ge 2 ]' "Expected at least 2 size entries"

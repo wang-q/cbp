@@ -1,24 +1,7 @@
 #!/bin/bash
 
-set -euo pipefail
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-# Create temp directory and ensure cleanup
-TEMP_DIR=$(mktemp -d)
-trap 'rm -rf "$TEMP_DIR"' EXIT
+echo "==> Testing ${PROJ} installation"
 
-echo "==> Testing muscle installation"
-
-# Test version output
-echo "-> Testing version output"
-VERSION_OUTPUT=$($(cbp prefix bin)/muscle -version)
-
-if echo "$VERSION_OUTPUT" | grep -q "muscle"; then
-    echo "Test PASSED"
-    exit 0
-else
-    echo "Test FAILED"
-    echo "Expected 'muscle' in version output"
-    echo "Got: $VERSION_OUTPUT"
-    exit 1
-fi
+test_version "muscle" "muscle" "-version"

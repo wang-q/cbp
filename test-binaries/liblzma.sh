@@ -1,37 +1,23 @@
 #!/bin/bash
 
-set -euo pipefail
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-# Create temp directory and ensure cleanup
-TEMP_DIR=$(mktemp -d)
-trap 'rm -rf "$TEMP_DIR"' EXIT
-
-echo "==> Testing liblzma installation"
+echo "==> Testing ${PROJ} installation"
 
 # Create test data
 echo "-> Creating test data"
-TEST_FILE="${TEMP_DIR}/data.txt"
-printf '%.0s.' {1..1000} > "$TEST_FILE"
-ORIGINAL_CONTENT=$(cat "$TEST_FILE")
+TEST_FILE="data.txt"
+printf '%.0s.' {1..1000} > "${TEST_FILE}"
+ORIGINAL_CONTENT=$(cat "${TEST_FILE}")
 
 # Test compression
 echo "-> Testing compression"
-$(cbp prefix bin)/xz "$TEST_FILE"
-if [ -f "$TEST_FILE" ]; then
-    echo "Compression failed: original file still exists"
-    exit 1
-fi
+$(cbp prefix bin)/xz "${TEST_FILE}"
+assert '[ ! -f "${TEST_FILE}" ]' "Expected original file to be replaced by compressed file"
 
 # Test decompression
 echo "-> Testing decompression"
 $(cbp prefix bin)/xz -d "${TEST_FILE}.xz"
-DECOMPRESSED_CONTENT=$(cat "$TEST_FILE")
+DECOMPRESSED_CONTENT=$(cat "${TEST_FILE}")
 
-if [ "$ORIGINAL_CONTENT" = "$DECOMPRESSED_CONTENT" ]; then
-    echo "Test PASSED"
-    exit 0
-else
-    echo "Test FAILED: content mismatch"
-    exit 1
-fi
+assert_eq "${ORIGINAL_CONTENT}" "${DECOMPRESSED_CONTENT}" "Expected content to match after compression/decompression"

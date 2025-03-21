@@ -1,25 +1,13 @@
 #!/bin/bash
 
-set -euo pipefail
-# shellcheck disable=SC2034
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-# Create temp directory and ensure cleanup
-TEMP_DIR=$(mktemp -d)
-trap 'rm -rf "$TEMP_DIR"' EXIT
+echo "==> Testing ${PROJ} installation"
 
-cd "$TEMP_DIR"
+# Test version output
+test_version "tectonic" "tectonic"
 
-echo "==> Testing tectonic installation"
-
-# Test 1: Version check
-echo "-> Checking version"
-$(cbp prefix bin)/tectonic --version || {
-    echo "FAILED: Version check failed"
-    exit 1
-}
-
-# Test 2: Basic compilation
+# Test basic compilation
 echo "-> Testing basic compilation"
 cat > test.tex << 'EOF'
 \documentclass{article}
@@ -28,17 +16,5 @@ Hello, World!
 \end{document}
 EOF
 
-$(cbp prefix bin)/tectonic test.tex || {
-    echo "FAILED: Basic compilation failed"
-    exit 1
-}
-
-# Test 3: Check output file
-if [ -f "test.pdf" ]; then
-    echo "PASSED: PDF file generated successfully"
-else
-    echo "FAILED: PDF file not found"
-    exit 1
-fi
-
-echo "==> All tests passed"
+assert '$(cbp prefix bin)/tectonic test.tex' "Basic compilation failed"
+assert '[ -f "test.pdf" ]' "PDF file not generated"

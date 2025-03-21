@@ -1,17 +1,12 @@
 #!/bin/bash
 
-set -euo pipefail
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-# Create temp directory and ensure cleanup
-TEMP_DIR=$(mktemp -d)
-trap 'rm -rf "$TEMP_DIR"' EXIT
-
-echo "==> Testing libdeflate installation"
+echo "==> Testing ${PROJ} installation"
 
 # Create test program
 echo "-> Creating test program"
-cat > ${TEMP_DIR}/test.c << 'EOF'
+cat > test.c << 'EOF'
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -66,15 +61,17 @@ echo "-> Compiling test program"
 if [[ "${OSTYPE:-}" == "msys" || "${OSTYPE:-}" == "win32" || "${OS:-}" == "Windows_NT" ]]; then
     gcc \
         -I"$(cbp prefix include)" \
-        ${TEMP_DIR}/test.c \
+        test.c \
         "$(cbp prefix lib)/libdeflate.a" \
-        -o ${TEMP_DIR}/test.exe
-    ${TEMP_DIR}/test.exe
+        -o test.exe
+    OUTPUT=$(./test.exe)
 else
     gcc \
         -I"$(cbp prefix include)" \
-        ${TEMP_DIR}/test.c \
+        test.c \
         "$(cbp prefix lib)/libdeflate.a" \
-        -o ${TEMP_DIR}/test
-    ${TEMP_DIR}/test
+        -o test
+    OUTPUT=$(./test)
 fi
+
+assert 'echo "${OUTPUT}" | grep -q "Test PASSED"' "Expected successful compression/decompression test"

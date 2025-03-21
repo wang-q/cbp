@@ -1,15 +1,10 @@
 #!/bin/bash
 
-set -euo pipefail
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-# Create temp directory and ensure cleanup
-TEMP_DIR=$(mktemp -d)
-trap 'rm -rf "$TEMP_DIR"' EXIT
+echo "==> Testing ${PROJ} installation"
 
-echo "==> Testing tokei installation"
-
-cd "${TEMP_DIR}"
+test_version "tokei" "tokei [0-9]+\.[0-9]+\.[0-9]+"
 
 # Create test Rust file
 echo "-> Creating test Rust file"
@@ -27,12 +22,5 @@ EOF
 echo "-> Testing tokei analysis"
 OUTPUT=$($(cbp prefix bin)/tokei lib.rs)
 
-if echo "$OUTPUT" | grep -q "Rust" && echo "$OUTPUT" | grep -q "Total"; then
-    echo "Test PASSED"
-    exit 0
-else
-    echo "Test FAILED"
-    echo "Expected output containing 'Rust' and 'Total'"
-    echo "Got: $OUTPUT"
-    exit 1
-fi
+assert 'echo "${OUTPUT}" | grep -q "Rust" && echo "${OUTPUT}" | grep -q "Total"' \
+    "Expected output containing 'Rust' and 'Total'"

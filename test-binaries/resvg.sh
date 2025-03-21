@@ -1,15 +1,8 @@
 #!/bin/bash
 
-set -euo pipefail
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-# Create temp directory and ensure cleanup
-TEMP_DIR=$(mktemp -d)
-trap 'rm -rf "$TEMP_DIR"' EXIT
-
-echo "==> Testing resvg installation"
-
-cd "${TEMP_DIR}"
+echo "==> Testing ${PROJ} installation"
 
 # Create test SVG file
 echo "-> Creating test SVG file"
@@ -22,12 +15,4 @@ EOF
 # Test resvg conversion
 echo "-> Testing resvg SVG to PNG conversion"
 $(cbp prefix bin)/resvg circle.svg test.png
-if [ -f "test.png" ]; then
-    echo "resvg test PASSED"
-else
-    echo "resvg test FAILED: PNG file not created"
-    exit 1
-fi
-
-echo "All tests PASSED"
-exit 0
+assert '[ -f "test.png" ]' "PNG file not created"

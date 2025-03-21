@@ -1,18 +1,13 @@
 #!/bin/bash
 
-set -euo pipefail
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-# Create temp directory and ensure cleanup
-TEMP_DIR=$(mktemp -d)
-trap 'rm -rf "$TEMP_DIR"' EXIT
-
-echo "==> Testing raxml-ng installation"
+echo "==> Testing ${PROJ} installation"
 
 # Create test phylip file
 # https://cme.h-its.org/exelixis/resource/download/hands-on/dna.phy
 echo "-> Creating test phylip file"
-cat > "${TEMP_DIR}/dna.phy" << 'EOF'
+cat > "dna.phy" << 'EOF'
 10 60
 Cow       ATGGCATATCCCATACAACTAGGATTCCAAGATGCAACATCACCAATCATAGAAGAACTA
 Carp      ATGGCACACCCAACGCAACTAGGTTTCAAGGACGCGGCCATACCCGTTATAGAGGAACTT
@@ -28,11 +23,4 @@ EOF
 
 # Test raxml-ng
 echo "-> Testing raxml-ng with GTR model"
-cd "${TEMP_DIR}"
-if $(cbp prefix bin)/raxml-ng --msa dna.phy --start --model GTR; then
-    echo "Test PASSED"
-    exit 0
-else
-    echo "Test FAILED"
-    exit 1
-fi
+assert '$(cbp prefix bin)/raxml-ng --msa dna.phy --start --model GTR' "RAxML-NG analysis failed"

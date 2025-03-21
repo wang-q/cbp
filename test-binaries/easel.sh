@@ -1,17 +1,12 @@
 #!/bin/bash
 
-set -euo pipefail
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-# Create temp directory and ensure cleanup
-TEMP_DIR=$(mktemp -d)
-trap 'rm -rf "$TEMP_DIR"' EXIT
-
-echo "==> Testing easel installation"
+echo "==> Testing ${PROJ} installation"
 
 # Create test alignment file
 echo "-> Creating test alignment file"
-cat > "${TEMP_DIR}/test.afa" << 'EOF'
+cat > "test.afa" << 'EOF'
 >MYG_PHYCA
 --------V-LSEGEWQLVLHVWAKVEADVAGHGQDILIRLFKSHPETLEKFDRFKHLKT
 EAEMKASEDLKKHGVTVLTALGAILKKKGH---HEAELKPLAQSHATKHKIPIKYLEFIS
@@ -32,14 +27,7 @@ EOF
 
 # Test esl-alistat
 echo "-> Testing esl-alistat"
-ALISTAT_OUTPUT=$($(cbp prefix bin)/esl-alistat "${TEMP_DIR}/test.afa")
+ALISTAT_OUTPUT=$($(cbp prefix bin)/esl-alistat "test.afa")
 
-if echo "$ALISTAT_OUTPUT" | grep -q "Alignment length:    165"; then
-    echo "Test PASSED"
-    exit 0
-else
-    echo "Test FAILED"
-    echo "Expected 'Alignment length:    165' in output"
-    echo "Got: $ALISTAT_OUTPUT"
-    exit 1
-fi
+assert 'echo "${ALISTAT_OUTPUT}" | grep -q "Alignment length:    165"' \
+    "Expected 'Alignment length:    165' in output"
