@@ -2,6 +2,8 @@
 
 ## Unreleased - ReleaseDate
 
+## 0.3.7 - 2025-03-21
+
 - Added automated binary testing workflow
 - Added Python 3 support with uv package manager
 - Added relocatable Perl 5 support

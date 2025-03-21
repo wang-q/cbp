@@ -1,6 +1,6 @@
 [package]
 name = "cbp"
-version = "0.3.6"
+version = "0.3.7"
 authors = ["wang-q <wang-q@outlook.com>"]
 description = "`cbp` is a Binary Package manager"
 documentation = "https://github.com/wang-q/cbp"
