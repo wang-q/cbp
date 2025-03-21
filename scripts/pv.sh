@@ -28,7 +28,7 @@ LDFLAGS="-L${CBP_LIB}" \
 make || exit 1
 make install || exit 1
 
-# ldd ${TEMP_DIR}/collect/bin/clustalo
+# ldd ${TEMP_DIR}/collect/bin/pv
 # eza -T ${TEMP_DIR}/collect/
 
 # Use build_tar function from common.sh
