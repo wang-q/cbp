@@ -86,7 +86,4 @@ cbp local -l eza
 
 # .\scripts\rust.ps1 wgatools
 
-$files = Get-ChildItem "binaries\*.tar.gz" | Select-Object -ExpandProperty FullName
-cbp upload $files
-
 ```

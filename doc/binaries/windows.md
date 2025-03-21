@@ -123,3 +123,11 @@ Get-Command pigz
 .\scripts\vcpkg.ps1 trf
 
 ```
+
+## Uploads
+
+```powershell
+$files = Get-ChildItem "binaries\*.tar.gz" | Select-Object -ExpandProperty FullName
+cbp upload $files
+
+```
