@@ -27,7 +27,8 @@ bash scripts/prebuilds/tectonic.sh linux
 bash scripts/prebuilds/tectonic.sh macos
 bash scripts/prebuilds/tectonic.sh windows
 
-#bash scripts/prebuilds/pup.sh
+bash scripts/prebuilds/pup.sh linux
+bash scripts/prebuilds/pup.sh macos
 
 bash scripts/prebuilds/uv.sh linux
 bash scripts/prebuilds/uv.sh macos
