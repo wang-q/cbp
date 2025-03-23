@@ -82,8 +82,11 @@ bash scripts/prebuilds/raxml-ng.sh linux
 bash scripts/prebuilds/raxml-ng.sh macos
 
 bash scripts/prebuilds/freebayes.sh linux
+```
 
-# java
+## java
+
+```bash
 bash scripts/prebuilds/fastqc.sh linux
 bash scripts/prebuilds/fastqc.sh macos
 
