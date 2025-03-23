@@ -1,0 +1,22 @@
+name: pandoc
+version: "3.6.3"
+description: "Universal markup converter"
+homepage: "https://pandoc.org"
+license: "GPL-2.0"
+
+downloads:
+  linux:
+    url: "https://github.com/jgm/pandoc/releases/download/3.6.3/pandoc-3.6.3-linux-amd64.tar.gz"
+    binary: "pandoc-*/bin/pandoc*"
+  macos:
+    url: "https://github.com/jgm/pandoc/releases/download/3.6.3/pandoc-3.6.3-arm64-macOS.zip"
+    binary: "pandoc-*/bin/pandoc*"
+  windows:
+    url: "https://github.com/jgm/pandoc/releases/download/3.6.3/pandoc-3.6.3-windows-x86_64.zip"
+    binary: "pandoc-*/pandoc*"
+
+tests:
+  - name: "version"
+    command: "pandoc"
+    pattern: "pandoc [0-9]+\\.[0-9]+\\.[0-9]+"
+    args: "--version"

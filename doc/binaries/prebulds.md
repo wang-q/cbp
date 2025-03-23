@@ -3,14 +3,17 @@
 ## Common tools
 
 ```bash
-# Download and package for specific OS
-bash scripts/prebuilds/jq.sh linux     # Download Linux x86_64 binary
-bash scripts/prebuilds/jq.sh macos     # Download macOS ARM64 binary
-bash scripts/prebuilds/jq.sh windows   # Download Windows x86_64 binary
+bash scripts/prebuild.sh jq linux
+bash scripts/prebuild.sh jq macos
+bash scripts/prebuild.sh jq windows
 
-bash scripts/prebuilds/ninja.sh linux
-bash scripts/prebuilds/ninja.sh macos
-bash scripts/prebuilds/ninja.sh windows
+bash scripts/prebuild.sh yq linux
+bash scripts/prebuild.sh yq macos
+bash scripts/prebuild.sh yq windows
+
+bash scripts/prebuild.sh ninja linux
+bash scripts/prebuild.sh ninja macos
+bash scripts/prebuild.sh ninja windows
 
 bash scripts/prebuilds/cmake.sh linux
 bash scripts/prebuilds/cmake.sh macos
@@ -19,24 +22,24 @@ bash scripts/prebuilds/cmake.sh windows
 bash scripts/prebuilds/tsv-utils.sh linux
 bash scripts/prebuilds/tsv-utils.sh macos
 
-bash scripts/prebuilds/pandoc.sh linux
-bash scripts/prebuilds/pandoc.sh macos
-bash scripts/prebuilds/pandoc.sh windows
+bash scripts/prebuild.sh pandoc linux
+bash scripts/prebuild.sh pandoc macos
+bash scripts/prebuild.sh pandoc windows
 
-bash scripts/prebuilds/tectonic.sh linux
-bash scripts/prebuilds/tectonic.sh macos
-bash scripts/prebuilds/tectonic.sh windows
+bash scripts/prebuild.sh tectonic linux
+bash scripts/prebuild.sh tectonic macos
+bash scripts/prebuild.sh tectonic windows
 
 bash scripts/prebuilds/pup.sh linux
 bash scripts/prebuilds/pup.sh macos
 
-bash scripts/prebuilds/uv.sh linux
-bash scripts/prebuilds/uv.sh macos
-bash scripts/prebuilds/uv.sh windows
+bash scripts/prebuild.sh uv linux
+bash scripts/prebuild.sh uv macos
+bash scripts/prebuild.sh uv windows
 
-bash scripts/prebuilds/bat.sh linux
-bash scripts/prebuilds/bat.sh macos
-bash scripts/prebuilds/bat.sh windows
+bash scripts/prebuild.sh bat linux
+bash scripts/prebuild.sh bat macos
+bash scripts/prebuild.sh bat windows
 
 ```
 

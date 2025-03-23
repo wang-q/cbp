@@ -1,0 +1,23 @@
+name: tsv-utils
+version: "2.1.1"
+description: "Command line tools for large, tabular data files"
+homepage: "https://github.com/eBay/tsv-utils"
+license: "BSL-1.0"
+
+downloads:
+  linux:
+    url: "https://github.com/eBay/tsv-utils/releases/download/v2.1.1/tsv-utils-v2.1.1_linux-x86_64_ldc2.tar.gz"
+    binary:
+      - "tsv-utils*/bin/*"
+      - "tsv-utils*/extras/scripts/*"
+  macos:
+    url: "https://github.com/eBay/tsv-utils/releases/download/v2.1.1/tsv-utils-v2.1.1_osx-x86_64_ldc2.tar.gz"
+    binary:
+      - "tsv-utils*/bin/*"
+      - "tsv-utils*/extras/scripts/*"
+
+tests:
+  - name: "version"
+    command: "tsv-summarize"
+    pattern: "tsv-summarize \\(eBay/tsv-utils\\) version [0-9]+\\.[0-9]+\\.[0-9]+"
+    args: "--version"

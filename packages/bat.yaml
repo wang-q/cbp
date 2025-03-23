@@ -1,0 +1,25 @@
+name: bat
+version: "0.25.0"
+description: "A cat(1) clone with syntax highlighting and Git integration"
+homepage: "https://github.com/sharkdp/bat"
+license: "Apache-2.0"
+
+downloads:
+  linux:
+    url: "https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-x86_64-unknown-linux-musl.tar.gz"
+    extract: "tar xvfz"
+    binary: "bat-*/bat"
+  macos:
+    url: "https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-aarch64-apple-darwin.tar.gz"
+    extract: "tar xvfz"
+    binary: "bat-*/bat"
+  windows:
+    url: "https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-x86_64-pc-windows-msvc.zip"
+    extract: "unzip"
+    binary: "bat-*/bat.exe"
+
+tests:
+  - name: "version"
+    command: "bat"
+    pattern: "bat [0-9]+\\."
+    args: "--version"
