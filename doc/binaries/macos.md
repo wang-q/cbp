@@ -43,6 +43,7 @@ bash scripts/vcpkg.sh pkgconf arm64-macos-zig pkgconf=pkg-config
 bash scripts/vcpkg.sh "python3[core,extensions]" arm64-osx-release
 mv binaries/python3.macos.tar.gz binaries/python3.11.macos.tar.gz
 
+# https://github.com/LadybirdBrowser/ladybird/issues/1162#issuecomment-2363694762
 # bash scripts/vcpkg.sh graphviz
 # bash scripts/vcpkg.sh gnuplot
 
