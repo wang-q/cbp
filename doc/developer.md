@@ -138,6 +138,28 @@ vcpkg remove --debug --recurse \
 
 ```
 
+* llvm
+
+```bash
+cd ~/share
+
+# Download and install llvm
+curl -o llvm.tar.xz -L https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/clang+llvm-18.1.8-arm64-apple-macos11.tar.xz
+
+tar xvf llvm.tar.xz
+mv clang+llvm-* llvm
+
+# Remove quarantine attribute if exists (ignore errors)
+for d in bin lib libexec; do
+    for f in llvm/${d}/*; do
+        xattr -d com.apple.quarantine "$f" 2>/dev/null || true
+    done
+done
+
+llvm/bin/lld --version
+
+```
+
 ### Other tools
 
 ```bash

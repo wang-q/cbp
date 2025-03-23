@@ -40,13 +40,6 @@ bash scripts/vcpkg.sh "curl[core,tool,ssl,http2,websockets]" arm64-osx-release
 
 bash scripts/vcpkg.sh pkgconf arm64-macos-zig pkgconf=pkg-config
 
-bash scripts/vcpkg.sh "python3[core,extensions]" arm64-osx-release
-mv binaries/python3.macos.tar.gz binaries/python3.11.macos.tar.gz
-
-# https://github.com/LadybirdBrowser/ladybird/issues/1162#issuecomment-2363694762
-# bash scripts/vcpkg.sh graphviz
-# bash scripts/vcpkg.sh gnuplot
-
 ```
 
 ## My ports
@@ -167,13 +160,45 @@ bash scripts/spoa.sh
 ```bash
 bash scripts/fasttree.sh
 
-# fatal error: 'iostream' file not found
+# https://github.com/LadybirdBrowser/ladybird/issues/1162#issuecomment-2363694762
+CC=~/share/llvm/bin/clang \
+CXX=~/share/llvm/bin/clang++ \
 vcpkg install --debug --recurse \
     --clean-buildtrees-after-build \
     --x-buildtrees-root=vcpkg/buildtrees \
     --downloads-root=vcpkg/downloads \
     --x-install-root=vcpkg/installed \
     --x-packages-root=vcpkg/packages \
-    libgd
+    graphviz:arm64-osx-release
+
+otool -L vcpkg/installed/arm64-osx-release/tools/graphviz/dot
+
+cbp collect --ignore tools/graphviz/graphviz/libgvplugin \
+    vcpkg/installed/vcpkg/info/graphviz_*_arm64-osx-release.list
+mv graphviz.osx.tar.gz binaries/graphviz.macos.tar.gz
+
+# CC=~/share/llvm/bin/clang \
+# CXX=~/share/llvm/bin/clang++ \
+# vcpkg install --debug --recurse \
+#     --clean-buildtrees-after-build \
+#     --overlay-ports=ports \
+#     --x-buildtrees-root=vcpkg/buildtrees \
+#     --downloads-root=vcpkg/downloads \
+#     --x-install-root=vcpkg/installed \
+#     --x-packages-root=vcpkg/packages \
+#     gnuplot:arm64-osx-release
+
+CC=~/share/llvm/bin/clang \
+CXX=~/share/llvm/bin/clang++ \
+vcpkg install --debug --recurse \
+    --clean-buildtrees-after-build \
+    --x-buildtrees-root=vcpkg/buildtrees \
+    --downloads-root=vcpkg/downloads \
+    --x-install-root=vcpkg/installed \
+    --x-packages-root=vcpkg/packages \
+    "python3[core,extensions]":arm64-osx-release
+
+cbp collect vcpkg/installed/vcpkg/info/python3_*_arm64-osx-release.list
+mv python3.osx.tar.gz binaries/python3.11.macos.tar.gz
 
 ```
