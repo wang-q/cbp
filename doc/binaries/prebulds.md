@@ -91,3 +91,21 @@ bash scripts/prebuilds/picard.sh linux
 bash scripts/prebuilds/picard.sh macos
 
 ```
+
+## Fonts
+
+```bash
+bash scripts/prebuild.sh arial font
+bash scripts/prebuild.sh charter font
+bash scripts/prebuild.sh helvetica font
+
+# Open Source Fonts
+bash scripts/prebuild.sh fira font
+bash scripts/prebuild.sh jetbrains-mono font
+bash scripts/prebuild.sh firacode-nf font
+
+bash scripts/prebuild.sh lxgw-wenkai font
+bash scripts/prebuild.sh source-han-sans font
+bash scripts/prebuild.sh source-han-serif font
+
+```

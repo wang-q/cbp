@@ -1,0 +1,17 @@
+name: source-han-sans
+version: "2.004R"
+description: "思源黑体 / 思源黑體 / 源ノ角ゴシック / 본고딕"
+homepage: "https://github.com/adobe-fonts/source-han-sans"
+license: "OFL-1.1"
+
+downloads:
+  font:
+    url: "https://github.com/adobe-fonts/source-han-sans/releases/download/2.004R/SourceHanSansSC.zip"
+    extract: "unzip -j -o"
+    binary: "*.otf"
+
+tests:
+  - name: "files"
+    command: "ls"
+    pattern: "SourceHanSansSC-Regular\\.otf$"
+    args: "$(cbp prefix)/share/fonts"

@@ -38,6 +38,13 @@ esac
 # Use provided OS type or default
 OS_TYPE=${2:-$DEFAULT_OS}
 
+# Set binary suffix for Windows
+if [ "$OS_TYPE" == "windows" ]; then
+    BIN_SUFFIX=".exe"
+else
+    BIN_SUFFIX=""
+fi
+
 # Validate the OS type
 if [[ "$OS_TYPE" != "linux" ]] &&
    [[ "$OS_TYPE" != "macos" ]] &&
@@ -66,52 +73,80 @@ if [ -z "${BINARY}" ]; then
     exit 1
 fi
 
+EXTRACT=$(yq ".downloads.${OS_TYPE}.extract" "$YAML_FILE")
+EXCLUDE=$(yq ".downloads.${OS_TYPE}.exclude" "$YAML_FILE")
+
 collect_bins() {
     local bins=("$@")
+    local target_dir="bin"
 
-    # Check if any binaries were specified
+    if [ "$OS_TYPE" == "font" ]; then
+        target_dir="share/fonts"
+    fi
+
+    # Check if any files were specified
     if [ ${#bins[@]} -eq 0 ]; then
-        echo "Error: No binaries specified"
+        echo "Error: No files specified"
         exit 1
     fi
 
     # Create collect directory
-    mkdir -p ${TEMP_DIR}/collect/bin
+    mkdir -p "${TEMP_DIR}/collect/${target_dir}"
 
-    # Process each binary file
+    # Process each file
     for bin in "${bins[@]}"; do
-        # Handle binary name with suffix
         local source_bin="${bin}"
         local base_name=$(basename "${bin}")
         local target_bin="${base_name}"
 
-        # Only add suffix for executables on Windows, and only if they don't already have an extension
-        if [ -n "${BIN_SUFFIX}" ] && [[ ! "${base_name}" =~ \.(exe|dll|lib|a)$ ]]; then
-            target_bin="${base_name}${BIN_SUFFIX}"
+        if [ "$OS_TYPE" != "font" ]; then
+            # Only add suffix for executables on Windows
+            if [ -n "${BIN_SUFFIX}" ] && [[ ! "${base_name}" =~ \.(exe|dll|lib|a)$ ]]; then
+                target_bin="${base_name}${BIN_SUFFIX}"
+            fi
+
+            # Check if source binary has suffix
+            if [ -n "${BIN_SUFFIX}" ] && [ -f "${bin}${BIN_SUFFIX}" ]; then
+                source_bin="${bin}${BIN_SUFFIX}"
+            fi
+
+            chmod +x "${source_bin}" ||
+                { echo "Error: Failed to make binary ${source_bin} executable"; exit 1; }
         fi
 
-        # Check if source binary has suffix
-        if [ -n "${BIN_SUFFIX}" ] && [ -f "${bin}${BIN_SUFFIX}" ]; then
-            source_bin="${bin}${BIN_SUFFIX}"
-        fi
-
-        chmod +x "${source_bin}" ||
-            { echo "Error: Failed to make binary ${source_bin} executable"; exit 1; }
-        cp "${source_bin}" "${TEMP_DIR}/collect/bin/${target_bin}" ||
-            { echo "Error: Failed to copy binary ${source_bin}"; exit 1; }
+        cp "${source_bin}" "${TEMP_DIR}/collect/${target_dir}/${target_bin}" ||
+            { echo "Error: Failed to copy file ${source_bin}"; exit 1; }
     done
 }
 
 # Download and extract
 echo "==> Downloading ${PACKAGE}..."
-if [[ "${URL}" == *.zip ]] || [[ "${URL}" == *.tar.gz ]]; then
-    # Archive file
+if [ -n "${EXTRACT}" ] || [[ "${URL}" == *.zip ]] || [[ "${URL}" == *.tar.gz ]] || [[ "${URL}" == *.exe ]]; then
+    # Download file
     if [[ "${URL}" == *.zip ]]; then
         curl -L "${URL}" -o "${PACKAGE}.zip"
-        unzip "${PACKAGE}.zip"
-    else
+        if [ -n "${EXTRACT}" ]; then
+            ${EXTRACT} "${PACKAGE}.zip"
+        else
+            unzip "${PACKAGE}.zip"
+        fi
+    elif [[ "${URL}" == *.tar.gz ]]; then
         curl -L "${URL}" -o "${PACKAGE}.tar.gz"
-        tar xvfz "${PACKAGE}.tar.gz"
+        if [ -n "${EXTRACT}" ]; then
+            ${EXTRACT} "${PACKAGE}.tar.gz"
+        else
+            tar xvfz "${PACKAGE}.tar.gz"
+        fi
+    else
+        # Other files that need extraction
+        ext="${URL##*.}"
+        curl -L "${URL}" -o "${PACKAGE}.${ext}"
+        ${EXTRACT} "${PACKAGE}.${ext}"
+    fi
+
+    # Handle exclude pattern right after extraction
+    if [ -n "${EXCLUDE}" ]; then
+        rm -f ${EXCLUDE}
     fi
 
     # Handle glob pattern
@@ -129,15 +164,9 @@ if [[ "${URL}" == *.zip ]] || [[ "${URL}" == *.tar.gz ]]; then
         collect_bins "${BINARY}"
     fi
 else
-    # Single binary file
-    if [ "$OS_TYPE" == "windows" ]; then
-        curl -L "${URL}" -o "${BINARY}" ||
-            { echo "Error: Failed to download ${BINARY}"; exit 1; }
-    else
-        curl -L "${URL}" -o "${BINARY}" ||
-            { echo "Error: Failed to download ${BINARY}"; exit 1; }
-        chmod +x "${BINARY}"
-    fi
+    # Single file
+    curl -L "${URL}" -o "${BINARY}" ||
+        { echo "Error: Failed to download ${BINARY}"; exit 1; }
     collect_bins "${BINARY}"
 fi
 
