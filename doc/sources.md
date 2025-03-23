@@ -69,7 +69,7 @@ curl -o sources/multiz.tar.gz -L https://github.com/wang-q/multiz/archive/633c0f
 # ./configure
 curl -o sources/datamash.tar.gz -L https://ftp.gnu.org/gnu/datamash/datamash-1.8.tar.gz
 
-curl -o sources/pv.tar.gz -L https://www.ivarch.com/programs/sources/pv-1.9.31.tar.gz
+curl -o sources/cabextract.tar.gz -L https://www.cabextract.org.uk/cabextract-1.11.tar.gz
 
 curl -L https://github.com/Benson-Genomics-Lab/TRF/archive/refs/tags/v4.09.1.tar.gz |
     tar xvfz - &&
@@ -163,6 +163,8 @@ curl -L http://eddylab.org/software/hmmer/2.4i/hmmer-2.4i.tar.gz |
     mv hmmer-2.4i hmmer2 &&
     tar -czf sources/hmmer2.tar.gz hmmer2/ &&
     rm -rf hmmer2
+
+curl -o sources/pv.tar.gz -L https://www.ivarch.com/programs/sources/pv-1.9.31.tar.gz
 
 # curl -o sources/MaSuRCA.tar.gz -L https://github.com/alekseyzimin/masurca/releases/download/v4.1.2/MaSuRCA-4.1.2.tar.gz
 

@@ -71,6 +71,7 @@ bash scripts/vcpkg.sh multiz
 
 # ./configure
 bash scripts/vcpkg.sh datamash
+bash scripts/vcpkg.sh cabextract
 
 bash scripts/vcpkg.sh trf
 

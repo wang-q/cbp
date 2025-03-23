@@ -1,0 +1,17 @@
+{
+    "name": "cabextract",
+    "version": "1.11",
+    "description": "Extract files from Microsoft cabinet files",
+    "homepage": "https://www.cabextract.org.uk/",
+    "license": "GPL-3.0",
+    "dependencies": [
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        },
+        {
+            "name": "vcpkg-cmake-config",
+            "host": true
+        }
+    ]
+}
