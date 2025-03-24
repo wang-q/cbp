@@ -1,0 +1,21 @@
+name: stringtie
+version: "3.0.0"
+description: "Transcript assembly and quantification for RNA-Seq"
+homepage: "https://github.com/gpertea/stringtie"
+license: "MIT"
+
+downloads:
+  linux:
+    url: "https://github.com/gpertea/stringtie/releases/download/v3.0.0/stringtie-3.0.0.Linux_x86_64.tar.gz"
+    extract: "tar xvfz"
+    binary: "stringtie-*/stringtie"
+  macos:
+    url: "https://github.com/gpertea/stringtie/releases/download/v3.0.0/stringtie-3.0.0.OSX_x86_64.tar.gz"
+    extract: "tar xvfz"
+    binary: "stringtie-*/stringtie"
+
+tests:
+  - name: "version"
+    command: "stringtie"
+    pattern: "StringTie v"
+    args: "--version"

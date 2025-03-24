@@ -1,0 +1,21 @@
+name: mash
+version: "2.3"
+description: "Fast genome and metagenome distance estimation using MinHash"
+homepage: "https://github.com/marbl/Mash"
+license: "BSD-3-Clause"
+
+downloads:
+  linux:
+    url: "https://github.com/marbl/Mash/releases/download/v2.3/mash-Linux64-v2.3.tar"
+    extract: "tar xvf"
+    binary: "mash-*/mash"
+  macos:
+    url: "https://github.com/marbl/Mash/releases/download/v2.3/mash-OSX64-v2.3.tar"
+    extract: "tar xvf"
+    binary: "mash-*/mash"
+
+tests:
+  - name: "version"
+    command: "mash"
+    pattern: "Mash version "
+    args: "--version"

@@ -30,8 +30,8 @@ bash scripts/prebuild.sh tectonic linux
 bash scripts/prebuild.sh tectonic macos
 bash scripts/prebuild.sh tectonic windows
 
-bash scripts/prebuilds/pup.sh linux
-bash scripts/prebuilds/pup.sh macos
+bash scripts/prebuild.sh pup linux
+bash scripts/prebuild.sh pup macos
 
 bash scripts/prebuild.sh uv linux
 bash scripts/prebuild.sh uv macos
@@ -46,42 +46,43 @@ bash scripts/prebuild.sh bat windows
 ## Bioinformatics tools
 
 ```bash
-bash scripts/prebuilds/blast.sh linux
-bash scripts/prebuilds/blast.sh macos
-bash scripts/prebuilds/blast.sh windows
+bash scripts/prebuild.sh blast linux
+bash scripts/prebuild.sh blast macos
+bash scripts/prebuild.sh blast windows
 
 bash scripts/prebuilds/sratoolkit.sh linux
 bash scripts/prebuilds/sratoolkit.sh macos
 bash scripts/prebuilds/sratoolkit.sh windows
 
-bash scripts/prebuilds/muscle.sh linux
-bash scripts/prebuilds/reseek.sh linux
-bash scripts/prebuilds/usearch.sh -t linux
+bash scripts/prebuild.sh muscle linux
+bash scripts/prebuild.sh reseek linux
+bash scripts/prebuild.sh usearch linux
 
-bash scripts/prebuilds/mosdepth.sh linux
+bash scripts/prebuild.sh mosdepth linux
 
 bash scripts/prebuilds/iqtree2.sh linux
 bash scripts/prebuilds/iqtree2.sh macos
 bash scripts/prebuilds/iqtree2.sh windows
 
-bash scripts/prebuilds/mash.sh linux
-bash scripts/prebuilds/mash.sh macos
+bash scripts/prebuild.sh mash linux
+bash scripts/prebuild.sh mash macos
 
 bash scripts/prebuilds/megahit.sh -t linux
 
-bash scripts/prebuilds/mmseqs.sh linux
-bash scripts/prebuilds/mmseqs.sh macos
+bash scripts/prebuild.sh mmseqs linux
+bash scripts/prebuild.sh mmseqs macos
 
-bash scripts/prebuilds/bowtie2.sh linux
-bash scripts/prebuilds/bowtie2.sh macos
+bash scripts/prebuild.sh bowtie2 linux
+bash scripts/prebuild.sh bowtie2 macos
 
-bash scripts/prebuilds/stringtie.sh linux
-bash scripts/prebuilds/stringtie.sh macos
+bash scripts/prebuild.sh stringtie linux
+bash scripts/prebuild.sh stringtie macos
 
 bash scripts/prebuilds/raxml-ng.sh linux
 bash scripts/prebuilds/raxml-ng.sh macos
 
-bash scripts/prebuilds/freebayes.sh linux
+bash scripts/prebuild.sh freebayes linux
+
 ```
 
 ## java

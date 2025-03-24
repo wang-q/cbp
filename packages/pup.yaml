@@ -1,0 +1,21 @@
+name: pup
+version: "0.4.0"
+description: "Parsing HTML at the command line"
+homepage: "https://github.com/ericchiang/pup"
+license: "MIT"
+
+downloads:
+  linux:
+    url: "https://github.com/ericchiang/pup/releases/download/v0.4.0/pup_v0.4.0_linux_amd64.zip"
+    extract: "unzip"
+    binary: "pup"
+  macos:
+    url: "https://github.com/ericchiang/pup/releases/download/v0.4.0/pup_v0.4.0_darwin_amd64.zip"
+    extract: "unzip"
+    binary: "pup"
+
+tests:
+  - name: "version"
+    command: "pup"
+    pattern: "pup v"
+    args: "--version"
