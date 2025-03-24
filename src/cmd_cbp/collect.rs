@@ -9,25 +9,39 @@ pub fn make_subcommand() -> Command {
             r###"
 Collect and package files into a tar.gz archive.
 
-Two operation modes:
-* Regular list file: One file path per line, relative to list file location
-* vcpkg list file: Use --vcpkg flag, handles vcpkg-specific directory structure
+Mode options:
+* files: Default mode, collect files as-is
+* list: Process a list file containing file paths
+* vcpkg: Process vcpkg-style list file
+* bin: Place files in bin/ directory
+* font: Place files in share/fonts/ directory
 
 Examples:
-1. Process regular list file:
-   cbp collect files.txt
+1. Process files (default mode):
+   cbp collect program.exe --mode files
+   # or simply
+   cbp collect program.exe
 
-2. Process vcpkg list:
-   cbp collect pkg.list --vcpkg
+2. Process list file:
+   cbp collect list.txt --mode list
 
-3. Create file aliases:
-   cbp collect files.txt --copy libz.so=libz.so.1
+3. Process vcpkg list:
+   cbp collect pkg.list --mode vcpkg
 
-4. Ignore specific files:
-   cbp collect files.txt --ignore .dll --ignore .exe
+4. Create file aliases:
+   cbp collect program.exe --copy libz.so=libz.so.1
 
-5. Specify output file:
-   cbp collect files.txt -o output.tar.gz
+5. Ignore specific files:
+   cbp collect src/ --ignore .dll --ignore .exe
+
+6. Specify output file:
+   cbp collect program.exe -o output.tar.gz
+
+7. Collect binaries:
+   cbp collect program.exe --mode bin
+
+8. Collect fonts:
+   cbp collect font.ttf --mode font
 "###,
         )
         .arg(
@@ -65,6 +79,12 @@ Examples:
                 .value_parser(["files", "list", "vcpkg", "bin", "font"])
                 .default_value("files")
                 .action(ArgAction::Set),
+        )
+        .arg(
+            Arg::new("shebang")
+                .long("shebang")
+                .help("Fix shebang lines in script files")
+                .action(ArgAction::SetTrue),
         )
 }
 
@@ -188,8 +208,7 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
 
     // Collect files
     for line in &file_list {
-        // Check if path matches any ignore pattern
-        if ignore_patterns.iter().any(|pattern| line.contains(pattern)) {
+        if should_skip_file(line, &ignore_patterns) {
             continue;
         }
 
@@ -199,28 +218,14 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
             continue;
         }
 
-        let parts: Vec<&str> = if is_vcpkg {
-            // Skip the first directory component for vcpkg (triplet name)
-            line.split('/').skip(1).collect()
-        } else {
-            line.split('/').collect()
-        };
-        if parts.is_empty() {
-            continue;
-        }
-
-        // Special handling for files in tools directory in vcpkg list
-        let relative_path = if is_vcpkg && parts[0] == "tools" {
-            format!("bin/{}", parts.last().unwrap())
-        } else if mode == "bin" {
-            format!("bin/{}", parts.last().unwrap())
-        } else if mode == "font" {
-            format!("share/fonts/{}", parts.last().unwrap())
-        } else {
-            parts.join("/")
+        let parts = match get_path_parts(line, is_vcpkg) {
+            Some(parts) => parts,
+            None => continue,
         };
 
+        let relative_path = get_relative_path(&parts, mode, is_vcpkg);
         let dest_path = temp_dir.path().join(&relative_path);
+
         if let Some(parent) = dest_path.parent() {
             std::fs::create_dir_all(parent)?;
         }
@@ -247,16 +252,12 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
                 )?;
             }
 
-            // Handle file aliases
-            if let Some(file_name) = dest_path.file_name().and_then(|n| n.to_str()) {
-                if let Some(aliases) = copy_map.get(file_name) {
-                    if let Some(parent) = dest_path.parent() {
-                        for alias in aliases {
-                            std::fs::copy(&dest_path, parent.join(alias))?;
-                        }
-                    }
-                }
+            // Fix shebang if needed
+            if matches.get_flag("shebang") {
+                fix_shebang(&dest_path)?;
             }
+
+            process_file_aliases(&dest_path, &copy_map)?;
         }
     }
 
@@ -266,6 +267,51 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
         ${cbp} tar ${temp_path} -o ${output}
     )?;
 
+    Ok(())
+}
+
+fn should_skip_file(line: &str, ignore_patterns: &[String]) -> bool {
+    ignore_patterns.iter().any(|pattern| line.contains(pattern))
+}
+fn get_path_parts(line: &str, is_vcpkg: bool) -> Option<Vec<String>> {
+    let parts: Vec<String> = if is_vcpkg {
+        line.split('/').skip(1).map(String::from).collect()
+    } else {
+        line.split('/').map(String::from).collect()
+    };
+    if parts.is_empty() {
+        None
+    } else {
+        Some(parts)
+    }
+}
+fn get_relative_path(parts: &[String], mode: &str, is_vcpkg: bool) -> String {
+    if is_vcpkg && parts[0] == "tools" {
+        format!("bin/{}", parts.last().unwrap())
+    } else if mode == "bin" {
+        format!("bin/{}", parts.last().unwrap())
+    } else if mode == "font" {
+        format!("share/fonts/{}", parts.last().unwrap())
+    } else {
+        parts.join("/")
+    }
+}
+
+fn process_file_aliases(
+    dest_path: &std::path::Path,
+    copy_map: &std::collections::HashMap<String, Vec<String>>,
+) -> anyhow::Result<()> {
+    if let Some(file_name) = dest_path.file_name().and_then(|n| n.to_str()) {
+        if let Some(aliases) = copy_map.get(file_name) {
+            let parent = dest_path.parent().ok_or_else(|| {
+                anyhow::anyhow!("Failed to get parent directory for {}", dest_path.display())
+            })?;
+            for alias in aliases {
+                std::fs::copy(dest_path, parent.join(alias))
+                    .map_err(|e| anyhow::anyhow!("Failed to create alias {}: {}", alias, e))?;
+            }
+        }
+    }
     Ok(())
 }
 
@@ -303,4 +349,47 @@ fn is_windows_executable(path: &std::path::Path) -> std::io::Result<bool> {
     } else {
         Ok(false)
     }
+}
+
+fn fix_shebang(path: &std::path::Path) -> anyhow::Result<()> {
+    // Check if it's a text file
+    let mut file = std::fs::File::open(path)?;
+    let mut buffer = [0u8; 512];
+    let n = file.read(&mut buffer)?;
+    
+    // Check if the first n bytes are valid UTF-8 or ASCII characters
+    if !buffer[..n].iter().all(|&b| b.is_ascii() || (b & 0xC0) == 0x80) {
+        return Ok(());
+    }
+
+    // Read file content
+    let content = std::fs::read_to_string(path)?;
+    let mut lines: Vec<&str> = content.lines().collect();
+    if lines.is_empty() {
+        return Ok(());
+    }
+
+    // Check for shebang line
+    if !lines[0].starts_with("#!") {
+        return Ok(());
+    }
+
+    // Fix shebang line
+    let first_line = lines[0];
+    let new_line = if first_line.contains("perl") {
+        "#!/usr/bin/env perl"
+    } else if first_line.contains("python") {
+        "#!/usr/bin/env python3"
+    } else {
+        return Ok(());
+    };
+
+    if first_line != new_line {
+        lines[0] = new_line;
+        let new_content = lines.join("\n") + "\n";
+        std::fs::write(path, new_content)?;
+        eprintln!("==> Fixed shebang in '{}'", path.display());
+    }
+
+    Ok(())
 }
