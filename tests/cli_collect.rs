@@ -235,20 +235,18 @@ fn command_collect_vcpkg_mode() -> anyhow::Result<()> {
     archive.unpack(temp_dir.path())?;
 
     let list_file = temp_dir.path().join("installed/vcpkg/info/bzip2_1.0.8_arm64-osx-release.list");
-    let output_tar = temp_dir.path().join("bzip2.osx.tar.gz");
 
     Command::cargo_bin("cbp")?
         .arg("collect")
         .arg("--mode")
         .arg("vcpkg")
-        .arg("-o")
-        .arg(&output_tar)
         .current_dir(temp_dir.path())
         .arg(&list_file)
         .assert()
         .success();
 
     // Verify archive content
+    let output_tar = temp_dir.path().join("bzip2.osx.tar.gz");
     assert!(output_tar.exists());
     let files = cbp::list_archive_files(&output_tar)?;
     eprintln!("files = {:#?}", files);
