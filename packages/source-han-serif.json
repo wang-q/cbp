@@ -1,0 +1,22 @@
+{
+  "name": "source-han-serif",
+  "version": "2.001R",
+  "description": "思源宋体 / 思源宋體 / 源ノ明朝 / 본명조",
+  "homepage": "https://github.com/adobe-fonts/source-han-serif",
+  "license": "OFL-1.1",
+  "downloads": {
+    "font": {
+      "url": "https://github.com/adobe-fonts/source-han-serif/releases/download/2.001R/09_SourceHanSerifSC.zip",
+      "extract": "unzip -j -o",
+      "binary": "*.otf"
+    }
+  },
+  "tests": [
+    {
+      "name": "files",
+      "command": "ls",
+      "pattern": "SourceHanSerifSC-Regular\\.otf$",
+      "args": "$(cbp prefix)/share/fonts"
+    }
+  ]
+}

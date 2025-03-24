@@ -1,0 +1,22 @@
+{
+  "name": "firacode-nf",
+  "version": "3.3.0",
+  "description": "Nerd Fonts patched FiraCode",
+  "homepage": "https://github.com/ryanoasis/nerd-fonts",
+  "license": "OFL-1.1",
+  "downloads": {
+    "font": {
+      "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FiraCode.zip",
+      "extract": "unzip",
+      "binary": "*.ttf"
+    }
+  },
+  "tests": [
+    {
+      "name": "files",
+      "command": "ls",
+      "pattern": "FiraCodeNerdFont-Regular\\.ttf$",
+      "args": "$(cbp prefix)/share/fonts"
+    }
+  ]
+}

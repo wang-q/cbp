@@ -1,0 +1,22 @@
+{
+  "name": "jetbrains-mono",
+  "version": "2.304",
+  "description": "A monospace font family for developers",
+  "homepage": "https://www.jetbrains.com/lp/mono/",
+  "license": "OFL-1.1",
+  "downloads": {
+    "font": {
+      "url": "https://github.com/JetBrains/JetBrainsMono/releases/download/v2.304/JetBrainsMono-2.304.zip",
+      "extract": "unzip",
+      "binary": "fonts/ttf/*"
+    }
+  },
+  "tests": [
+    {
+      "name": "files",
+      "command": "ls",
+      "pattern": "JetBrainsMono-Regular\\.ttf$",
+      "args": "$(cbp prefix)/share/fonts"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "fira",
+  "version": "4.202",
+  "description": "Mozilla's Fira type family",
+  "homepage": "https://github.com/mozilla/Fira",
+  "license": "OFL-1.1",
+  "downloads": {
+    "font": {
+      "url": "https://github.com/mozilla/Fira/archive/4.202.tar.gz",
+      "extract": "tar xvfz",
+      "binary": "Fira-4.202/ttf/*"
+    }
+  },
+  "tests": [
+    {
+      "name": "files",
+      "command": "ls",
+      "pattern": "FiraSans-Regular\\.ttf$",
+      "args": "$(cbp prefix)/share/fonts"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "arial",
+  "version": "32",
+  "description": "Microsoft Arial font family",
+  "homepage": "https://sourceforge.net/projects/corefonts/",
+  "license": "Microsoft TrueType Core Fonts",
+  "dependencies": [
+    "cabextract"
+  ],
+  "downloads": {
+    "font": {
+      "url": "https://downloads.sourceforge.net/corefonts/arial32.exe",
+      "extract": "cabextract",
+      "binary": "*.TTF"
+    }
+  },
+  "tests": [
+    {
+      "name": "files",
+      "command": "ls",
+      "pattern": "arial\\.TTF$",
+      "args": "$(cbp prefix)/share/fonts"
+    }
+  ]
+}

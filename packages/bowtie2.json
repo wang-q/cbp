@@ -1,0 +1,29 @@
+{
+  "name": "bowtie2",
+  "version": "2.5.4",
+  "description": "An ultrafast and memory-efficient tool for aligning sequencing reads to long reference sequences",
+  "homepage": "https://github.com/BenLangmead/bowtie2",
+  "license": "GPL-3.0",
+  "downloads": {
+    "linux": {
+      "url": "https://github.com/BenLangmead/bowtie2/releases/download/v2.5.4/bowtie2-2.5.4-linux-x86_64.zip",
+      "extract": "unzip",
+      "binary": "bowtie2-*/bowtie2*",
+      "exclude": "bowtie2-*/*-debug"
+    },
+    "macos": {
+      "url": "https://github.com/BenLangmead/bowtie2/releases/download/v2.5.4/bowtie2-2.5.4-macos-arm64.zip",
+      "extract": "unzip",
+      "binary": "bowtie2-*/bowtie2*",
+      "exclude": "bowtie2-*/*-debug"
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "bowtie2",
+      "pattern": "version ",
+      "args": "--version"
+    }
+  ]
+}

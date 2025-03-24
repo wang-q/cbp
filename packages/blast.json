@@ -1,0 +1,32 @@
+{
+  "name": "blast",
+  "version": "2.16.0",
+  "description": "Basic Local Alignment Search Tool",
+  "homepage": "https://blast.ncbi.nlm.nih.gov",
+  "license": "Public Domain",
+  "downloads": {
+    "linux": {
+      "url": "https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.16.0/ncbi-blast-2.16.0+-x64-linux.tar.gz",
+      "extract": "tar xvfz",
+      "binary": "ncbi-blast-*/bin/*"
+    },
+    "macos": {
+      "url": "https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.16.0/ncbi-blast-2.16.0+-aarch64-macosx.tar.gz",
+      "extract": "tar xvfz",
+      "binary": "ncbi-blast-*/bin/*"
+    },
+    "windows": {
+      "url": "https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.16.0/ncbi-blast-2.16.0+-x64-win64.tar.gz",
+      "extract": "tar xvfz",
+      "binary": "ncbi-blast-*/bin/*"
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "blastn",
+      "pattern": "^blastn: ",
+      "args": "-version"
+    }
+  ]
+}

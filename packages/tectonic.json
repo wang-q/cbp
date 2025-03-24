@@ -1,0 +1,29 @@
+{
+  "name": "tectonic",
+  "version": "0.15.0",
+  "description": "A modernized, complete, self-contained TeX/LaTeX engine",
+  "homepage": "https://tectonic-typesetting.github.io",
+  "license": "MIT",
+  "downloads": {
+    "linux": {
+      "url": "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.15.0/tectonic-0.15.0-x86_64-unknown-linux-musl.tar.gz",
+      "binary": "tectonic"
+    },
+    "macos": {
+      "url": "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.15.0/tectonic-0.15.0-aarch64-apple-darwin.tar.gz",
+      "binary": "tectonic"
+    },
+    "windows": {
+      "url": "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.15.0/tectonic-0.15.0-x86_64-pc-windows-msvc.zip",
+      "binary": "tectonic.exe"
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "tectonic",
+      "pattern": "tectonic [0-9]+\\.[0-9]+\\.[0-9]+",
+      "args": "--version"
+    }
+  ]
+}

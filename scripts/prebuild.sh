@@ -12,9 +12,9 @@ fi
 PACKAGE=$1
 
 # package
-YAML_FILE="${BASH_DIR}/../packages/${PACKAGE}.yaml"
-if [ ! -f "${YAML_FILE}" ]; then
-    echo "Error: Package file not found: ${YAML_FILE}"
+JSON_FILE="${BASH_DIR}/../packages/${PACKAGE}.json"
+if [ ! -f "${JSON_FILE}" ]; then
+    echo "Error: Package file not found: ${JSON_FILE}"
     exit 1
 fi
 
@@ -60,122 +60,121 @@ TEMP_DIR=$(mktemp -d)
 trap 'rm -rf ${TEMP_DIR}' EXIT
 cd ${TEMP_DIR}  || { echo "Error: Failed to enter temp directory"; exit 1; }
 
-# Read YAML file
-URL=$(yq ".downloads.${OS_TYPE}.url" "$YAML_FILE")
+# Read package info
+URL=$(jq -r ".downloads.${OS_TYPE}.url" "$JSON_FILE")
 if [ -z "${URL}" ]; then
-    echo "Error: URL not found for ${OS_TYPE} in ${YAML_FILE}"
+    echo "Error: URL not found for ${OS_TYPE} in ${JSON_FILE}"
     exit 1
 fi
 
-BINARY=$(yq ".downloads.${OS_TYPE}.binary" "$YAML_FILE")
-if [ -z "${BINARY}" ]; then
-    echo "Error: Binary path not found for ${OS_TYPE} in ${YAML_FILE}"
-    exit 1
-fi
-
-EXTRACT=$(yq ".downloads.${OS_TYPE}.extract" "$YAML_FILE")
-EXCLUDE=$(yq ".downloads.${OS_TYPE}.exclude" "$YAML_FILE")
-
-collect_bins() {
-    local bins=("$@")
-    local target_dir="bin"
-
-    if [ "$OS_TYPE" == "font" ]; then
-        target_dir="share/fonts"
+# Handle binary paths as array or single string
+BINARY_PATHS=()
+while IFS= read -r binary; do
+    if [ -n "$binary" ]; then
+        BINARY_PATHS+=("$binary")
     fi
+done < <(jq -r ".downloads.${OS_TYPE}.binary | if type == \"array\" then .[] else . end" "$JSON_FILE")
 
-    # Check if any files were specified
-    if [ ${#bins[@]} -eq 0 ]; then
-        echo "Error: No files specified"
+if [ ${#BINARY_PATHS[@]} -eq 0 ]; then
+    echo "Error: Binary path not found for ${OS_TYPE} in ${JSON_FILE}"
+    exit 1
+fi
+
+EXTRACT=$(jq -r ".downloads.${OS_TYPE}.extract // empty" "$JSON_FILE")
+EXCLUDE=$(jq -r ".downloads.${OS_TYPE}.exclude // empty" "$JSON_FILE")
+
+# Download and extract
+download_url() {
+    local url="$1"
+    local output="$2"
+    echo "==> Downloading ${url}"
+    curl -L "${url}" -o "${output}" ||
+        { echo "Error: Failed to download ${url}"; exit 1; }
+}
+
+download_package() {
+    echo "==> Downloading ${PACKAGE}..."
+    if [[ "${URL}" == *.zip ]] || [[ "${URL}" == *.tar.gz ]] || [ -n "${EXTRACT}" ]; then
+        # Download file
+        if [[ "${URL}" == *.zip ]]; then
+            download_url "${URL}" "${PACKAGE}.zip"
+            if [ -n "${EXTRACT}" ]; then
+                ${EXTRACT} "${PACKAGE}.zip"
+            else
+                unzip "${PACKAGE}.zip"
+            fi
+        elif [[ "${URL}" == *.tar.gz ]]; then
+            download_url "${URL}" "${PACKAGE}.tar.gz"
+            if [ -n "${EXTRACT}" ]; then
+                ${EXTRACT} "${PACKAGE}.tar.gz"
+            else
+                tar xvfz "${PACKAGE}.tar.gz"
+            fi
+        else
+            # Other files that need extraction
+            ext="${URL##*.}"
+            download_url "${URL}" "${PACKAGE}.${ext}"
+            if [ -n "${EXTRACT}" ]; then
+                ${EXTRACT} "${PACKAGE}.${ext}"
+            fi
+        fi
+
+    else
+        download_url "${URL}" "${BINARY_PATHS[0]}"
+    fi
+}
+
+process_binaries() {
+    local mode="bin"
+    local fn_tar="$1"
+
+    if [ -z "$fn_tar" ]; then
+        echo "Error: Missing output filename"
         exit 1
     fi
 
-    # Create collect directory
-    mkdir -p "${TEMP_DIR}/collect/${target_dir}"
-
-    # Process each file
-    for bin in "${bins[@]}"; do
-        local source_bin="${bin}"
-        local base_name=$(basename "${bin}")
-        local target_bin="${base_name}"
-
-        if [ "$OS_TYPE" != "font" ]; then
-            # Only add suffix for executables on Windows
-            if [ -n "${BIN_SUFFIX}" ] && [[ ! "${base_name}" =~ \.(exe|dll|lib|a)$ ]]; then
-                target_bin="${base_name}${BIN_SUFFIX}"
-            fi
-
-            # Check if source binary has suffix
-            if [ -n "${BIN_SUFFIX}" ] && [ -f "${bin}${BIN_SUFFIX}" ]; then
-                source_bin="${bin}${BIN_SUFFIX}"
-            fi
-
-            chmod +x "${source_bin}" ||
-                { echo "Error: Failed to make binary ${source_bin} executable"; exit 1; }
-        fi
-
-        cp "${source_bin}" "${TEMP_DIR}/collect/${target_dir}/${target_bin}" ||
-            { echo "Error: Failed to copy file ${source_bin}"; exit 1; }
-    done
-}
-
-# Download and extract
-echo "==> Downloading ${PACKAGE}..."
-if [ -n "${EXTRACT}" ] || [[ "${URL}" == *.zip ]] || [[ "${URL}" == *.tar.gz ]] || [[ "${URL}" == *.exe ]]; then
-    # Download file
-    if [[ "${URL}" == *.zip ]]; then
-        curl -L "${URL}" -o "${PACKAGE}.zip"
-        if [ -n "${EXTRACT}" ]; then
-            ${EXTRACT} "${PACKAGE}.zip"
-        else
-            unzip "${PACKAGE}.zip"
-        fi
-    elif [[ "${URL}" == *.tar.gz ]]; then
-        curl -L "${URL}" -o "${PACKAGE}.tar.gz"
-        if [ -n "${EXTRACT}" ]; then
-            ${EXTRACT} "${PACKAGE}.tar.gz"
-        else
-            tar xvfz "${PACKAGE}.tar.gz"
-        fi
-    else
-        # Other files that need extraction
-        ext="${URL##*.}"
-        curl -L "${URL}" -o "${PACKAGE}.${ext}"
-        ${EXTRACT} "${PACKAGE}.${ext}"
+    if [ "$OS_TYPE" == "font" ]; then
+        mode="font"
     fi
 
-    # Handle exclude pattern right after extraction
-    if [ -n "${EXCLUDE}" ]; then
-        rm -f ${EXCLUDE}
-    fi
-
-    # Handle glob pattern
-    if [[ "${BINARY}" == *"*"* ]]; then
-        shopt -s nullglob
-        BINARY_FILES=(${BINARY})
-        shopt -u nullglob
+    if [[ "${URL}" == *.zip ]] || [[ "${URL}" == *.tar.gz ]] || [ -n "${EXTRACT}" ]; then
+        # Handle exclude pattern right after extraction
+        if [ -n "${EXCLUDE}" ]; then
+            rm -f ${EXCLUDE}
+        fi
         
-        if [ ${#BINARY_FILES[@]} -eq 0 ]; then
-            echo "Error: No files found matching pattern: ${BINARY}"
+        # Process each binary path
+        local all_files=()
+        for binary in "${BINARY_PATHS[@]}"; do
+            if [[ "${binary}" == *"*"* ]]; then
+                shopt -s nullglob
+                binary_files=(${binary})
+                shopt -u nullglob
+                
+                if [ ${#binary_files[@]} -gt 0 ]; then
+                    all_files+=("${binary_files[@]}")
+                fi
+            else
+                all_files+=("${binary}")
+            fi
+        done
+
+        if [ ${#all_files[@]} -eq 0 ]; then
+            echo "Error: No files found matching patterns"
             exit 1
         fi
-        collect_bins "${BINARY_FILES[@]}"
+        
+        cbp collect --mode "${mode}" -o "${fn_tar}" "${all_files[@]}"
     else
-        collect_bins "${BINARY}"
+        cbp collect --mode "${mode}" -o "${fn_tar}" "${BINARY_PATHS[0]}"
     fi
-else
-    # Single file
-    curl -L "${URL}" -o "${BINARY}" ||
-        { echo "Error: Failed to download ${BINARY}"; exit 1; }
-    collect_bins "${BINARY}"
-fi
+}
 
-# Create package
+# Main process
+download_package
 FN_TAR="${PACKAGE}.${OS_TYPE}.tar.gz"
-
-cbp tar collect -o "${FN_TAR}" --cleanup ||
-    { echo "==> Error: Failed to create archive"; exit 1; }
+process_binaries "${FN_TAR}"
 
 # Move archive to the central tar directory
-mv "${FN_TAR}" ${BASH_DIR}/../binaries/ ||
+mv "${FN_TAR}" "${BASH_DIR}/../binaries/" ||
     { echo "==> Error: Failed to move archive"; exit 1; }
