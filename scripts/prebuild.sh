@@ -67,6 +67,11 @@ if [ -z "${URL}" ]; then
     exit 1
 fi
 
+# Read all package options
+EXTRACT=$(jq -r ".downloads.${OS_TYPE}.extract // empty" "$JSON_FILE")
+EXCLUDE=$(jq -r ".downloads.${OS_TYPE}.exclude // empty" "$JSON_FILE")
+SHEBANG=$(jq -r ".downloads.${OS_TYPE}.shebang // empty" "$JSON_FILE")
+
 # Handle binary paths as array or single string
 BINARY_PATHS=()
 while IFS= read -r binary; do
@@ -79,9 +84,6 @@ if [ ${#BINARY_PATHS[@]} -eq 0 ]; then
     echo "Error: Binary path not found for ${OS_TYPE} in ${JSON_FILE}"
     exit 1
 fi
-
-EXTRACT=$(jq -r ".downloads.${OS_TYPE}.extract // empty" "$JSON_FILE")
-EXCLUDE=$(jq -r ".downloads.${OS_TYPE}.exclude // empty" "$JSON_FILE")
 
 # Download and extract
 download_url() {
@@ -137,12 +139,18 @@ process_binaries() {
         mode="font"
     fi
 
+    # Handle exclude pattern right after extraction
+    if [ -n "${EXCLUDE}" ]; then
+        rm -f ${EXCLUDE}
+    fi
+    
+    # Add shebang option if enabled
+    local shebang_opt=""
+    if [ "${SHEBANG}" == "true" ]; then
+        shebang_opt="--shebang"
+    fi
+    
     if [[ "${URL}" == *.zip ]] || [[ "${URL}" == *.tar.gz ]] || [ -n "${EXTRACT}" ]; then
-        # Handle exclude pattern right after extraction
-        if [ -n "${EXCLUDE}" ]; then
-            rm -f ${EXCLUDE}
-        fi
-        
         # Process each binary path
         local all_files=()
         for binary in "${BINARY_PATHS[@]}"; do
@@ -164,9 +172,9 @@ process_binaries() {
             exit 1
         fi
         
-        cbp collect --mode "${mode}" -o "${fn_tar}" "${all_files[@]}"
+        cbp collect --mode "${mode}" ${shebang_opt} -o "${fn_tar}" "${all_files[@]}"
     else
-        cbp collect --mode "${mode}" -o "${fn_tar}" "${BINARY_PATHS[0]}"
+        cbp collect --mode "${mode}" ${shebang_opt} -o "${fn_tar}" "${BINARY_PATHS[0]}"
     fi
 }
 

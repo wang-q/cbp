@@ -1,0 +1,23 @@
+{
+  "name": "megahit",
+  "version": "1.2.9",
+  "description": "An ultra-fast and memory-efficient metagenome assembler",
+  "homepage": "https://github.com/voutcn/megahit",
+  "license": "GPL-3.0",
+  "downloads": {
+    "linux": {
+      "url": "https://github.com/voutcn/megahit/releases/download/v1.2.9/MEGAHIT-1.2.9-Linux-x86_64-static.tar.gz",
+      "extract": "tar xvfz",
+      "binary": "MEGAHIT-*/bin/*",
+      "shebang": true
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "megahit",
+      "pattern": "MEGAHIT v[0-9]+",
+      "args": "--version"
+    }
+  ]
+}

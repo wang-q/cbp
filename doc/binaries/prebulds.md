@@ -67,7 +67,7 @@ bash scripts/prebuild.sh iqtree2 windows
 bash scripts/prebuild.sh mash linux
 bash scripts/prebuild.sh mash macos
 
-bash scripts/prebuilds/megahit.sh -t linux
+bash scripts/prebuild.sh megahit linux
 
 bash scripts/prebuild.sh mmseqs linux
 bash scripts/prebuild.sh mmseqs macos
