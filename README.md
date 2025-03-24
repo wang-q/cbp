@@ -70,7 +70,7 @@ iwr "https://github.com/wang-q/cbp/releases/latest/download/cbp.windows.exe" -Ou
 
 ## `cbp help`
 
-Current release: 0.3.7
+Current release: 0.3.8
 
 ```text
 `cbp` is a Cross-platform Binary Package manager

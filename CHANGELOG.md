@@ -2,6 +2,8 @@
 
 ## Unreleased - ReleaseDate
 
+## 0.3.8 - 2025-03-24
+
 - Enhanced package management
   - Added `info` command for package metadata display
   - Added `uninstall` as alias for `remove` command
