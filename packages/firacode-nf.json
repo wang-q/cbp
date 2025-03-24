@@ -4,6 +4,7 @@
   "description": "Nerd Fonts patched FiraCode",
   "homepage": "https://github.com/ryanoasis/nerd-fonts",
   "license": "OFL-1.1",
+  "type": "font",
   "downloads": {
     "font": {
       "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FiraCode.zip",

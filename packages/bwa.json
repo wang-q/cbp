@@ -1,0 +1,16 @@
+{
+  "name": "bwa",
+  "version": "0.7.18",
+  "description": "Burrow-Wheeler Aligner for pairwise alignment between DNA sequences",
+  "homepage": "https://github.com/lh3/bwa",
+  "license": "GPL-3.0",
+  "type": "vcpkg",
+  "tests": [
+    {
+      "name": "version",
+      "command": "bwa",
+      "pattern": "Version: [0-9]+\\.",
+      "args": " || true"
+    }
+  ]
+}

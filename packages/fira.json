@@ -4,6 +4,7 @@
   "description": "Mozilla's Fira type family",
   "homepage": "https://github.com/mozilla/Fira",
   "license": "OFL-1.1",
+  "type": "font",
   "downloads": {
     "font": {
       "url": "https://github.com/mozilla/Fira/archive/4.202.tar.gz",

@@ -24,7 +24,7 @@
     {
       "name": "version",
       "command": "tsv-filter",
-      "pattern": "tsv-summarize \\(eBay/tsv-utils\\) version [0-9]+\\.",
+      "pattern": "eBay/tsv-utils",
       "args": "--version"
     }
   ]

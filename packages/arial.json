@@ -4,6 +4,7 @@
   "description": "Microsoft Arial font family",
   "homepage": "https://sourceforge.net/projects/corefonts/",
   "license": "Microsoft TrueType Core Fonts",
+  "type": "font",
   "dependencies": [
     "cabextract"
   ],

@@ -4,6 +4,7 @@
   "description": "Helvetica font family",
   "homepage": "https://font.download/helvetica",
   "license": "Commercial",
+  "type": "font",
   "downloads": {
     "font": {
       "url": "https://font.download/dl/font/helvetica-255.zip",

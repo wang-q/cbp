@@ -1,0 +1,16 @@
+{
+  "name": "sickle",
+  "version": "1.33",
+  "description": "A windowed adaptive trimming tool for FASTQ data",
+  "homepage": "https://github.com/najoshi/sickle",
+  "license": "MIT",
+  "type": "vcpkg",
+  "tests": [
+    {
+      "name": "version",
+      "command": "sickle",
+      "pattern": "sickle version [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

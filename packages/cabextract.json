@@ -1,0 +1,16 @@
+{
+  "name": "cabextract",
+  "version": "1.11",
+  "description": "Extract files from Microsoft cabinet files",
+  "homepage": "https://www.cabextract.org.uk/",
+  "license": "GPL-3.0",
+  "type": "vcpkg",
+  "tests": [
+    {
+      "name": "version",
+      "command": "cabextract",
+      "pattern": "^cabextract version [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

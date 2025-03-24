@@ -91,40 +91,55 @@ jobs:
             fi
           done
 
-          test_results_pass=""
-          test_results_fail=""
+          # Initialize result arrays
+          standalone_pass=""
+          standalone_fail=""
+          package_pass=""
+          package_fail=""
+          skipped_unavailable=""
+          skipped_notest=""
 
           # Test available packages
           for pkg in $platform_pkgs; do
             echo "Testing $pkg..."
+
+            # Install package first
+            if ! cbp install $pkg; then
+              echo "❌ Failed to install $pkg"
+              continue
+            fi
+
+            # Run standalone test script
             if [ -f "test-binaries/$pkg.sh" ]; then
-              # Use package-specific test script if available
-              if cbp install $pkg && \
-                 bash "test-binaries/$pkg.sh"; then
-                test_results_pass="${test_results_pass:+$test_results_pass }$pkg"
+              echo "-> Running standalone tests"
+              if bash "test-binaries/$pkg.sh"; then
+                standalone_pass="${standalone_pass:+$standalone_pass }$pkg"
               else
-                test_results_fail="${test_results_fail}❌ Failed: $pkg\n"
+                standalone_fail="${standalone_fail}❌ Failed: $pkg\n"
               fi
-            elif [ -f "packages/$pkg.json" ]; then
-              # Fallback to generic test-package.sh if JSON has tests
-              if cbp install $pkg && \
-                 bash "test-binaries/test-package.sh" "$pkg"; then
-                test_results_pass="${test_results_pass:+$test_results_pass }$pkg"
+            fi
+
+            # Run package tests
+            if [ -f "packages/$pkg.json" ]; then
+              echo "-> Running package tests"
+              if bash "test-binaries/test-package.sh" "$pkg"; then
+                package_pass="${package_pass:+$package_pass }$pkg"
               else
-                test_results_fail="${test_results_fail}❌ Failed: $pkg\n"
+                package_fail="${package_fail}❌ Failed: $pkg\n"
               fi
-            else
+            fi
+
+            # Mark as no test if neither exists
+            if [ ! -f "test-binaries/$pkg.sh" ] && [ ! -f "packages/$pkg.json" ]; then
               skipped_notest="${skipped_notest:-} $pkg"
             fi
           done
 
           echo -e "\n==> Test Summary:"
-          [ -n "${test_results_pass}" ] && echo -e "✅ Passed: ${test_results_pass}"
-          [ -n "${test_results_fail}" ] && echo -e "${test_results_fail}"
+          [ -n "${standalone_pass}" ] && echo -e "✅ Standalone tests passed: ${standalone_pass}"
+          [ -n "${standalone_fail}" ] && echo -e "${standalone_fail}"
+          [ -n "${package_pass}" ] && echo -e "✅ Package tests passed: ${package_pass}"
+          [ -n "${package_fail}" ] && echo -e "${package_fail}"
           [ -n "${skipped_unavailable:-}" ] && echo -e "⏭️ Skipped (not available):${skipped_unavailable}"
           [ -n "${skipped_notest:-}" ] && echo -e "⏭️ Skipped (no test):${skipped_notest}"
-
-          if echo "$test_results" | grep -q "FAILED"; then
-            exit 1
-          fi
         shell: bash

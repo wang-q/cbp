@@ -4,6 +4,7 @@
   "description": "Charter is a serif typeface designed by Matthew Carter",
   "homepage": "https://practicaltypography.com/charter.html",
   "license": "Bitstream Charter",
+  "type": "font",
   "downloads": {
     "font": {
       "url": "https://practicaltypography.com/fonts/Charter%20210112.zip",
