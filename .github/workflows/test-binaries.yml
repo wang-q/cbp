@@ -95,10 +95,19 @@ jobs:
 
           # Test available packages
           for pkg in $platform_pkgs; do
+            echo "Testing $pkg..."
             if [ -f "test-binaries/$pkg.sh" ]; then
-              echo "Testing $pkg..."
+              # Use package-specific test script if available
               if cbp install $pkg && \
                  bash "test-binaries/$pkg.sh"; then
+                test_results_pass="${test_results_pass:+$test_results_pass }$pkg"
+              else
+                test_results_fail="${test_results_fail}❌ Failed: $pkg\n"
+              fi
+            elif [ -f "packages/$pkg.json" ]; then
+              # Fallback to generic test-package.sh if JSON has tests
+              if cbp install $pkg && \
+                 bash "test-binaries/test-package.sh" "$pkg"; then
                 test_results_pass="${test_results_pass:+$test_results_pass }$pkg"
               else
                 test_results_fail="${test_results_fail}❌ Failed: $pkg\n"

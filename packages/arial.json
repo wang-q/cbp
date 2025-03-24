@@ -18,7 +18,7 @@
     {
       "name": "files",
       "command": "ls",
-      "pattern": "arial\\.TTF$",
+      "pattern": "Arial\\.TTF$",
       "args": "$(cbp prefix)/share/fonts"
     }
   ]
