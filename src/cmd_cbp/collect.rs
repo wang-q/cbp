@@ -4,12 +4,38 @@ use std::io::{Read, Seek, SeekFrom};
 
 pub fn make_subcommand() -> Command {
     Command::new("collect")
-        .about("Collect and package files from vcpkg installed directory")
+        .about("Collect and package files into a tar.gz archive")
+        .after_help(
+            r###"
+Collect and package files into a tar.gz archive.
+
+Two operation modes:
+* Regular list file: One file path per line, relative to list file location
+* vcpkg list file: Use --vcpkg flag, handles vcpkg-specific directory structure
+
+Examples:
+1. Process regular list file:
+   cbp collect files.txt
+
+2. Process vcpkg list:
+   cbp collect pkg.list --vcpkg
+
+3. Create file aliases:
+   cbp collect files.txt --copy libz.so=libz.so.1
+
+4. Ignore specific files:
+   cbp collect files.txt --ignore .dll --ignore .exe
+
+5. Specify output file:
+   cbp collect files.txt -o output.tar.gz
+"###,
+        )
         .arg(
-            Arg::new("list")
-                .help("Path to the .list file")
+            Arg::new("sources")
+                .help("Source files, directories or a list")
                 .required(true)
-                .action(ArgAction::Set),
+                .num_args(1..)
+                .index(1),
         )
         .arg(
             Arg::new("copy")
@@ -21,7 +47,7 @@ pub fn make_subcommand() -> Command {
         .arg(
             Arg::new("ignore")
                 .long("ignore")
-                .help("Ignore files matching the pattern (e.g., --ignore .dll)")
+                .help("Ignore files matching the pattern")
                 .action(ArgAction::Append)
                 .num_args(1),
         )
@@ -32,21 +58,56 @@ pub fn make_subcommand() -> Command {
                 .help("Output tar.gz file")
                 .action(ArgAction::Set),
         )
+        .arg(
+            Arg::new("mode")
+                .long("mode")
+                .help("Processing mode")
+                .value_parser(["files", "list", "vcpkg", "bin", "font"])
+                .default_value("files")
+                .action(ArgAction::Set),
+        )
 }
 
 pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
     //----------------------------
     // Args
     //----------------------------
-    let list_path = matches.get_one::<String>("list").unwrap();
-    let list_file = std::path::Path::new(list_path);
+    let sources = matches.get_many::<String>("sources").unwrap();
+    let mode = matches.get_one::<String>("mode").unwrap();
+    let is_vcpkg = mode == "vcpkg";
 
-    // Validate list file existence and extension
-    if !list_file.exists() || list_file.extension().unwrap_or_default() != "list" {
-        anyhow::bail!("Invalid list file: {}", list_path);
-    }
+    // Get first source for output name
+    let first_source = sources.clone().into_iter().next().unwrap();
 
-    // Parse copy aliases
+    // output name
+    let output: String =
+        matches
+            .get_one::<String>("output")
+            .cloned()
+            .unwrap_or_else(|| {
+                if mode == "vcpkg" {
+                    let source_file = std::path::Path::new(first_source);
+                    let stem = source_file.file_stem().unwrap().to_str().unwrap();
+                    // Parse package name and platform from filename
+                    let parts: Vec<&str> = stem.split('_').collect();
+                    let pkg_name = parts[0];
+                    let platform = parts
+                        .get(2)
+                        .map(|s| s.split('-').nth(1).unwrap_or(""))
+                        .unwrap_or("");
+                    format!("{}.{}.tar.gz", pkg_name, platform)
+                } else {
+                    let path = std::path::Path::new(first_source);
+                    let name = path
+                        .file_stem()
+                        .or_else(|| path.file_name())
+                        .and_then(|n| n.to_str())
+                        .unwrap_or("output");
+                    format!("{}.tar.gz", name)
+                }
+            });
+
+    // Parse copy aliases and ignore patterns...
     let copy_map: std::collections::HashMap<String, Vec<String>> = matches
         .get_many::<String>("copy")
         .map(|copies| {
@@ -69,65 +130,92 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
         .map(|ignores| ignores.map(|s| s.to_string()).collect())
         .unwrap_or_default();
 
-    // output name
-    let output: String =
-        matches
-            .get_one::<String>("output")
-            .cloned()
-            .unwrap_or_else(|| {
-                let stem = list_file.file_stem().unwrap().to_str().unwrap();
-                // Parse package name and platform from filename (e.g., "bzip2_1.0.8_x64-windows-zig")
-                let parts: Vec<&str> = stem.split('_').collect();
-                let pkg_name = parts[0];
-                let platform = parts
-                    .get(2)
-                    .map(|s| s.split('-').nth(1).unwrap_or(""))
-                    .unwrap_or("");
-                format!("{}.{}.tar.gz", pkg_name, platform)
-            });
-
     let cbp = std::env::current_exe()?.display().to_string();
 
     //----------------------------
     // Operating
     //----------------------------
-    // Read and parse list file
-    let content = std::fs::read_to_string(list_file)?;
-    let vcpkg_installed = list_file
-        .parent()
-        .unwrap()
-        .parent()
-        .unwrap()
-        .parent()
-        .unwrap();
+    // Process sources
+    let mut file_list = Vec::new();
+    let mut base_dir = std::env::current_dir()?;
 
-    eprintln!("vcpkg_installed = {:#?}", vcpkg_installed);
+    if mode == "files" || mode == "bin" || mode == "font" {
+        // Collect files from command line arguments
+        for source in sources {
+            let path = std::path::Path::new(source);
+            if !path.exists() {
+                eprintln!("Warning: Source not found: {}", source);
+                continue;
+            }
+            if path.is_file() {
+                file_list.push(source.to_string());
+            } else if path.is_dir() {
+                let files = cbp::find_files(path, None)?;
+                file_list.extend(files);
+            }
+        }
+    } else {
+        // Read and parse list file
+        let source_path = sources.into_iter().next().unwrap();
+        let source_file = std::path::Path::new(source_path);
+        if !source_file.exists() {
+            anyhow::bail!("Source file not found: {}", source_path);
+        }
+        let content = std::fs::read_to_string(source_file)?;
+        file_list = content.lines().map(|s| s.to_string()).collect();
+
+        if is_vcpkg {
+            // For vcpkg list, use parent^3 as base
+            base_dir = source_file
+                .parent()
+                .unwrap()
+                .parent()
+                .unwrap()
+                .parent()
+                .unwrap()
+                .to_path_buf();
+        } else {
+            // For normal list, use parent as base
+            base_dir = source_file.parent().unwrap().to_path_buf();
+        }
+    }
+
+    eprintln!("base_dir = {:#?}", base_dir);
+    // eprintln!("file_list = {:#?}", file_list);
 
     // Create temporary directory
     let temp_dir = tempfile::Builder::new().prefix("cbp-collect-").tempdir()?;
 
     // Collect files
-    for line in content.lines() {
+    for line in &file_list {
         // Check if path matches any ignore pattern
         if ignore_patterns.iter().any(|pattern| line.contains(pattern)) {
             continue;
         }
 
-        let src_path = vcpkg_installed.join(line);
+        let src_path = base_dir.join(line);
         if !src_path.exists() {
-            eprintln!("Warning: Source file not found: {}", src_path.display());
+            eprintln!("Warning: File not found: {}", src_path.display());
             continue;
         }
 
-        // Skip the first directory component (triplet name)
-        let parts: Vec<&str> = line.split('/').skip(1).collect();
+        let parts: Vec<&str> = if is_vcpkg {
+            // Skip the first directory component for vcpkg (triplet name)
+            line.split('/').skip(1).collect()
+        } else {
+            line.split('/').collect()
+        };
         if parts.is_empty() {
             continue;
         }
 
-        // Special handling for files in tools directory
-        let relative_path = if parts[0] == "tools" {
+        // Special handling for files in tools directory in vcpkg list
+        let relative_path = if is_vcpkg && parts[0] == "tools" {
             format!("bin/{}", parts.last().unwrap())
+        } else if mode == "bin" {
+            format!("bin/{}", parts.last().unwrap())
+        } else if mode == "font" {
+            format!("share/fonts/{}", parts.last().unwrap())
         } else {
             parts.join("/")
         };
@@ -194,7 +282,8 @@ fn is_windows_executable(path: &std::path::Path) -> std::io::Result<bool> {
 
         // Get PE header offset from DOS header at 0x3C
         // and read PE header (24 bytes)
-        let pe_offset = u32::from_le_bytes(buffer[0x3C..0x40].try_into().unwrap()) as u64;
+        let pe_offset =
+            u32::from_le_bytes(buffer[0x3C..0x40].try_into().unwrap()) as u64;
         let mut pe_header = [0u8; 24];
         file.seek(SeekFrom::Start(pe_offset))?;
         if file.read_exact(&mut pe_header).is_err() {
