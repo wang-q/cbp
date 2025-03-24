@@ -46,14 +46,13 @@ LDFLAGS="-L${TEMP_DIR}/cff/lib" \
 make -j 8 || exit 1
 make install || exit 1
 
-# Fix shebang lines in all files
-find "${TEMP_DIR}/collect" -type f -print0 |
-while IFS= read -r -d '' file; do
-    fix_shebang "$file"
-done
-
 # ldd $TEMP_DIR/collect/bin/mcl
-# eza -T $TEMP_DIR/collect
+eza -T $TEMP_DIR/collect
 
-# Use build_tar function from common.sh
-build_tar
+# Build tar
+FN_TAR="${PROJ}.${OS_TYPE}.tar.gz"
+cd $TEMP_DIR
+cbp collect --shebang -o "${FN_TAR}" collect/ ||
+    { echo "==> Error: Failed to create archive"; exit 1; }
+mv "${FN_TAR}" ${BASH_DIR}/../binaries/ ||
+    { echo "==> Error: Failed to move archive"; exit 1; }
