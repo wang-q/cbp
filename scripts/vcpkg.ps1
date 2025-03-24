@@ -55,7 +55,7 @@ if ($args.Count -gt 2) {
 }
 
 # Create archive from the package list
-cbp collect $LIST_FILE $COPY_ARGS
+cbp collect --mode vcpkg $LIST_FILE $COPY_ARGS
 if ($LASTEXITCODE -ne 0) { throw "cbp collect failed" }
 
 # Rename .mingw.tar.gz to .windows.tar.gz if needed
