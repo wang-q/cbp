@@ -170,8 +170,22 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
             if path.is_file() {
                 file_list.push(source.to_string());
             } else if path.is_dir() {
-                let files = cbp::find_files(path, None)?;
-                file_list.extend(files);
+                let base = path.canonicalize()?;
+                let files = cbp::find_files(&base, None)?;
+                // eprintln!("files = {:#?}", files);
+                for file in files {
+                    // Combine base path with file path
+                    let full_path = base.join(&file);
+                    let rel_path = if let Ok(rel) = full_path.strip_prefix(&base_dir) {
+                        rel.to_string_lossy().into_owned()
+                    } else {
+                        // If unable to get relative path, use original path
+                        path.join(&file)
+                            .to_string_lossy()
+                            .into_owned()
+                    };
+                    file_list.push(rel_path);
+                }
             }
         }
     } else {
