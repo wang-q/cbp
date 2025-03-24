@@ -31,5 +31,9 @@ make install || exit 1
 # ldd ${TEMP_DIR}/collect/bin/pv
 # eza -T ${TEMP_DIR}/collect/
 
-# Use build_tar function from common.sh
-build_tar
+# Collect binaries and create tarball
+FN_TAR="${PROJ}.${OS_TYPE}.tar.gz"
+cbp collect -o "${FN_TAR}" collect ||
+    { echo "==> Error: Failed to create archive"; exit 1; }
+mv "${FN_TAR}" ${BASH_DIR}/../binaries/ ||
+    { echo "==> Error: Failed to move archive"; exit 1; }

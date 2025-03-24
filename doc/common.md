@@ -39,10 +39,6 @@ The script defines the following variables:
 | Source Code Management        |                                                                |
 | `extract_source`              | Extracts `${PROJ}.tar.gz` from the `sources/` directory and    |
 |                               | changes to the extracted directory                             |
-| Archive Management            |                                                                |
-| `build_tar [name] [os_type]`  | Creates a compressed archive from files in `collect/`          |
-|                               | - `name`: Archive name (defaults to `$PROJ`)                   |
-|                               | - `os_type`: OS type for archive name (defaults to `$OS_TYPE`) |
 
 ## Error Handling
 

@@ -119,24 +119,4 @@ extract_source() {
         { echo "Error: Cannot find source directory"; exit 1; }
 }
 
-# Build tar archive
-build_tar() {
-    local name=${1:-${PROJ}}
-    local os_type=${2:-${OS_TYPE}}
-
-    # Define the name of the compressed file
-    FN_TAR="${name}.${os_type}.tar.gz"
-
-    # Create compressed archive using cbp tar
-    cd ${TEMP_DIR} ||
-        { echo "==> Error: temp directory not found"; exit 1; }
-
-    cbp tar collect -o "${FN_TAR}" --cleanup ||
-        { echo "==> Error: Failed to create archive"; exit 1; }
-
-    # Move archive to the central tar directory
-    mv "${FN_TAR}" ${BASH_DIR}/../binaries/ ||
-        { echo "==> Error: Failed to move archive"; exit 1; }
-}
-
-export -f extract_source build_tar
+export -f extract_source

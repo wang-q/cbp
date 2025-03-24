@@ -145,7 +145,7 @@ zvm use 0.13.0
 # bash scripts/bifrost.sh
 bash scripts/spoa.sh
 
-# bash scripts/newick-utils.sh # bison, flex
+bash scripts/newick-utils.sh # bison, flex
 
 ```
 

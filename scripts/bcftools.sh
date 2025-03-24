@@ -24,5 +24,9 @@ make install || exit 1
 # No functional bcftools plugins were found. The environment variable BCFTOOLS_PLUGINS is not set
 # and no usable plugins were found in /tmp/tmp.AFxLzJ0znf/collect/libexec/bcftools.
 
-# Use build_tar function from common.sh
-build_tar
+# Collect binaries and create tarball
+FN_TAR="${PROJ}.${OS_TYPE}.tar.gz"
+cbp collect -o "${FN_TAR}" collect ||
+    { echo "==> Error: Failed to create archive"; exit 1; }
+mv "${FN_TAR}" ${BASH_DIR}/../binaries/ ||
+    { echo "==> Error: Failed to move archive"; exit 1; }

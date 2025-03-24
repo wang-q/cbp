@@ -31,4 +31,8 @@ cp -R ../collect/* ${TEMP_DIR}/collect/
 # head -n 50 ${TEMP_DIR}/collect/bin/mafft
 
 # Collect binaries and create tarball
-build_tar
+FN_TAR="${PROJ}.${OS_TYPE}.tar.gz"
+cbp collect -o "${FN_TAR}" collect ||
+    { echo "==> Error: Failed to create archive"; exit 1; }
+mv "${FN_TAR}" ${BASH_DIR}/../binaries/ ||
+    { echo "==> Error: Failed to move archive"; exit 1; }
