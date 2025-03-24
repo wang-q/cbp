@@ -5,7 +5,7 @@ use std::process::Command;
 fn setup_test_data() -> anyhow::Result<tempfile::TempDir> {
     let temp_dir = tempfile::TempDir::new()?;
 
-    // 解压测试数据
+    // Extract test data
     let mut archive = tar::Archive::new(flate2::read::GzDecoder::new(
         std::fs::File::open("tests/cbp_macos.tar.gz")?,
     ));
