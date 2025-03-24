@@ -379,10 +379,8 @@ make \
     CC="zig cc -target ${TARGET_ARCH}" \
     || exit 1
 
-# Collect binaries
-collect_bins "bin/*"
-
-# Create package
-build_tar
+# Collect binaries and create tarball
+FN_TAR="${PROJ}.${OS_TYPE}.tar.gz"
+cbp collect --mode bin -o "${FN_TAR}" program
 
 ```

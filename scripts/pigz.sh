@@ -24,5 +24,8 @@ make pigz \
     || exit 1
 
 # Collect binaries and create tarball
-collect_bins pigz
-build_tar
+FN_TAR="${PROJ}.${OS_TYPE}.tar.gz"
+cbp collect --mode bin -o "${FN_TAR}" pigz ||
+    { echo "==> Error: Failed to create archive"; exit 1; }
+mv "${FN_TAR}" ${BASH_DIR}/../binaries/ ||
+    { echo "==> Error: Failed to move archive"; exit 1; }

@@ -20,6 +20,9 @@ make caster-site || exit 1
 make caster-pair || exit 1
 make waster-site || exit 1
 
-# Use build_tar function from common.sh
-collect_bins bin/*
-build_tar
+# Collect binaries and create tarball
+FN_TAR="${PROJ}.${OS_TYPE}.tar.gz"
+cbp collect --mode bin -o "${FN_TAR}" bin/ ||
+    { echo "==> Error: Failed to create archive"; exit 1; }
+mv "${FN_TAR}" ${BASH_DIR}/../binaries/ ||
+    { echo "==> Error: Failed to move archive"; exit 1; }

@@ -19,7 +19,6 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     echo "  PROJ        Name of the calling script (without .sh)"
     echo "  OS_TYPE     Operating system type"
     echo "  TARGET_ARCH Target architecture for compilation"
-    echo "  BIN_SUFFIX  Binary suffix (.exe for Windows)"
     echo "  TEMP_DIR    Temporary working directory"
     exit 1
 fi
@@ -78,16 +77,12 @@ fi
 # Set the target architecture and binary suffix based on OS type
 if [ "$OS_TYPE" == "linux" ]; then
     TARGET_ARCH="x86_64-linux-gnu.2.17"
-    BIN_SUFFIX=""
 elif [ "$OS_TYPE" == "macos" ]; then
     TARGET_ARCH="aarch64-macos-none"
-    BIN_SUFFIX=""
 elif [ "$OS_TYPE" == "windows" ]; then
     TARGET_ARCH="x86_64-windows-gnu"
-    BIN_SUFFIX=".exe"
 elif [ "$OS_TYPE" == "font" ]; then
     TARGET_ARCH=""
-    BIN_SUFFIX=""
 fi
 
 # Create temp directory
@@ -144,57 +139,4 @@ build_tar() {
         { echo "==> Error: Failed to move archive"; exit 1; }
 }
 
-# Collect specified binaries
-#
-# This function handles various binary file scenarios:
-# 1. Non-Windows:
-#    - Input: program        -> Output: program
-#    - Input: libcrypto.a    -> Output: libcrypto.a
-#
-# 2. Windows:
-#    - Input: program        -> Output: program.exe
-#    - Input: program.exe    -> Output: program.exe
-#    - Input: program.dll    -> Output: program.dll
-#    - Input: libcrypto.lib  -> Output: libcrypto.lib
-#    - Input: libcrypto.a    -> Output: libcrypto.a
-#
-# Note: For Windows, if 'program' is provided but 'program.exe' exists,
-#       the function will use 'program.exe' as the source file.
-collect_bins() {
-    local bins=("$@")
-
-    # Check if any binaries were specified
-    if [ ${#bins[@]} -eq 0 ]; then
-        echo "Error: No binaries specified"
-        exit 1
-    fi
-
-    # Create collect directory
-    mkdir -p ${TEMP_DIR}/collect/bin
-
-    # Process each binary file
-    for bin in "${bins[@]}"; do
-        # Handle binary name with suffix
-        local source_bin="${bin}"
-        local base_name=$(basename "${bin}")
-        local target_bin="${base_name}"
-
-        # Only add suffix for executables on Windows, and only if they don't already have an extension
-        if [ -n "${BIN_SUFFIX}" ] && [[ ! "${base_name}" =~ \.(exe|dll|lib|a)$ ]]; then
-            target_bin="${base_name}${BIN_SUFFIX}"
-        fi
-
-        # Check if source binary has suffix
-        if [ -n "${BIN_SUFFIX}" ] && [ -f "${bin}${BIN_SUFFIX}" ]; then
-            source_bin="${bin}${BIN_SUFFIX}"
-        fi
-
-        chmod +x "${source_bin}" ||
-            { echo "Error: Failed to make binary ${source_bin} executable"; exit 1; }
-        cp "${source_bin}" "${TEMP_DIR}/collect/bin/${target_bin}" ||
-            { echo "Error: Failed to copy binary ${source_bin}"; exit 1; }
-    done
-}
-
 export -f extract_source build_tar
-export -f collect_bins

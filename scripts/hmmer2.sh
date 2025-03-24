@@ -35,8 +35,9 @@ for BIN in $BINS; do
 done
 BINS=$RENAMED_BINS
 
-# Create compressed archive with maximum compression
-collect_bins ${BINS}
-
-# Move archive to the central tar directory
-build_tar
+# Collect binaries and create tarball
+FN_TAR="${PROJ}.${OS_TYPE}.tar.gz"
+cbp collect --mode bin -o "${FN_TAR}" ${BINS} ||
+    { echo "==> Error: Failed to create archive"; exit 1; }
+mv "${FN_TAR}" ${BASH_DIR}/../binaries/ ||
+    { echo "==> Error: Failed to move archive"; exit 1; }
