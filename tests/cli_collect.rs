@@ -1,6 +1,8 @@
 use assert_cmd::prelude::*;
 use std::process::Command;
 use std::fs;
+use tar::Archive;
+use flate2::read::GzDecoder;
 
 fn setup_test_files() -> anyhow::Result<tempfile::TempDir> {
     let temp_dir = tempfile::TempDir::new()?;
@@ -218,6 +220,47 @@ fn command_collect_multiple_paths() -> anyhow::Result<()> {
     assert!(files.contains("doc/file1.txt"));
     assert!(files.contains("doc/sub1/file2.txt"));
     assert!(!files.contains("doc/sub2/file3.txt")); // Should not be included
+
+    Ok(())
+}
+
+#[test]
+fn command_collect_vcpkg_mode() -> anyhow::Result<()> {
+    let temp_dir = tempfile::TempDir::new()?;
+    
+    // Extract test data
+    let mut archive = Archive::new(GzDecoder::new(
+        std::fs::File::open("tests/vcpkg.tar.gz")?
+    ));
+    archive.unpack(temp_dir.path())?;
+
+    let list_file = temp_dir.path().join("installed/vcpkg/info/bzip2_1.0.8_arm64-osx-release.list");
+    let output_tar = temp_dir.path().join("bzip2.osx.tar.gz");
+
+    Command::cargo_bin("cbp")?
+        .arg("collect")
+        .arg("--mode")
+        .arg("vcpkg")
+        .arg("-o")
+        .arg(&output_tar)
+        .current_dir(temp_dir.path())
+        .arg(&list_file)
+        .assert()
+        .success();
+
+    // Verify archive content
+    assert!(output_tar.exists());
+    let files = cbp::list_archive_files(&output_tar)?;
+    eprintln!("files = {:#?}", files);
+
+    // Check if files are in correct locations
+    assert!(files.contains("bin/bzip2")); // tools moved to bin/
+    assert!(files.contains("bin/bzip2recover")); // tools moved to bin/
+    assert!(files.contains("lib/libbz2.a")); // libraries in lib/
+    assert!(files.contains("include/bzlib.h")); // headers in include/
+
+    assert!(!files.contains("tools/bzip2/bzip2"));
+    assert!(!files.contains("tools/bzip2/bzip2recover"));
 
     Ok(())
 }
