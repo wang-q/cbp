@@ -14,7 +14,7 @@
     {
       "name": "version",
       "command": "muscle",
-      "pattern": "MUSCLE v",
+      "pattern": "muscle [0-9]+\\.",
       "args": "-version"
     }
   ]

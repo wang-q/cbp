@@ -14,7 +14,7 @@
     {
       "name": "version",
       "command": "mosdepth",
-      "pattern": "mosdepth version: ",
+      "pattern": "mosdepth [0-9]+\\.",
       "args": "--version"
     }
   ]

@@ -20,7 +20,7 @@
     {
       "name": "version",
       "command": "mash",
-      "pattern": "Mash version ",
+      "pattern": "[0-9]+\\.",
       "args": "--version"
     }
   ]

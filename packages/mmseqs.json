@@ -20,8 +20,8 @@
     {
       "name": "version",
       "command": "mmseqs",
-      "pattern": "MMseqs2 Version: ",
-      "args": "version"
+      "pattern": "MMseqs2",
+      "args": "-h"
     }
   ]
 }

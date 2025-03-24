@@ -21,8 +21,8 @@
   "tests": [
     {
       "name": "version",
-      "command": "bowtie2",
-      "pattern": "version ",
+      "command": "bowtie2-build-l",
+      "pattern": "version [0-9]+\\.",
       "args": "--version"
     }
   ]

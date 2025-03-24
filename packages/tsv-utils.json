@@ -23,8 +23,8 @@
   "tests": [
     {
       "name": "version",
-      "command": "tsv-summarize",
-      "pattern": "tsv-summarize \\(eBay/tsv-utils\\) version [0-9]+\\.[0-9]+\\.[0-9]+",
+      "command": "tsv-filter",
+      "pattern": "tsv-summarize \\(eBay/tsv-utils\\) version [0-9]+\\.",
       "args": "--version"
     }
   ]

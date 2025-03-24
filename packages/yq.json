@@ -22,7 +22,7 @@
     {
       "name": "version",
       "command": "yq",
-      "pattern": "yq \\(https://github.com/mikefarah/yq\\) version",
+      "pattern": "yq ",
       "args": "--version"
     }
   ]

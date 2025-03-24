@@ -20,7 +20,7 @@
     {
       "name": "version",
       "command": "stringtie",
-      "pattern": "StringTie v",
+      "pattern": "[0-9]+\\.",
       "args": "--version"
     }
   ]

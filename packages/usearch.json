@@ -14,8 +14,7 @@
     {
       "name": "version",
       "command": "usearch",
-      "pattern": "usearch v",
-      "args": "--version"
+      "pattern": "usearch v"
     }
   ]
 }

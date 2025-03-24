@@ -10,6 +10,7 @@ on:
     paths:
       - '.github/workflows/test-binaries.yml'
       - 'test-binaries/**'
+      - 'packages/**'
 
 jobs:
   test-packages:
