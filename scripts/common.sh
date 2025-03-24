@@ -196,38 +196,5 @@ collect_bins() {
     done
 }
 
-# Collect binaries from Makefile's all target
-collect_make_bins() {
-    # Get binary names from Makefile
-    BINS=$(make -p | grep "^all: " | sed 's/^all: //')
-
-    # Use collect_bins to process binaries
-    collect_bins ${BINS}
-}
-
-# Fix shebang lines in scripts
-fix_shebang() {
-    local file="$1"
-
-    # Check if file exists and is a regular file
-    [ -f "$file" ] || return 0
-
-    # Check if file is a text file
-    if ! file -b "${file}" | grep -q "text"; then
-        return 0
-    fi
-
-    # Check if file is a script (has a shebang line)
-    if head -n1 "$file" | grep -q '^#!'; then
-        perl -pi -e '
-            if ($. == 1) {
-                s{^#!.*perl}{#!/usr/bin/env perl} and print STDERR "==> Fixed perl shebang in '$file'\n";
-                s{^#!.*python}{#!/usr/bin/env python3} and print STDERR "==> Fixed python shebang in '$file'\n";
-            }
-        ' "$file"
-    fi
-}
-
 export -f extract_source build_tar
-export -f collect_bins collect_make_bins
-export -f fix_shebang
+export -f collect_bins

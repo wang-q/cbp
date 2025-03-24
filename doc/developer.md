@@ -380,7 +380,7 @@ make \
     || exit 1
 
 # Collect binaries
-collect_make_bins
+collect_bins "bin/*"
 
 # Create package
 build_tar

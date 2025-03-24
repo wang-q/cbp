@@ -40,16 +40,11 @@ The script defines the following variables:
 | `extract_source`              | Extracts `${PROJ}.tar.gz` from the `sources/` directory and    |
 |                               | changes to the extracted directory                             |
 | Binary Collection             |                                                                |
-| `collect_make_bins`           | Collects binaries listed in Makefile's `all` target            |
 | `collect_bins bin1 [bin2...]` | Collects specified binary files into `collect/bin/`            |
 | Archive Management            |                                                                |
 | `build_tar [name] [os_type]`  | Creates a compressed archive from files in `collect/`          |
 |                               | - `name`: Archive name (defaults to `$PROJ`)                   |
 |                               | - `os_type`: OS type for archive name (defaults to `$OS_TYPE`) |
-| Script Utilities              |                                                                |
-| `fix_shebang file`            | Fixes shebang lines in script files:                           |
-|                               | - Perl: `#!/usr/bin/env perl`                                  |
-|                               | - Python: `#!/usr/bin/env python3`                             |
 
 ## Error Handling
 

@@ -47,7 +47,7 @@ make -j 8 || exit 1
 make install || exit 1
 
 # ldd $TEMP_DIR/collect/bin/mcl
-eza -T $TEMP_DIR/collect
+# eza -T $TEMP_DIR/collect
 
 # Build tar
 FN_TAR="${PROJ}.${OS_TYPE}.tar.gz"
