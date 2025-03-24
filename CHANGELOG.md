@@ -2,6 +2,18 @@
 
 ## Unreleased - ReleaseDate
 
+- Enhanced package management
+  - Added `info` command for package metadata display
+  - Added `uninstall` as alias for `remove` command
+  - Improved `collect` command
+  - Added `prebuild.sh` script for unified prebuilt package handling
+  - Migrate prebuild scripts to package definitions: `packages/`
+- Improved binary testing workflow
+- Updated build system
+  - Added LLVM toolchain support
+- Improved documentation
+- Added more packages
+
 ## 0.3.7 - 2025-03-21
 
 - Added automated binary testing workflow
