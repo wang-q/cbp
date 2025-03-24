@@ -100,3 +100,68 @@ fn command_install() -> anyhow::Result<()> {
 
     Ok(())
 }
+
+#[test]
+fn command_info() -> anyhow::Result<()> {
+    // Create mock server
+    let mut server = mockito::Server::new();
+
+    // Prepare mock JSON response
+    let mock_response = r#"{
+        "name": "newick-utils",
+        "version": "1.6",
+        "description": "A suite of utilities for processing phylogenetic trees",
+        "homepage": "http://cegg.unige.ch/newick_utils",
+        "license": "BSD-3-Clause",
+        "dependencies": ["zlib", "readline"]
+    }"#;
+
+    // Set up mock endpoint
+    let _m = server
+        .mock("GET", "/wang-q/cbp/master/packages/newick-utils.json")
+        .with_status(200)
+        .with_header("content-type", "application/json")
+        .with_body(mock_response)
+        .create();
+
+    // Test normal output
+    let mut cmd = Command::cargo_bin("cbp")?;
+    cmd.env("GITHUB_RAW_URL", &server.url())
+        .arg("info")
+        .arg("newick-utils");
+
+    cmd.assert()
+        .success()
+        .stdout(predicate::str::contains("==> Package info: newick-utils"))
+        .stdout(predicate::str::contains("Version: 1.6"))
+        .stdout(predicate::str::contains("License: BSD-3-Clause"))
+        .stdout(predicate::str::contains("- zlib"))
+        .stdout(predicate::str::contains("- readline"));
+
+    // Test JSON output
+    let mut cmd = Command::cargo_bin("cbp")?;
+    cmd.env("GITHUB_RAW_URL", &server.url())
+        .arg("info")
+        .arg("newick-utils")
+        .arg("--json");
+
+    cmd.assert()
+        .success()
+        .stdout(predicate::str::contains("\"name\": \"newick-utils\""))
+        .stdout(predicate::str::contains("\"version\": \"1.6\""));
+
+    // Test non-existent package
+    let _m = server
+        .mock("GET", "/wang-q/cbp/master/packages/non-existent.json")
+        .with_status(404)
+        .create();
+
+    let mut cmd = Command::cargo_bin("cbp")?;
+    cmd.env("GITHUB_RAW_URL", &server.url())
+        .arg("info")
+        .arg("non-existent");
+
+    cmd.assert().failure();
+
+    Ok(())
+}

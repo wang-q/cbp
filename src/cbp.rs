@@ -16,6 +16,7 @@ fn main() -> anyhow::Result<()> {
         .subcommand(cmd_cbp::local::make_subcommand())
         .subcommand(cmd_cbp::list::make_subcommand())
         .subcommand(cmd_cbp::remove::make_subcommand())
+        .subcommand(cmd_cbp::info::make_subcommand())
         .subcommand(cmd_cbp::avail::make_subcommand())
         .subcommand(cmd_cbp::check::make_subcommand())
         .subcommand(cmd_cbp::tar::make_subcommand())
@@ -48,11 +49,12 @@ Common Commands:
    cbp local zlib              # from local files
 
 3. Package Management:
-   cbp list                    # list all packages
+   cbp list                    # list installed packages
    cbp list zlib               # show package contents
    cbp remove zlib             # remove package
 
 4. Package Discovery:
+   cbp info zlib               # package information
    cbp avail                   # list all packages
    cbp avail macos             # platform specific
 
@@ -71,6 +73,7 @@ Common Commands:
     match app.get_matches().subcommand() {
         Some(("avail", sub_matches)) => cmd_cbp::avail::execute(sub_matches),
         Some(("check", sub_matches)) => cmd_cbp::check::execute(sub_matches),
+        Some(("info", sub_matches)) => cmd_cbp::info::execute(sub_matches),
         Some(("init", sub_matches)) => cmd_cbp::init::execute(sub_matches),
         Some(("install", sub_matches)) => cmd_cbp::install::execute(sub_matches),
         Some(("kb", sub_matches)) => cmd_cbp::kb::execute(sub_matches),
