@@ -180,9 +180,7 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
                         rel.to_string_lossy().into_owned()
                     } else {
                         // If unable to get relative path, use original path
-                        path.join(&file)
-                            .to_string_lossy()
-                            .into_owned()
+                        path.join(&file).to_string_lossy().into_owned()
                     };
                     file_list.push(rel_path);
                 }
@@ -318,11 +316,15 @@ fn process_file_aliases(
     if let Some(file_name) = dest_path.file_name().and_then(|n| n.to_str()) {
         if let Some(aliases) = copy_map.get(file_name) {
             let parent = dest_path.parent().ok_or_else(|| {
-                anyhow::anyhow!("Failed to get parent directory for {}", dest_path.display())
+                anyhow::anyhow!(
+                    "Failed to get parent directory for {}",
+                    dest_path.display()
+                )
             })?;
             for alias in aliases {
-                std::fs::copy(dest_path, parent.join(alias))
-                    .map_err(|e| anyhow::anyhow!("Failed to create alias {}: {}", alias, e))?;
+                std::fs::copy(dest_path, parent.join(alias)).map_err(|e| {
+                    anyhow::anyhow!("Failed to create alias {}: {}", alias, e)
+                })?;
             }
         }
     }
@@ -370,9 +372,12 @@ fn fix_shebang(path: &std::path::Path) -> anyhow::Result<()> {
     let mut file = std::fs::File::open(path)?;
     let mut buffer = [0u8; 512];
     let n = file.read(&mut buffer)?;
-    
+
     // Check if the first n bytes are valid UTF-8 or ASCII characters
-    if !buffer[..n].iter().all(|&b| b.is_ascii() || (b & 0xC0) == 0x80) {
+    if !buffer[..n]
+        .iter()
+        .all(|&b| b.is_ascii() || (b & 0xC0) == 0x80)
+    {
         return Ok(());
     }
 

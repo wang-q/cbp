@@ -24,12 +24,17 @@ fn main() -> anyhow::Result<()> {
         .subcommand(cmd_cbp::kb::make_subcommand())
         .subcommand(cmd_cbp::upload::make_subcommand())
         .subcommand(cmd_cbp::collect::make_subcommand())
+        .subcommand(
+            Command::new("uninstall")
+                .about("Alias for remove command")
+                .hide(true) // Hide from help message to avoid confusion
+                .args(cmd_cbp::remove::make_subcommand().get_arguments().cloned()),
+        )
         .after_help(
             r###"
 Package Manager Features:
+    * Linux/macOS/Windows
     * Pre-built binaries without dependencies
-    * GitHub release integration
-    * Local package support
     * Customizable installation paths
 
 Directory Structure:
@@ -39,32 +44,12 @@ Directory Structure:
     ├── records/  - Package file lists
     └── include/, lib/, share/ - Installed files
 
-Common Commands:
-1. Initial Setup:
-   cbp init                    # default setup
-   cbp init /opt/cbp           # custom location
-
-2. Package Installation:
-   cbp install zlib            # from GitHub
-   cbp local zlib              # from local files
-
-3. Package Management:
-   cbp list                    # list installed packages
-   cbp list zlib               # show package contents
-   cbp remove zlib             # remove package
-
-4. Package Discovery:
-   cbp info zlib               # package information
-   cbp avail                   # list all packages
-   cbp avail macos             # platform specific
-
-5. Development Tools:
-   cbp check                   # find unmanaged files
-   cbp tar -o pkg.tar.gz src/  # create package
-   cbp prefix                  # show install paths
-
-6. Documentation:
-   cbp kb readme               # view documentation
+Quick Start:
+    cbp init                    # Initial setup
+    cbp install <package>       # Install package
+    cbp list                    # List installed packages
+    cbp avail                   # List available packages
+    cbp kb readme               # View more examples
 
 "###,
         );
@@ -80,6 +65,7 @@ Common Commands:
         Some(("list", sub_matches)) => cmd_cbp::list::execute(sub_matches),
         Some(("local", sub_matches)) => cmd_cbp::local::execute(sub_matches),
         Some(("remove", sub_matches)) => cmd_cbp::remove::execute(sub_matches),
+        Some(("uninstall", sub_matches)) => cmd_cbp::remove::execute(sub_matches), // 添加别名处理
         Some(("tar", sub_matches)) => cmd_cbp::tar::execute(sub_matches),
         Some(("upload", sub_matches)) => cmd_cbp::upload::execute(sub_matches),
         Some(("prefix", sub_matches)) => cmd_cbp::prefix::execute(sub_matches),

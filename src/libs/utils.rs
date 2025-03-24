@@ -1,4 +1,4 @@
-use std::io::{Read, BufWriter, Write};
+use std::io::{BufWriter, Read, Write};
 use std::path::Path;
 
 /// Creates a buffered writer for either stdout or a file
@@ -166,7 +166,10 @@ pub fn list_archive_files(archive_path: &Path) -> anyhow::Result<String> {
 }
 
 /// Read file content from a tar.gz archive
-pub fn read_file_from_archive(archive_path: &std::path::Path, file_path: &str) -> anyhow::Result<String> {
+pub fn read_file_from_archive(
+    archive_path: &std::path::Path,
+    file_path: &str,
+) -> anyhow::Result<String> {
     let file = std::fs::File::open(archive_path)?;
     let tar = flate2::read::GzDecoder::new(file);
     let mut archive = tar::Archive::new(tar);

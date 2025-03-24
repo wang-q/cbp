@@ -57,11 +57,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     // Build JSON file URL
     let raw_url = std::env::var("GITHUB_RAW_URL")
         .unwrap_or_else(|_| "https://raw.githubusercontent.com".to_string());
-    let json_url = format!(
-        "{}/wang-q/cbp/master/packages/{}.json",
-        raw_url,
-        package
-    );
+    let json_url = format!("{}/wang-q/cbp/master/packages/{}.json", raw_url, package);
 
     // Get JSON data
     let resp = agent
@@ -80,10 +76,13 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         println!("==> Package info: {}", package);
         println!("Name: {}", info["name"].as_str().unwrap_or("Unknown"));
         println!("Version: {}", info["version"].as_str().unwrap_or("Unknown"));
-        println!("Description: {}", info["description"].as_str().unwrap_or("None"));
+        println!(
+            "Description: {}",
+            info["description"].as_str().unwrap_or("None")
+        );
         println!("Homepage: {}", info["homepage"].as_str().unwrap_or("None"));
         println!("License: {}", info["license"].as_str().unwrap_or("Unknown"));
-        
+
         if let Some(deps) = info["dependencies"].as_array() {
             println!("\nDependencies:");
             for dep in deps {
