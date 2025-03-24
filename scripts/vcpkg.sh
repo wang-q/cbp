@@ -90,7 +90,7 @@ for copy_pair in "$@"; do
 done
 
 # Create archive from the package list
-cbp collect "${LIST_FILE}" "${COPY_ARGS[@]}" || exit 1
+cbp collect --mode vcpkg "${LIST_FILE}" "${COPY_ARGS[@]}" || exit 1
 
 # Rename .osx.tar.gz to .macos.tar.gz if needed
 if [ -f "${BASE_PROJ}.osx.tar.gz" ]; then
