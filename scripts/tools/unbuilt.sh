@@ -17,4 +17,21 @@ list_unbuilt() {
     echo
 }
 
+list_pkg() {
+    echo "==> Packages in pakages/ but not built for ${OS_TYPE}:"
+    comm -23 \
+        <(cd "${BASH_DIR}/../../packages" && find . -maxdepth 1 -name "*.json" -print |
+            sed 's/^\.\///' |
+            sed 's/\.json$//' |
+            sort) \
+        <(gh release download Binaries --pattern "cbp-packages.json" --output - |
+            jq -r '.[] | select(.name | endswith(".'"${OS_TYPE}"'.tar.gz")) | .name' |
+            sed "s/\.${OS_TYPE}\.tar\.gz$//" |
+            sort) |
+        perl -n -e "${PERL_FMT}"
+    echo
+}
+
 list_unbuilt
+
+list_pkg
