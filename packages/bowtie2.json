@@ -9,13 +9,13 @@
       "url": "https://github.com/BenLangmead/bowtie2/releases/download/v2.5.4/bowtie2-2.5.4-linux-x86_64.zip",
       "extract": "unzip",
       "binary": "bowtie2-*/bowtie2*",
-      "exclude": "bowtie2-*/*-debug"
+      "clean": "bowtie2-*/*-debug"
     },
     "macos": {
       "url": "https://github.com/BenLangmead/bowtie2/releases/download/v2.5.4/bowtie2-2.5.4-macos-arm64.zip",
       "extract": "unzip",
       "binary": "bowtie2-*/bowtie2*",
-      "exclude": "bowtie2-*/*-debug"
+      "clean": "bowtie2-*/*-debug"
     }
   },
   "tests": [

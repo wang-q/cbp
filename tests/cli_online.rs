@@ -167,8 +167,11 @@ fn command_info() -> anyhow::Result<()> {
 }
 
 #[test]
-#[cfg_attr(target_os = "windows", ignore = "tar operations not supported on Windows")]
-fn command_build_download() -> anyhow::Result<()> {
+#[cfg_attr(
+    target_os = "windows",
+    ignore = "tar operations not supported on Windows"
+)]
+fn command_build_source() -> anyhow::Result<()> {
     let temp_dir = tempfile::TempDir::new()?;
 
     // Create mock server
@@ -179,7 +182,10 @@ fn command_build_download() -> anyhow::Result<()> {
 
     // Set up mock endpoints
     let _m1 = server
-        .mock("GET", "/Benson-Genomics-Lab/TRF/archive/refs/tags/v4.09.1.tar.gz")
+        .mock(
+            "GET",
+            "/Benson-Genomics-Lab/TRF/archive/refs/tags/v4.09.1.tar.gz",
+        )
         .with_status(200)
         .with_header("content-type", "application/gzip")
         .with_body(test_package)
@@ -187,7 +193,8 @@ fn command_build_download() -> anyhow::Result<()> {
 
     // Create package directory and copy the existing package JSON
     std::fs::create_dir_all(temp_dir.path().join("packages"))?;
-    let cargo_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap_or_else(|_| ".".to_string());
+    let cargo_dir =
+        std::env::var("CARGO_MANIFEST_DIR").unwrap_or_else(|_| ".".to_string());
     std::fs::copy(
         std::path::Path::new(&cargo_dir).join("packages/trf.json"),
         temp_dir.path().join("packages/trf.json"),
@@ -197,7 +204,7 @@ fn command_build_download() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin("cbp")?;
     cmd.env("GITHUB_RELEASE_URL", &server.url())
         .arg("build")
-        .arg("download")
+        .arg("source")
         .arg("--dir")
         .arg(temp_dir.path())
         .arg("trf");
@@ -207,7 +214,9 @@ fn command_build_download() -> anyhow::Result<()> {
         .stdout(predicate::str::contains("==> Processing package: trf"))
         .stdout(predicate::str::contains("-> Downloading from"))
         .stdout(predicate::str::contains("-> Processing source archive"))
-        .stdout(predicate::str::contains("-> Successfully downloaded and processed"));
+        .stdout(predicate::str::contains(
+            "-> Successfully downloaded and processed",
+        ));
 
     // Debug: Print directory structure
     eprintln!("==> Temporary directory structure:");
@@ -224,13 +233,78 @@ fn command_build_download() -> anyhow::Result<()> {
     // Debug: Print archive contents
     eprintln!("\n==> Archive contents:");
     let files = cbp::list_archive_files(&output_tar)?;
-        eprintln!("  {}", files);
+    eprintln!("  {}", files);
 
     // Perform checks
     assert!(files.contains("trf/"));
     assert!(files.contains("trf/INSTALL"));
     assert!(!files.contains("TRF-4.09.1/")); // Should be renamed
     assert!(!files.contains("config.h.in~")); // Should be cleaned
+
+    Ok(())
+}
+
+#[test]
+#[cfg_attr(
+    target_os = "windows",
+    ignore = "tar operations not supported on Windows"
+)]
+fn command_build_font() -> anyhow::Result<()> {
+    let temp_dir = tempfile::TempDir::new()?;
+
+    // Create mock server
+    let mut server = mockito::Server::new();
+
+    // Prepare test package data
+    let test_package = include_bytes!("Charter 210112.zip");
+
+    // Set up mock endpoint
+    let _m = server
+        .mock(
+            "GET",
+            "/practicaltypography.com/fonts/Charter%20210112.zip",
+        )
+        .with_status(200)
+        .with_header("content-type", "application/zip")
+        .with_body(test_package)
+        .create();
+
+    // Create package directory and copy the existing package JSON
+    std::fs::create_dir_all(temp_dir.path().join("packages"))?;
+    let cargo_dir =
+        std::env::var("CARGO_MANIFEST_DIR").unwrap_or_else(|_| ".".to_string());
+    std::fs::copy(
+        std::path::Path::new(&cargo_dir).join("packages/charter.json"),
+        temp_dir.path().join("packages/charter.json"),
+    )?;
+
+    // Run font command
+    let mut cmd = Command::cargo_bin("cbp")?;
+    cmd.env("GITHUB_RELEASE_URL", &server.url())
+        .arg("build")
+        .arg("font")
+        .arg("--dir")
+        .arg(temp_dir.path())
+        .arg("charter");
+
+    cmd.assert()
+        .success()
+        .stdout(predicate::str::contains("==> Processing font package: charter"))
+        .stdout(predicate::str::contains("-> Downloading from"))
+        .stdout(predicate::str::contains("-> Font package created successfully"));
+
+    // Verify build results
+    let output_tar = temp_dir.path().join("binaries/charter.font.tar.gz");
+    assert!(output_tar.exists());
+
+    // Debug: Print archive contents
+    eprintln!("\n==> Archive contents:");
+    let files = cbp::list_archive_files(&output_tar)?;
+    eprintln!("  {}", files);
+
+    // Perform checks
+    assert!(files.contains("Charter Regular.ttf"));
+    assert!(!files.contains("__MACOSX")); // Should be cleaned
 
     Ok(())
 }

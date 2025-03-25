@@ -69,7 +69,7 @@ fi
 
 # Read all package options
 EXTRACT=$(jq -r ".downloads.${OS_TYPE}.extract // empty" "$JSON_FILE")
-EXCLUDE=$(jq -r ".downloads.${OS_TYPE}.exclude // empty" "$JSON_FILE")
+CLEAN=$(jq -r ".downloads.${OS_TYPE}.clean // empty" "$JSON_FILE")
 SHEBANG=$(jq -r ".downloads.${OS_TYPE}.shebang // empty" "$JSON_FILE")
 
 # Handle binary paths as array or single string
@@ -140,8 +140,8 @@ process_binaries() {
     fi
 
     # Handle exclude pattern right after extraction
-    if [ -n "${EXCLUDE}" ]; then
-        rm -f ${EXCLUDE}
+    if [ -n "${CLEAN}" ]; then
+        rm -f ${CLEAN}
     fi
     
     # Add shebang option if enabled

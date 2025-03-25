@@ -255,3 +255,26 @@ mv python3.linux.tar.gz binaries/python3.11.linux.tar.gz
 bash scripts/fasttree.sh
 
 ```
+
+## Prebuilds from the official repositories
+
+### Fonts
+
+```bash
+cbp install cabextract
+
+bash scripts/prebuild.sh arial font
+bash scripts/prebuild.sh helvetica font
+
+cbp build font charter
+
+# Open Source Fonts
+bash scripts/prebuild.sh fira font
+bash scripts/prebuild.sh jetbrains-mono font
+bash scripts/prebuild.sh firacode-nf font
+
+bash scripts/prebuild.sh lxgw-wenkai font
+bash scripts/prebuild.sh source-han-sans font
+bash scripts/prebuild.sh source-han-serif font
+
+```

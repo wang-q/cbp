@@ -5,6 +5,9 @@
 ```bash
 fd -e json . packages -x sh -c 'jq -e ".source.rename" {} > /dev/null 2>&1 && echo {}'
 
+
+fd -e json . packages -x sh -c 'jq -e ".. | objects | select(has(\"exclude\"))" {} > /dev/null 2>&1 && echo {}'
+
 ```
 
 ## Basic libraries
@@ -49,7 +52,7 @@ bash scripts/download-source.sh datamash
 
 bash scripts/download-source.sh cabextract
 
-cbp build download trf
+cbp build source trf
 
 bash scripts/download-source.sh aria2
 

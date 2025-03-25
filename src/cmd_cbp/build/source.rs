@@ -4,7 +4,7 @@ use std::path::Path;
 
 /// Create clap subcommand arguments
 pub fn make_subcommand() -> clap::Command {
-    clap::Command::new("download")
+    clap::Command::new("source")
         .about("Download package sources")
         .arg(
             Arg::new("packages")
@@ -42,31 +42,31 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
     // Process packages
     for pkg in args.get_many::<String>("packages").unwrap() {
-        download_package(&base_dir, pkg, &agent)?;
+        download_source(&base_dir, pkg, &agent)?;
     }
 
     Ok(())
 }
 
 /// Download and process a single package
-/// 
+///
 /// # Arguments
 /// * `base_dir` - Base directory containing packages/ and sources/
 /// * `pkg` - Package name
 /// * `agent` - HTTP agent for downloading
-fn download_package(
+fn download_source(
     base_dir: &Path,
     pkg: &str,
     agent: &ureq::Agent,
 ) -> anyhow::Result<()> {
     println!("==> Processing package: {}", pkg);
-    let json = read_package_json(base_dir, pkg)?;
+    let json = cbp::read_package_json(base_dir, pkg)?;
     let source_url = get_source_url(&json)?;
     let temp_dir = tempfile::tempdir()?;
     let temp_file = temp_dir.path().join("download.tmp");
 
     println!("-> Downloading from {}", source_url);
-    download_source(&source_url, &temp_file, agent)?;
+    cbp::download_file(&source_url, &temp_file, agent)?;
     if let serde_json::Value::Object(source_obj) = &json["source"] {
         println!("-> Processing source archive");
         process_source_object(&temp_dir, &temp_file, source_obj, pkg)?;
@@ -77,40 +77,8 @@ fn download_package(
     Ok(())
 }
 
-/// Read and validate package JSON configuration
-/// 
-/// # Returns
-/// * JSON object containing package configuration
-/// * Error if package file not found or validation fails
-fn read_package_json(base_dir: &Path, pkg: &str) -> anyhow::Result<serde_json::Value> {
-    let json_path = base_dir.join("packages").join(format!("{}.json", pkg));
-    if !json_path.exists() {
-        return Err(anyhow::anyhow!(
-            "Package file {} not found",
-            json_path.display()
-        ));
-    }
-
-    let json_content = std::fs::read_to_string(&json_path)?;
-    let json: serde_json::Value = serde_json::from_str(&json_content)?;
-
-    // Validate package name
-    let name = json["name"]
-        .as_str()
-        .ok_or_else(|| anyhow::anyhow!("Field 'name' not found"))?;
-    if name != pkg {
-        return Err(anyhow::anyhow!(
-            "Package name in JSON ({}) does not match requested package ({})",
-            name,
-            pkg
-        ));
-    }
-
-    Ok(json)
-}
-
 /// Extract source URL from package JSON
-/// 
+///
 /// Handles both string format and object format with url field
 /// Supports GITHUB_RELEASE_URL environment variable override
 fn get_source_url(json: &serde_json::Value) -> anyhow::Result<String> {
@@ -133,19 +101,8 @@ fn get_source_url(json: &serde_json::Value) -> anyhow::Result<String> {
     Ok(url)
 }
 
-fn download_source(
-    url: &str,
-    file_path: &Path,
-    agent: &ureq::Agent,
-) -> anyhow::Result<()> {
-    let mut file = std::fs::File::create(file_path)?;
-    let resp = agent.get(url).call()?;
-    std::io::copy(&mut resp.into_reader(), &mut file)?;
-    Ok(())
-}
-
 /// Process source object after download
-/// 
+///
 /// Steps:
 /// 1. Extract archive
 /// 2. Handle rename
@@ -157,55 +114,15 @@ fn process_source_object(
     source_obj: &serde_json::Map<String, serde_json::Value>,
     pkg: &str,
 ) -> anyhow::Result<()> {
-    extract_archive(temp_dir, temp_file, source_obj)?;
+    cbp::extract_archive(temp_dir, temp_file, source_obj)?;
     let rename_target = handle_rename(temp_dir, source_obj, pkg)?;
-    clean_files(temp_dir, source_obj)?;
+    cbp::clean_files(temp_dir, source_obj)?;
     create_reproducible_archive(temp_dir, temp_file, &rename_target)?;
     Ok(())
 }
 
-/// Extract archive using custom command or default tar
-/// 
-/// Uses gtar on macOS and tar on other platforms
-fn extract_archive(
-    temp_dir: &tempfile::TempDir,
-    temp_file: &Path,
-    source_obj: &serde_json::Map<String, serde_json::Value>,
-) -> anyhow::Result<()> {
-    println!("-> Extracting archive");
-    if let Some(extract_cmd) = source_obj.get("extract") {
-        let cmd_str = extract_cmd
-            .as_str()
-            .ok_or_else(|| anyhow::anyhow!("Extract command must be a string"))?;
-        println!("-> Using custom extract command: {}", cmd_str);
-
-        let mut parts = cmd_str.split_whitespace();
-        let program = parts
-            .next()
-            .ok_or_else(|| anyhow::anyhow!("Empty extract command"))?;
-
-        std::process::Command::new(program)
-            .args(parts)
-            .arg(temp_file)
-            .current_dir(temp_dir.path())
-            .status()?;
-    } else {
-        std::process::Command::new(if cfg!(target_os = "macos") {
-            "gtar"
-        } else {
-            "tar"
-        })
-        .arg("xf")
-        .arg(temp_file)
-        .current_dir(temp_dir.path())
-        .status()?;
-    }
-    println!("  -> Extraction completed");
-    Ok(())
-}
-
 /// Handle file renaming based on package configuration
-/// 
+///
 /// If rename is not specified, uses package name as target
 fn handle_rename(
     temp_dir: &tempfile::TempDir,
@@ -226,44 +143,8 @@ fn handle_rename(
     }
 }
 
-/// Clean files matching patterns specified in package configuration
-fn clean_files(
-    temp_dir: &tempfile::TempDir,
-    source_obj: &serde_json::Map<String, serde_json::Value>,
-) -> anyhow::Result<()> {
-    if let Some(clean) = source_obj.get("clean") {
-        let clean_paths = clean
-            .as_array()
-            .ok_or_else(|| anyhow::anyhow!("Clean must be an array"))?;
-        
-        println!("  -> Cleaning {} patterns", clean_paths.len());
-        for path in clean_paths {
-            let path_str = path
-                .as_str()
-                .ok_or_else(|| anyhow::anyhow!("Clean path must be a string"))?;
-            let pattern = Pattern::new(path_str)?;
-
-            // Recursively walk through the directory to match all files
-            for entry in walkdir::WalkDir::new(temp_dir.path()) {
-                let entry = entry?;
-                let rel_path = entry.path().strip_prefix(temp_dir.path())?.to_string_lossy();
-                if pattern.matches(&rel_path) {
-                    let path = entry.path();
-                    if path.is_dir() {
-                        std::fs::remove_dir_all(&path)?;
-                    } else {
-                        std::fs::remove_file(&path)?;
-                    }
-                    println!("    -> Removed: {}", rel_path);
-                }
-            }
-        }
-    }
-    Ok(())
-}
-
 /// Create reproducible tar archive with standardized attributes
-/// 
+///
 /// Sets consistent ownership, permissions, and timestamps
 fn create_reproducible_archive(
     temp_dir: &tempfile::TempDir,
@@ -275,7 +156,7 @@ fn create_reproducible_archive(
     } else {
         "tar"
     });
-    
+
     // Set GZIP=-n environment variable
     cmd.env("GZIP", "-n")
         .args([
@@ -292,7 +173,7 @@ fn create_reproducible_archive(
         .arg(rename_target)
         .current_dir(temp_dir.path())
         .status()?;
-    
+
     Ok(())
 }
 
@@ -309,7 +190,7 @@ fn finalize_download(
 }
 
 /// Find first directory in temp_dir and return its name
-/// 
+///
 /// Used as fallback when rename target is not specified
 fn get_first_directory(temp_dir: &std::path::Path) -> anyhow::Result<String> {
     let entries: Vec<_> = std::fs::read_dir(temp_dir)?
@@ -327,7 +208,7 @@ fn get_first_directory(temp_dir: &std::path::Path) -> anyhow::Result<String> {
 }
 
 /// Handle rename map from package configuration
-/// 
+///
 /// Supports glob patterns for matching source directories
 fn handle_rename_map(
     temp_dir: &std::path::Path,

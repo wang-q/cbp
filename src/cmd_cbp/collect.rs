@@ -266,7 +266,7 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
 
             // Fix shebang if needed
             if matches.get_flag("shebang") {
-                fix_shebang(&dest_path)?;
+                cbp::fix_shebang(&dest_path)?;
             }
 
             process_file_aliases(&dest_path, &copy_map)?;
@@ -365,50 +365,4 @@ fn is_windows_executable(path: &std::path::Path) -> std::io::Result<bool> {
     } else {
         Ok(false)
     }
-}
-
-fn fix_shebang(path: &std::path::Path) -> anyhow::Result<()> {
-    // Check if it's a text file
-    let mut file = std::fs::File::open(path)?;
-    let mut buffer = [0u8; 512];
-    let n = file.read(&mut buffer)?;
-
-    // Check if the first n bytes are valid UTF-8 or ASCII characters
-    if !buffer[..n]
-        .iter()
-        .all(|&b| b.is_ascii() || (b & 0xC0) == 0x80)
-    {
-        return Ok(());
-    }
-
-    // Read file content
-    let content = std::fs::read_to_string(path)?;
-    let mut lines: Vec<&str> = content.lines().collect();
-    if lines.is_empty() {
-        return Ok(());
-    }
-
-    // Check for shebang line
-    if !lines[0].starts_with("#!") {
-        return Ok(());
-    }
-
-    // Fix shebang line
-    let first_line = lines[0];
-    let new_line = if first_line.contains("perl") {
-        "#!/usr/bin/env perl"
-    } else if first_line.contains("python") {
-        "#!/usr/bin/env python3"
-    } else {
-        return Ok(());
-    };
-
-    if first_line != new_line {
-        lines[0] = new_line;
-        let new_content = lines.join("\n") + "\n";
-        std::fs::write(path, new_content)?;
-        eprintln!("==> Fixed shebang in '{}'", path.display());
-    }
-
-    Ok(())
 }
