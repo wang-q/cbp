@@ -273,7 +273,7 @@ cbp build prebuild pup tsv-utils
 ### Bioinformatics tools
 
 ```bash
-cbp build prebuild blast sratoolkit
+cbp build prebuild blast
 
 cbp build prebuild muscle reseek usearch
 cbp build prebuild freebayes mosdepth megahit
@@ -281,6 +281,10 @@ cbp build prebuild freebayes mosdepth megahit
 cbp build prebuild bowtie2 stringtie
 cbp build prebuild iqtree2
 cbp build prebuild mash mmseqs raxml-ng
+
+bash scripts/prebuilds/sratoolkit.sh linux
+bash scripts/prebuilds/sratoolkit.sh macos
+bash scripts/prebuilds/sratoolkit.sh windows
 
 ```
 

@@ -32,6 +32,27 @@ list_pkg() {
     echo
 }
 
+list_pkg_rev() {
+    echo "==> Packages not in pakages/"
+    comm -23 \
+        <(gh release download Binaries --pattern "cbp-packages.json" --output - |
+            jq -r '.[] | select(.name | endswith(".tar.gz")) | .name' |
+            sed "s/\.linux\.tar\.gz$//" |
+            sed "s/\.macos\.tar\.gz$//" |
+            sed "s/\.windows\.tar\.gz$//" |
+            sed "s/\.font\.tar\.gz$//" |
+            sort |
+            uniq) \
+        <(cd "${BASH_DIR}/../../packages" && find . -maxdepth 1 -name "*.json" -print |
+            sed 's/^\.\///' |
+            sed 's/\.json$//' |
+            sort) |
+        perl -n -e "${PERL_FMT}"
+    echo
+}
+
 list_unbuilt
 
 list_pkg
+
+list_pkg_rev
