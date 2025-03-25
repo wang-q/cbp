@@ -12,7 +12,7 @@ fi
 PACKAGE=$1
 
 # package
-JSON_FILE="${BASH_DIR}/../packages/${PACKAGE}.json"
+JSON_FILE="${BASH_DIR}/../../packages/${PACKAGE}.json"
 if [ ! -f "${JSON_FILE}" ]; then
     echo "Error: Package file not found: ${JSON_FILE}"
     exit 1
@@ -184,5 +184,5 @@ FN_TAR="${PACKAGE}.${OS_TYPE}.tar.gz"
 process_binaries "${FN_TAR}"
 
 # Move archive to the central tar directory
-mv "${FN_TAR}" "${BASH_DIR}/../binaries/" ||
+mv "${FN_TAR}" "${BASH_DIR}/../../binaries/" ||
     { echo "==> Error: Failed to move archive"; exit 1; }
