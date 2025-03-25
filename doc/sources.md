@@ -3,12 +3,9 @@
 ## Basic libraries
 
 ```bash
-
-bash scripts/download-source.sh gmp
-
-bash scripts/download-source.sh pkgconf
-
 bash scripts/download-source.sh gdbm
+bash scripts/download-source.sh gmp
+bash scripts/download-source.sh pkgconf
 
 # curl -L https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/openmp-19.1.7.src.tar.xz |
 #     tar xvfJ - &&
@@ -56,7 +53,7 @@ bash scripts/download-source.sh diamond
 
 ```
 
-## `Makefile`
+## `make`
 
 ```bash
 bash scripts/download-source.sh fastk
@@ -88,54 +85,22 @@ bash scripts/download-source.sh prodigal
 
 ```
 
-## `./configure`
+## `autotools`
 
 ```bash
-curl -o sources/hmmer.tar.gz -L http://eddylab.org/software/hmmer/hmmer-3.4.tar.gz
+bash scripts/download-source.sh clustalo
+bash scripts/download-source.sh mummer
+bash scripts/download-source.sh pv
+bash scripts/download-source.sh snp-sites
 
-curl -o sources/easel.tar.gz -L https://github.com/EddyRivasLab/easel/archive/refs/tags/easel-0.49.tar.gz
-
-# hmmer2: rename package to avoid conflict with hmmer3
-curl -L http://eddylab.org/software/hmmer/2.4i/hmmer-2.4i.tar.gz |
-    tar xvfz - &&
-    mv hmmer-2.4i hmmer2 &&
-    tar -czf sources/hmmer2.tar.gz hmmer2/ &&
-    rm -rf hmmer2
-
-curl -o sources/pv.tar.gz -L https://www.ivarch.com/programs/sources/pv-1.9.31.tar.gz
-
-# curl -o sources/MaSuRCA.tar.gz -L https://github.com/alekseyzimin/masurca/releases/download/v4.1.2/MaSuRCA-4.1.2.tar.gz
-
-curl -o sources/mummer.tar.gz -L https://github.com/mummer4/mummer/releases/download/v4.0.1/mummer-4.0.1.tar.gz
-
-curl -L http://www.clustal.org/omega/clustal-omega-1.2.4.tar.gz |
-    tar xvfz - &&
-    mv clustal-omega-1.2.4 clustalo &&
-    tar -czf sources/clustalo.tar.gz clustalo/ &&
-    rm -rf clustalo
+bash scripts/download-source.sh easel
+bash scripts/download-source.sh hmmer
+bash scripts/download-source.sh hmmer2
 
 # The .tar.gz source code from GitHub requires autoconf/automake to generate ./configure
-curl -L https://github.com/samtools/htslib/releases/download/1.21/htslib-1.21.tar.bz2 |
-    tar xvfj - &&
-    tar -czf sources/htslib.tar.gz htslib-1.21/ &&
-    rm -rf htslib-1.21
-
-curl -L https://github.com/samtools/samtools/releases/download/1.21/samtools-1.21.tar.bz2 |
-    tar xvfj - &&
-    tar -czf sources/samtools.tar.gz samtools-1.21/ &&
-    rm -rf samtools-1.21
-
-curl -L https://github.com/samtools/bcftools/releases/download/1.21/bcftools-1.21.tar.bz2 |
-    tar xvfj - &&
-    tar -czf sources/bcftools.tar.gz bcftools-1.21/ &&
-    rm -rf bcftools-1.21
-
-curl -L https://github.com/sanger-pathogens/snp-sites/archive/refs/tags/v2.5.1.tar.gz |
-    tar xvfz - &&
-    mv snp-sites-* snp-sites &&
-    rm -rf snp-sites/example_data/*.gz &&
-    tar -czf sources/snp-sites.tar.gz snp-sites/ &&
-    rm -rf snp-sites
+bash scripts/download-source.sh htslib
+bash scripts/download-source.sh samtools
+bash scripts/download-source.sh bcftools
 
 # mcl
 curl -L https://micans.org/mcl/src/cimfomfa-22-273.tar.gz |
@@ -148,22 +113,23 @@ curl -L https://micans.org/mcl/src/cimfomfa-22-273.tar.gz |
     tar -czf sources/mcl.tar.gz mcl/ &&
     rm -rf mcl
 
+# curl -o sources/MaSuRCA.tar.gz -L https://github.com/alekseyzimin/masurca/releases/download/v4.1.2/MaSuRCA-4.1.2.tar.gz
+
 ```
 
 ## `cmake`
 
 ```bash
-curl -o sources/bifrost.tar.gz -L https://github.com/pmelsted/bifrost/archive/refs/tags/v1.3.5.tar.gz
+bash scripts/download-source.sh bifrost
+bash scripts/download-source.sh spoa
 
-curl -o sources/spoa.tar.gz -L https://github.com/rvaser/spoa/archive/refs/tags/4.1.4.tar.gz
-
-curl -o sources/chainnet.tar.gz -L https://github.com/wang-q/chainnet/archive/161cb82417f74ed3caa78932a06baeb2e10094e8.tar.gz
+bash scripts/download-source.sh chainnet
 
 # Remove large files
 curl -L https://github.com/tjunier/newick_utils/archive/da121155a977197cab9fbb15953ca1b40b11eb87.tar.gz |
     tar xvfz - &&
     mv newick_utils-da121155a977197cab9fbb15953ca1b40b11eb87 newick-utils &&
-     fd -t f -S +500k . newick-utils -X rm &&
+    fd -t f -S +500k . newick-utils -X rm &&
     tar -czf sources/newick-utils.tar.gz newick-utils/ &&
     rm -rf newick-utils
 
@@ -205,41 +171,29 @@ mkdir -p fasttree &&
 ### CLI utilities
 
 ```bash
-curl -o sources/eza.tar.gz -L https://github.com/eza-community/eza/archive/refs/tags/v0.20.23.tar.gz
-
-curl -o sources/fd.tar.gz -L https://github.com/sharkdp/fd/archive/refs/tags/v10.2.0.tar.gz
-
-curl -o sources/dust.tar.gz -L https://github.com/bootandy/dust/archive/refs/tags/v1.1.2.tar.gz
-
-curl -o sources/ripgrep.tar.gz -L https://github.com/BurntSushi/ripgrep/archive/refs/tags/14.1.1.tar.gz
-
-curl -o sources/skim.tar.gz -L https://github.com/skim-rs/skim/archive/refs/tags/v0.16.1.tar.gz
-
-curl -o sources/hyperfine.tar.gz -L https://github.com/sharkdp/hyperfine/archive/refs/tags/v1.19.0.tar.gz
-
-curl -o sources/tealdeer.tar.gz -L https://github.com/tealdeer-rs/tealdeer/archive/refs/tags/v1.7.1.tar.gz
-
-curl -o sources/tokei.tar.gz -L https://github.com/XAMPPRocky/tokei/archive/refs/tags/v12.1.2.tar.gz
-
-curl -o sources/jnv.tar.gz -L https://github.com/ynqa/jnv/archive/refs/tags/v0.5.0.tar.gz
-
-curl -o sources/resvg.tar.gz -L https://github.com/linebender/resvg/archive/refs/tags/0.45.0.tar.gz
+bash scripts/download-source.sh dust
+bash scripts/download-source.sh eza
+bash scripts/download-source.sh fd
+bash scripts/download-source.sh hyperfine
+bash scripts/download-source.sh jnv
+bash scripts/download-source.sh resvg
+bash scripts/download-source.sh ripgrep
+bash scripts/download-source.sh skim
+bash scripts/download-source.sh tealdeer
+bash scripts/download-source.sh tokei
 
 ```
 
 ### Bioinformatics utilities
 
 ```bash
-curl -o sources/nwr.tar.gz -L https://github.com/wang-q/nwr/archive/refs/tags/v0.7.7.tar.gz
+bash scripts/download-source.sh hnsm
+bash scripts/download-source.sh intspan
+bash scripts/download-source.sh nwr
 
-curl -o sources/intspan.tar.gz -L https://github.com/wang-q/intspan/archive/refs/tags/v0.8.4.tar.gz
+bash scripts/download-source.sh pgr
+bash scripts/download-source.sh anchr
 
-curl -o sources/hnsm.tar.gz -L https://github.com/wang-q/hnsm/archive/refs/tags/v0.3.1.tar.gz
-
-curl -o sources/pgr.tar.gz -L https://github.com/wang-q/pgr/archive/refs/tags/v0.1.0.tar.gz
-
-curl -o sources/anchr.tar.gz -L https://github.com/wang-q/anchr/archive/fadc09fe502e7b31cf6bbd9fa29b7188bf42ae3a.tar.gz
-
-curl -o sources/wgatools.tar.gz -L https://github.com/wjwei-handsome/wgatools/archive/refs/tags/v1.0.0.tar.gz
+bash scripts/download-source.sh wgatools
 
 ```
