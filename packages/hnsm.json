@@ -5,6 +5,9 @@
   "homepage": "https://github.com/wang-q/hnsm",
   "license": "MIT",
   "type": "rust",
+  "source": {
+    "url": "https://github.com/wang-q/hnsm/archive/refs/tags/v0.3.1.tar.gz"
+  },
   "tests": [
     {
       "name": "version",

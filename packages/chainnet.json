@@ -1,0 +1,19 @@
+{
+  "name": "chainnet",
+  "version": "0.1.0",
+  "description": "UCSC chain/net pipeline",
+  "homepage": "https://github.com/wang-q/chainnet",
+  "license": "MIT",
+  "type": "cmake",
+  "source": {
+    "url": "https://github.com/wang-q/chainnet/archive/161cb82417f74ed3caa78932a06baeb2e10094e8.tar.gz"
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "lavToPsl",
+      "ignore_exit_code": true,
+      "pattern": "lavToPsl -"
+    }
+  ]
+}

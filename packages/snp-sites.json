@@ -5,6 +5,15 @@
   "homepage": "https://github.com/sanger-pathogens/snp-sites",
   "license": "GPL-3.0",
   "type": "autotools",
+  "source": {
+    "url": "https://github.com/sanger-pathogens/snp-sites/archive/refs/tags/v2.5.1.tar.gz",
+    "rename": {
+      "snp-sites-*": "snp-sites"
+    },
+    "clean": [
+      "snp-sites/example_data/*.gz"
+    ]
+  },
   "tests": [
     {
       "name": "version",

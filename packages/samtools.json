@@ -1,0 +1,19 @@
+{
+  "name": "samtools",
+  "version": "1.21",
+  "description": "Tools for manipulating next-generation sequencing data",
+  "homepage": "https://www.htslib.org/",
+  "license": "MIT",
+  "type": "autotools",
+  "source": {
+    "url": "https://github.com/samtools/samtools/releases/download/1.21/samtools-1.21.tar.bz2"
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "samtools",
+      "pattern": "samtools [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

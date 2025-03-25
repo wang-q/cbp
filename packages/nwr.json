@@ -5,6 +5,9 @@
   "homepage": "https://github.com/wang-q/nwr",
   "license": "MIT",
   "type": "rust",
+  "source": {
+    "url": "https://github.com/wang-q/nwr/archive/refs/tags/v0.7.7.tar.gz"
+  },
   "tests": [
     {
       "name": "version",

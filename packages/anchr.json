@@ -5,6 +5,9 @@
   "homepage": "https://github.com/wang-q/anchr",
   "license": "MIT",
   "type": "rust",
+  "source": {
+    "url": "https://github.com/wang-q/anchr/archive/fadc09fe502e7b31cf6bbd9fa29b7188bf42ae3a.tar.gz"
+  },
   "tests": [
     {
       "name": "version",

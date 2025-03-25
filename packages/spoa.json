@@ -1,0 +1,19 @@
+{
+  "name": "spoa",
+  "version": "4.1.4",
+  "description": "SIMD partial order alignment tool",
+  "homepage": "https://github.com/rvaser/spoa",
+  "license": "MIT",
+  "type": "cmake",
+  "source": {
+    "url": "https://github.com/rvaser/spoa/archive/refs/tags/4.1.4.tar.gz"
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "spoa",
+      "pattern": "[0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

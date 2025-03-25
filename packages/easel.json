@@ -1,0 +1,19 @@
+{
+  "name": "easel",
+  "version": "0.49",
+  "description": "Easel - a C library for biological sequence analysis",
+  "homepage": "https://github.com/EddyRivasLab/easel",
+  "license": "BSD-3-Clause",
+  "type": "autotools",
+  "source": {
+    "url": "https://github.com/EddyRivasLab/easel/archive/refs/tags/easel-0.49.tar.gz"
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "esl-reformat",
+      "pattern": "Easel [0-9]+\\.",
+      "args": "-h"
+    }
+  ]
+}

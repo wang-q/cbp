@@ -1,0 +1,19 @@
+{
+  "name": "hmmer",
+  "version": "3.4",
+  "description": "HMMER: biosequence analysis using profile hidden Markov models",
+  "homepage": "http://hmmer.org/",
+  "license": "BSD-3-Clause",
+  "type": "autotools",
+  "source": {
+    "url": "http://eddylab.org/software/hmmer/hmmer-3.4.tar.gz"
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "hmmsearch",
+      "pattern": "HMMER [0-9]+\\.",
+      "args": "-h"
+    }
+  ]
+}

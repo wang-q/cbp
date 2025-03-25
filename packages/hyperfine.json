@@ -5,6 +5,9 @@
   "homepage": "https://github.com/sharkdp/hyperfine",
   "license": "MIT",
   "type": "rust",
+  "source": {
+    "url": "https://github.com/sharkdp/hyperfine/archive/refs/tags/v1.19.0.tar.gz"
+  },
   "tests": [
     {
       "name": "version",

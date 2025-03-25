@@ -5,6 +5,9 @@
   "homepage": "https://github.com/tealdeer-rs/tealdeer",
   "license": "MIT",
   "type": "rust",
+  "source": {
+    "url": "https://github.com/tealdeer-rs/tealdeer/archive/refs/tags/v1.7.1.tar.gz"
+  },
   "tests": [
     {
       "name": "version",

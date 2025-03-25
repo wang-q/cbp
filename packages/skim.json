@@ -5,6 +5,9 @@
   "homepage": "https://github.com/skim-rs/skim",
   "license": "MIT",
   "type": "rust",
+  "source": {
+    "url": "https://github.com/skim-rs/skim/archive/refs/tags/v0.16.1.tar.gz"
+  },
   "tests": [
     {
       "name": "version",

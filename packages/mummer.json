@@ -5,6 +5,9 @@
   "homepage": "https://github.com/mummer4/mummer",
   "license": "Artistic-2.0",
   "type": "autotools",
+  "source": {
+    "url": "https://github.com/mummer4/mummer/releases/download/v4.0.1/mummer-4.0.1.tar.gz"
+  },
   "tests": [
     {
       "name": "version",

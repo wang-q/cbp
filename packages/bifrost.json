@@ -1,0 +1,19 @@
+{
+  "name": "bifrost",
+  "version": "1.3.5",
+  "description": "Highly parallel construction and indexing of colored and compacted de Bruijn graphs",
+  "homepage": "https://github.com/pmelsted/bifrost",
+  "license": "BSD-2-Clause",
+  "type": "cmake",
+  "source": {
+    "url": "https://github.com/pmelsted/bifrost/archive/refs/tags/v1.3.5.tar.gz"
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "Bifrost",
+      "pattern": "[0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

@@ -5,6 +5,9 @@
   "homepage": "https://github.com/XAMPPRocky/tokei",
   "license": "MIT",
   "type": "rust",
+  "source": {
+    "url": "https://github.com/XAMPPRocky/tokei/archive/refs/tags/v12.1.2.tar.gz"
+  },
   "tests": [
     {
       "name": "version",

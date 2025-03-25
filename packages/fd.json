@@ -5,6 +5,9 @@
   "homepage": "https://github.com/sharkdp/fd",
   "license": "MIT",
   "type": "rust",
+  "source": {
+    "url": "https://github.com/sharkdp/fd/archive/refs/tags/v10.2.0.tar.gz"
+  },
   "tests": [
     {
       "name": "version",
