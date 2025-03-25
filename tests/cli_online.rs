@@ -211,7 +211,9 @@ fn command_build_source() -> anyhow::Result<()> {
 
     cmd.assert()
         .success()
-        .stdout(predicate::str::contains("==> Processing source package: trf"))
+        .stdout(predicate::str::contains(
+            "==> Processing source package: trf",
+        ))
         .stdout(predicate::str::contains("-> Downloading from"))
         .stdout(predicate::str::contains("-> Processing source archive"))
         .stdout(predicate::str::contains(
@@ -306,6 +308,73 @@ fn command_build_font() -> anyhow::Result<()> {
     // Perform checks
     assert!(files.contains("Charter Regular.ttf"));
     assert!(!files.contains("__MACOSX")); // Should be cleaned
+
+    Ok(())
+}
+
+#[test]
+#[cfg_attr(
+    target_os = "windows",
+    ignore = "tar operations not supported on Windows"
+)]
+fn command_build_prebuild() -> anyhow::Result<()> {
+    let temp_dir = tempfile::TempDir::new()?;
+
+    // Create mock server
+    let mut server = mockito::Server::new();
+
+    // Prepare test package data
+    let test_package = include_bytes!("jq-macos-arm64");
+
+    // Set up mock endpoints for different platforms
+    let _m1 = server
+        .mock(
+            "GET",
+            "/jqlang/jq/releases/download/jq-1.7.1/jq-macos-arm64",
+        )
+        .with_status(200)
+        .with_header("content-type", "application/octet-stream")
+        .with_body(test_package)
+        .create();
+
+    // Create package directory and copy the package JSON
+    std::fs::create_dir_all(temp_dir.path().join("packages"))?;
+    let cargo_dir =
+        std::env::var("CARGO_MANIFEST_DIR").unwrap_or_else(|_| ".".to_string());
+    std::fs::copy(
+        std::path::Path::new(&cargo_dir).join("packages/jq.json"),
+        temp_dir.path().join("packages/jq.json"),
+    )?;
+
+    // Run prebuild command
+    let mut cmd = Command::cargo_bin("cbp")?;
+    cmd.env("GITHUB_RELEASE_URL", &server.url())
+        .arg("build")
+        .arg("prebuild")
+        .arg("--dir")
+        .arg(temp_dir.path())
+        .arg("--type")
+        .arg("macos")
+        .arg("jq");
+
+    cmd.assert()
+        .success()
+        .stdout(predicate::str::contains("==> Processing prebuild package: jq"))
+        .stdout(predicate::str::contains("-> Processing for OS: macos"))
+        .stdout(predicate::str::contains("-> Package created successfully"));
+
+    // Verify build results
+    let output_tar = temp_dir.path().join("binaries/jq.macos.tar.gz");
+    assert!(output_tar.exists());
+
+    // Debug: Print archive contents
+    eprintln!("\n==> Archive contents:");
+    let files = cbp::list_archive_files(&output_tar)?;
+    eprintln!("  {}", files);
+
+    // Perform checks
+    assert!(files.contains("jq")); // Should contain the binary
+    assert!(!files.contains("download.tmp")); // Should not contain temporary files
 
     Ok(())
 }

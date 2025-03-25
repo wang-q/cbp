@@ -256,7 +256,7 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
             }
 
             #[cfg(unix)]
-            if parts[0] == "tools" {
+            if parts[0] == "tools" || parts[0] == "bin" {
                 use std::os::unix::fs::PermissionsExt;
                 std::fs::set_permissions(
                     &dest_path,
