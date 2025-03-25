@@ -9,7 +9,7 @@
     {
       "name": "version",
       "command": "dust",
-      "pattern": "dust [0-9]+\\.",
+      "pattern": "Dust [0-9]+\\.",
       "args": "--version"
     }
   ]

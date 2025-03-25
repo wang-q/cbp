@@ -10,7 +10,7 @@
       "name": "version",
       "command": "snp-sites",
       "pattern": "snp-sites [0-9]+\\.",
-      "args": "--version"
+      "args": "-V"
     }
   ]
 }

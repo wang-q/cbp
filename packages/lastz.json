@@ -9,6 +9,7 @@
     {
       "name": "version",
       "command": "lastz",
+      "ignore_exit_code": true,
       "pattern": "lastz ",
       "args": "--version"
     }
