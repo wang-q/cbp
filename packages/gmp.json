@@ -1,0 +1,9 @@
+{
+  "name": "gmp",
+  "version": "6.3.0",
+  "description": "GNU Multiple Precision Arithmetic Library",
+  "homepage": "https://gmplib.org/",
+  "license": "LGPL-3.0",
+  "type": "vcpkg",
+  "source": "https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.gz"
+}

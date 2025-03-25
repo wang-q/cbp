@@ -1,0 +1,17 @@
+{
+  "name": "multiz",
+  "version": "0.0.0",
+  "description": "Multiple alignment tools",
+  "homepage": "https://github.com/wang-q/multiz",
+  "license": "MIT",
+  "type": "vcpkg",
+  "source": "https://github.com/wang-q/multiz/archive/633c0f7814c887e9e7468ad42076d62496651cb8.tar.gz",
+  "tests": [
+    {
+      "name": "version",
+      "command": "multiz",
+      "ignore_exit_code": true,
+      "pattern": "multiz.v"
+    }
+  ]
+}

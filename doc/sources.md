@@ -4,11 +4,11 @@
 
 ```bash
 
-curl -o sources/gmp.tar.gz -L https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.gz
+bash scripts/download-source.sh gmp
 
-curl -o sources/pkgconf.tar.gz -L https://distfiles.ariadne.space/pkgconf/pkgconf-2.3.0.tar.gz
+bash scripts/download-source.sh pkgconf
 
-curl -o sources/gdbm.tar.gz -L https://ftp.gnu.org/gnu/gdbm/gdbm-1.24.tar.gz
+bash scripts/download-source.sh gdbm
 
 # curl -L https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/openmp-19.1.7.src.tar.xz |
 #     tar xvfJ - &&
@@ -24,13 +24,13 @@ curl -o sources/gdbm.tar.gz -L https://ftp.gnu.org/gnu/gdbm/gdbm-1.24.tar.gz
 
 ```bash
 # Transform Makefile to CMakeLists.txt
-curl -o sources/pigz.tar.gz -L https://github.com/madler/pigz/archive/refs/tags/v2.8.tar.gz
+bash scripts/download-source.sh pigz
 
-curl -o sources/sickle.tar.gz -L https://github.com/najoshi/sickle/archive/refs/tags/v1.33.tar.gz
+bash scripts/download-source.sh sickle
 
-curl -o sources/faops.tar.gz -L https://github.com/wang-q/faops/archive/refs/tags/0.8.22.tar.gz
+bash scripts/download-source.sh faops
 
-curl -o sources/bwa.tar.gz -L https://github.com/lh3/bwa/archive/refs/tags/v0.7.18.tar.gz
+bash scripts/download-source.sh bwa
 
 # just .tar file
 curl -L http://stat.sys.i.kyoto-u.ac.jp/prog/consel/pub/cnsls020.tgz |
@@ -64,12 +64,12 @@ curl -L https://github.com/thegenemyers/FASTGA/archive/e97c33ef4daeafdfbb7b5dda5
     tar -czf sources/fastga.tar.gz fastga/ &&
     rm -rf fastga
 
-curl -o sources/multiz.tar.gz -L https://github.com/wang-q/multiz/archive/633c0f7814c887e9e7468ad42076d62496651cb8.tar.gz
+bash scripts/download-source.sh multiz
 
 # ./configure
-curl -o sources/datamash.tar.gz -L https://ftp.gnu.org/gnu/datamash/datamash-1.8.tar.gz
+bash scripts/download-source.sh datamash
 
-curl -o sources/cabextract.tar.gz -L https://www.cabextract.org.uk/cabextract-1.11.tar.gz
+bash scripts/download-source.sh cabextract
 
 curl -L https://github.com/Benson-Genomics-Lab/TRF/archive/refs/tags/v4.09.1.tar.gz |
     tar xvfz - &&
@@ -83,28 +83,27 @@ curl -L https://github.com/aria2/aria2/releases/download/release-1.37.0/aria2-1.
     tar -czf sources/aria2.tar.gz aria2/ &&
     rm -rf aria2
 
-curl -o sources/gnuplot.tar.gz -L https://downloads.sourceforge.net/project/gnuplot/gnuplot/6.0.2/gnuplot-6.0.2.tar.gz
+bash scripts/download-source.sh gnuplot
 
 # cmake
-curl -o sources/diamond.tar.gz -L https://github.com/bbuchfink/diamond/archive/refs/tags/v2.1.11.tar.gz
+bash scripts/download-source.sh diamond
 
 ```
 
 ## `Makefile`
 
 ```bash
-curl -o sources/minimap2.tar.gz -L https://github.com/lh3/minimap2/archive/refs/tags/v2.28.tar.gz
+bash scripts/download-source.sh lastz
 
-curl -o sources/miniprot.tar.gz -L https://github.com/lh3/miniprot/archive/refs/tags/v0.13.tar.gz
+bash scripts/download-source.sh mafft
 
-curl -o sources/lastz.tar.gz -L https://github.com/lastz/lastz/archive/refs/tags/1.04.41.tar.gz
+bash scripts/download-source.sh minimap2
+
+bash scripts/download-source.sh miniprot
 
 curl -o sources/phylip.tar.gz -L https://phylipweb.github.io/phylip/download/phylip-3.697.tar.gz
 
-curl -o sources/mafft.tar.gz -L https://gitlab.com/sysimm/mafft/-/archive/v7.526/mafft-v7.526.tar.gz
-
 curl -o sources/phast.tar.gz -L https://github.com/CshlSiepelLab/phast/archive/refs/tags/v1.7.tar.gz
-
 
 # remove unnecessary files to reduce source size
 curl -L https://github.com/inab/trimal/archive/refs/tags/v1.5.0.tar.gz |

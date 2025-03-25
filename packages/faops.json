@@ -5,6 +5,7 @@
   "homepage": "https://github.com/wang-q/faops",
   "license": "MIT",
   "type": "vcpkg",
+  "source": "https://github.com/wang-q/faops/archive/refs/tags/0.8.22.tar.gz",
   "tests": [
     {
       "name": "version",

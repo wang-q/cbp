@@ -5,6 +5,7 @@
   "homepage": "https://github.com/lh3/miniprot",
   "license": "MIT",
   "type": "make",
+  "source": "https://github.com/lh3/miniprot/archive/refs/tags/v0.13.tar.gz",
   "tests": [
     {
       "name": "version",

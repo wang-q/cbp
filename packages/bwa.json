@@ -5,6 +5,7 @@
   "homepage": "https://github.com/lh3/bwa",
   "license": "GPL-3.0",
   "type": "vcpkg",
+  "source": "https://github.com/lh3/bwa/archive/refs/tags/v0.7.18.tar.gz",
   "tests": [
     {
       "name": "version",

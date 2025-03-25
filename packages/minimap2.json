@@ -5,6 +5,7 @@
   "homepage": "https://github.com/lh3/minimap2",
   "license": "MIT",
   "type": "make",
+  "source": "https://github.com/lh3/minimap2/archive/refs/tags/v2.28.tar.gz",
   "tests": [
     {
       "name": "version",

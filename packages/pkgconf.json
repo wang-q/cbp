@@ -5,6 +5,7 @@
   "homepage": "https://github.com/pkgconf/pkgconf",
   "license": "ISC",
   "type": "vcpkg",
+  "source": "https://distfiles.ariadne.space/pkgconf/pkgconf-2.3.0.tar.gz",
   "tests": [
     {
       "name": "version",
