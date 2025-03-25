@@ -1,0 +1,16 @@
+{
+  "name": "mummer",
+  "version": "4.0.1",
+  "description": "MUMmer is a system for rapidly aligning entire genomes",
+  "homepage": "https://github.com/mummer4/mummer",
+  "license": "Artistic-2.0",
+  "type": "autotools",
+  "tests": [
+    {
+      "name": "version",
+      "command": "nucmer",
+      "pattern": "[0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

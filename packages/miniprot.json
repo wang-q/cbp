@@ -1,0 +1,16 @@
+{
+  "name": "miniprot",
+  "version": "0.13",
+  "description": "Fast protein-to-genome aligner",
+  "homepage": "https://github.com/lh3/miniprot",
+  "license": "MIT",
+  "type": "make",
+  "tests": [
+    {
+      "name": "version",
+      "command": "miniprot",
+      "pattern": "[0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

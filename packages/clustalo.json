@@ -1,0 +1,16 @@
+{
+  "name": "clustalo",
+  "version": "1.2.4",
+  "description": "Clustal Omega - Multiple sequence alignment",
+  "homepage": "http://www.clustal.org/omega/",
+  "license": "GPL-2.0",
+  "type": "autotools",
+  "tests": [
+    {
+      "name": "version",
+      "command": "clustalo",
+      "pattern": "[0-9]+\\.[0-9]+\\.[0-9]+",
+      "args": "--version"
+    }
+  ]
+}

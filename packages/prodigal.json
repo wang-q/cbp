@@ -1,0 +1,16 @@
+{
+  "name": "prodigal",
+  "version": "2.6.3",
+  "description": "Fast, reliable protein-coding gene prediction for prokaryotic genomes",
+  "homepage": "https://github.com/hyattpd/Prodigal",
+  "license": "GPL-3.0",
+  "type": "make",
+  "tests": [
+    {
+      "name": "version",
+      "command": "prodigal",
+      "pattern": "Prodigal V[0-9]+\\.",
+      "args": "-v"
+    }
+  ]
+}

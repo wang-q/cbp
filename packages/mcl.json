@@ -1,0 +1,16 @@
+{
+  "name": "mcl",
+  "version": "22.282",
+  "description": "Markov Cluster Algorithm",
+  "homepage": "https://micans.org/mcl/",
+  "license": "GPL-3.0",
+  "type": "autotools",
+  "tests": [
+    {
+      "name": "version",
+      "command": "mcl",
+      "pattern": "iterands",
+      "args": "-h"
+    }
+  ]
+}

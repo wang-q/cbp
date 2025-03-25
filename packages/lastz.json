@@ -1,0 +1,16 @@
+{
+  "name": "lastz",
+  "version": "1.04.41",
+  "description": "LASTZ - pairwise DNA sequence aligner",
+  "homepage": "https://github.com/lastz/lastz",
+  "license": "MIT",
+  "type": "make",
+  "tests": [
+    {
+      "name": "version",
+      "command": "lastz",
+      "pattern": "lastz ",
+      "args": "--version"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "gnuplot",
+  "version": "6.0.2",
+  "description": "Command-driven, interactive function plotting",
+  "homepage": "http://www.gnuplot.info/",
+  "license": "gnuplot",
+  "type": "vcpkg",
+  "tests": [
+    {
+      "name": "version",
+      "command": "gnuplot",
+      "pattern": "gnuplot [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

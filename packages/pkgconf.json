@@ -1,0 +1,16 @@
+{
+  "name": "pkgconf",
+  "version": "2.3.0",
+  "description": "Package compiler and linker metadata toolkit",
+  "homepage": "https://github.com/pkgconf/pkgconf",
+  "license": "ISC",
+  "type": "vcpkg",
+  "tests": [
+    {
+      "name": "version",
+      "command": "pkgconf",
+      "pattern": "[0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

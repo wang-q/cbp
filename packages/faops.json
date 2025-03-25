@@ -1,0 +1,16 @@
+{
+  "name": "faops",
+  "version": "0.8.22",
+  "description": "Operate fasta files",
+  "homepage": "https://github.com/wang-q/faops",
+  "license": "MIT",
+  "type": "vcpkg",
+  "tests": [
+    {
+      "name": "version",
+      "command": "faops",
+      "pattern": "Version: ",
+      "args": "help"
+    }
+  ]
+}

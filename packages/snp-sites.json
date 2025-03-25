@@ -1,0 +1,16 @@
+{
+  "name": "snp-sites",
+  "version": "2.5.1",
+  "description": "Finds SNP sites from a multi-FASTA alignment file",
+  "homepage": "https://github.com/sanger-pathogens/snp-sites",
+  "license": "GPL-3.0",
+  "type": "autotools",
+  "tests": [
+    {
+      "name": "version",
+      "command": "snp-sites",
+      "pattern": "snp-sites [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "diamond",
+  "version": "2.1.11",
+  "description": "Accelerated BLAST compatible local sequence aligner",
+  "homepage": "https://github.com/bbuchfink/diamond",
+  "license": "GPL-3.0",
+  "type": "cmake",
+  "tests": [
+    {
+      "name": "version",
+      "command": "diamond",
+      "pattern": "diamond version [0-9]+\\.",
+      "args": "version"
+    }
+  ]
+}

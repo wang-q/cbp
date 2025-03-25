@@ -1,0 +1,16 @@
+{
+  "name": "trimal",
+  "version": "1.5.0",
+  "description": "A tool for automated alignment trimming in large-scale phylogenetic analyses",
+  "homepage": "https://github.com/inab/trimal",
+  "license": "GPL-3.0",
+  "type": "make",
+  "tests": [
+    {
+      "name": "version",
+      "command": "trimal",
+      "pattern": "trimAl v[0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

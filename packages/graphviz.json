@@ -1,0 +1,16 @@
+{
+  "name": "graphviz",
+  "version": "10.0.1",
+  "description": "Graph Visualization Software",
+  "homepage": "https://graphviz.org/",
+  "license": "EPL-1.0",
+  "type": "vcpkg",
+  "tests": [
+    {
+      "name": "version",
+      "command": "dot",
+      "pattern": "dot - graphviz version",
+      "args": "-V"
+    }
+  ]
+}
