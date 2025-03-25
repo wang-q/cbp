@@ -10,7 +10,9 @@
       "url": "https://font.download/dl/font/helvetica-255.zip",
       "extract": "unzip -j -o",
       "binary": "*.ttf",
-      "clean": "*-587ebe5a59211.*"
+      "clean": [
+        "*-587ebe5a59211.*"
+      ]
     }
   },
   "tests": [

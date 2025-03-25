@@ -263,18 +263,13 @@ bash scripts/fasttree.sh
 ```bash
 cbp install cabextract
 
-bash scripts/prebuild.sh arial font
-bash scripts/prebuild.sh helvetica font
-
-cbp build font charter
+cbp build font arial charter helvetica
 
 # Open Source Fonts
-bash scripts/prebuild.sh fira font
-bash scripts/prebuild.sh jetbrains-mono font
-bash scripts/prebuild.sh firacode-nf font
+cbp build font fira jetbrains-mono firacode-nf
 
-bash scripts/prebuild.sh lxgw-wenkai font
-bash scripts/prebuild.sh source-han-sans font
-bash scripts/prebuild.sh source-han-serif font
+cbp build font lxgw-wenkai
+cbp build font source-han-sans 
+cbp build font source-han-serif
 
 ```
