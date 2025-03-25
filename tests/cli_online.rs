@@ -167,7 +167,8 @@ fn command_info() -> anyhow::Result<()> {
 }
 
 #[test]
-fn command_download() -> anyhow::Result<()> {
+#[cfg_attr(target_os = "windows", ignore = "tar operations not supported on Windows")]
+fn command_build_download() -> anyhow::Result<()> {
     let temp_dir = tempfile::TempDir::new()?;
 
     // Create mock server
