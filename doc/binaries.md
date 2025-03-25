@@ -258,6 +258,32 @@ bash scripts/fasttree.sh
 
 ## Prebuilds from the official repositories
 
+### Common tools
+
+```bash
+cbp build prebuild jq yq
+cbp build prebuild ninja uv
+
+cbp build prebuild pandoc tectonic
+cbp build prebuild bat 
+cbp build prebuild pup tsv-utils
+
+```
+
+### Bioinformatics tools
+
+```bash
+cbp build prebuild blast sratoolkit
+
+cbp build prebuild muscle reseek usearch
+cbp build prebuild freebayes mosdepth megahit
+
+cbp build prebuild bowtie2 stringtie
+cbp build prebuild iqtree2
+cbp build prebuild mash mmseqs raxml-ng
+
+```
+
 ### Fonts
 
 ```bash
@@ -271,5 +297,16 @@ cbp build font fira jetbrains-mono firacode-nf
 cbp build font lxgw-wenkai
 cbp build font source-han-sans 
 cbp build font source-han-serif
+
+```
+
+### java
+
+```bash
+bash scripts/prebuilds/fastqc.sh linux
+bash scripts/prebuilds/fastqc.sh macos
+
+bash scripts/prebuilds/picard.sh linux
+bash scripts/prebuilds/picard.sh macos
 
 ```
