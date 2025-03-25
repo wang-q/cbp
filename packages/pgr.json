@@ -1,0 +1,16 @@
+{
+  "name": "pgr",
+  "version": "0.1.0",
+  "description": "Population Genomes Refiner",
+  "homepage": "https://github.com/wang-q/pgr",
+  "license": "MIT",
+  "type": "rust",
+  "tests": [
+    {
+      "name": "version",
+      "command": "pgr",
+      "pattern": "pgr [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

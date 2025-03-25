@@ -1,0 +1,16 @@
+{
+  "name": "ripgrep",
+  "version": "14.1.1",
+  "description": "A line-oriented search tool that recursively searches directories for a regex pattern",
+  "homepage": "https://github.com/BurntSushi/ripgrep",
+  "license": "MIT",
+  "type": "rust",
+  "tests": [
+    {
+      "name": "version",
+      "command": "rg",
+      "pattern": "ripgrep [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

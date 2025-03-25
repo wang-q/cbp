@@ -1,0 +1,16 @@
+{
+  "name": "hnsm",
+  "version": "0.3.1",
+  "description": "Homogeneous Nucleic acid Smart Matching",
+  "homepage": "https://github.com/wang-q/hnsm",
+  "license": "MIT",
+  "type": "rust",
+  "tests": [
+    {
+      "name": "version",
+      "command": "hnsm",
+      "pattern": "hnsm [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

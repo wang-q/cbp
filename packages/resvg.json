@@ -1,0 +1,16 @@
+{
+  "name": "resvg",
+  "version": "0.45.0",
+  "description": "An SVG rendering library",
+  "homepage": "https://github.com/linebender/resvg",
+  "license": "MPL-2.0",
+  "type": "rust",
+  "tests": [
+    {
+      "name": "version",
+      "command": "resvg",
+      "pattern": "[0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "hyperfine",
+  "version": "1.19.0",
+  "description": "A command-line benchmarking tool",
+  "homepage": "https://github.com/sharkdp/hyperfine",
+  "license": "MIT",
+  "type": "rust",
+  "tests": [
+    {
+      "name": "version",
+      "command": "hyperfine",
+      "pattern": "hyperfine [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

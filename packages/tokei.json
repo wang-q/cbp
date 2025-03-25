@@ -1,0 +1,16 @@
+{
+  "name": "tokei",
+  "version": "12.1.2",
+  "description": "A program that allows you to count your code, quickly",
+  "homepage": "https://github.com/XAMPPRocky/tokei",
+  "license": "MIT",
+  "type": "rust",
+  "tests": [
+    {
+      "name": "version",
+      "command": "tokei",
+      "pattern": "tokei [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

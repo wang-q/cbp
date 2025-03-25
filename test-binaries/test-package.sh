@@ -18,8 +18,9 @@ fi
 function run_test() {
     local name=$1
     local cmd=$2
-    local pattern=$3
-    shift 3
+    local ignore_exit_code=$3
+    local pattern=$4
+    shift 4
     local args=("$@")
 
     echo -n "==> Running test '$name'... "
@@ -30,7 +31,7 @@ function run_test() {
     local exit_code=$?
 
     # Check if command executed successfully
-    if [[ $exit_code -ne 0 ]]; then
+    if [[ $exit_code -ne 0 && "$ignore_exit_code" != "true" ]]; then
         echo "FAILED"
         echo "Command failed with exit code $exit_code"
         echo "Output: $output"
@@ -84,6 +85,7 @@ for ((i=0; i<test_count; i++)); do
     # Get test case fields and validate
     name=$(jq -r ".tests[$i].name // \"test #$i\"" "$json_file")
     cmd=$(jq -r ".tests[$i].command" "$json_file")
+    ignore_exit_code=$(jq -r ".tests[$i].ignore_exit_code // false" "$json_file")
     pattern=$(jq -r ".tests[$i].pattern // empty" "$json_file")
 
     # Check required fields
@@ -124,7 +126,7 @@ for ((i=0; i<test_count; i++)); do
         fi
     fi
 
-    if ! run_test "$name" "$cmd" "$pattern" "${args[@]}"; then
+    if ! run_test "$name" "$cmd" "$ignore_exit_code" "$pattern" "${args[@]}"; then
         ((failed++))
     fi
 done

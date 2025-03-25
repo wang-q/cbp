@@ -1,0 +1,16 @@
+{
+  "name": "jnv",
+  "version": "0.5.0",
+  "description": "Interactive JSON filter using jq",
+  "homepage": "https://github.com/ynqa/jnv",
+  "license": "MIT",
+  "type": "rust",
+  "tests": [
+    {
+      "name": "version",
+      "command": "jnv",
+      "pattern": "jnv [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

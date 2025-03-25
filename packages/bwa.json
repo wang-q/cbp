@@ -9,8 +9,8 @@
     {
       "name": "version",
       "command": "bwa",
-      "pattern": "Version: [0-9]+\\.",
-      "args": " || true"
+      "ignore_exit_code": true,
+      "pattern": "Version: [0-9]+\\."
     }
   ]
 }

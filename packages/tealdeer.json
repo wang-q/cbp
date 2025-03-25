@@ -1,0 +1,16 @@
+{
+  "name": "tealdeer",
+  "version": "1.7.1",
+  "description": "A very fast implementation of tldr in Rust",
+  "homepage": "https://github.com/tealdeer-rs/tealdeer",
+  "license": "MIT",
+  "type": "rust",
+  "tests": [
+    {
+      "name": "version",
+      "command": "tldr",
+      "pattern": "tealdeer [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

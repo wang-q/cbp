@@ -1,0 +1,16 @@
+{
+  "name": "wgatools",
+  "version": "1.0.0",
+  "description": "Whole Genome Alignment Tools",
+  "homepage": "https://github.com/wjwei-handsome/wgatools",
+  "license": "MIT",
+  "type": "rust",
+  "tests": [
+    {
+      "name": "version",
+      "command": "wgatools",
+      "pattern": "wgatools [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

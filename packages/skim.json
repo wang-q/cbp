@@ -1,0 +1,16 @@
+{
+  "name": "skim",
+  "version": "0.16.1",
+  "description": "Fuzzy Finder in rust",
+  "homepage": "https://github.com/skim-rs/skim",
+  "license": "MIT",
+  "type": "rust",
+  "tests": [
+    {
+      "name": "version",
+      "command": "sk",
+      "pattern": "sk [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

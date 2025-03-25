@@ -1,0 +1,16 @@
+{
+  "name": "dust",
+  "version": "1.1.2",
+  "description": "A more intuitive version of du written in rust",
+  "homepage": "https://github.com/bootandy/dust",
+  "license": "Apache-2.0",
+  "type": "rust",
+  "tests": [
+    {
+      "name": "version",
+      "command": "dust",
+      "pattern": "dust [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

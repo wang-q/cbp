@@ -1,0 +1,16 @@
+{
+  "name": "intspan",
+  "version": "0.8.4",
+  "description": "Command line tools for IntSpan operations",
+  "homepage": "https://github.com/wang-q/intspan",
+  "license": "MIT",
+  "type": "rust",
+  "tests": [
+    {
+      "name": "version",
+      "command": "spanr",
+      "pattern": "spanr [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

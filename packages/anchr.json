@@ -1,0 +1,16 @@
+{
+  "name": "anchr",
+  "version": "0.3.18",
+  "description": "Assembler of N-free CHRomosomes",
+  "homepage": "https://github.com/wang-q/anchr",
+  "license": "MIT",
+  "type": "rust",
+  "tests": [
+    {
+      "name": "version",
+      "command": "anchr",
+      "pattern": "anchr [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}
