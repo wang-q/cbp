@@ -211,7 +211,7 @@ fn command_build_source() -> anyhow::Result<()> {
 
     cmd.assert()
         .success()
-        .stdout(predicate::str::contains("==> Processing package: trf"))
+        .stdout(predicate::str::contains("==> Processing source package: trf"))
         .stdout(predicate::str::contains("-> Downloading from"))
         .stdout(predicate::str::contains("-> Processing source archive"))
         .stdout(predicate::str::contains(
@@ -260,10 +260,7 @@ fn command_build_font() -> anyhow::Result<()> {
 
     // Set up mock endpoint
     let _m = server
-        .mock(
-            "GET",
-            "/practicaltypography.com/fonts/Charter%20210112.zip",
-        )
+        .mock("GET", "/practicaltypography.com/fonts/Charter%20210112.zip")
         .with_status(200)
         .with_header("content-type", "application/zip")
         .with_body(test_package)
@@ -289,9 +286,13 @@ fn command_build_font() -> anyhow::Result<()> {
 
     cmd.assert()
         .success()
-        .stdout(predicate::str::contains("==> Processing font package: charter"))
+        .stdout(predicate::str::contains(
+            "==> Processing font package: charter",
+        ))
         .stdout(predicate::str::contains("-> Downloading from"))
-        .stdout(predicate::str::contains("-> Font package created successfully"));
+        .stdout(predicate::str::contains(
+            "-> Font package created successfully",
+        ));
 
     // Verify build results
     let output_tar = temp_dir.path().join("binaries/charter.font.tar.gz");

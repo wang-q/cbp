@@ -5,8 +5,7 @@
 ```bash
 fd -e json . packages -x sh -c 'jq -e ".source.rename" {} > /dev/null 2>&1 && echo {}'
 
-
-fd -e json . packages -x sh -c 'jq -e ".. | objects | select(has(\"exclude\"))" {} > /dev/null 2>&1 && echo {}'
+fd -e json . packages -x sh -c 'jq -e ".. | objects | select(has(\"shebang\"))" {} > /dev/null 2>&1 && echo {}'
 
 ```
 

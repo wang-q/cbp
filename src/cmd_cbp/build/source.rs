@@ -42,38 +42,33 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
     // Process packages
     for pkg in args.get_many::<String>("packages").unwrap() {
-        download_source(&base_dir, pkg, &agent)?;
+        println!("==> Processing source package: {}", pkg);
+
+        // Read and validate package configuration
+        let json = cbp::read_package_json(&base_dir, pkg)?;
+
+        let temp_dir = tempfile::tempdir()?;
+        let temp_file = temp_dir.path().join("download.tmp");
+
+        let source_url = get_source_url(&json)?;
+        println!("-> Downloading from {}", source_url);
+        cbp::download_file(&source_url, &temp_file, &agent)?;
+
+        if let serde_json::Value::Object(source_obj) = &json["source"] {
+            println!("-> Processing source archive");
+            cbp::extract_archive(&temp_dir, &temp_file, source_obj)?;
+            let rename_target = handle_rename(&temp_dir, source_obj, pkg)?;
+            cbp::clean_files(&temp_dir, source_obj)?;
+            create_reproducible_archive(&temp_dir, &temp_file, &rename_target)?;
+        }
+
+        let target_path = base_dir.join("sources").join(format!("{}.tar.gz", pkg));
+        std::fs::create_dir_all(base_dir.join("sources"))?;
+        std::fs::rename(temp_file, target_path)?;
+
+        println!("-> Successfully downloaded and processed");
     }
 
-    Ok(())
-}
-
-/// Download and process a single package
-///
-/// # Arguments
-/// * `base_dir` - Base directory containing packages/ and sources/
-/// * `pkg` - Package name
-/// * `agent` - HTTP agent for downloading
-fn download_source(
-    base_dir: &Path,
-    pkg: &str,
-    agent: &ureq::Agent,
-) -> anyhow::Result<()> {
-    println!("==> Processing package: {}", pkg);
-    let json = cbp::read_package_json(base_dir, pkg)?;
-    let source_url = get_source_url(&json)?;
-    let temp_dir = tempfile::tempdir()?;
-    let temp_file = temp_dir.path().join("download.tmp");
-
-    println!("-> Downloading from {}", source_url);
-    cbp::download_file(&source_url, &temp_file, agent)?;
-    if let serde_json::Value::Object(source_obj) = &json["source"] {
-        println!("-> Processing source archive");
-        process_source_object(&temp_dir, &temp_file, source_obj, pkg)?;
-    }
-
-    finalize_download(base_dir, pkg, &temp_file)?;
-    println!("-> Successfully downloaded and processed");
     Ok(())
 }
 
@@ -99,26 +94,6 @@ fn get_source_url(json: &serde_json::Value) -> anyhow::Result<String> {
     }
 
     Ok(url)
-}
-
-/// Process source object after download
-///
-/// Steps:
-/// 1. Extract archive
-/// 2. Handle rename
-/// 3. Clean files
-/// 4. Create reproducible archive
-fn process_source_object(
-    temp_dir: &tempfile::TempDir,
-    temp_file: &Path,
-    source_obj: &serde_json::Map<String, serde_json::Value>,
-    pkg: &str,
-) -> anyhow::Result<()> {
-    cbp::extract_archive(temp_dir, temp_file, source_obj)?;
-    let rename_target = handle_rename(temp_dir, source_obj, pkg)?;
-    cbp::clean_files(temp_dir, source_obj)?;
-    create_reproducible_archive(temp_dir, temp_file, &rename_target)?;
-    Ok(())
 }
 
 /// Handle file renaming based on package configuration
@@ -174,18 +149,6 @@ fn create_reproducible_archive(
         .current_dir(temp_dir.path())
         .status()?;
 
-    Ok(())
-}
-
-/// Move downloaded and processed file to final location
-fn finalize_download(
-    base_dir: &Path,
-    pkg: &str,
-    temp_file: &Path,
-) -> anyhow::Result<()> {
-    let target_path = base_dir.join("sources").join(format!("{}.tar.gz", pkg));
-    std::fs::create_dir_all(base_dir.join("sources"))?;
-    std::fs::rename(temp_file, target_path)?;
     Ok(())
 }
 

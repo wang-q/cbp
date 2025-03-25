@@ -125,7 +125,10 @@ pub fn clean_files(
     Ok(())
 }
 
-pub fn find_binary_files(temp_dir: &std::path::Path, json_obj: &serde_json::Map<String, serde_json::Value>) -> anyhow::Result<Vec<String>> {
+pub fn find_binary_files(
+    temp_dir: &std::path::Path,
+    json_obj: &serde_json::Map<String, serde_json::Value>,
+) -> anyhow::Result<Vec<String>> {
     let binary_paths = match &json_obj["binary"] {
         serde_json::Value::String(pattern) => {
             let mut paths = Vec::new();
@@ -134,12 +137,11 @@ pub fn find_binary_files(temp_dir: &std::path::Path, json_obj: &serde_json::Map<
             }
             paths
         }
-        serde_json::Value::Array(arr) => {
-            arr.iter()
-                .filter_map(|v| v.as_str())
-                .map(|s| s.to_string())
-                .collect()
-        }
+        serde_json::Value::Array(arr) => arr
+            .iter()
+            .filter_map(|v| v.as_str())
+            .map(|s| s.to_string())
+            .collect(),
         _ => return Err(anyhow::anyhow!("Invalid binary format")),
     };
 

@@ -85,7 +85,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             .display()
             .to_string();
         let temp_path = temp_dir.path().canonicalize()?;
-        
+
         // Create binaries directory if it doesn't exist
         std::fs::create_dir_all(base_dir.join("binaries"))?;
 
