@@ -21,7 +21,7 @@ fi
 
 # Read JSON file
 package="$1"
-json_file="${BASH_DIR}/../packages/${package}.json"
+json_file="${BASH_DIR}/../../packages/${package}.json"
 
 if [ ! -f "$json_file" ]; then
     echo "Error: Package file ${json_file} not found"
@@ -107,4 +107,4 @@ if [ "$source_type" = "object" ]; then
 fi
 
 # Move final archive to sources directory with proper name
-mv "${tempfile}" "${BASH_DIR}/../sources/${name}.tar.gz"
+mv "${tempfile}" "${BASH_DIR}/../../sources/${name}.tar.gz"
