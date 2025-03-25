@@ -1,5 +1,12 @@
 # Source Management
 
+## Manage package json
+
+```bash
+fd -e json . packages -x sh -c 'jq -e ".source.rename" {} > /dev/null 2>&1 && echo {}'
+
+```
+
 ## Basic libraries
 
 ```bash
@@ -42,7 +49,7 @@ bash scripts/download-source.sh datamash
 
 bash scripts/download-source.sh cabextract
 
-bash scripts/download-source.sh trf
+cbp build download trf
 
 bash scripts/download-source.sh aria2
 

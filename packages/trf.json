@@ -9,6 +9,9 @@
     "url": "https://github.com/Benson-Genomics-Lab/TRF/archive/refs/tags/v4.09.1.tar.gz",
     "rename": {
       "TRF-*": "trf"
-    }
+    },
+    "clean": [
+      "trf/*~"
+    ]
   }
 }

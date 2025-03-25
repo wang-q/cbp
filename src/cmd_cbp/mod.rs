@@ -1,6 +1,7 @@
 //! Subcommand modules for the `cbp` binary.
 
 pub mod avail;
+pub mod build;
 pub mod check;
 pub mod collect;
 pub mod info;

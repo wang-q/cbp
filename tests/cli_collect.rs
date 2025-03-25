@@ -51,11 +51,6 @@ fn command_collect_files() -> anyhow::Result<()> {
     // Verify archive content
     assert!(output_tar.exists());
     let files = cbp::list_archive_files(&output_tar)?;
-    eprintln!(
-        "files
-     = {:#?}",
-        files
-    );
     assert!(files.contains("test.txt"));
     Ok(())
 }
@@ -79,7 +74,6 @@ fn command_collect_bin_mode() -> anyhow::Result<()> {
     // Verify archive content
     assert!(output_tar.exists());
     let files = cbp::list_archive_files(&output_tar)?;
-    eprintln!("files\n    = {:#?}", files);
     assert!(files.contains("bin/program"));
     Ok(())
 }
@@ -132,11 +126,6 @@ fn command_collect_with_copy() -> anyhow::Result<()> {
     // Verify archive content
     assert!(output_tar.exists());
     let files = cbp::list_archive_files(&output_tar)?;
-    eprintln!(
-        "files
-    = {:#?}",
-        files
-    );
     assert!(files.contains("test.txt"));
     assert!(files.contains("alias.txt"));
     Ok(())
@@ -163,7 +152,6 @@ fn command_collect_with_ignore() -> anyhow::Result<()> {
     // Verify archive content
     assert!(output_tar.exists());
     let files = cbp::list_archive_files(&output_tar)?;
-    eprintln!("files = {:#?}", files);
     assert!(!files.contains("test.txt")); // Should be ignored
     assert!(files.contains("bin/program")); // Should be included
     Ok(())

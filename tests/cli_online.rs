@@ -165,3 +165,71 @@ fn command_info() -> anyhow::Result<()> {
 
     Ok(())
 }
+
+#[test]
+fn command_download() -> anyhow::Result<()> {
+    let temp_dir = tempfile::TempDir::new()?;
+
+    // Create mock server
+    let mut server = mockito::Server::new();
+
+    // Prepare test package data
+    let test_package = include_bytes!("TRF-4.09.1.tar.gz");
+
+    // Set up mock endpoints
+    let _m1 = server
+        .mock("GET", "/Benson-Genomics-Lab/TRF/archive/refs/tags/v4.09.1.tar.gz")
+        .with_status(200)
+        .with_header("content-type", "application/gzip")
+        .with_body(test_package)
+        .create();
+
+    // Create package directory and copy the existing package JSON
+    std::fs::create_dir_all(temp_dir.path().join("packages"))?;
+    let cargo_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap_or_else(|_| ".".to_string());
+    std::fs::copy(
+        std::path::Path::new(&cargo_dir).join("packages/trf.json"),
+        temp_dir.path().join("packages/trf.json"),
+    )?;
+
+    // Run download command
+    let mut cmd = Command::cargo_bin("cbp")?;
+    cmd.env("GITHUB_RELEASE_URL", &server.url())
+        .arg("build")
+        .arg("download")
+        .arg("--dir")
+        .arg(temp_dir.path())
+        .arg("trf");
+
+    cmd.assert()
+        .success()
+        .stdout(predicate::str::contains("==> Processing package: trf"))
+        .stdout(predicate::str::contains("-> Downloading from"))
+        .stdout(predicate::str::contains("-> Processing source archive"))
+        .stdout(predicate::str::contains("-> Successfully downloaded and processed"));
+
+    // Debug: Print directory structure
+    eprintln!("==> Temporary directory structure:");
+    for entry in walkdir::WalkDir::new(temp_dir.path()) {
+        let entry = entry?;
+        let path = entry.path().strip_prefix(temp_dir.path())?;
+        eprintln!("  {}", path.display());
+    }
+
+    // Verify download results
+    let output_tar = temp_dir.path().join("sources/trf.tar.gz");
+    assert!(output_tar.exists());
+
+    // Debug: Print archive contents
+    eprintln!("\n==> Archive contents:");
+    let files = cbp::list_archive_files(&output_tar)?;
+        eprintln!("  {}", files);
+
+    // Perform checks
+    assert!(files.contains("trf/"));
+    assert!(files.contains("trf/INSTALL"));
+    assert!(!files.contains("TRF-4.09.1/")); // Should be renamed
+    assert!(!files.contains("config.h.in~")); // Should be cleaned
+
+    Ok(())
+}
