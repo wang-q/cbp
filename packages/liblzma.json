@@ -1,0 +1,16 @@
+{
+  "name": "liblzma",
+  "version": "5.6.3",
+  "description": "Compression library with an API similar to that of zlib",
+  "homepage": "https://tukaani.org/xz/",
+  "license": "LGPL-2.1",
+  "type": "vcpkg",
+  "tests": [
+    {
+      "name": "version",
+      "command": "xz",
+      "pattern": "xz \\(XZ Utils\\) [0-9]+\\.[0-9]+\\.[0-9]+",
+      "args": "--version"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "libxml2",
+  "version": "2.13.5",
+  "description": "Libxml2 is the XML C parser and toolkit developed for the Gnome project",
+  "homepage": "https://gitlab.gnome.org/GNOME/libxml2/-/wikis/home",
+  "license": "MIT",
+  "type": "vcpkg"
+}
