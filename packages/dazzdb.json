@@ -1,0 +1,14 @@
+{
+  "name": "dazzdb",
+  "version": "be65e59",
+  "description": "DAZZ_DB: The Dazzler Data Base",
+  "homepage": "https://github.com/thegenemyers/DAZZ_DB",
+  "license": "BSD-3-Clause",
+  "type": "make",
+  "source": {
+    "url": "https://github.com/thegenemyers/DAZZ_DB/archive/be65e5991ec0aa4ebbfa926ea00e3680de7b5760.tar.gz",
+    "rename": {
+        "DAZZ_DB-*": "dazzdb"
+      }
+  }
+}

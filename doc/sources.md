@@ -29,59 +29,25 @@ bash scripts/download-source.sh pigz
 bash scripts/download-source.sh sickle
 
 bash scripts/download-source.sh faops
+bash scripts/download-source.sh multiz
 
 bash scripts/download-source.sh bwa
 
-# just .tar file
-curl -L http://stat.sys.i.kyoto-u.ac.jp/prog/consel/pub/cnsls020.tgz |
-    tar xvf - &&
-    tar -czf sources/consel.tar.gz consel/ &&
-    rm -fr consel
+bash scripts/download-source.sh consel
 
-# use specific commit to ensure reproducibility
-curl -L https://github.com/thegenemyers/DAZZ_DB/archive/be65e5991ec0aa4ebbfa926ea00e3680de7b5760.tar.gz |
-    tar xvfz - &&
-    mv DAZZ_DB-* dazzdb &&
-    tar -czf sources/dazzdb.tar.gz dazzdb/ &&
-    rm -rf dazzdb
-
-curl -L https://github.com/thegenemyers/DALIGNER/archive/a8e2f42f752f21d21c92fbc39c75b16b52c6cabe.tar.gz |
-    tar xvfz - &&
-    mv DALIGNER-* daligner &&
-    tar -czf sources/daligner.tar.gz daligner/ &&
-    rm -rf daligner
-
-curl -L https://github.com/thegenemyers/MERQURY.FK/archive/a1005336b0eae8a1dd478017e3dbbae5366ccda5.tar.gz |
-    tar xvfz - &&
-    mv MERQURY.FK-* merquryfk &&
-    tar -czf sources/merquryfk.tar.gz merquryfk/ &&
-    rm -rf merquryfk
-
-curl -L https://github.com/thegenemyers/FASTGA/archive/e97c33ef4daeafdfbb7b5dda56d31eaac9a5e214.tar.gz |
-    tar xvfz - &&
-    mv FASTGA-* fastga &&
-    rm -fr fastga/EXAMPLE &&
-    tar -czf sources/fastga.tar.gz fastga/ &&
-    rm -rf fastga
-
-bash scripts/download-source.sh multiz
+bash scripts/download-source.sh dazzdb
+bash scripts/download-source.sh daligner
+bash scripts/download-source.sh merquryfk
+bash scripts/download-source.sh fastga
 
 # ./configure
 bash scripts/download-source.sh datamash
 
 bash scripts/download-source.sh cabextract
 
-curl -L https://github.com/Benson-Genomics-Lab/TRF/archive/refs/tags/v4.09.1.tar.gz |
-    tar xvfz - &&
-    mv TRF-* trf &&
-    tar -czf sources/trf.tar.gz trf/ &&
-    rm -rf trf
+bash scripts/download-source.sh trf
 
-curl -L https://github.com/aria2/aria2/releases/download/release-1.37.0/aria2-1.37.0.tar.xz |
-    tar xvfJ - &&
-    mv aria2-* aria2 &&
-    tar -czf sources/aria2.tar.gz aria2/ &&
-    rm -rf aria2
+bash scripts/download-source.sh aria2
 
 bash scripts/download-source.sh gnuplot
 
@@ -93,25 +59,21 @@ bash scripts/download-source.sh diamond
 ## `Makefile`
 
 ```bash
+bash scripts/download-source.sh fastk
 bash scripts/download-source.sh lastz
 
 bash scripts/download-source.sh mafft
+bash scripts/download-source.sh trimal
 
 bash scripts/download-source.sh minimap2
-
 bash scripts/download-source.sh miniprot
 
-curl -o sources/phylip.tar.gz -L https://phylipweb.github.io/phylip/download/phylip-3.697.tar.gz
+bash scripts/download-source.sh aster
+bash scripts/download-source.sh paml
+bash scripts/download-source.sh phast
+bash scripts/download-source.sh phylip
 
-curl -o sources/phast.tar.gz -L https://github.com/CshlSiepelLab/phast/archive/refs/tags/v1.7.tar.gz
-
-# remove unnecessary files to reduce source size
-curl -L https://github.com/inab/trimal/archive/refs/tags/v1.5.0.tar.gz |
-    tar xvfz - &&
-    rm -fr trimal-1.5.0/dataset/ &&
-    rm -fr trimal-1.5.0/docs/ &&
-    tar -czf sources/trimal.tar.gz trimal-1.5.0/ &&
-    rm -rf trimal-1.5.0
+bash scripts/download-source.sh prodigal
 
 # curl -L https://github.com/arq5x/bedtools2/archive/refs/tags/v2.31.1.tar.gz |
 #     tar xvfz - \
@@ -123,29 +85,6 @@ curl -L https://github.com/inab/trimal/archive/refs/tags/v1.5.0.tar.gz |
 #     mv bedtools2-2.31.1 bedtools &&
 #     tar -czf sources/bedtools.tar.gz bedtools/ &&
 #     rm -rf bedtools
-
-# use specific commit to ensure reproducibility
-curl -L https://github.com/thegenemyers/FASTK/archive/ddea6cf254f378db51d22c6eb21af775fa9e1f77.tar.gz |
-    tar xvfz - &&
-    mv FASTK-* fastk &&
-    tar -czf sources/fastk.tar.gz fastk/ &&
-    rm -rf fastk
-
-curl -o sources/paml.tar.gz -L https://github.com/abacus-gene/paml/archive/01508dd10b6e7c746a0768ee3cddadb5c28d5ae0.tar.gz
-
-curl -L https://github.com/chaoszhang/ASTER/archive/e8da7edf8adf4205cf5551630dc77bb81497092b.tar.gz |
-    tar xvfz - &&
-    mv ASTER-* aster &&
-    rm -fr aster/example &&
-    rm aster/exe/* &&
-    tar -czf sources/aster.tar.gz aster/ &&
-    rm -rf aster
-
-curl -L https://github.com/hyattpd/Prodigal/archive/c1e2d361479cc1b18175ea79ebd8ff10411c46cb.tar.gz |
-    tar xvfz - &&
-    mv Prodigal-* prodigal &&
-    tar -czf sources/prodigal.tar.gz prodigal/ &&
-    rm -rf prodigal
 
 ```
 

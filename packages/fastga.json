@@ -1,0 +1,18 @@
+{
+  "name": "fastga",
+  "version": "1.0",
+  "description": "FASTGA: Fast Genome Alignment",
+  "homepage": "https://github.com/thegenemyers/FASTGA",
+  "license": "MIT",
+  "type": "make",
+  "source": {
+    "url": "https://github.com/thegenemyers/FASTGA/archive/e97c33ef4daeafdfbb7b5dda56d31eaac9a5e214.tar.gz",
+    "rename": {
+      "FASTGA-*": "fastga"
+    },
+    "clean": [
+      "fastga/EXAMPLE",
+      "fastga/*.png"
+    ]
+  }
+}

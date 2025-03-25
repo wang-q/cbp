@@ -5,6 +5,16 @@
   "homepage": "https://github.com/inab/trimal",
   "license": "GPL-3.0",
   "type": "make",
+  "source": {
+    "url": "https://github.com/inab/trimal/archive/refs/tags/v1.5.0.tar.gz",
+    "rename": {
+      "trimal-*": "trimal"
+    },
+    "clean": [
+      "trimal/dataset",
+      "trimal/docs"
+    ]
+  },
   "tests": [
     {
       "name": "version",

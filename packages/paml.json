@@ -1,0 +1,9 @@
+{
+  "name": "paml",
+  "version": "4.10.7",
+  "description": "PAML: Phylogenetic Analysis by Maximum Likelihood",
+  "homepage": "http://abacus.gene.ucl.ac.uk/software/paml.html",
+  "license": "GPL-3.0",
+  "type": "make",
+  "source": "https://github.com/abacus-gene/paml/archive/01508dd10b6e7c746a0768ee3cddadb5c28d5ae0.tar.gz"
+}

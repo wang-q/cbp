@@ -1,0 +1,14 @@
+{
+  "name": "daligner",
+  "version": "1.0",
+  "description": "DALIGNER: Find all significant local alignments between reads",
+  "homepage": "https://github.com/thegenemyers/DALIGNER",
+  "license": "BSD-3-Clause",
+  "type": "make",
+  "source": {
+    "url": "https://github.com/thegenemyers/DALIGNER/archive/a8e2f42f752f21d21c92fbc39c75b16b52c6cabe.tar.gz",
+    "rename": {
+      "DALIGNER-*": "daligner"
+    }
+  }
+}

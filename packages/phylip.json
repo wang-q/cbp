@@ -1,0 +1,9 @@
+{
+  "name": "phylip",
+  "version": "3.697",
+  "description": "Package of programs for inferring phylogenies",
+  "homepage": "https://phylipweb.github.io/phylip/",
+  "license": "BSD-2-Clause",
+  "type": "make",
+  "source": "https://phylipweb.github.io/phylip/download/phylip-3.697.tar.gz"
+}

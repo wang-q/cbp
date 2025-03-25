@@ -1,0 +1,16 @@
+{
+  "name": "phast",
+  "version": "1.7",
+  "description": "Phylogenetic Analysis with Space/Time Models",
+  "homepage": "http://compgen.cshl.edu/phast/",
+  "license": "BSD-3-Clause",
+  "type": "make",
+  "source": "https://github.com/CshlSiepelLab/phast/archive/refs/tags/v1.7.tar.gz",
+  "tests": [
+    {
+      "name": "version",
+      "command": "phast",
+      "pattern": "PHAST v[0-9]+\\."
+    }
+  ]
+}

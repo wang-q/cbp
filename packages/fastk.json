@@ -1,0 +1,14 @@
+{
+  "name": "fastk",
+  "version": "1.0",
+  "description": "FASTK: Fast K-mer Counter",
+  "homepage": "https://github.com/thegenemyers/FASTK",
+  "license": "MIT",
+  "type": "make",
+  "source": {
+    "url": "https://github.com/thegenemyers/FASTK/archive/ddea6cf254f378db51d22c6eb21af775fa9e1f77.tar.gz",
+    "rename": {
+      "FASTK-*": "fastk"
+    }
+  }
+}

@@ -5,6 +5,12 @@
   "homepage": "https://github.com/hyattpd/Prodigal",
   "license": "GPL-3.0",
   "type": "make",
+  "source": {
+    "url": "https://github.com/hyattpd/Prodigal/archive/c1e2d361479cc1b18175ea79ebd8ff10411c46cb.tar.gz",
+    "rename": {
+      "Prodigal-*": "prodigal"
+    }
+  },
   "tests": [
     {
       "name": "version",
