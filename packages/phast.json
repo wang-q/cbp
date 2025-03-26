@@ -5,7 +5,11 @@
   "homepage": "http://compgen.cshl.edu/phast/",
   "license": "BSD-3-Clause",
   "type": "make",
-  "source": "https://github.com/CshlSiepelLab/phast/archive/refs/tags/v1.7.tar.gz",
+  "downloads": {
+    "source": {
+      "url": "https://github.com/CshlSiepelLab/phast/archive/refs/tags/v1.7.tar.gz"
+    }
+  },
   "tests": [
     {
       "name": "version",

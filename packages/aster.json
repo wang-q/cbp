@@ -5,13 +5,17 @@
   "homepage": "https://github.com/chaoszhang/ASTER",
   "license": "GPL-3.0",
   "type": "make",
-  "source": {
-    "url": "https://github.com/chaoszhang/ASTER/archive/e8da7edf8adf4205cf5551630dc77bb81497092b.tar.gz",
-    "rename": "aster",
-    "clean": [
-      "aster/example",
-      "aster/exe/*"
-    ]
+  "downloads": {
+    "source": {
+      "url": "https://github.com/chaoszhang/ASTER/archive/e8da7edf8adf4205cf5551630dc77bb81497092b.tar.gz",
+      "rename": {
+        "ASTER-*": "aster"
+      },
+      "clean": [
+        "aster/example",
+        "aster/exe/*"
+      ]
+    }
   },
   "tests": [
     {

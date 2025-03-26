@@ -61,21 +61,12 @@ cbp build source diamond
 ## `make`
 
 ```bash
-bash scripts/download-source.sh fastk
-bash scripts/download-source.sh lastz
-
-bash scripts/download-source.sh mafft
-bash scripts/download-source.sh trimal
-
-bash scripts/download-source.sh minimap2
-bash scripts/download-source.sh miniprot
-
-bash scripts/download-source.sh aster
-bash scripts/download-source.sh paml
-bash scripts/download-source.sh phast
-bash scripts/download-source.sh phylip
-
-bash scripts/download-source.sh prodigal
+cbp build source aster paml phast phylip
+cbp build source fastk
+cbp build source lastz
+cbp build source mafft trimal
+cbp build source minimap2 miniprot
+cbp build source prodigal
 
 # curl -L https://github.com/arq5x/bedtools2/archive/refs/tags/v2.31.1.tar.gz |
 #     tar xvfz - \

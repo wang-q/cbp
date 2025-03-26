@@ -5,7 +5,11 @@
   "homepage": "https://github.com/lastz/lastz",
   "license": "MIT",
   "type": "make",
-  "source": "https://github.com/lastz/lastz/archive/refs/tags/1.04.41.tar.gz",
+  "downloads": {
+    "source": {
+      "url": "https://github.com/lastz/lastz/archive/refs/tags/1.04.41.tar.gz"
+    }
+  },
   "tests": [
     {
       "name": "version",

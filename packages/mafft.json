@@ -5,7 +5,11 @@
   "homepage": "https://mafft.cbrc.jp/alignment/software/",
   "license": "BSD-3-Clause",
   "type": "make",
-  "source": "https://gitlab.com/sysimm/mafft/-/archive/v7.526/mafft-v7.526.tar.gz",
+  "downloads": {
+    "source": {
+      "url": "https://gitlab.com/sysimm/mafft/-/archive/v7.526/mafft-v7.526.tar.gz"
+    }
+  },
   "tests": [
     {
       "name": "version",
