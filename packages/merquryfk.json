@@ -5,10 +5,12 @@
   "homepage": "https://github.com/thegenemyers/MERQURY.FK",
   "license": "MIT",
   "type": "make",
-  "source": {
-    "url": "https://github.com/thegenemyers/MERQURY.FK/archive/a1005336b0eae8a1dd478017e3dbbae5366ccda5.tar.gz",
-    "rename": {
-      "MERQURY.FK-*": "merquryfk"
+  "downloads": {
+    "source": {
+      "url": "https://github.com/thegenemyers/MERQURY.FK/archive/a1005336b0eae8a1dd478017e3dbbae5366ccda5.tar.gz",
+      "rename": {
+        "MERQURY.FK-*": "merquryfk"
+      }
     }
   }
 }

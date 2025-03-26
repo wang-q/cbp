@@ -5,11 +5,13 @@
   "homepage": "https://aria2.github.io/",
   "license": "GPL-2.0",
   "type": "autotools",
-  "source": {
-    "url": "https://github.com/aria2/aria2/releases/download/release-1.37.0/aria2-1.37.0.tar.xz",
-    "extract": "tar xvfJ",
-    "rename": {
-      "aria2-*": "aria2"
+  "downloads": {
+    "source": {
+      "url": "https://github.com/aria2/aria2/releases/download/release-1.37.0/aria2-1.37.0.tar.xz",
+      "extract": "tar xvfJ",
+      "rename": {
+        "aria2-*": "aria2"
+      }
     }
   }
 }

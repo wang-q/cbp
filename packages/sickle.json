@@ -5,7 +5,11 @@
   "homepage": "https://github.com/najoshi/sickle",
   "license": "MIT",
   "type": "vcpkg",
-  "source": "https://github.com/najoshi/sickle/archive/refs/tags/v1.33.tar.gz",
+  "downloads": {
+    "source": {
+      "url": "https://github.com/najoshi/sickle/archive/refs/tags/v1.33.tar.gz"
+    }
+  },
   "tests": [
     {
       "name": "version",

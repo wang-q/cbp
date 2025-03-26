@@ -35,51 +35,26 @@ fd -e json . packages -x sh -c 'jq -e "select(has(\"type\") | not)" {} > /dev/nu
 
 ```
 
-## Basic libraries
-
-```bash
-bash scripts/download-source.sh gdbm
-
-# curl -L https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/openmp-19.1.7.src.tar.xz |
-#     tar xvfJ - &&
-#     mv openmp-19.1.7.src libomp &&
-#     tar -czf sources/libomp.tar.gz libomp/ &&
-#     rm -rf libomp
-
-# curl -o sources/clapack.tar.gz -L https://www.netlib.org/clapack/clapack-3.2.1-CMAKE.tgz
-
-```
-
 ## My ports
 
 ```bash
 # Transform Makefile to CMakeLists.txt
-bash scripts/download-source.sh pigz
-
-bash scripts/download-source.sh sickle
-
-bash scripts/download-source.sh faops
-bash scripts/download-source.sh multiz
-
-bash scripts/download-source.sh bwa
-
-bash scripts/download-source.sh consel
-
-bash scripts/download-source.sh dazzdb
-bash scripts/download-source.sh daligner
-bash scripts/download-source.sh merquryfk
-bash scripts/download-source.sh fastga
+cbp build source bwa
+cbp build source consel
+cbp build source dazzdb daligner fastga merquryfk
+cbp build source faops multiz
+cbp build source pigz
+cbp build source sickle
 
 # ./configure
+cbp build source aria2
 cbp build source cabextract
 cbp build source datamash
 cbp build source trf
 cbp build source gnuplot
 
-bash scripts/download-source.sh aria2
-
 # cmake
-bash scripts/download-source.sh diamond
+cbp build source diamond
 
 ```
 
@@ -118,6 +93,8 @@ bash scripts/download-source.sh prodigal
 ## `autotools`
 
 ```bash
+bash scripts/download-source.sh gdbm
+
 bash scripts/download-source.sh clustalo
 bash scripts/download-source.sh mummer
 bash scripts/download-source.sh pv

@@ -5,7 +5,11 @@
   "homepage": "https://github.com/bbuchfink/diamond",
   "license": "GPL-3.0",
   "type": "cmake",
-  "source": "https://github.com/bbuchfink/diamond/archive/refs/tags/v2.1.11.tar.gz",
+  "downloads": {
+    "source": {
+      "url": "https://github.com/bbuchfink/diamond/archive/refs/tags/v2.1.11.tar.gz"
+    }
+  },
   "tests": [
     {
       "name": "version",

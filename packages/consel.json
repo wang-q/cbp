@@ -5,11 +5,13 @@
   "homepage": "http://stat.sys.i.kyoto-u.ac.jp/prog/consel/",
   "license": "GPL-2.0",
   "type": "make",
-  "source": {
-    "url": "https://stat.sys.i.kyoto-u.ac.jp/prog/consel/pub/cnsls020.tgz",
-    "extract": "tar -xvf",
-    "rename": {
+  "downloads": {
+    "source": {
+      "url": "https://stat.sys.i.kyoto-u.ac.jp/prog/consel/pub/cnsls020.tgz",
+      "extract": "tar -xf",
+      "rename": {
         "consel": "consel"
       }
+    }
   }
 }

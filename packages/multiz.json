@@ -5,7 +5,11 @@
   "homepage": "https://github.com/wang-q/multiz",
   "license": "MIT",
   "type": "vcpkg",
-  "source": "https://github.com/wang-q/multiz/archive/633c0f7814c887e9e7468ad42076d62496651cb8.tar.gz",
+  "downloads": {
+    "source": {
+      "url": "https://github.com/wang-q/multiz/archive/633c0f7814c887e9e7468ad42076d62496651cb8.tar.gz"
+    }
+  },
   "tests": [
     {
       "name": "version",
