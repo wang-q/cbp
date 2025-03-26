@@ -4,14 +4,17 @@
   "description": "The ultra fast download utility",
   "homepage": "https://aria2.github.io/",
   "license": "GPL-2.0",
-  "type": "autotools",
+  "type": "prebuild",
   "downloads": {
-    "source": {
-      "url": "https://github.com/aria2/aria2/releases/download/release-1.37.0/aria2-1.37.0.tar.xz",
-      "extract": "tar xvfJ",
-      "rename": {
-        "aria2-*": "aria2"
-      }
+    "linux": {
+      "url": "https://github.com/abcfy2/aria2-static-build/releases/download/1.37.0/aria2-x86_64-linux-musl_static.zip",
+      "extract": "unzip",
+      "binary": "aria2c"
+    },
+    "windows": {
+      "url": "https://github.com/abcfy2/aria2-static-build/releases/download/1.37.0/aria2-x86_64-w64-mingw32_static.zip",
+      "extract": "unzip",
+      "binary": "aria2c.exe"
     }
   }
 }

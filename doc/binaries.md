@@ -273,8 +273,9 @@ cbp build prebuild openjdk
 cbp build prebuild jq yq
 cbp build prebuild ninja uv
 
-cbp build prebuild pandoc tectonic
+cbp build prebuild aria2
 cbp build prebuild bat
+cbp build prebuild pandoc tectonic
 cbp build prebuild pup tsv-utils
 
 ```

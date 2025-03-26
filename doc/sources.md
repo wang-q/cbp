@@ -48,7 +48,6 @@ cbp build source pigz
 cbp build source sickle
 
 # ./configure
-cbp build source aria2
 cbp build source cabextract
 cbp build source datamash
 cbp build source trf
