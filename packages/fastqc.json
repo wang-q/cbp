@@ -1,0 +1,8 @@
+{
+  "name": "fastqc",
+  "version": "0.12.1",
+  "description": "A quality control tool for high throughput sequence data",
+  "homepage": "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/",
+  "license": "GPL-3.0",
+  "type": "java"
+}

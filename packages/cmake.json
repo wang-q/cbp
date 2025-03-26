@@ -1,0 +1,16 @@
+{
+  "name": "cmake",
+  "version": "3.31.6",
+  "description": "CMake is an open-source, cross-platform family of tools designed to build, test and package software",
+  "homepage": "https://cmake.org/",
+  "license": "BSD-3-Clause",
+  "type": "prebuild",
+  "tests": [
+    {
+      "name": "version",
+      "command": "cmake",
+      "pattern": "cmake version [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

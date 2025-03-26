@@ -1,0 +1,8 @@
+{
+  "name": "picard",
+  "version": "3.3.0",
+  "description": "A set of command line tools for manipulating high-throughput sequencing (HTS) data and formats",
+  "homepage": "https://broadinstitute.github.io/picard/",
+  "license": "MIT",
+  "type": "java"
+}

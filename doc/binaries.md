@@ -268,6 +268,10 @@ cbp build prebuild pandoc tectonic
 cbp build prebuild bat 
 cbp build prebuild pup tsv-utils
 
+bash scripts/prebuilds/cmake.sh linux
+bash scripts/prebuilds/cmake.sh macos
+bash scripts/prebuilds/cmake.sh windows
+
 ```
 
 ### Bioinformatics tools
