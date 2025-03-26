@@ -154,7 +154,42 @@ pub fn handle_symlink(
                 .ok_or_else(|| anyhow::anyhow!("Symlink target must be a string"))?;
 
             let link_path = bin_dir.join(link_name);
+            #[cfg(unix)]
             std::os::unix::fs::symlink(target, link_path)?;
+        }
+    }
+    Ok(())
+}
+
+/// Handle Windows shims
+pub fn handle_shim(
+    temp_dir: &tempfile::TempDir,
+    json_obj: &serde_json::Map<String, serde_json::Value>,
+) -> anyhow::Result<()> {
+    if let Some(symlink) = json_obj.get("symlink") {
+        println!("  -> Processing symlink rules");
+        let symlink_map = symlink
+            .as_object()
+            .ok_or_else(|| anyhow::anyhow!("Symlink must be an object"))?;
+
+        // Create bin directory for symlinks
+        let bin_dir = temp_dir.path().join("bin");
+        std::fs::create_dir_all(&bin_dir)?;
+
+        // Process each symlink
+        for (link_name, target) in symlink_map {
+            let target = target
+                .as_str()
+                .ok_or_else(|| anyhow::anyhow!("Symlink target must be a string"))?;
+
+            let script_path = bin_dir.join(format!("{}.ps1", link_name));
+
+            // Create PowerShell wrapper script
+            let script_content = format!(
+                "& \"$PSScriptRoot\\{}\" @args\n",
+                target
+            );
+            std::fs::write(&script_path, script_content)?;
         }
     }
     Ok(())

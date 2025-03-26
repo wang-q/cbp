@@ -112,6 +112,8 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             cbp::handle_rename(&temp_dir, dl_obj)?;
             if os_type != "windows" {
                 cbp::handle_symlink(&temp_dir, dl_obj)?;
+            } else {
+                cbp::handle_shim(&temp_dir, dl_obj)?;
             }
             cbp::handle_wrapper(&temp_dir, dl_obj)?;
             cbp::clean_files(&temp_dir, dl_obj)?;

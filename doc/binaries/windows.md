@@ -46,6 +46,12 @@ vcpkg install --debug bzip2[tool]:x64-mingw-static
 
 ```
 
+### Command Wrappers
+
+The package manager creates PowerShell script wrappers (`.ps1`) for command line applications. These wrapper scripts allow the system to redirect commands to their actual executable locations using relative paths, making it possible to run commands without modifying the PATH environment variable.
+
+For example, when a package specifies a symlink from `node` to `../libexec/nodejs/node.exe`, a PowerShell script named `node.ps1` will be created in the `bin` directory. This script uses `$PSScriptRoot` to ensure the target executable can be found regardless of the package's installation location.
+
 ## `vcpkg` libraries
 
 Most packages are built with x64-windows-zig triplet, which uses Zig as the C/C++ compiler:

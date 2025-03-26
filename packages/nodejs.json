@@ -16,17 +16,29 @@
         "npm": "../libexec/nodejs/bin/npm",
         "npx": "../libexec/nodejs/bin/npx"
       }
-    }
-  },
-  "macos": {
-    "url": "https://nodejs.org/dist/v22.14.0/node-v22.14.0-darwin-arm64.tar.gz",
-    "rename": {
-      "node-*": "libexec/nodejs"
     },
-    "symlink": {
-      "node": "../libexec/nodejs/bin/node",
-      "npm": "../libexec/nodejs/bin/npm",
-      "npx": "../libexec/nodejs/bin/npx"
+    "macos": {
+      "url": "https://nodejs.org/dist/v22.14.0/node-v22.14.0-darwin-arm64.tar.gz",
+      "rename": {
+        "node-*": "libexec/nodejs"
+      },
+      "symlink": {
+        "node": "../libexec/nodejs/bin/node",
+        "npm": "../libexec/nodejs/bin/npm",
+        "npx": "../libexec/nodejs/bin/npx"
+      }
+    },
+    "windows": {
+      "url": "https://nodejs.org/dist/latest-jod/node-v22.14.0-win-x64.zip",
+      "extract": "unzip",
+      "rename": {
+        "node-*": "libexec/nodejs"
+      },
+      "symlink": {
+        "node": "..\\libexec\\nodejs\\node.exe",
+        "npm": "..\\libexec\\nodejs\\npm.ps1",
+        "npx": "..\\libexec\\nodejs\\npx.ps1"
+      }
     }
   }
 }
