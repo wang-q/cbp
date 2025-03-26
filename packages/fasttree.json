@@ -1,0 +1,16 @@
+{
+  "name": "fasttree",
+  "version": "2.1.11",
+  "description": "FastTree infers approximately-maximum-likelihood phylogenetic trees from alignments of nucleotide or protein sequences",
+  "homepage": "http://www.microbesonline.org/fasttree/",
+  "license": "GPL-2.0",
+  "type": "source",
+  "tests": [
+    {
+      "name": "help",
+      "command": "FastTree",
+      "pattern": "FastTree ",
+      "args": "-help"
+    }
+  ]
+}

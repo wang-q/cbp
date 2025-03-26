@@ -6,7 +6,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 # Extract source code
 extract_source
 
-cmake -LH .
+# cmake -LH .
 
 # Configure CMake with Zig compiler
 ASM="zig cc" \

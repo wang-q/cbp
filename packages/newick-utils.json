@@ -1,0 +1,16 @@
+{
+  "name": "newick-utils",
+  "version": "1.6.0",
+  "description": "A suite of utilities for processing phylogenetic trees in Newick format",
+  "homepage": "https://github.com/tjunier/newick_utils",
+  "license": "BSD-3-Clause",
+  "type": "cmake",
+  "tests": [
+    {
+      "name": "help",
+      "command": "nw_reroot",
+      "pattern": "Synopsis",
+      "args": "-h"
+    }
+  ]
+}

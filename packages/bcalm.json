@@ -1,0 +1,16 @@
+{
+  "name": "bcalm",
+  "version": "2.2.3",
+  "description": "BCALM 2: A bioinformatics tool for de novo construction of compacted de Bruijn graphs",
+  "homepage": "https://github.com/GATB/bcalm",
+  "license": "MIT",
+  "type": "make",
+  "tests": [
+    {
+      "name": "help",
+      "command": "bcalm",
+      "pattern": "nb-cores",
+      "args": "-help"
+    }
+  ]
+}
