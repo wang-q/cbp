@@ -4,6 +4,7 @@
   "description": "Command-line JSON processor",
   "homepage": "https://jqlang.github.io/jq/",
   "license": "MIT",
+  "type": "prebuild",
   "downloads": {
     "linux": {
       "url": "https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64",

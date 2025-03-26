@@ -4,6 +4,7 @@
   "description": "Fast genome and metagenome distance estimation using MinHash",
   "homepage": "https://github.com/marbl/Mash",
   "license": "BSD-3-Clause",
+  "type": "prebuild",
   "downloads": {
     "linux": {
       "url": "https://github.com/marbl/Mash/releases/download/v2.3/mash-Linux64-v2.3.tar",

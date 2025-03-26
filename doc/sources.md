@@ -12,6 +12,27 @@ fd -e json . packages -x sh -c 'jq -e ".. | objects | select(has(\"rename\"))" {
 # Find packages without tests field
 fd -e json . packages -x sh -c 'jq -e ".tests" {} > /dev/null 2>&1 || echo {}'
 
+# Find packages that are of type "vcpkg" but don't have a "source" field
+# These packages typically use official vcpkg ports and don't need custom source downloads
+# Used for identifying packages that rely on vcpkg's standard source acquisition
+fd -e json . packages -x sh -c 'jq -e "select(.type == \"vcpkg\" and (has(\"source\") | not))" {} > /dev/null 2>&1 && echo {}'
+
+# Count all package types and sort by frequency
+fd -e json . packages -x jq -r '.type // "undefined"' | sort | uniq -c | sort -rn
+#   26 vcpkg
+#   24 prebuild
+#   18 make
+#   16 rust
+#   13 autotools
+#    9 font
+#    5 cmake
+#    2 source
+#    2 java
+
+fd -e json . packages -x sh -c 'jq -e "select(.type == \"prebuild\")" {} > /dev/null 2>&1 && echo {}'
+
+fd -e json . packages -x sh -c 'jq -e "select(has(\"type\") | not)" {} > /dev/null 2>&1 && echo {}'
+
 ```
 
 ## Basic libraries

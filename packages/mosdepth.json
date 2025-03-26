@@ -4,6 +4,7 @@
   "description": "Fast BAM/CRAM depth calculation for WGS, exome, or targeted sequencing",
   "homepage": "https://github.com/brentp/mosdepth",
   "license": "MIT",
+  "type": "prebuild",
   "downloads": {
     "linux": {
       "url": "https://github.com/brentp/mosdepth/releases/download/v0.3.11/mosdepth",

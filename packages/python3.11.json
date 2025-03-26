@@ -1,0 +1,16 @@
+{
+  "name": "python3.11",
+  "version": "3.11.11",
+  "description": "The Python programming language",
+  "homepage": "https://github.com/python/cpython",
+  "license": "Python-2.0",
+  "type": "vcpkg",
+  "tests": [
+    {
+      "name": "version",
+      "command": "python3",
+      "pattern": "Python [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

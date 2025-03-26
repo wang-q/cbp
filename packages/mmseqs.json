@@ -4,6 +4,7 @@
   "description": "MMseqs2: ultra fast and sensitive sequence search and clustering suite",
   "homepage": "https://github.com/soedinglab/MMseqs2",
   "license": "GPL-3.0",
+  "type": "prebuild",
   "downloads": {
     "linux": {
       "url": "https://github.com/soedinglab/MMseqs2/releases/download/17-b804f/mmseqs-linux-avx2.tar.gz",

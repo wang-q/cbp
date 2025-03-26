@@ -4,6 +4,7 @@
   "description": "A modernized, complete, self-contained TeX/LaTeX engine",
   "homepage": "https://tectonic-typesetting.github.io",
   "license": "MIT",
+  "type": "prebuild",
   "downloads": {
     "linux": {
       "url": "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.15.0/tectonic-0.15.0-x86_64-unknown-linux-musl.tar.gz",

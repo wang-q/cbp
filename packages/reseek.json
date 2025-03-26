@@ -4,6 +4,7 @@
   "description": "Reseek: Realign Sequences with Errors and Kmers",
   "homepage": "https://github.com/rcedgar/reseek",
   "license": "GPL-3.0",
+  "type": "prebuild",
   "downloads": {
     "linux": {
       "url": "https://github.com/rcedgar/reseek/releases/download/v2.3/reseek-v2.3-linux-x86",

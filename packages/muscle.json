@@ -4,6 +4,7 @@
   "description": "MUSCLE: Multiple Sequence Alignment with High Accuracy and High Throughput",
   "homepage": "https://github.com/rcedgar/muscle",
   "license": "GPL-3.0",
+  "type": "prebuild",
   "downloads": {
     "linux": {
       "url": "https://github.com/rcedgar/muscle/releases/download/v5.3/muscle-linux-x86.v5.3",

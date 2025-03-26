@@ -4,6 +4,7 @@
   "description": "Transcript assembly and quantification for RNA-Seq",
   "homepage": "https://github.com/gpertea/stringtie",
   "license": "MIT",
+  "type": "prebuild",
   "downloads": {
     "linux": {
       "url": "https://github.com/gpertea/stringtie/releases/download/v3.0.0/stringtie-3.0.0.Linux_x86_64.tar.gz",

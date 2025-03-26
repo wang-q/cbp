@@ -4,6 +4,7 @@
   "description": "Parsing HTML at the command line",
   "homepage": "https://github.com/ericchiang/pup",
   "license": "MIT",
+  "type": "prebuild",
   "downloads": {
     "linux": {
       "url": "https://github.com/ericchiang/pup/releases/download/v0.4.0/pup_v0.4.0_linux_amd64.zip",

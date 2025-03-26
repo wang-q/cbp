@@ -4,6 +4,7 @@
   "description": "Universal markup converter",
   "homepage": "https://pandoc.org",
   "license": "GPL-2.0",
+  "type": "prebuild",
   "downloads": {
     "linux": {
       "url": "https://github.com/jgm/pandoc/releases/download/3.6.3/pandoc-3.6.3-linux-amd64.tar.gz",

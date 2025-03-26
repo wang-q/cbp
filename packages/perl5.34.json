@@ -1,0 +1,19 @@
+{
+  "name": "perl5.34",
+  "version": "5.34.3",
+  "description": "Highly capable, feature-rich programming language",
+  "homepage": "https://www.perl.org/",
+  "license": "GPL-1.0-or-later OR Artistic-1.0-Perl",
+  "type": "source",
+  "source": {
+    "url": "https://www.cpan.org/src/5.0/perl-5.34.3.tar.gz"
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "perl",
+      "pattern": "This is perl [0-9]+, version [0-9]+",
+      "args": "-v"
+    }
+  ]
+}

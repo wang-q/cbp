@@ -4,6 +4,7 @@
   "description": "Efficient phylogenomic software by maximum likelihood",
   "homepage": "https://github.com/iqtree/iqtree2",
   "license": "GPL-2.0",
+  "type": "prebuild",
   "downloads": {
     "linux": {
       "url": "https://github.com/iqtree/iqtree2/releases/download/v2.4.0/iqtree-2.4.0-Linux-intel.tar.gz",

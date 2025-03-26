@@ -4,6 +4,7 @@
   "description": "An ultrafast and memory-efficient tool for aligning sequencing reads to long reference sequences",
   "homepage": "https://github.com/BenLangmead/bowtie2",
   "license": "GPL-3.0",
+  "type": "prebuild",
   "downloads": {
     "linux": {
       "url": "https://github.com/BenLangmead/bowtie2/releases/download/v2.5.4/bowtie2-2.5.4-linux-x86_64.zip",

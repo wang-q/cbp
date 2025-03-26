@@ -4,6 +4,7 @@
   "description": "A small build system with a focus on speed",
   "homepage": "https://ninja-build.org/",
   "license": "Apache-2.0",
+  "type": "prebuild",
   "downloads": {
     "linux": {
       "url": "https://github.com/ninja-build/ninja/releases/download/v1.12.1/ninja-linux.zip",

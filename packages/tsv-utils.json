@@ -4,6 +4,7 @@
   "description": "Command line tools for large, tabular data files",
   "homepage": "https://github.com/eBay/tsv-utils",
   "license": "BSL-1.0",
+  "type": "prebuild",
   "downloads": {
     "linux": {
       "url": "https://github.com/eBay/tsv-utils/releases/download/v2.1.1/tsv-utils-v2.1.1_linux-x86_64_ldc2.tar.gz",

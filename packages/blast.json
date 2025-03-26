@@ -4,6 +4,7 @@
   "description": "Basic Local Alignment Search Tool",
   "homepage": "https://blast.ncbi.nlm.nih.gov",
   "license": "Public Domain",
+  "type": "prebuild",
   "downloads": {
     "linux": {
       "url": "https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.16.0/ncbi-blast-2.16.0+-x64-linux.tar.gz",

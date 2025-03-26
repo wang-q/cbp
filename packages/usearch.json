@@ -4,6 +4,7 @@
   "description": "Ultra-fast sequence analysis tools",
   "homepage": "https://github.com/rcedgar/usearch12",
   "license": "Proprietary",
+  "type": "prebuild",
   "downloads": {
     "linux": {
       "url": "https://github.com/rcedgar/usearch12/releases/download/v12.0-beta1/usearch_linux_x86_12.0-beta",
