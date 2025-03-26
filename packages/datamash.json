@@ -5,7 +5,11 @@
   "homepage": "https://www.gnu.org/software/datamash/",
   "license": "GPL-3.0",
   "type": "vcpkg",
-  "source": "https://ftp.gnu.org/gnu/datamash/datamash-1.8.tar.gz",
+  "downloads": {
+    "source": {
+      "url": "https://ftp.gnu.org/gnu/datamash/datamash-1.8.tar.gz"
+    }
+  },
   "tests": [
     {
       "name": "version",

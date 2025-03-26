@@ -47,18 +47,27 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         // Read and validate package configuration
         let json = cbp::read_package_json(&base_dir, pkg)?;
 
+        // Get source download configuration
+        let dl_obj = json["downloads"]["source"]
+            .as_object()
+            .ok_or_else(|| anyhow::anyhow!("Download configuration not found"))?;
+
         let temp_dir = tempfile::tempdir()?;
         let temp_file = temp_dir.path().join("download.tmp");
 
-        let source_url = get_source_url(&json)?;
-        println!("-> Downloading from {}", source_url);
-        cbp::download_file(&source_url, &temp_file, &agent)?;
+        // Download font file
+        let url = dl_obj["url"]
+            .as_str()
+            .ok_or_else(|| anyhow::anyhow!("Font URL not found"))?;
+        println!("-> Downloading from {}", url);
+        cbp::download_file(url, &temp_file, &agent)?;
 
-        if let serde_json::Value::Object(source_obj) = &json["source"] {
+        // Check number of keys in dl_obj
+        if dl_obj.len() > 1 {
             println!("-> Processing source archive");
-            cbp::extract_archive(&temp_dir, &temp_file, source_obj)?;
-            let rename_target = handle_rename(&temp_dir, source_obj, pkg)?;
-            cbp::clean_files(&temp_dir, source_obj)?;
+            cbp::extract_archive(&temp_dir, &temp_file, dl_obj)?;
+            let rename_target = handle_rename(&temp_dir, dl_obj, pkg)?;
+            cbp::clean_files(&temp_dir, dl_obj)?;
             create_reproducible_archive(&temp_dir, &temp_file, &rename_target)?;
         }
 
@@ -70,30 +79,6 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     }
 
     Ok(())
-}
-
-/// Extract source URL from package JSON
-///
-/// Handles both string format and object format with url field
-/// Supports GITHUB_RELEASE_URL environment variable override
-fn get_source_url(json: &serde_json::Value) -> anyhow::Result<String> {
-    let url = match &json["source"] {
-        serde_json::Value::String(url) => url.to_string(),
-        serde_json::Value::Object(obj) => obj["url"]
-            .as_str()
-            .ok_or_else(|| anyhow::anyhow!("Source URL not found"))?
-            .to_string(),
-        _ => return Err(anyhow::anyhow!("Invalid source format")),
-    };
-
-    // Handle GitHub URL override
-    if let Ok(github_url) = std::env::var("GITHUB_RELEASE_URL") {
-        if url.starts_with("https://github.com") {
-            return Ok(url.replace("https://github.com", &github_url));
-        }
-    }
-
-    Ok(url)
 }
 
 /// Handle file renaming based on package configuration

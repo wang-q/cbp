@@ -5,13 +5,15 @@
   "homepage": "https://github.com/Benson-Genomics-Lab/TRF",
   "license": "AGPL-3.0",
   "type": "make",
-  "source": {
-    "url": "https://github.com/Benson-Genomics-Lab/TRF/archive/refs/tags/v4.09.1.tar.gz",
-    "rename": {
-      "TRF-*": "trf"
-    },
-    "clean": [
-      "trf/*~"
-    ]
+  "downloads": {
+    "source": {
+      "url": "https://github.com/Benson-Genomics-Lab/TRF/archive/refs/tags/v4.09.1.tar.gz",
+      "rename": {
+        "TRF-*": "trf"
+      },
+      "clean": [
+        "trf/*~"
+      ]
+    }
   }
 }

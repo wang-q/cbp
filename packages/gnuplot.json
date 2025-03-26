@@ -5,7 +5,11 @@
   "homepage": "http://www.gnuplot.info/",
   "license": "gnuplot",
   "type": "vcpkg",
-  "source": "https://downloads.sourceforge.net/project/gnuplot/gnuplot/6.0.2/gnuplot-6.0.2.tar.gz",
+  "downloads": {
+    "source": {
+      "url": "https://downloads.sourceforge.net/project/gnuplot/gnuplot/6.0.2/gnuplot-6.0.2.tar.gz"
+    }
+  },
   "tests": [
     {
       "name": "version",

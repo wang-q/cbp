@@ -5,7 +5,11 @@
   "homepage": "https://www.cabextract.org.uk/",
   "license": "GPL-3.0",
   "type": "vcpkg",
-  "source": "https://www.cabextract.org.uk/cabextract-1.11.tar.gz",
+  "downloads": {
+    "source": {
+      "url": "https://www.cabextract.org.uk/cabextract-1.11.tar.gz"
+    }
+  },
   "tests": [
     {
       "name": "version",

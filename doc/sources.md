@@ -71,15 +71,12 @@ bash scripts/download-source.sh merquryfk
 bash scripts/download-source.sh fastga
 
 # ./configure
-bash scripts/download-source.sh datamash
-
-bash scripts/download-source.sh cabextract
-
+cbp build source cabextract
+cbp build source datamash
 cbp build source trf
+cbp build source gnuplot
 
 bash scripts/download-source.sh aria2
-
-bash scripts/download-source.sh gnuplot
 
 # cmake
 bash scripts/download-source.sh diamond
@@ -213,7 +210,8 @@ bash scripts/download-source.sh resvg
 bash scripts/download-source.sh ripgrep
 bash scripts/download-source.sh skim
 bash scripts/download-source.sh tealdeer
-bash scripts/download-source.sh tokei
+
+cbp build source tokei
 
 ```
 

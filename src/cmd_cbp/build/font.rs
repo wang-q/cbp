@@ -55,27 +55,27 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             return Err(anyhow::anyhow!("Package {} is not a font package", pkg));
         }
 
-        // Get font download configuration
-        let font_obj = json["downloads"]["font"]
+        // Get download configuration
+        let dl_obj = json["downloads"]["font"]
             .as_object()
-            .ok_or_else(|| anyhow::anyhow!("Font download configuration not found"))?;
+            .ok_or_else(|| anyhow::anyhow!("Download configuration not found"))?;
 
         let temp_dir = tempfile::tempdir()?;
         let temp_file = temp_dir.path().join("download.tmp");
 
         // Download font file
-        let url = font_obj["url"]
+        let url = dl_obj["url"]
             .as_str()
             .ok_or_else(|| anyhow::anyhow!("Font URL not found"))?;
         println!("-> Downloading from {}", url);
         cbp::download_file(url, &temp_file, &agent)?;
 
         // Process downloaded file
-        cbp::extract_archive(&temp_dir, &temp_file, font_obj)?;
-        cbp::clean_files(&temp_dir, font_obj)?;
+        cbp::extract_archive(&temp_dir, &temp_file, dl_obj)?;
+        cbp::clean_files(&temp_dir, dl_obj)?;
 
         // Find binary files
-        let binary_paths = cbp::find_binary_files(temp_dir.path(), font_obj)?;
+        let binary_paths = cbp::find_binary_files(temp_dir.path(), dl_obj)?;
 
         // Create final font package
         let target_path = base_dir
