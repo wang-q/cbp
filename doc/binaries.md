@@ -265,7 +265,6 @@ cbp build prebuild cmake
 cbp build prebuild nodejs
 cbp build prebuild openjdk
 
-
 ```
 
 ### Standalone Tools
@@ -277,12 +276,6 @@ cbp build prebuild ninja uv
 cbp build prebuild pandoc tectonic
 cbp build prebuild bat
 cbp build prebuild pup tsv-utils
-
-cbp build prebuild nodejs
-
-bash scripts/prebuilds/cmake.sh linux
-bash scripts/prebuilds/cmake.sh macos
-bash scripts/prebuilds/cmake.sh windows
 
 ```
 
