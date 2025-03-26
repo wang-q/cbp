@@ -1,0 +1,34 @@
+{
+  "name": "openjdk",
+  "version": "17.0.14",
+  "description": "Open Java Development Kit",
+  "homepage": "https://adoptium.net/",
+  "license": "GPL-2.0-with-classpath-exception",
+  "type": "prebuild",
+  "downloads": {
+    "linux": {
+      "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.14%2B7/OpenJDK17U-jdk_x64_linux_hotspot_17.0.14_7.tar.gz",
+      "rename": {
+        "jdk-*": "openjdk"
+      },
+      "libexec": [
+        "openjdk"
+      ],
+      "symlink": {
+        "java": "libexec/openjdk/bin/java"
+      }
+    },
+    "macos": {
+      "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.14%2B7/OpenJDK17U-jdk_aarch64_mac_hotspot_17.0.14_7.tar.gz",
+      "rename": {
+        "jdk-*": "openjdk"
+      },
+      "libexec": [
+        "openjdk"
+      ],
+      "symlink": {
+        "java": "libexec/openjdk/bin/java"
+      }
+    }
+  }
+}
