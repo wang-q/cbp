@@ -77,7 +77,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                 continue;
             }
 
-            let download_obj = download_obj.as_object().ok_or_else(|| {
+            let dl_obj = download_obj.as_object().ok_or_else(|| {
                 anyhow::anyhow!("Download configuration not found for {}", os_type)
             })?;
 
@@ -87,31 +87,31 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             let temp_file = temp_dir.path().join("download.tmp");
 
             // Download file
-            let url = download_obj["url"]
+            let url = dl_obj["url"]
                 .as_str()
                 .ok_or_else(|| anyhow::anyhow!("URL not found"))?;
             println!("-> Downloading from {}", url);
             cbp::download_file(url, &temp_file, &agent)?;
 
             // Check if extraction is needed
-            let needs_extract = url.ends_with(".zip") 
-                || url.ends_with(".tar.gz") 
-                || download_obj.get("extract").is_some();
+            let needs_extract = url.ends_with(".zip")
+                || url.ends_with(".tar.gz")
+                || dl_obj.get("extract").is_some();
 
             if needs_extract {
                 // Process downloaded file
-                cbp::extract_archive(&temp_dir, &temp_file, download_obj)?;
-                cbp::clean_files(&temp_dir, download_obj)?;
+                cbp::extract_archive(&temp_dir, &temp_file, dl_obj)?;
+                cbp::clean_files(&temp_dir, dl_obj)?;
             } else {
                 // For single binary files, just rename the downloaded file
-                let binary_name = download_obj["binary"]
+                let binary_name = dl_obj["binary"]
                     .as_str()
                     .ok_or_else(|| anyhow::anyhow!("Binary name not found"))?;
                 std::fs::rename(&temp_file, temp_dir.path().join(binary_name))?;
             }
 
             // Find binary files
-            let binary_paths = cbp::find_binary_files(temp_dir.path(), download_obj)?;
+            let binary_paths = cbp::find_binary_files(temp_dir.path(), dl_obj)?;
 
             // Set executable permissions for binary files
             #[cfg(unix)]
@@ -138,7 +138,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
             // Add shebang option if enabled
             let shebang_opt =
-                if download_obj.get("shebang").and_then(|v| v.as_bool()) == Some(true) {
+                if dl_obj.get("shebang").and_then(|v| v.as_bool()) == Some(true) {
                     "--shebang"
                 } else {
                     ""

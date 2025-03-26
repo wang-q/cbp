@@ -86,6 +86,43 @@ pub fn extract_archive(
     Ok(())
 }
 
+/// Handle file renaming based on package configuration
+pub fn handle_rename(
+    temp_dir: &tempfile::TempDir,
+    source_obj: &serde_json::Map<String, serde_json::Value>,
+) -> anyhow::Result<()> {
+    if let Some(rename) = source_obj.get("rename") {
+        println!("  -> Processing rename rules");
+        let rename_map = rename
+            .as_object()
+            .ok_or_else(|| anyhow::anyhow!("Rename must be an object"))?;
+
+        // Only the first rename rule will be processed
+        // Multiple renames should be handled by array of rules
+        if let Some((pattern_str, target)) = rename_map.iter().next() {
+            let target = target
+                .as_str()
+                .ok_or_else(|| anyhow::anyhow!("Rename target must be a string"))?;
+
+            let pattern = glob::Pattern::new(pattern_str)?;
+
+            // Find matching files
+            let entries: Vec<_> = std::fs::read_dir(temp_dir.path())?
+                .filter_map(|e| e.ok())
+                .filter(|e| pattern.matches(&e.file_name().to_string_lossy()))
+                .collect();
+
+            if let Some(entry) = entries.first() {
+                let source = entry.file_name();
+                if source.to_string_lossy() != target {
+                    std::fs::rename(temp_dir.path().join(&source), temp_dir.path().join(target))?;
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
 /// Clean files matching patterns specified in package configuration
 pub fn clean_files(
     temp_dir: &tempfile::TempDir,

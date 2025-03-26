@@ -1,6 +1,4 @@
 use clap::*;
-use glob::Pattern;
-use std::path::Path;
 
 /// Create clap subcommand arguments
 pub fn make_subcommand() -> clap::Command {
@@ -66,9 +64,11 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         if dl_obj.len() > 1 {
             println!("-> Processing source archive");
             cbp::extract_archive(&temp_dir, &temp_file, dl_obj)?;
-            let rename_target = handle_rename(&temp_dir, dl_obj, pkg)?;
+            cbp::handle_rename(&temp_dir, dl_obj)?;
             cbp::clean_files(&temp_dir, dl_obj)?;
-            create_reproducible_archive(&temp_dir, &temp_file, &rename_target)?;
+
+            let target_name = get_target_name(&temp_dir, dl_obj, pkg)?;
+            create_reproducible_archive(&temp_dir, &temp_file, &target_name)?;
         }
 
         let target_path = base_dir.join("sources").join(format!("{}.tar.gz", pkg));
@@ -81,25 +81,60 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     Ok(())
 }
 
-/// Handle file renaming based on package configuration
-///
-/// If rename is not specified, uses package name as target
-fn handle_rename(
+/// Get target directory name for archive
+fn get_target_name(
     temp_dir: &tempfile::TempDir,
     source_obj: &serde_json::Map<String, serde_json::Value>,
     pkg: &str,
 ) -> anyhow::Result<String> {
     if let Some(rename) = source_obj.get("rename") {
-        println!("  -> Processing rename rules");
         let rename_map = rename
             .as_object()
             .ok_or_else(|| anyhow::anyhow!("Rename must be an object"))?;
-        let result = handle_rename_map(temp_dir.path(), rename_map)?;
-        println!("  -> Renamed to: {}", result);
-        Ok(result)
+        if let Some(target) = get_rename_target(rename_map)? {
+            println!("  -> Using rename target: {}", target);
+            return Ok(target);
+        }
+    }
+
+    // Fallback to first directory or package name
+    if let Ok(first_dir) = get_first_directory(temp_dir.path()) {
+        Ok(first_dir)
     } else {
         println!("  -> Using package name as target: {}", pkg);
         Ok(pkg.to_string())
+    }
+}
+
+/// Get target name from rename map
+fn get_rename_target(
+    rename_map: &serde_json::Map<String, serde_json::Value>,
+) -> anyhow::Result<Option<String>> {
+    if let Some((_, target)) = rename_map.iter().next() {
+        let target = target
+            .as_str()
+            .ok_or_else(|| anyhow::anyhow!("Rename target must be a string"))?;
+        Ok(Some(target.to_string()))
+    } else {
+        Ok(None)
+    }
+}
+
+/// Find first directory in temp_dir and return its name
+///
+/// Used as fallback when rename target is not specified
+fn get_first_directory(temp_dir: &std::path::Path) -> anyhow::Result<String> {
+    let entries: Vec<_> = std::fs::read_dir(temp_dir)?
+        .filter_map(|e| e.ok())
+        .filter(|e| e.path().is_dir())
+        .collect();
+
+    if let Some(first_dir) = entries.first() {
+        let target = first_dir.file_name().to_string_lossy().into_owned();
+        println!("-> Using first directory as target: {}", target);
+        Ok(target)
+    } else {
+        Err(anyhow::anyhow!("No directory found for rename target"))
     }
 }
 
@@ -108,7 +143,7 @@ fn handle_rename(
 /// Sets consistent ownership, permissions, and timestamps
 fn create_reproducible_archive(
     temp_dir: &tempfile::TempDir,
-    temp_file: &Path,
+    temp_file: &std::path::Path,
     rename_target: &str,
 ) -> anyhow::Result<()> {
     let mut cmd = std::process::Command::new(if cfg!(target_os = "macos") {
@@ -135,56 +170,4 @@ fn create_reproducible_archive(
         .status()?;
 
     Ok(())
-}
-
-/// Find first directory in temp_dir and return its name
-///
-/// Used as fallback when rename target is not specified
-fn get_first_directory(temp_dir: &std::path::Path) -> anyhow::Result<String> {
-    let entries: Vec<_> = std::fs::read_dir(temp_dir)?
-        .filter_map(|e| e.ok())
-        .filter(|e| e.path().is_dir())
-        .collect();
-
-    if let Some(first_dir) = entries.first() {
-        let target = first_dir.file_name().to_string_lossy().into_owned();
-        println!("-> Using first directory as target: {}", target);
-        Ok(target)
-    } else {
-        Err(anyhow::anyhow!("No directory found for rename target"))
-    }
-}
-
-/// Handle rename map from package configuration
-///
-/// Supports glob patterns for matching source directories
-fn handle_rename_map(
-    temp_dir: &std::path::Path,
-    rename_map: &serde_json::Map<String, serde_json::Value>,
-) -> anyhow::Result<String> {
-    if let Some((pattern_str, target)) = rename_map.iter().next() {
-        let target = target
-            .as_str()
-            .ok_or_else(|| anyhow::anyhow!("Rename target must be a string"))?;
-
-        let pattern = Pattern::new(pattern_str)?;
-
-        // Find matching files
-        let entries: Vec<_> = std::fs::read_dir(temp_dir)?
-            .filter_map(|e| e.ok())
-            .filter(|e| pattern.matches(&e.file_name().to_string_lossy()))
-            .collect();
-
-        if let Some(entry) = entries.first() {
-            let source = entry.file_name();
-            if source.to_string_lossy() != target {
-                std::fs::rename(temp_dir.join(&source), temp_dir.join(target))?;
-            }
-            Ok(target.to_string())
-        } else {
-            get_first_directory(temp_dir)
-        }
-    } else {
-        get_first_directory(temp_dir)
-    }
 }
