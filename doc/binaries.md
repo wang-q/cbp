@@ -258,15 +258,29 @@ bash scripts/fasttree.sh
 
 ## Prebuilds from the official repositories
 
-### Common tools
+### Development Environments
+
+```bash
+cbp build prebuild nodejs
+cbp build prebuild openjdk
+
+bash scripts/prebuilds/cmake.sh linux
+bash scripts/prebuilds/cmake.sh macos
+bash scripts/prebuilds/cmake.sh windows
+
+```
+
+### Standalone Tools
 
 ```bash
 cbp build prebuild jq yq
 cbp build prebuild ninja uv
 
 cbp build prebuild pandoc tectonic
-cbp build prebuild bat 
+cbp build prebuild bat
 cbp build prebuild pup tsv-utils
+
+cbp build prebuild nodejs
 
 bash scripts/prebuilds/cmake.sh linux
 bash scripts/prebuilds/cmake.sh macos
@@ -303,7 +317,7 @@ cbp build font arial charter helvetica
 cbp build font fira jetbrains-mono firacode-nf
 
 cbp build font lxgw-wenkai
-cbp build font source-han-sans 
+cbp build font source-han-sans
 cbp build font source-han-serif
 
 ```

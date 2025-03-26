@@ -317,7 +317,7 @@ fn command_build_font() -> anyhow::Result<()> {
     target_os = "windows",
     ignore = "tar operations not supported on Windows"
 )]
-fn command_build_prebuild() -> anyhow::Result<()> {
+fn command_build_prebuild_binary() -> anyhow::Result<()> {
     let temp_dir = tempfile::TempDir::new()?;
 
     // Create mock server
@@ -359,7 +359,9 @@ fn command_build_prebuild() -> anyhow::Result<()> {
 
     cmd.assert()
         .success()
-        .stdout(predicate::str::contains("==> Processing prebuild package: jq"))
+        .stdout(predicate::str::contains(
+            "==> Processing prebuild package: jq",
+        ))
         .stdout(predicate::str::contains("-> Processing for OS: macos"))
         .stdout(predicate::str::contains("-> Package created successfully"));
 

@@ -89,16 +89,15 @@ pub fn extract_archive(
 /// Handle file renaming based on package configuration
 pub fn handle_rename(
     temp_dir: &tempfile::TempDir,
-    source_obj: &serde_json::Map<String, serde_json::Value>,
+    json_obj: &serde_json::Map<String, serde_json::Value>,
 ) -> anyhow::Result<()> {
-    if let Some(rename) = source_obj.get("rename") {
+    if let Some(rename) = json_obj.get("rename") {
         println!("  -> Processing rename rules");
         let rename_map = rename
             .as_object()
             .ok_or_else(|| anyhow::anyhow!("Rename must be an object"))?;
 
         // Only the first rename rule will be processed
-        // Multiple renames should be handled by array of rules
         if let Some((pattern_str, target)) = rename_map.iter().next() {
             let target = target
                 .as_str()
@@ -106,18 +105,56 @@ pub fn handle_rename(
 
             let pattern = glob::Pattern::new(pattern_str)?;
 
-            // Find matching files
-            let entries: Vec<_> = std::fs::read_dir(temp_dir.path())?
+            // Use WalkDir to find matching files recursively
+            let entries: Vec<_> = walkdir::WalkDir::new(temp_dir.path())
+                .into_iter()
                 .filter_map(|e| e.ok())
                 .filter(|e| pattern.matches(&e.file_name().to_string_lossy()))
                 .collect();
 
             if let Some(entry) = entries.first() {
-                let source = entry.file_name();
+                let source = entry.path().strip_prefix(temp_dir.path())?.to_path_buf();
                 if source.to_string_lossy() != target {
-                    std::fs::rename(temp_dir.path().join(&source), temp_dir.path().join(target))?;
+                    // Create parent directories if they don't exist
+                    if let Some(parent) = std::path::Path::new(target).parent() {
+                        std::fs::create_dir_all(temp_dir.path().join(parent))?;
+                    }
+
+                    // Perform the rename
+                    std::fs::rename(
+                        temp_dir.path().join(&source),
+                        temp_dir.path().join(target),
+                    )?;
                 }
             }
+        }
+    }
+    Ok(())
+}
+
+/// Handle symlink creation based on package configuration
+pub fn handle_symlink(
+    temp_dir: &tempfile::TempDir,
+    json_obj: &serde_json::Map<String, serde_json::Value>,
+) -> anyhow::Result<()> {
+    if let Some(symlink) = json_obj.get("symlink") {
+        println!("  -> Processing symlink rules");
+        let symlink_map = symlink
+            .as_object()
+            .ok_or_else(|| anyhow::anyhow!("Symlink must be an object"))?;
+
+        // Create bin directory for symlinks
+        let bin_dir = temp_dir.path().join("bin");
+        std::fs::create_dir_all(&bin_dir)?;
+
+        // Process each symlink
+        for (link_name, target) in symlink_map {
+            let target = target
+                .as_str()
+                .ok_or_else(|| anyhow::anyhow!("Symlink target must be a string"))?;
+
+            let link_path = bin_dir.join(link_name);
+            std::os::unix::fs::symlink(target, link_path)?;
         }
     }
     Ok(())

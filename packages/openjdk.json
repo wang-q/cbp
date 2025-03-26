@@ -9,25 +9,11 @@
     "linux": {
       "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.14%2B7/OpenJDK17U-jdk_x64_linux_hotspot_17.0.14_7.tar.gz",
       "rename": {
-        "jdk-*": "openjdk"
+        "jdk-*": "libexec/openjdk"
       },
-      "libexec": [
-        "openjdk"
-      ],
       "symlink": {
-        "java": "libexec/openjdk/bin/java"
-      }
-    },
-    "macos": {
-      "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.14%2B7/OpenJDK17U-jdk_aarch64_mac_hotspot_17.0.14_7.tar.gz",
-      "rename": {
-        "jdk-*": "openjdk"
-      },
-      "libexec": [
-        "openjdk"
-      ],
-      "symlink": {
-        "java": "libexec/openjdk/bin/java"
+        "java": "../libexec/openjdk/bin/java",
+        "javac": "../libexec/openjdk/bin/javac"
       }
     }
   }

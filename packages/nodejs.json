@@ -1,0 +1,32 @@
+{
+  "name": "nodejs",
+  "version": "22.14.0",
+  "description": "Node.js JavaScript runtime",
+  "homepage": "https://nodejs.org",
+  "license": "MIT",
+  "type": "prebuild",
+  "downloads": {
+    "linux": {
+      "url": "https://nodejs.org/dist/v22.14.0/node-v22.14.0-linux-x64.tar.gz",
+      "rename": {
+        "node-*": "libexec/nodejs"
+      },
+      "symlink": {
+        "node": "../libexec/nodejs/bin/node",
+        "npm": "../libexec/nodejs/bin/npm",
+        "npx": "../libexec/nodejs/bin/npx"
+      }
+    }
+  },
+  "macos": {
+    "url": "https://nodejs.org/dist/v22.14.0/node-v22.14.0-darwin-arm64.tar.gz",
+    "rename": {
+      "node-*": "libexec/nodejs"
+    },
+    "symlink": {
+      "node": "../libexec/nodejs/bin/node",
+      "npm": "../libexec/nodejs/bin/npm",
+      "npx": "../libexec/nodejs/bin/npx"
+    }
+  }
+}

@@ -28,11 +28,7 @@ cd ..
 cp -R dat/ ${TEMP_DIR}/collect/paml/
 cp -R examples/ ${TEMP_DIR}/collect/paml/
 
-cd ${TEMP_DIR}
-
 # Collect binaries and create tarball
 FN_TAR="${PROJ}.${OS_TYPE}.tar.gz"
-cbp collect -o "${FN_TAR}" collect ||
+cbp tar ${TEMP_DIR}/collect -o "${BASH_DIR}/../binaries/${FN_TAR}" ||
     { echo "==> Error: Failed to create archive"; exit 1; }
-mv "${FN_TAR}" ${BASH_DIR}/../binaries/ ||
-    { echo "==> Error: Failed to move archive"; exit 1; }

@@ -15,7 +15,9 @@ fd -e json . packages -x sh -c 'jq -e ".tests" {} > /dev/null 2>&1 || echo {}'
 # Find packages that are of type "vcpkg" but don't have a "source" field
 # These packages typically use official vcpkg ports and don't need custom source downloads
 # Used for identifying packages that rely on vcpkg's standard source acquisition
-fd -e json . packages -x sh -c 'jq -e "select(.type == \"vcpkg\" and (has(\"source\") | not))" {} > /dev/null 2>&1 && echo {}'
+fd -e json . packages -x sh -c 'jq -e "select(.type == \"vcpkg\" and ([.. | objects | has(\"source\")] | any | not))" {} > /dev/null 2>&1 && echo {}'
+
+fd -e json . packages -x sh -c 'jq -e "select(.type == \"prebuild\" and ([.. | objects | has(\"binary\")] | any | not))" {} > /dev/null 2>&1 && echo {}'
 
 # Count all package types and sort by frequency
 fd -e json . packages -x jq -r '.type // "undefined"' | sort | uniq -c | sort -rn

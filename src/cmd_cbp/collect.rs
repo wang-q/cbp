@@ -243,6 +243,7 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
         }
 
         if src_path.is_file() {
+            // can't handle symlinks
             std::fs::copy(&src_path, &dest_path)?;
 
             // Check if it's a Windows executable in tools or bin directory

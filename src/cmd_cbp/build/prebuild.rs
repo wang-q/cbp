@@ -101,7 +101,12 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             if needs_extract {
                 // Process downloaded file
                 cbp::extract_archive(&temp_dir, &temp_file, dl_obj)?;
+                cbp::handle_rename(&temp_dir, dl_obj)?;
+                if os_type != "windows" {
+                    cbp::handle_symlink(&temp_dir, dl_obj)?;
+                }
                 cbp::clean_files(&temp_dir, dl_obj)?;
+                std::fs::remove_file(&temp_file)?;
             } else {
                 // For single binary files, just rename the downloaded file
                 let binary_name = dl_obj["binary"]
@@ -110,21 +115,8 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                 std::fs::rename(&temp_file, temp_dir.path().join(binary_name))?;
             }
 
-            // Find binary files
-            let binary_paths = cbp::find_binary_files(temp_dir.path(), dl_obj)?;
-
-            // Set executable permissions for binary files
-            #[cfg(unix)]
-            for binary_path in &binary_paths {
-                use std::os::unix::fs::PermissionsExt;
-                let full_path = temp_dir.path().join(binary_path);
-                std::fs::set_permissions(
-                    &full_path,
-                    std::fs::Permissions::from_mode(0o755),
-                )?;
-            }
-
             // Create final package
+            std::fs::create_dir_all(base_dir.join("binaries"))?;
             let target_path = base_dir
                 .canonicalize()?
                 .join("binaries")
@@ -132,9 +124,6 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                 .display()
                 .to_string();
             let temp_path = temp_dir.path().canonicalize()?;
-
-            // Create binaries directory if it doesn't exist
-            std::fs::create_dir_all(base_dir.join("binaries"))?;
 
             // Add shebang option if enabled
             let shebang_opt =
@@ -144,12 +133,35 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                     ""
                 };
 
-            // Change to temp directory and collect files
-            run_cmd!(
-                cd ${temp_path};
-                ${cbp} collect --mode bin ${shebang_opt} -o ${target_path} $[binary_paths]
-            )?;
+            // Only process binary files if binary configuration exists
+            if dl_obj.get("binary").is_some() {
+                // Find binary files
+                let binary_paths = cbp::find_binary_files(temp_dir.path(), dl_obj)?;
 
+                // Set executable permissions for binary files
+                #[cfg(unix)]
+                for binary_path in &binary_paths {
+                    use std::os::unix::fs::PermissionsExt;
+                    let full_path = temp_dir.path().join(binary_path);
+                    std::fs::set_permissions(
+                        &full_path,
+                        std::fs::Permissions::from_mode(0o755),
+                    )?;
+                }
+
+                // Change to temp directory and collect files
+                run_cmd!(
+                    cd ${temp_path};
+                    ${cbp} collect --mode bin ${shebang_opt} -o ${target_path} $[binary_paths]
+                )?;
+            } else {
+                // Change to temp directory and collect files
+                // cbp collect can't handle symlinks
+                run_cmd!(
+                    cd ${temp_path};
+                    ${cbp} tar . -o ${target_path}
+                )?;
+            }
             println!("-> Package created successfully");
         }
     }
