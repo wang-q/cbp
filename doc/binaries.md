@@ -291,9 +291,21 @@ cbp build prebuild bowtie2 stringtie
 cbp build prebuild iqtree2
 cbp build prebuild mash mmseqs raxml-ng
 
+# java
+cbp build prebuild fastqc
+cbp build prebuild picard
+
 bash scripts/prebuilds/sratoolkit.sh linux
 bash scripts/prebuilds/sratoolkit.sh macos
 bash scripts/prebuilds/sratoolkit.sh windows
+
+```
+
+### java
+
+```bash
+bash scripts/prebuilds/.sh linux
+bash scripts/prebuilds/fastqc.sh macos
 
 ```
 
@@ -310,16 +322,5 @@ cbp build font fira jetbrains-mono firacode-nf
 cbp build font lxgw-wenkai
 cbp build font source-han-sans
 cbp build font source-han-serif
-
-```
-
-### java
-
-```bash
-bash scripts/prebuilds/fastqc.sh linux
-bash scripts/prebuilds/fastqc.sh macos
-
-bash scripts/prebuilds/picard.sh linux
-bash scripts/prebuilds/picard.sh macos
 
 ```

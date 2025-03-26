@@ -4,13 +4,59 @@
   "description": "A quality control tool for high throughput sequence data",
   "homepage": "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/",
   "license": "GPL-3.0",
-  "type": "java",
+  "type": "prebuild",
   "downloads": {
-    "java": {
-      "url": "https://github.com/broadinstitute/picard/releases/download/3.3.0/picard.jar",
-      "libexec": [
-        "picard.jar"
-      ]
+    "linux": {
+      "url": "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.12.1.zip",
+      "extract": "unzip",
+      "rename": {
+        "FastQC": "libexec/fastqc"
+      },
+      "wrapper": {
+        "fastqc": [
+          "#!/bin/bash",
+          "",
+          "# Find the real path of the script",
+          "if [ -L \"$0\" ]; then",
+          "    SCRIPT_PATH=$(readlink \"$0\")",
+          "else",
+          "    SCRIPT_PATH=\"$0\"",
+          "fi",
+          "SCRIPT_DIR=$(cd \"$(dirname \"$SCRIPT_PATH\")\" && pwd)",
+          "BASE_DIR=$(dirname \"$SCRIPT_DIR\")",
+          "",
+          "# Set memory options if needed",
+          "JAVA_OPTS=${JAVA_OPTS:-\"-Xmx2g\"}",
+          "",
+          "exec \"${BASE_DIR}/libexec/fastqc/fastqc\" \"$@\""
+        ]
+      }
+    },
+    "macos": {
+      "url": "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.12.1.zip",
+      "extract": "unzip",
+      "rename": {
+        "FastQC": "libexec/fastqc"
+      },
+      "wrapper": {
+        "fastqc": [
+          "#!/bin/bash",
+          "",
+          "# Find the real path of the script",
+          "if [ -L \"$0\" ]; then",
+          "    SCRIPT_PATH=$(readlink \"$0\")",
+          "else",
+          "    SCRIPT_PATH=\"$0\"",
+          "fi",
+          "SCRIPT_DIR=$(cd \"$(dirname \"$SCRIPT_PATH\")\" && pwd)",
+          "BASE_DIR=$(dirname \"$SCRIPT_DIR\")",
+          "",
+          "# Set memory options if needed",
+          "JAVA_OPTS=${JAVA_OPTS:-\"-Xmx2g\"}",
+          "",
+          "exec \"${BASE_DIR}/libexec/fastqc/fastqc\" \"$@\""
+        ]
+      }
     }
   }
 }

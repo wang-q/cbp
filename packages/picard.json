@@ -4,5 +4,57 @@
   "description": "A set of command line tools for manipulating high-throughput sequencing (HTS) data and formats",
   "homepage": "https://broadinstitute.github.io/picard/",
   "license": "MIT",
-  "type": "java"
+  "type": "prebuild",
+  "downloads": {
+    "linux": {
+      "url": "https://github.com/broadinstitute/picard/releases/download/3.3.0/picard.jar",
+      "rename": {
+        "download.tmp": "libexec/picard.jar"
+      },
+      "wrapper": {
+        "picard": [
+          "#!/bin/bash",
+          "",
+          "# Find the real path of the script",
+          "if [ -L \"$0\" ]; then",
+          "    SCRIPT_PATH=$(readlink \"$0\")",
+          "else",
+          "    SCRIPT_PATH=\"$0\"",
+          "fi",
+          "SCRIPT_DIR=$(cd \"$(dirname \"$SCRIPT_PATH\")\" && pwd)",
+          "BASE_DIR=$(dirname \"$SCRIPT_DIR\")",
+          "",
+          "# Set memory options if needed",
+          "JAVA_OPTS=${JAVA_OPTS:-\"-Xmx2g\"}",
+          "",
+          "exec java $JAVA_OPTS -jar \"${BASE_DIR}/libexec/picard.jar\" \"$@\""
+        ]
+      }
+    },
+    "macos": {
+      "url": "https://github.com/broadinstitute/picard/releases/download/3.3.0/picard.jar",
+      "rename": {
+        "download.tmp": "libexec/picard.jar"
+      },
+      "wrapper": {
+        "picard": [
+          "#!/bin/bash",
+          "",
+          "# Find the real path of the script",
+          "if [ -L \"$0\" ]; then",
+          "    SCRIPT_PATH=$(readlink \"$0\")",
+          "else",
+          "    SCRIPT_PATH=\"$0\"",
+          "fi",
+          "SCRIPT_DIR=$(cd \"$(dirname \"$SCRIPT_PATH\")\" && pwd)",
+          "BASE_DIR=$(dirname \"$SCRIPT_DIR\")",
+          "",
+          "# Set memory options if needed",
+          "JAVA_OPTS=${JAVA_OPTS:-\"-Xmx2g\"}",
+          "",
+          "exec java $JAVA_OPTS -jar \"${BASE_DIR}/libexec/picard.jar\" \"$@\""
+        ]
+      }
+    }
+  }
 }

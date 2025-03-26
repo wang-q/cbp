@@ -99,20 +99,24 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                 || dl_obj.get("extract").is_some();
 
             if needs_extract {
-                // Process downloaded file
                 cbp::extract_archive(&temp_dir, &temp_file, dl_obj)?;
-                cbp::handle_rename(&temp_dir, dl_obj)?;
-                if os_type != "windows" {
-                    cbp::handle_symlink(&temp_dir, dl_obj)?;
-                }
-                cbp::clean_files(&temp_dir, dl_obj)?;
-                std::fs::remove_file(&temp_file)?;
-            } else {
+            } else if dl_obj.get("binary").is_some() {
                 // For single binary files, just rename the downloaded file
                 let binary_name = dl_obj["binary"]
                     .as_str()
                     .ok_or_else(|| anyhow::anyhow!("Binary name not found"))?;
                 std::fs::rename(&temp_file, temp_dir.path().join(binary_name))?;
+            }
+
+            // Process downloaded files
+            cbp::handle_rename(&temp_dir, dl_obj)?;
+            if os_type != "windows" {
+                cbp::handle_symlink(&temp_dir, dl_obj)?;
+            }
+            cbp::handle_wrapper(&temp_dir, dl_obj)?;
+            cbp::clean_files(&temp_dir, dl_obj)?;
+            if temp_file.exists() {
+                std::fs::remove_file(&temp_file)?;
             }
 
             // Create final package
@@ -156,13 +160,15 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                 )?;
             } else if dl_obj.get("tar").is_some() {
                 let tar = dl_obj["tar"]
-                .as_str()
-                .ok_or_else(|| anyhow::anyhow!("URL not found"))?;
+                    .as_str()
+                    .ok_or_else(|| anyhow::anyhow!("URL not found"))?;
+                println!("-> Creating tarball from {}", tar);
                 run_cmd!(
                     cd ${temp_path};
                     ${cbp} tar ${tar} -o ${target_path}
                 )?;
             } else {
+                println!("-> Creating tarball from {}", ".");
                 // Change to temp directory and collect files
                 // cbp collect can't handle symlinks
                 run_cmd!(

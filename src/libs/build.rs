@@ -160,6 +160,47 @@ pub fn handle_symlink(
     Ok(())
 }
 
+pub fn handle_wrapper(
+    temp_dir: &tempfile::TempDir,
+    json_obj: &serde_json::Map<String, serde_json::Value>,
+) -> anyhow::Result<()> {
+    if let Some(wrapper) = json_obj.get("wrapper").and_then(|w| w.as_object()) {
+        std::fs::create_dir_all(temp_dir.path().join("bin"))?;
+
+        for (name, content) in wrapper {
+            let script_path = temp_dir.path().join("bin").join(name);
+            let content = match content {
+                serde_json::Value::String(s) => s.to_string(),
+                serde_json::Value::Array(lines) => {
+                    lines
+                        .iter()
+                        .filter_map(|line| line.as_str())
+                        .collect::<Vec<_>>()
+                        .join("\n")
+                        + "\n"
+                }
+                _ => {
+                    return Err(anyhow::anyhow!(
+                        "Wrapper content must be a string or array"
+                    ))
+                }
+            };
+
+            std::fs::write(&script_path, content)?;
+
+            #[cfg(unix)]
+            {
+                use std::os::unix::fs::PermissionsExt;
+                std::fs::set_permissions(
+                    &script_path,
+                    std::fs::Permissions::from_mode(0o755),
+                )?;
+            }
+        }
+    }
+    Ok(())
+}
+
 /// Clean files matching patterns specified in package configuration
 pub fn clean_files(
     temp_dir: &tempfile::TempDir,
