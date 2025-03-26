@@ -261,12 +261,10 @@ bash scripts/fasttree.sh
 ### Development Environments
 
 ```bash
+cbp build prebuild cmake
 cbp build prebuild nodejs
 cbp build prebuild openjdk
 
-bash scripts/prebuilds/cmake.sh linux
-bash scripts/prebuilds/cmake.sh macos
-bash scripts/prebuilds/cmake.sh windows
 
 ```
 

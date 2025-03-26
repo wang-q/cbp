@@ -5,6 +5,44 @@
   "homepage": "https://cmake.org/",
   "license": "BSD-3-Clause",
   "type": "prebuild",
+  "downloads": {
+    "linux": {
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6-linux-x86_64.tar.gz",
+      "rename": {
+        "cmake-*": "cmake"
+      },
+      "clean": [
+        "cmake/bin/cmake-gui",
+        "cmake/doc",
+        "cmake/man"
+      ],
+      "tar": "cmake"
+    },
+    "macos": {
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6-macos-universal.tar.gz",
+      "rename": {
+        "cmake-*/CMake.app/Contents": "cmake"
+      },
+      "clean": [
+        "cmake/bin/cmake-gui",
+        "cmake/doc",
+        "cmake/man"
+      ],
+      "tar": "cmake"
+    },
+    "windows": {
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6-windows-x86_64.zip",
+      "rename": {
+        "cmake-*": "cmake"
+      },
+      "clean": [
+        "cmake/bin/cmake-gui*",
+        "cmake/doc",
+        "cmake/man"
+      ],
+      "tar": "cmake"
+    }
+  },
   "tests": [
     {
       "name": "version",

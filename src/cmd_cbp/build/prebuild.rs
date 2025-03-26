@@ -154,6 +154,14 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                     cd ${temp_path};
                     ${cbp} collect --mode bin ${shebang_opt} -o ${target_path} $[binary_paths]
                 )?;
+            } else if dl_obj.get("tar").is_some() {
+                let tar = dl_obj["tar"]
+                .as_str()
+                .ok_or_else(|| anyhow::anyhow!("URL not found"))?;
+                run_cmd!(
+                    cd ${temp_path};
+                    ${cbp} tar ${tar} -o ${target_path}
+                )?;
             } else {
                 // Change to temp directory and collect files
                 // cbp collect can't handle symlinks
