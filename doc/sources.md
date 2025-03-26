@@ -3,9 +3,14 @@
 ## Manage package json
 
 ```bash
+# Find packages with source.rename field
 fd -e json . packages -x sh -c 'jq -e ".source.rename" {} > /dev/null 2>&1 && echo {}'
 
+# Find packages with any rename field at any level in the JSON structure
 fd -e json . packages -x sh -c 'jq -e ".. | objects | select(has(\"rename\"))" {} > /dev/null 2>&1 && echo {}'
+
+# Find packages without tests field
+fd -e json . packages -x sh -c 'jq -e ".tests" {} > /dev/null 2>&1 || echo {}'
 
 ```
 
@@ -13,8 +18,6 @@ fd -e json . packages -x sh -c 'jq -e ".. | objects | select(has(\"rename\"))" {
 
 ```bash
 bash scripts/download-source.sh gdbm
-bash scripts/download-source.sh gmp
-bash scripts/download-source.sh pkgconf
 
 # curl -L https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/openmp-19.1.7.src.tar.xz |
 #     tar xvfJ - &&
