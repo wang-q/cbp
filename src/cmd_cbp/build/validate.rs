@@ -12,6 +12,13 @@ pub fn make_subcommand() -> clap::Command {
                 .value_name("PACKAGES"),
         )
         .arg(
+            Arg::new("schema")
+                .long("schema")
+                .help("Custom JSON schema file path")
+                .num_args(1)
+                .value_name("SCHEMA"),
+        )
+        .arg(
             Arg::new("base")
                 .long("base")
                 .help("Base directory containing packages/ and schema/")
@@ -31,8 +38,13 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     //----------------------------
     // Load schema
     //----------------------------
-    let schema_str = include_str!("../../../doc/schema/schema.json");
-    let schema = serde_json::from_str(schema_str)?;
+    let schema_str = if let Some(schema_path) = args.get_one::<String>("schema") {
+        std::fs::read_to_string(schema_path)
+            .map_err(|e| anyhow::anyhow!("Failed to read schema file: {}", e))?
+    } else {
+        include_str!("../../../doc/schema/schema.json").to_string()
+    };
+    let schema = serde_json::from_str(&schema_str)?;
     let compiled: jsonschema::JSONSchema = jsonschema::JSONSchema::compile(&schema)
         .map_err(|e| anyhow::anyhow!("Schema compilation error: {}", e))?;
 
