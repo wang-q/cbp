@@ -78,11 +78,6 @@ bash scripts/vcpkg.sh "curl[core,tool,ssl,http2,websockets]"
 
 bash scripts/vcpkg.sh pkgconf x64-linux-zig pkgconf=pkg-config
 
-# static python can't load shared libraries
-# zvm use 0.14.0
-# CFLAGS="-Wno-date-time" \
-#     bash scripts/vcpkg.sh python3
-
 ```
 
 ## My ports
@@ -95,20 +90,8 @@ bash scripts/vcpkg.sh bwa
 cbp build source consel
 bash scripts/vcpkg.sh consel
 
-cbp build source daligner
-bash scripts/vcpkg.sh daligner
-
-cbp build source dazzdb
-bash scripts/vcpkg.sh dazzdb
-
 cbp build source faops
 bash scripts/vcpkg.sh faops
-
-cbp build source fastga
-bash scripts/vcpkg.sh fastga
-
-cbp build source merquryfk
-bash scripts/vcpkg.sh merquryfk
 
 cbp build source multiz
 bash scripts/vcpkg.sh multiz
@@ -119,6 +102,18 @@ bash scripts/vcpkg.sh pigz
 cbp build source sickle
 bash scripts/vcpkg.sh sickle
 
+cbp build source daligner
+bash scripts/vcpkg.sh daligner
+
+cbp build source dazzdb
+bash scripts/vcpkg.sh dazzdb
+
+cbp build source fastga
+bash scripts/vcpkg.sh fastga
+
+cbp build source merquryfk
+bash scripts/vcpkg.sh merquryfk
+
 # ./configure
 cbp build source cabextract
 bash scripts/vcpkg.sh cabextract
@@ -128,8 +123,6 @@ bash scripts/vcpkg.sh datamash
 
 cbp build source trf
 bash scripts/vcpkg.sh trf
-
-cbp build source gnuplot
 
 # cmake
 cbp build source chainnet
@@ -301,6 +294,16 @@ singularity pull docker://wangq/vcpkg-centos:master
 
 mv vcpkg-centos_master.sif vcpkg/vcpkg-centos.sif
 
+mkdir -p fasttree &&
+    curl -o fasttree/FastTree.c -L https://raw.githubusercontent.com/morgannprice/fasttree/refs/heads/main/old/FastTree-2.1.11.c &&
+    tar -czf sources/fasttree.tar.gz fasttree/ &&
+    rm -fr fasttree
+bash scripts/fasttree.sh
+
+```
+
+```bash
+# lapack-reference
 singularity run \
     vcpkg/vcpkg-centos.sif \
 /opt/vcpkg/vcpkg install --debug --recurse \
@@ -313,6 +316,7 @@ singularity run \
 
 cbp collect vcpkg/installed/vcpkg/info/lapack-reference_*_x64-linux-release.list
 
+# gmp
 singularity run \
     vcpkg/vcpkg-centos.sif \
 /opt/vcpkg/vcpkg install --debug --recurse \
@@ -350,6 +354,8 @@ cbp collect --ignore tools/graphviz/graphviz/libgvplugin \
 mv graphviz.linux.tar.gz binaries/
 
 # gnuplot
+cbp build source gnuplot
+
 singularity run \
     --env CFLAGS="-D_GNU_SOURCE -std=gnu99 -Wno-missing-prototypes -Wno-strict-prototypes" \
     vcpkg/vcpkg-centos.sif \
@@ -380,15 +386,10 @@ singularity run \
 cbp collect vcpkg/installed/vcpkg/info/python3_*_x64-linux-release.list
 mv python3.linux.tar.gz binaries/python3.11.linux.tar.gz
 
-
-```
-
-```bash
-mkdir -p fasttree &&
-    curl -o fasttree/FastTree.c -L https://raw.githubusercontent.com/morgannprice/fasttree/refs/heads/main/old/FastTree-2.1.11.c &&
-    tar -czf sources/fasttree.tar.gz fasttree/ &&
-    rm -fr fasttree
-bash scripts/fasttree.sh
+# static python can't load shared libraries
+# zvm use 0.14.0
+# CFLAGS="-Wno-date-time" \
+#     bash scripts/vcpkg.sh python3
 
 ```
 

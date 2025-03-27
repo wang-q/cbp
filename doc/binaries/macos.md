@@ -46,26 +46,21 @@ bash scripts/vcpkg.sh pkgconf arm64-macos-zig pkgconf=pkg-config
 
 ```bash
 # Transform Makefile to CMakeLists.txt
+bash scripts/vcpkg.sh bwa
+bash scripts/vcpkg.sh consel
+bash scripts/vcpkg.sh faops
+bash scripts/vcpkg.sh multiz
 bash scripts/vcpkg.sh pigz
 bash scripts/vcpkg.sh sickle
-bash scripts/vcpkg.sh faops
 
-bash scripts/vcpkg.sh bwa
-
-bash scripts/vcpkg.sh consel
-
-# use specific commit to ensure reproducibility
-bash scripts/vcpkg.sh dazzdb
 bash scripts/vcpkg.sh daligner
-bash scripts/vcpkg.sh merquryfk
+bash scripts/vcpkg.sh dazzdb
 bash scripts/vcpkg.sh fastga
-
-bash scripts/vcpkg.sh multiz
+bash scripts/vcpkg.sh merquryfk
 
 # ./configure
-bash scripts/vcpkg.sh datamash
 bash scripts/vcpkg.sh cabextract
-
+bash scripts/vcpkg.sh datamash
 bash scripts/vcpkg.sh trf
 
 # cmake
@@ -74,66 +69,58 @@ bash scripts/vcpkg.sh chainnet
 
 ```
 
-## Libraries
-
-```bash
-# ./configure
-bash scripts/gdbm.sh
-
-zvm use 0.13.0
-cbp local libdeflate
-bash scripts/htslib.sh # --with-libdeflate
-
-```
-
 ## `Makefile`
 
 ```bash
-bash scripts/minimap2.sh
-bash scripts/miniprot.sh
+bash scripts/aster.sh
 
-bash scripts/lastz.sh
-bash scripts/phylip.sh
-
-bash scripts/mafft.sh
-
-# bash scripts/phast.sh # build without CLAPACK
-
-bash scripts/trimal.sh
-
-# use specific commit to ensure reproducibility
 cbp local zlib libdeflate htslib
 bash scripts/fastk.sh
 
+bash scripts/lastz.sh
+bash scripts/mafft.sh
+
+bash scripts/minimap2.sh
+bash scripts/miniprot.sh
+
 bash scripts/paml.sh
-bash scripts/aster.sh
+# bash scripts/phast.sh # build without CLAPACK
+bash scripts/phylip.sh
 
 bash scripts/prodigal.sh
+
+bash scripts/trimal.sh
 
 ```
 
 ## `./configure`
 
 ```bash
-bash scripts/hmmer.sh
-bash scripts/easel.sh
-# bash scripts/hmmer2.sh
-bash scripts/mummer.sh
-
 zvm use 0.13.0
 cbp local argtable2
 bash scripts/clustalo.sh
 
+bash scripts/gdbm.sh
+
+bash scripts/easel.sh
+bash scripts/hmmer.sh
+# bash scripts/hmmer2.sh
+
+zvm use 0.13.0
+cbp local libdeflate
+bash scripts/htslib.sh # --with-libdeflate
+
+bash scripts/mcl.sh
+bash scripts/mummer.sh
+
 cbp local ncurses
 bash scripts/pv.sh
 
-# bundled htslib
 zvm use 0.13.0
-bash scripts/samtools.sh
-bash scripts/bcftools.sh
+bash scripts/samtools.sh    # bundled htslib
+bash scripts/bcftools.sh    # bundled htslib
 
 bash scripts/snp-sites.sh
-bash scripts/mcl.sh
 
 ```
 
