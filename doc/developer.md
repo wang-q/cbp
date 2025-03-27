@@ -342,6 +342,13 @@ https://github.com/wang-q/cbp/releases/download/Binaries/zlib.linux.tar.gz
 https://github.com/wang-q/cbp/releases/download/Binaries/zlib.macos.tar.gz
 ```
 
+## Packages
+
+```bash
+cargo run --bin cbp build test --dir ~/.cbp arial
+
+```
+
 ## Contributing
 
 ### Development Workflow
