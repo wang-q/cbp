@@ -52,7 +52,7 @@ Examples:
 pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     let files: Vec<_> = args.get_many::<String>("files").unwrap().collect();
 
-    let mut release_notes = include_str!("../../doc/release.md").to_string();
+    let mut release_notes = include_str!("../../../doc/release.md").to_string();
     release_notes = release_notes
         .lines()
         .skip(1)

@@ -13,4 +13,3 @@ pub mod local;
 pub mod prefix;
 pub mod remove;
 pub mod tar;
-pub mod upload;

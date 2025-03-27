@@ -22,7 +22,6 @@ fn main() -> anyhow::Result<()> {
         .subcommand(cmd_cbp::tar::make_subcommand())
         .subcommand(cmd_cbp::prefix::make_subcommand())
         .subcommand(cmd_cbp::kb::make_subcommand())
-        .subcommand(cmd_cbp::upload::make_subcommand())
         .subcommand(cmd_cbp::build::make_subcommand())
         .subcommand(cmd_cbp::collect::make_subcommand())
         .subcommand(
@@ -71,7 +70,6 @@ Quick Start:
         Some(("remove", sub_matches)) => cmd_cbp::remove::execute(sub_matches),
         Some(("tar", sub_matches)) => cmd_cbp::tar::execute(sub_matches),
         Some(("uninstall", sub_matches)) => cmd_cbp::remove::execute(sub_matches), // 添加别名处理
-        Some(("upload", sub_matches)) => cmd_cbp::upload::execute(sub_matches),
         _ => unreachable!(),
     }?;
 
