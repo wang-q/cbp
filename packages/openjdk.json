@@ -25,6 +25,17 @@
         "java": "../libexec/openjdk/bin/java",
         "javac": "../libexec/openjdk/bin/javac"
       }
+    },
+    "windows": {
+      "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.14%2B7/OpenJDK17U-jdk_x64_windows_hotspot_17.0.14_7.zip",
+      "extract": "unzip",
+      "rename": {
+        "jdk-*": "libexec/openjdk"
+      },
+      "symlink": {
+        "java": "..\\libexec\\openjdk\\bin\\java.exe",
+        "javac": "..\\libexec\\openjdk\\bin\\javac.exe"
+      }
     }
   },
   "tests": [
