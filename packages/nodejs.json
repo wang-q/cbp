@@ -40,5 +40,13 @@
         "npx": "..\\libexec\\nodejs\\npx.ps1"
       }
     }
-  }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "node",
+      "pattern": "v[0-9]+\\.",
+      "args": "--version"
+    }
+  ]
 }
