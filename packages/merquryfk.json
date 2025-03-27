@@ -12,5 +12,13 @@
         "MERQURY.FK-*": "merquryfk"
       }
     }
-  }
+  },
+  "tests": [
+    {
+      "name": "helps",
+      "command": "KatGC",
+      "ignore_exit_code": true,
+      "pattern": "Usage: KatGC"
+    }
+  ]
 }
