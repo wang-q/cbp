@@ -10,21 +10,39 @@ platform-specific `.tar.gz` archives for distribution through GitHub releases.
 * Zig
 * cargo-zigbuild
 
+## Sources
+
+```bash
+cbp build source dust eza fd ripgrep skim
+cbp build source htmlq jnv resvg
+cbp build source hyperfine tokei tealdeer
+
+```
+
+```bash
+cbp build source hnsm intspan nwr
+cbp build source pgr anchr
+cbp build source wgatools
+
+```
+
 ## Builds on Linux
 
 ```bash
 # CLI utilities
+bash scripts/rust.sh dust
 bash scripts/rust.sh eza
 bash scripts/rust.sh fd
-bash scripts/rust.sh dust
 bash scripts/rust.sh ripgrep
 bash scripts/rust.sh skim
+
 bash scripts/rust.sh htmlq
+bash scripts/rust.sh jnv
+bash scripts/rust.sh resvg
+
 bash scripts/rust.sh hyperfine
 bash scripts/rust.sh tealdeer
 bash scripts/rust.sh tokei
-bash scripts/rust.sh jnv
-bash scripts/rust.sh resvg
 
 # Bioinformatics utilities
 bash scripts/rust.sh intspan

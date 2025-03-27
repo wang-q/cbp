@@ -2,9 +2,45 @@
 
 This file contains build instructions for each component. Note that:
 
-1. All builds use Zig as the cross-compiler targeting glibc 2.17 for Linux and aarch64 for macOS
+1. Most builds use Zig as the cross-compiler targeting glibc 2.17 for Linux
 2. Build artifacts are packaged into .tar.gz files and stored in the `binaries/` directory
 3. Each build is performed in a temporary directory to avoid polluting the project's directories
+
+## Manage package json
+
+```bash
+# Find packages with source.rename field
+fd -e json . packages -x sh -c 'jq -e ".source" {} > /dev/null 2>&1 && echo {}'
+
+# Find packages with any rename field at any level in the JSON structure
+fd -e json . packages -x sh -c 'jq -e ".. | objects | select(has(\"rename\"))" {} > /dev/null 2>&1 && echo {}'
+
+# Find packages without tests field
+fd -e json . packages -x sh -c 'jq -e ".tests" {} > /dev/null 2>&1 || echo {}'
+
+# Find packages that are of type "vcpkg" but don't have a "source" field
+# These packages typically use official vcpkg ports and don't need custom source downloads
+# Used for identifying packages that rely on vcpkg's standard source acquisition
+fd -e json . packages -x sh -c 'jq -e "select(.type == \"vcpkg\" and ([.. | objects | has(\"source\")] | any | not))" {} > /dev/null 2>&1 && echo {}'
+
+fd -e json . packages -x sh -c 'jq -e "select(.type == \"prebuild\" and ([.. | objects | has(\"binary\")] | any | not))" {} > /dev/null 2>&1 && echo {}'
+
+# Count all package types and sort by frequency
+fd -e json . packages -x jq -r '.type // "undefined"' | sort | uniq -c | sort -rn
+# 29 prebuild
+# 26 vcpkg
+# 18 make
+# 16 rust
+# 12 autotools
+# 9 font
+# 5 cmake
+# 2 source
+
+fd -e json . packages -x sh -c 'jq -e "select(.type == \"prebuild\")" {} > /dev/null 2>&1 && echo {}'
+
+fd -e json . packages -x sh -c 'jq -e "select(has(\"type\") | not)" {} > /dev/null 2>&1 && echo {}'
+
+```
 
 ## `vcpkg` libraries
 
@@ -53,109 +89,201 @@ bash scripts/vcpkg.sh pkgconf x64-linux-zig pkgconf=pkg-config
 
 ```bash
 # Transform Makefile to CMakeLists.txt
-bash scripts/vcpkg.sh pigz
-bash scripts/vcpkg.sh sickle
-bash scripts/vcpkg.sh faops
-
+cbp build source bwa
 bash scripts/vcpkg.sh bwa
 
+cbp build source consel
 bash scripts/vcpkg.sh consel
 
-# use specific commit to ensure reproducibility
-bash scripts/vcpkg.sh dazzdb
+cbp build source daligner
 bash scripts/vcpkg.sh daligner
-bash scripts/vcpkg.sh merquryfk
+
+cbp build source dazzdb
+bash scripts/vcpkg.sh dazzdb
+
+cbp build source faops
+bash scripts/vcpkg.sh faops
+
+cbp build source fastga
 bash scripts/vcpkg.sh fastga
 
+cbp build source merquryfk
+bash scripts/vcpkg.sh merquryfk
+
+cbp build source multiz
 bash scripts/vcpkg.sh multiz
 
+cbp build source pigz
+bash scripts/vcpkg.sh pigz
+
+cbp build source sickle
+bash scripts/vcpkg.sh sickle
+
 # ./configure
-bash scripts/vcpkg.sh datamash
+cbp build source cabextract
 bash scripts/vcpkg.sh cabextract
 
+cbp build source datamash
+bash scripts/vcpkg.sh datamash
+
+cbp build source trf
 bash scripts/vcpkg.sh trf
 
+cbp build source gnuplot
+
 # cmake
+cbp build source chainnet
 bash scripts/vcpkg.sh chainnet
+
+cbp build source diamond
 bash scripts/vcpkg.sh diamond
-
-```
-
-## Libraries
-
-```bash
-# ./configure
-bash scripts/gdbm.sh
-
-zvm use 0.13.0
-cbp local libdeflate
-bash scripts/htslib.sh # --with-libdeflate
 
 ```
 
 ## `Makefile`
 
 ```bash
-bash scripts/minimap2.sh
-bash scripts/miniprot.sh
+cbp build source aster
+bash scripts/aster.sh
 
-bash scripts/lastz.sh
-bash scripts/phylip.sh
-
-bash scripts/mafft.sh
-
-bash scripts/phast.sh # build without CLAPACK
-
-bash scripts/trimal.sh
-
-# use specific commit to ensure reproducibility
+cbp build source fastk
 cbp local zlib libdeflate htslib
 bash scripts/fastk.sh
 
-bash scripts/paml.sh
-bash scripts/aster.sh
+cbp build source lastz
+bash scripts/lastz.sh
 
+cbp build source mafft
+bash scripts/mafft.sh
+
+cbp build source minimap2
+bash scripts/minimap2.sh
+
+cbp build source miniprot
+bash scripts/miniprot.sh
+
+cbp build source paml
+bash scripts/paml.sh
+
+cbp build source phast
+bash scripts/phast.sh # build without CLAPACK
+
+cbp build source phylip
+bash scripts/phylip.sh
+
+cbp build source prodigal
 bash scripts/prodigal.sh
+
+cbp build source trimal
+bash scripts/trimal.sh
+
+# curl -L https://github.com/arq5x/bedtools2/archive/refs/tags/v2.31.1.tar.gz |
+#     tar xvfz - \
+#         --exclude='*/docs*' \
+#         --exclude='*/data*' \
+#         --exclude='*/genomes*' \
+#         --exclude='*/tes*t' \
+#         --exclude='*/tutorial*' &&
+#     mv bedtools2-2.31.1 bedtools &&
+#     tar -czf sources/bedtools.tar.gz bedtools/ &&
+#     rm -rf bedtools
 
 ```
 
 ## `./configure`
 
 ```bash
-bash scripts/hmmer.sh
-bash scripts/easel.sh
-bash scripts/hmmer2.sh
-bash scripts/mummer.sh
+cbp build source bcftools
+bash scripts/bcftools.sh    # bundled htslib
 
+cbp build source clustalo
 cbp local argtable2
 bash scripts/clustalo.sh
 
+cbp build source easel
+bash scripts/easel.sh
+
+cbp build srouce gdbm
+bash scripts/gdbm.sh
+
+cbp build source hmmer
+bash scripts/hmmer.sh
+
+cbp build source hmmer2
+bash scripts/hmmer2.sh
+
+cbp build source htslib
+cbp local libdeflate
+zvm use 0.13.0
+bash scripts/htslib.sh  # --with-libdeflate
+
+cbp build source mummer
+bash scripts/mummer.sh
+
+cbp build source pv
 cbp local ncurses
 bash scripts/pv.sh
 
-# bundled htslib
-bash scripts/samtools.sh
-bash scripts/bcftools.sh
+cbp build source samtools
+bash scripts/samtools.sh    # bundled htslib
 
+cbp build source snp-sites
 bash scripts/snp-sites.sh
+
+# mcl
+curl -L https://micans.org/mcl/src/cimfomfa-22-273.tar.gz |
+    tar xz &&
+    mv cimfomfa-* cimfomfa &&
+    curl -L https://micans.org/mcl/src/mcl-22-282.tar.gz |
+    tar xz &&
+    mv mcl-* mcl &&
+    mv cimfomfa mcl/ &&
+    tar -czf sources/mcl.tar.gz mcl/ &&
+    rm -rf mcl
 bash scripts/mcl.sh
+
+# curl -o sources/MaSuRCA.tar.gz -L https://github.com/alekseyzimin/masurca/releases/download/v4.1.2/MaSuRCA-4.1.2.tar.gz
 
 ```
 
 ## `cmake`
 
 ```bash
+cbp build source bifrost
 zvm use 0.13.0
 bash scripts/bifrost.sh
+
+cbp build source spoa
 bash scripts/spoa.sh
 
+# Remove large files
+curl -L https://github.com/tjunier/newick_utils/archive/da121155a977197cab9fbb15953ca1b40b11eb87.tar.gz |
+    tar xvfz - &&
+    mv newick_utils-da121155a977197cab9fbb15953ca1b40b11eb87 newick-utils &&
+    fd -t f -S +500k . newick-utils -X rm &&
+    tar -czf sources/newick-utils.tar.gz newick-utils/ &&
+    rm -rf newick-utils
 bash scripts/newick-utils.sh # bison, flex
 
 ```
 
 ## Source codes from Git Repositories
 
+This section clones recursively and sets up all required git repo at specific commits.
+
 ```bash
+# bcalm
+REPO=bcalm
+git clone --recursive https://github.com/GATB/${REPO}.git
+cd ${REPO}
+git checkout v2.2.3
+
+rm -rf .git
+rm -rf gatb-core/.git
+cd ..
+tar -cf - ${REPO}/ | gzip -9 > sources/${REPO}.tar.gz
+rm -rf ${REPO}
+
 bash scripts/bcalm.sh
 
 ```
@@ -252,6 +380,14 @@ singularity run \
 cbp collect vcpkg/installed/vcpkg/info/python3_*_x64-linux-release.list
 mv python3.linux.tar.gz binaries/python3.11.linux.tar.gz
 
+
+```
+
+```bash
+mkdir -p fasttree &&
+    curl -o fasttree/FastTree.c -L https://raw.githubusercontent.com/morgannprice/fasttree/refs/heads/main/old/FastTree-2.1.11.c &&
+    tar -czf sources/fasttree.tar.gz fasttree/ &&
+    rm -fr fasttree
 bash scripts/fasttree.sh
 
 ```

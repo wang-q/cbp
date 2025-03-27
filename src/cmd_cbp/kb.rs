@@ -10,10 +10,8 @@ Access project documentation and guides.
 
 Documents:
 * readme    - Overview and basic usage
-* common    - Build script functions
-* sources   - Code organization
-* binaries  - Package management
 * developer - Contributing guide
+* binaries  - Package management
 
 Output Options:
 * Display in terminal (default)
@@ -47,31 +45,21 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     let outfile = args.get_one::<String>("outfile").unwrap();
 
     static FILE_MD_README: &str = include_str!("../../README.md");
-    static FILE_MD_COMMON: &str = include_str!("../../doc/common.md");
-    static FILE_MD_SOURCES: &str = include_str!("../../doc/sources.md");
-    static FILE_MD_BINARIES: &str = include_str!("../../doc/binaries.md");
     static FILE_MD_DEVELOPER: &str = include_str!("../../doc/developer.md");
+    static FILE_MD_BINARIES: &str = include_str!("../../doc/binaries.md");
 
     match args.get_one::<String>("name").unwrap().as_ref() {
         "readme" => {
             let mut writer = cbp::writer(outfile);
             writer.write_all(FILE_MD_README.as_ref())?;
         }
-        "common" => {
+        "developer" => {
             let mut writer = cbp::writer(outfile);
-            writer.write_all(FILE_MD_COMMON.as_ref())?;
-        }
-        "sources" => {
-            let mut writer = cbp::writer(outfile);
-            writer.write_all(FILE_MD_SOURCES.as_ref())?;
+            writer.write_all(FILE_MD_DEVELOPER.as_ref())?;
         }
         "binaries" => {
             let mut writer = cbp::writer(outfile);
             writer.write_all(FILE_MD_BINARIES.as_ref())?;
-        }
-        "developer" => {
-            let mut writer = cbp::writer(outfile);
-            writer.write_all(FILE_MD_DEVELOPER.as_ref())?;
         }
         _ => unreachable!(),
     };
