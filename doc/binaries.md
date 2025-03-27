@@ -22,9 +22,9 @@ fd -e json . packages -x jq -r 'select(.tests == null) | .name' |
 # Find packages that are of type "vcpkg" but don't have a "source" field
 # These packages typically use official vcpkg ports and don't need custom source downloads
 # Used for identifying packages that rely on vcpkg's standard source acquisition
-fd -e json . packages -x sh -c 'jq -e "select(.type == \"vcpkg\" and ([.. | objects | has(\"source\")] | any | not))" {} > /dev/null 2>&1 && echo {}'
+fd -e json . packages -x jq -r 'select(.type == "vcpkg" and ([.. | objects | has("source")] | any | not)) | .name'
 
-fd -e json . packages -x sh -c 'jq -e "select(.type == \"prebuild\" and ([.. | objects | has(\"binary\")] | any | not))" {} > /dev/null 2>&1 && echo {}'
+fd -e json . packages -x jq -r 'select(.type == "prebuild" and ([.. | objects | has("binary")] | any | not)) | .name'
 
 # Count all package types and sort by frequency
 fd -e json . packages -x jq -r '.type // "undefined"' | sort | uniq -c | sort -rn
@@ -37,9 +37,7 @@ fd -e json . packages -x jq -r '.type // "undefined"' | sort | uniq -c | sort -r
 #    5 cmake
 #    2 source
 
-fd -e json . packages -x sh -c 'jq -e "select(.type == \"prebuild\")" {} > /dev/null 2>&1 && echo {}'
-
-fd -e json . packages -x sh -c 'jq -e "select(has(\"type\") | not)" {} > /dev/null 2>&1 && echo {}'
+fd -e json . packages -x jq -r 'select(.type == "prebuild") | .name'
 
 ```
 
