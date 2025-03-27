@@ -15,7 +15,6 @@ struct Package {
 pub fn make_subcommand() -> Command {
     Command::new("upload")
         .about("Upload package files to GitHub release")
-        .hide(true) // Hide this command from help messages
         .after_help(
             r###"
 Upload package files to GitHub release and update checksums.
