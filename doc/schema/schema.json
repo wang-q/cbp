@@ -19,12 +19,12 @@
     },
     "version": {
       "type": "string",
-      "pattern": "^\\d+\\.\\d+(\\.\\d+)?(-[a-zA-Z0-9]+)?$",
-      "description": "Version number in x.y.z or x.y format, with optional suffix"
+      "pattern": "^\\d+(\\.\\d+)*(-[a-zA-Z0-9]+)?$",
+      "description": "Version number in any numeric format (e.g., x.y.z, x.y, x), with optional suffix"
     },
     "description": {
       "type": "string",
-      "minLength": 10,
+      "minLength": 1,
       "description": "Brief description of the package"
     },
     "homepage": {
@@ -45,6 +45,7 @@
         "cmake",
         "autotools",
         "vcpkg",
+        "font",
         "source"
       ],
       "description": "Build type of the package"
