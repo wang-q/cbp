@@ -2,6 +2,12 @@
 
 ## Unreleased - ReleaseDate
 
+- Reorganized commands
+  - Moved `upload` command under `build` subcommands
+- Enhanced package validation
+  - Added `--schema` option to `build validate` command
+  - Added GitHub workflow for package schema validation
+
 ## 0.3.9 - 2025-03-27
 
 - Added new commands
