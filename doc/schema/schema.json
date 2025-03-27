@@ -154,7 +154,19 @@
             "description": "Regular expression pattern to match in command output"
           },
           "args": {
-            "type": "string",
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "Command line arguments as a single string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Command line arguments as an array of strings"
+              }
+            ],
             "description": "Command line arguments"
           },
           "ignore_exit_code": {
