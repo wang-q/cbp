@@ -4,5 +4,13 @@
   "description": "The SRA Toolkit and SDK from NCBI is a collection of tools and libraries for using data in the INSDC Sequence Read Archives",
   "homepage": "https://github.com/ncbi/sra-tools",
   "license": "Public Domain",
-  "type": "prebuild"
+  "type": "prebuild",
+  "tests": [
+    {
+      "name": "version",
+      "command": "fastq-dump",
+      "pattern": "fastq-dump : [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
 }
