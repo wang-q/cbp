@@ -55,7 +55,7 @@ jobs:
           # Test each package
           for pkg in $packages; do
             echo "==> Validating $pkg..."
-            if cbp build validate $pkg; then
+            if cbp build validate --schema doc/schema/schema.json $pkg; then
               validate_pass="${validate_pass:+$validate_pass }$pkg"
             else
               validate_fail="${validate_fail}❌ Failed: $pkg\n"
