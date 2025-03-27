@@ -12,5 +12,13 @@
         "DALIGNER-*": "daligner"
       }
     }
-  }
+  },
+  "tests": [
+    {
+      "name": "helps",
+      "command": "daligner",
+      "ignore_exit_code": true,
+      "pattern": "Usage: daligner"
+    }
+  ]
 }

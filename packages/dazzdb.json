@@ -12,5 +12,13 @@
         "DAZZ_DB-*": "dazzdb"
       }
     }
-  }
+  },
+  "tests": [
+    {
+      "name": "helps",
+      "command": "fasta2DB",
+      "ignore_exit_code": true,
+      "pattern": "Usage: fasta2DB"
+    }
+  ]
 }

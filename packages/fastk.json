@@ -12,5 +12,13 @@
         "FASTK-*": "fastk"
       }
     }
-  }
+  },
+  "tests": [
+    {
+      "name": "helps",
+      "command": "FastGA",
+      "ignore_exit_code": true,
+      "pattern": "Usage: FastK"
+    }
+  ]
 }

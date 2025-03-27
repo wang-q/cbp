@@ -16,5 +16,13 @@
         "fastga/*.png"
       ]
     }
-  }
+  },
+  "tests": [
+    {
+      "name": "helps",
+      "command": "FastGA",
+      "ignore_exit_code": true,
+      "pattern": "Usage: FastGA"
+    }
+  ]
 }

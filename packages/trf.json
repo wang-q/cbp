@@ -15,5 +15,13 @@
         "trf/*~"
       ]
     }
-  }
+  },
+  "tests": [
+    {
+      "name": "helps",
+      "command": "trf",
+      "ignore_exit_code": true,
+      "pattern": "Please use: trf "
+    }
+  ]
 }
