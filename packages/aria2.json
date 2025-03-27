@@ -16,5 +16,13 @@
       "extract": "unzip",
       "binary": "aria2c.exe"
     }
-  }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "aria2c",
+      "pattern": "aria2 version [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
 }

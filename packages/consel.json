@@ -13,5 +13,14 @@
         "consel": "consel"
       }
     }
-  }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "consel",
+      "ignore_exit_code": true,
+      "pattern": "consel\\.c,v [0-9]+\\.",
+      "args": "123"
+    }
+  ]
 }

@@ -9,14 +9,15 @@ This file contains build instructions for each component. Note that:
 ## Manage package json
 
 ```bash
-# Find packages with source.rename field
-fd -e json . packages -x sh -c 'jq -e ".source" {} > /dev/null 2>&1 && echo {}'
-
 # Find packages with any rename field at any level in the JSON structure
 fd -e json . packages -x sh -c 'jq -e ".. | objects | select(has(\"rename\"))" {} > /dev/null 2>&1 && echo {}'
 
 # Find packages without tests field
-fd -e json . packages -x sh -c 'jq -e ".tests" {} > /dev/null 2>&1 || echo {}'
+fd -e json . packages -x jq -r 'select(.tests == null) | .name'
+
+fd -e json . packages -x jq -r 'select(.tests == null) | .name' |
+    grep -v -Fw -f <(fd -e sh . test-binaries -x basename {} .sh) |
+    sort
 
 # Find packages that are of type "vcpkg" but don't have a "source" field
 # These packages typically use official vcpkg ports and don't need custom source downloads
