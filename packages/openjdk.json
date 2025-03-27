@@ -42,7 +42,7 @@
     {
       "name": "version",
       "command": "java",
-      "pattern": "java version",
+      "pattern": "Runtime Environment",
       "args": "-version"
     }
   ]
