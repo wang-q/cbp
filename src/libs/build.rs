@@ -185,10 +185,7 @@ pub fn handle_shim(
             let script_path = bin_dir.join(format!("{}.ps1", link_name));
 
             // Create PowerShell wrapper script
-            let script_content = format!(
-                "& \"$PSScriptRoot\\{}\" @args\n",
-                target
-            );
+            let script_content = format!("& \"$PSScriptRoot\\{}\" @args\n", target);
             std::fs::write(&script_path, script_content)?;
         }
     }

@@ -5,8 +5,10 @@
   "homepage": "https://www.perl.org/",
   "license": "GPL-1.0-or-later OR Artistic-1.0-Perl",
   "type": "source",
-  "source": {
-    "url": "https://www.cpan.org/src/5.0/perl-5.34.3.tar.gz"
+  "downloads": {
+    "source": {
+      "url": "https://www.cpan.org/src/5.0/perl-5.34.3.tar.gz"
+    }
   },
   "tests": [
     {

@@ -4,7 +4,7 @@
 
 ```bash
 # Find packages with source.rename field
-fd -e json . packages -x sh -c 'jq -e ".source.rename" {} > /dev/null 2>&1 && echo {}'
+fd -e json . packages -x sh -c 'jq -e ".source" {} > /dev/null 2>&1 && echo {}'
 
 # Find packages with any rename field at any level in the JSON structure
 fd -e json . packages -x sh -c 'jq -e ".. | objects | select(has(\"rename\"))" {} > /dev/null 2>&1 && echo {}'
