@@ -1,5 +1,30 @@
 #!/bin/bash
 
+# Common Shell Library
+#
+# This script provides a set of common variables and utility functions for building
+# and packaging projects. It serves as a shared library and must be sourced by other
+# scripts rather than executed directly.
+#
+# Usage:
+#   source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+#
+# Arguments:
+#   os_type     Target OS (linux, macos, or windows, default: current OS)
+#
+# Variables:
+#   BASH_DIR    Directory of the calling script
+#   PROJ        Name of the calling script (without .sh)
+#   OS_TYPE     Operating system type
+#   TARGET_ARCH Target architecture for compilation
+#                 - linux: x86_64-linux-gnu.2.17
+#                 - macos: aarch64-macos-none
+#                 - windows: x86_64-windows-gnu
+#   TEMP_DIR    Temporary working directory (auto-cleaned on exit)
+#   CBP_HOME    CBP installation prefix
+#   CBP_INCLUDE Include directory
+#   CBP_LIB     Library directory
+
 # Prevent direct execution of this script
 # ${BASH_SOURCE[0]} is the path of the currently executing script (common.sh)
 # ${0} is the path used to call the script
@@ -7,19 +32,6 @@
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     echo "Error: This script should be sourced, not executed directly"
     echo "Usage: source ${BASH_SOURCE[0]} [-t] [os_type]"
-    echo
-    echo "Options:"
-    echo "  -t          Run tests after build"
-    echo
-    echo "Arguments:"
-    echo "  os_type     Target OS (linux, macos, or windows, default: current OS)"
-    echo
-    echo "Environment:"
-    echo "  BASH_DIR    Directory of the calling script"
-    echo "  PROJ        Name of the calling script (without .sh)"
-    echo "  OS_TYPE     Operating system type"
-    echo "  TARGET_ARCH Target architecture for compilation"
-    echo "  TEMP_DIR    Temporary working directory"
     exit 1
 fi
 
@@ -29,20 +41,6 @@ fi
 # ${BASH_SOURCE[1]} refers to zlib.sh's path
 BASH_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 PROJ=$(basename "${BASH_SOURCE[1]}" .sh)
-
-# Process command line options
-while getopts "t" opt; do
-    case ${opt} in
-        t)
-            RUN_TEST="test"
-            ;;
-        *)
-            echo "Invalid option: -${OPTARG}"
-            exit 1
-            ;;
-    esac
-done
-shift $((OPTIND-1))
 
 # Set default OS type based on current system
 case "$OSTYPE" in
@@ -67,10 +65,9 @@ OS_TYPE=${1:-$DEFAULT_OS}
 # Validate the OS type
 if [[ "$OS_TYPE" != "linux" ]] &&
    [[ "$OS_TYPE" != "macos" ]] &&
-   [[ "$OS_TYPE" != "windows" ]] &&
-   [[ "$OS_TYPE" != "font" ]]; then
+   [[ "$OS_TYPE" != "windows" ]]; then
     echo "Unsupported os_type: $OS_TYPE"
-    echo "Supported os_type: linux, macos, windows, font"
+    echo "Supported os_type: linux, macos, windows"
     exit 1
 fi
 
@@ -81,8 +78,6 @@ elif [ "$OS_TYPE" == "macos" ]; then
     TARGET_ARCH="aarch64-macos-none"
 elif [ "$OS_TYPE" == "windows" ]; then
     TARGET_ARCH="x86_64-windows-gnu"
-elif [ "$OS_TYPE" == "font" ]; then
-    TARGET_ARCH=""
 fi
 
 # Create temp directory
