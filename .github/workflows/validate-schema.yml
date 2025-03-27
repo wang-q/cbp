@@ -5,9 +5,11 @@ on:
     paths:
       - '.github/workflows/validate-schema.yml'
       - 'packages/**'
+      - 'doc/schema/schema.json'
   pull_request:
     paths:
       - 'packages/**'
+      - 'doc/schema/schema.json'
   workflow_dispatch:
 
 jobs:
