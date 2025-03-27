@@ -2,6 +2,8 @@
 
 ## Unreleased - ReleaseDate
 
+## 0.3.9 - 2025-03-27
+
 - Added new commands
   - Added `build source` command for downloading sources
   - Added `build prebuild` command for prebuilt packages
