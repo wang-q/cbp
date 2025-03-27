@@ -58,7 +58,7 @@ bash scripts/vcpkg.sh readline
 
 bash scripts/vcpkg.sh argtable2
 bash scripts/vcpkg.sh expat
-bash scripts/vcpkg.sh "libxml2[core,iconv,lzma,zlib]"
+bash scripts/vcpkg.sh "libxml2[core,zlib]"
 
 CFLAGS="-Wno-language-extension-token" bash scripts/vcpkg.sh libxcrypt
 

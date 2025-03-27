@@ -58,5 +58,13 @@
         ]
       }
     }
-  }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "fastqc",
+      "pattern": "FastQC v[0-9]+\\.",
+      "args": "--version"
+    }
+  ]
 }
