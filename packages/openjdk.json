@@ -15,6 +15,24 @@
         "java": "../libexec/openjdk/bin/java",
         "javac": "../libexec/openjdk/bin/javac"
       }
+    },
+    "macos": {
+      "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.14%2B7/OpenJDK17U-jdk_aarch64_mac_hotspot_17.0.14_7.tar.gz",
+      "rename": {
+        "jdk-*/Contents/Home": "libexec/openjdk"
+      },
+      "symlink": {
+        "java": "../libexec/openjdk/bin/java",
+        "javac": "../libexec/openjdk/bin/javac"
+      }
     }
-  }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "java",
+      "pattern": "java version",
+      "args": "-version"
+    }
+  ]
 }
