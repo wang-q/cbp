@@ -5,8 +5,10 @@
   "homepage": "https://www.htslib.org/",
   "license": "MIT",
   "type": "autotools",
-  "source": {
-    "url": "https://github.com/samtools/htslib/releases/download/1.21/htslib-1.21.tar.bz2"
+  "downloads": {
+    "source": {
+      "url": "https://github.com/samtools/htslib/releases/download/1.21/htslib-1.21.tar.bz2"
+    }
   },
   "tests": [
     {

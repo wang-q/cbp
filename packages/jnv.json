@@ -5,8 +5,10 @@
   "homepage": "https://github.com/ynqa/jnv",
   "license": "MIT",
   "type": "rust",
-  "source": {
-    "url": "https://github.com/ynqa/jnv/archive/refs/tags/v0.5.0.tar.gz"
+  "downloads": {
+    "source": {
+      "url": "https://github.com/ynqa/jnv/archive/refs/tags/v0.5.0.tar.gz"
+    }
   },
   "tests": [
     {

@@ -5,8 +5,10 @@
   "homepage": "https://www.ivarch.com/programs/pv.shtml",
   "license": "Artistic-2.0",
   "type": "autotools",
-  "source": {
-    "url": "https://www.ivarch.com/programs/sources/pv-1.9.31.tar.gz"
+  "downloads": {
+    "source": {
+      "url": "https://www.ivarch.com/programs/sources/pv-1.9.31.tar.gz"
+    }
   },
   "tests": [
     {

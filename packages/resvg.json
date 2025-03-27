@@ -5,8 +5,10 @@
   "homepage": "https://github.com/linebender/resvg",
   "license": "MPL-2.0",
   "type": "rust",
-  "source": {
-    "url": "https://github.com/linebender/resvg/archive/refs/tags/0.45.0.tar.gz"
+  "downloads": {
+    "source": {
+      "url": "https://github.com/linebender/resvg/archive/refs/tags/0.45.0.tar.gz"
+    }
   },
   "tests": [
     {

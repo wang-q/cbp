@@ -21,14 +21,14 @@ fd -e json . packages -x sh -c 'jq -e "select(.type == \"prebuild\" and ([.. | o
 
 # Count all package types and sort by frequency
 fd -e json . packages -x jq -r '.type // "undefined"' | sort | uniq -c | sort -rn
-#   28 prebuild
-#   26 vcpkg
-#   18 make
-#   16 rust
-#   13 autotools
-#    9 font
-#    5 cmake
-#    2 source
+# 29 prebuild
+# 26 vcpkg
+# 18 make
+# 16 rust
+# 12 autotools
+# 9 font
+# 5 cmake
+# 2 source
 
 fd -e json . packages -x sh -c 'jq -e "select(.type == \"prebuild\")" {} > /dev/null 2>&1 && echo {}'
 
@@ -84,21 +84,13 @@ cbp build source prodigal
 ## `autotools`
 
 ```bash
-bash scripts/download-source.sh gdbm
+cbp build source gdbm pv
 
-bash scripts/download-source.sh clustalo
-bash scripts/download-source.sh mummer
-bash scripts/download-source.sh pv
-bash scripts/download-source.sh snp-sites
-
-bash scripts/download-source.sh easel
-bash scripts/download-source.sh hmmer
-bash scripts/download-source.sh hmmer2
+cbp build source clustalo mummer snp-sites
+cbp build source easel hmmer hmmer2
 
 # The .tar.gz source code from GitHub requires autoconf/automake to generate ./configure
-bash scripts/download-source.sh htslib
-bash scripts/download-source.sh samtools
-bash scripts/download-source.sh bcftools
+cbp build source htslib bcftools samtools
 
 # mcl
 curl -L https://micans.org/mcl/src/cimfomfa-22-273.tar.gz |
@@ -118,10 +110,9 @@ curl -L https://micans.org/mcl/src/cimfomfa-22-273.tar.gz |
 ## `cmake`
 
 ```bash
-bash scripts/download-source.sh bifrost
-bash scripts/download-source.sh spoa
-
-bash scripts/download-source.sh chainnet
+cbp build source bifrost
+cbp build source spoa
+cbp build source chainnet
 
 # Remove large files
 curl -L https://github.com/tjunier/newick_utils/archive/da121155a977197cab9fbb15953ca1b40b11eb87.tar.gz |
@@ -169,30 +160,17 @@ mkdir -p fasttree &&
 ### CLI utilities
 
 ```bash
-bash scripts/download-source.sh dust
-bash scripts/download-source.sh eza
-bash scripts/download-source.sh fd
-bash scripts/download-source.sh hyperfine
-bash scripts/download-source.sh jnv
-bash scripts/download-source.sh resvg
-bash scripts/download-source.sh ripgrep
-bash scripts/download-source.sh skim
-bash scripts/download-source.sh tealdeer
-
-cbp build source tokei
+cbp build source dust eza fd ripgrep skim
+cbp build source jnv resvg
+cbp build source hyperfine tokei tealdeer
 
 ```
 
 ### Bioinformatics utilities
 
 ```bash
-bash scripts/download-source.sh hnsm
-bash scripts/download-source.sh intspan
-bash scripts/download-source.sh nwr
-
-bash scripts/download-source.sh pgr
-bash scripts/download-source.sh anchr
-
-bash scripts/download-source.sh wgatools
+cbp build source hnsm intspan nwr
+cbp build source pgr anchr
+cbp build source wgatools
 
 ```

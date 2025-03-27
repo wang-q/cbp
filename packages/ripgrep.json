@@ -5,8 +5,10 @@
   "homepage": "https://github.com/BurntSushi/ripgrep",
   "license": "MIT",
   "type": "rust",
-  "source": {
-    "url": "https://github.com/BurntSushi/ripgrep/archive/refs/tags/14.1.1.tar.gz"
+  "downloads": {
+    "source": {
+      "url": "https://github.com/BurntSushi/ripgrep/archive/refs/tags/14.1.1.tar.gz"
+    }
   },
   "tests": [
     {

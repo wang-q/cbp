@@ -5,8 +5,10 @@
   "homepage": "https://github.com/wang-q/pgr",
   "license": "MIT",
   "type": "rust",
-  "source": {
-    "url": "https://github.com/wang-q/pgr/archive/refs/tags/v0.1.0.tar.gz"
+  "downloads": {
+    "source": {
+      "url": "https://github.com/wang-q/pgr/archive/refs/tags/v0.1.0.tar.gz"
+    }
   },
   "tests": [
     {

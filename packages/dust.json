@@ -5,8 +5,10 @@
   "homepage": "https://github.com/bootandy/dust",
   "license": "Apache-2.0",
   "type": "rust",
-  "source": {
-    "url": "https://github.com/bootandy/dust/archive/refs/tags/v1.1.2.tar.gz"
+  "downloads": {
+    "source": {
+      "url": "https://github.com/bootandy/dust/archive/refs/tags/v1.1.2.tar.gz"
+    }
   },
   "tests": [
     {

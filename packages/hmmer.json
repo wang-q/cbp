@@ -5,8 +5,10 @@
   "homepage": "http://hmmer.org/",
   "license": "BSD-3-Clause",
   "type": "autotools",
-  "source": {
-    "url": "http://eddylab.org/software/hmmer/hmmer-3.4.tar.gz"
+  "downloads": {
+    "source": {
+      "url": "http://eddylab.org/software/hmmer/hmmer-3.4.tar.gz"
+    }
   },
   "tests": [
     {

@@ -5,8 +5,10 @@
   "homepage": "https://github.com/wang-q/intspan",
   "license": "MIT",
   "type": "rust",
-  "source": {
-    "url": "https://github.com/wang-q/intspan/archive/refs/tags/v0.8.4.tar.gz"
+  "downloads": {
+    "source": {
+      "url": "https://github.com/wang-q/intspan/archive/refs/tags/v0.8.4.tar.gz"
+    }
   },
   "tests": [
     {

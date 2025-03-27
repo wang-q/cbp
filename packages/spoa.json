@@ -5,8 +5,10 @@
   "homepage": "https://github.com/rvaser/spoa",
   "license": "MIT",
   "type": "cmake",
-  "source": {
-    "url": "https://github.com/rvaser/spoa/archive/refs/tags/4.1.4.tar.gz"
+  "downloads": {
+    "source": {
+      "url": "https://github.com/rvaser/spoa/archive/refs/tags/4.1.4.tar.gz"
+    }
   },
   "tests": [
     {

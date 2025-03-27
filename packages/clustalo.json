@@ -5,10 +5,12 @@
   "homepage": "http://www.clustal.org/omega/",
   "license": "GPL-2.0",
   "type": "autotools",
-  "source": {
-    "url": "http://www.clustal.org/omega/clustal-omega-1.2.4.tar.gz",
-    "rename": {
-      "clustal-omega-*": "clustalo"
+  "downloads": {
+    "source": {
+      "url": "http://www.clustal.org/omega/clustal-omega-1.2.4.tar.gz",
+      "rename": {
+        "clustal-omega-*": "clustalo"
+      }
     }
   },
   "tests": [

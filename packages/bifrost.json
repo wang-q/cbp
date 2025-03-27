@@ -5,8 +5,10 @@
   "homepage": "https://github.com/pmelsted/bifrost",
   "license": "BSD-2-Clause",
   "type": "cmake",
-  "source": {
-    "url": "https://github.com/pmelsted/bifrost/archive/refs/tags/v1.3.5.tar.gz"
+  "downloads": {
+    "source": {
+      "url": "https://github.com/pmelsted/bifrost/archive/refs/tags/v1.3.5.tar.gz"
+    }
   },
   "tests": [
     {

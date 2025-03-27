@@ -5,8 +5,10 @@
   "homepage": "https://github.com/wjwei-handsome/wgatools",
   "license": "MIT",
   "type": "rust",
-  "source": {
-    "url": "https://github.com/wjwei-handsome/wgatools/archive/refs/tags/v1.0.0.tar.gz"
+  "downloads": {
+    "source": {
+      "url": "https://github.com/wjwei-handsome/wgatools/archive/refs/tags/v1.0.0.tar.gz"
+    }
   },
   "tests": [
     {

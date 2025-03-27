@@ -5,7 +5,11 @@
   "homepage": "https://www.gnu.org/software/gdbm/",
   "license": "GPL-3.0",
   "type": "autotools",
-  "source": "https://ftp.gnu.org/gnu/gdbm/gdbm-1.24.tar.gz",
+  "downloads": {
+    "source": {
+      "url": "https://ftp.gnu.org/gnu/gdbm/gdbm-1.24.tar.gz"
+    }
+  },
   "tests": [
     {
       "name": "version",

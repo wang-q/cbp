@@ -302,14 +302,6 @@ bash scripts/prebuilds/sratoolkit.sh windows
 
 ```
 
-### java
-
-```bash
-bash scripts/prebuilds/.sh linux
-bash scripts/prebuilds/fastqc.sh macos
-
-```
-
 ### Fonts
 
 ```bash

@@ -5,8 +5,10 @@
   "homepage": "https://www.htslib.org/",
   "license": "MIT",
   "type": "autotools",
-  "source": {
-    "url": "https://github.com/samtools/bcftools/releases/download/1.21/bcftools-1.21.tar.bz2"
+  "downloads": {
+    "source": {
+      "url": "https://github.com/samtools/bcftools/releases/download/1.21/bcftools-1.21.tar.bz2"
+    }
   },
   "tests": [
     {
