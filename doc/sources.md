@@ -161,7 +161,7 @@ mkdir -p fasttree &&
 
 ```bash
 cbp build source dust eza fd ripgrep skim
-cbp build source jnv resvg
+cbp build source htmlq jnv resvg
 cbp build source hyperfine tokei tealdeer
 
 ```

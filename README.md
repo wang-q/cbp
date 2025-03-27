@@ -72,7 +72,8 @@ iwr "https://github.com/wang-q/cbp/releases/latest/download/cbp.windows.exe" -Ou
 
 Current release: 0.3.10
 
-```text
+```console
+$ cbp help
 `cbp` is a Cross-platform Binary Package manager
 
 Usage: cbp [COMMAND]
@@ -83,11 +84,14 @@ Commands:
   local    Install packages from local binaries
   list     List installed packages and their contents
   remove   Remove installed packages
+  info     Display package information
   avail    List available packages from GitHub
   check    Check for unmanaged files
   tar      Create compressed archive
   prefix   Display cbp installation directories
   kb       Display project documentation
+  build    Build package commands
+  collect  Collect and package files into a tar.gz archive
   help     Print this message or the help of the given subcommand(s)
 
 Options:
@@ -96,9 +100,8 @@ Options:
 
 
 Package Manager Features:
+    * Linux/macOS/Windows
     * Pre-built binaries without dependencies
-    * GitHub release integration
-    * Local package support
     * Customizable installation paths
 
 Directory Structure:
@@ -108,33 +111,12 @@ Directory Structure:
     ├── records/  - Package file lists
     └── include/, lib/, share/ - Installed files
 
-Common Commands:
-1. Initial Setup:
-   cbp init                    # default setup
-   cbp init /opt/cbp           # custom location
-
-2. Package Installation:
-   cbp install zlib            # from GitHub
-   cbp local zlib              # from local files
-   # Use --proxy for restricted networks
-   # cbp install --proxy socks5://127.0.0.1:7890 zlib
-
-3. Package Management:
-   cbp list                    # list all packages
-   cbp list zlib               # show package contents
-   cbp remove zlib             # remove package
-
-4. Package Discovery:
-   cbp avail                   # list all packages
-   cbp avail macos             # platform specific
-
-5. Development Tools:
-   cbp check                   # find unmanaged files
-   cbp tar -o pkg.tar.gz src/  # create package
-   cbp prefix                  # show install paths
-
-6. Documentation:
-   cbp kb readme               # view documentation
+Quick Start:
+    cbp init                    # Initial setup
+    cbp install <package>       # Install package
+    cbp list                    # List installed packages
+    cbp avail                   # List available packages
+    cbp kb readme               # View more examples
 
 ```
 
