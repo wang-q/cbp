@@ -2,6 +2,8 @@
 
 ## Unreleased - ReleaseDate
 
+## 0.3.10 - 2025-03-27
+
 - Reorganized commands
   - Moved `upload` command under `build` subcommands
 - Enhanced package validation
