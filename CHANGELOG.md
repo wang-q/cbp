@@ -2,6 +2,23 @@
 
 ## Unreleased - ReleaseDate
 
+- Added new commands
+  - Added `build source` command for downloading sources
+  - Added `build prebuild` command for prebuilt packages
+  - Added `build font` command for font packages
+  - Added `build test` command for package testing
+  - Added `build validate` command for package configuration validation
+- Enhanced package management
+  - Added package schema validation with JSON Schema
+  - Added package type classification
+  - Migrated build scripts to package definitions
+  - Added more package metadata and test cases
+- Improved testing
+  - Enhanced binary test workflow with separate standalone and package tests
+  - Added more test coverage
+- Documentation updates
+- Added more packages
+
 ## 0.3.8 - 2025-03-24
 
 - Enhanced package management
