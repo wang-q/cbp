@@ -1,0 +1,71 @@
+name: Validate Schema
+
+on:
+  push:
+    paths:
+      - '.github/workflows/validate-schema.yml'
+      - 'packages/**'
+  pull_request:
+    paths:
+      - 'packages/**'
+  workflow_dispatch:
+
+jobs:
+  validate-packages:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        include:
+          - os: ubuntu-latest
+            cbp_bin: cbp.linux
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download cbp
+        run: |
+          curl -LO https://github.com/wang-q/cbp/releases/latest/download/${{ matrix.cbp_bin }}
+          chmod +x ${{ matrix.cbp_bin }}
+        shell: bash
+
+      - name: Initialize cbp
+        run: |
+          ./${{ matrix.cbp_bin }} init
+          echo "$HOME/.cbp/bin" >> $GITHUB_PATH
+          source ~/.bashrc
+        shell: bash
+
+      - name: Test cbp installation
+        run: cbp --version || exit 1
+        shell: bash
+
+      - name: Validate package schemas
+        run: |
+          # Get all packages
+          packages=$(ls packages/*.json | sed 's/packages\///' | sed 's/\.json$//')
+
+          # Initialize result arrays
+          validate_pass=""
+          validate_fail=""
+
+          # Test each package
+          for pkg in $packages; do
+            echo "==> Validating $pkg..."
+            if cbp build validate $pkg; then
+              validate_pass="${validate_pass:+$validate_pass }$pkg"
+            else
+              validate_fail="${validate_fail}❌ Failed: $pkg\n"
+            fi
+          done
+
+          echo -e "\n==> Validation Summary:"
+          [ -n "${validate_pass}" ] && echo -e "✅ Validation passed: ${validate_pass}"
+          [ -n "${validate_fail}" ] && echo -e "${validate_fail}"
+
+          # Exit with error if any validation failed
+          [ -z "${validate_fail}" ]
+        shell: bash
