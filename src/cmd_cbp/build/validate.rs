@@ -1,7 +1,4 @@
 use clap::*;
-use jsonschema::JSONSchema;
-use serde_json::Value;
-use std::path::Path;
 
 /// Create clap subcommand arguments
 pub fn make_subcommand() -> clap::Command {
@@ -15,12 +12,11 @@ pub fn make_subcommand() -> clap::Command {
                 .value_name("PACKAGES"),
         )
         .arg(
-            Arg::new("dir")
-                .long("dir")
-                .short('d')
+            Arg::new("base")
+                .long("base")
                 .help("Base directory containing packages/ and schema/")
                 .num_args(1)
-                .value_name("DIR")
+                .value_name("BASE")
                 .default_value("."),
         )
 }
@@ -30,14 +26,14 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     //----------------------------
     // Args
     //----------------------------
-    let base_dir = std::path::PathBuf::from(args.get_one::<String>("dir").unwrap());
+    let base_dir = std::path::PathBuf::from(args.get_one::<String>("base").unwrap());
 
     //----------------------------
     // Load schema
     //----------------------------
     let schema_str = include_str!("../../../doc/schema/schema.json");
-    let schema: Value = serde_json::from_str(schema_str)?;
-    let compiled = JSONSchema::compile(&schema)
+    let schema = serde_json::from_str(schema_str)?;
+    let compiled: jsonschema::JSONSchema = jsonschema::JSONSchema::compile(&schema)
         .map_err(|e| anyhow::anyhow!("Schema compilation error: {}", e))?;
 
     //----------------------------
@@ -79,9 +75,9 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 }
 
 fn validate_package(
-    base_dir: &Path,
+    base_dir: &std::path::Path,
     pkg: &str,
-    schema: &JSONSchema,
+    schema: &jsonschema::JSONSchema,
 ) -> anyhow::Result<()> {
     let json = cbp::read_package_json(base_dir, pkg)?;
 

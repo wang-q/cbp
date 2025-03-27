@@ -205,7 +205,7 @@ fn command_build_source() -> anyhow::Result<()> {
     cmd.env("GITHUB_RELEASE_URL", &server.url())
         .arg("build")
         .arg("source")
-        .arg("--dir")
+        .arg("--base")
         .arg(temp_dir.path())
         .arg("trf");
 
@@ -282,7 +282,7 @@ fn command_build_font() -> anyhow::Result<()> {
     cmd.env("GITHUB_RELEASE_URL", &server.url())
         .arg("build")
         .arg("font")
-        .arg("--dir")
+        .arg("--base")
         .arg(temp_dir.path())
         .arg("charter");
 
@@ -351,7 +351,7 @@ fn command_build_prebuild_binary() -> anyhow::Result<()> {
     cmd.env("GITHUB_RELEASE_URL", &server.url())
         .arg("build")
         .arg("prebuild")
-        .arg("--dir")
+        .arg("--base")
         .arg(temp_dir.path())
         .arg("--type")
         .arg("macos")

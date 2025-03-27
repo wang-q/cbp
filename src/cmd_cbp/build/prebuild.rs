@@ -29,12 +29,11 @@ pub fn make_subcommand() -> clap::Command {
                 .value_parser(["linux", "macos", "windows"]),
         )
         .arg(
-            Arg::new("dir")
-                .long("dir")
-                .short('d')
+            Arg::new("base")
+                .long("base")
                 .help("Base directory containing packages/ and binaries/")
                 .num_args(1)
-                .value_name("DIR")
+                .value_name("BASE")
                 .default_value("."),
         )
 }
@@ -44,7 +43,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     //----------------------------
     // Args
     //----------------------------
-    let base_dir = std::path::PathBuf::from(args.get_one::<String>("dir").unwrap());
+    let base_dir = std::path::PathBuf::from(args.get_one::<String>("base").unwrap());
     let opt_proxy_url = args.get_one::<String>("proxy");
     let agent = cbp::create_http_agent(opt_proxy_url)?;
 
