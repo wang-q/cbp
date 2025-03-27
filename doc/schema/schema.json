@@ -90,6 +90,16 @@
           }
         },
         {
+          "required": [
+            "font"
+          ],
+          "properties": {
+            "font": {
+              "$ref": "#/definitions/platformDownload"
+            }
+          }
+        },
+        {
           "anyOf": [
             {
               "required": [
