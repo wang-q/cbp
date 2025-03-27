@@ -62,7 +62,10 @@
       "name": "version",
       "command": "picard",
       "pattern": "Version:[0-9]+\\.",
-      "args": "SortSam --version"
+      "args": [
+        "SortSam",
+        "--version"
+      ]
     }
   ]
 }
