@@ -57,6 +57,29 @@
           "exec \"${BASE_DIR}/libexec/fastqc/fastqc\" \"$@\""
         ]
       }
+    },
+    "windows": {
+      "url": "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.12.1.zip",
+      "extract": "unzip",
+      "rename": {
+        "FastQC": "libexec/fastqc"
+      },
+      "wrapper": {
+        "fastqc.ps1": [
+          "# Get the script path",
+          "$ScriptPath = $MyInvocation.MyCommand.Path",
+          "$ScriptDir = Split-Path -Parent $ScriptPath",
+          "$BaseDir = Split-Path -Parent $ScriptDir",
+          "",
+          "# Set memory options if not defined",
+          "if (-not $env:JAVA_OPTS) {",
+          "    $env:JAVA_OPTS = '-Xmx2g'",
+          "}",
+          "",
+          "# Execute FastQC",
+          "& java $env:JAVA_OPTS -classpath \"$BaseDir\\libexec\\fastqc;$BaseDir\\libexec\\fastqc\\sam-1.103.jar;$BaseDir\\libexec\\fastqc\\jbzip2-0.9.jar\" uk.ac.babraham.FastQC.FastQCApplication $args"
+        ]
+      }
     }
   },
   "tests": [
