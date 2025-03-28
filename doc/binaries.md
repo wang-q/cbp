@@ -6,9 +6,10 @@ This document describes the build process for all packages in the cbp (Cross-pla
 
 Key points about the build process:
 
-1. Most builds use Zig as the cross-compiler targeting glibc 2.17 for Linux
-2. Build artifacts are packaged into .tar.gz files and stored in the `binaries/` directory
-3. Each build is performed in a temporary directory to avoid polluting the project's directories
+1. Package definitions are stored in the `packages/` directory as JSON files
+2. Most builds use Zig as the cross-compiler targeting glibc 2.17 for Linux
+3. Build artifacts are packaged into .tar.gz files and stored in the `binaries/` directory
+4. Each build is performed in a temporary directory to avoid polluting the project's directories
 
 ## Package Analysis
 
