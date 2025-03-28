@@ -131,7 +131,15 @@ pub fn handle_rename(
 
                 if source_path != target_path {
                     if source_path.exists() {
-                        std::fs::rename(source_path, &target_path)?;
+                        let options = fs_extra::dir::CopyOptions::new()
+                            .overwrite(true)
+                            .copy_inside(true);
+
+                        if source_path.is_dir() {
+                            fs_extra::dir::move_dir(source_path, &target_path, &options)?;
+                        } else {
+                            fs_extra::file::move_file(source_path, &target_path, &fs_extra::file::CopyOptions::new())?;
+                        }
                         println!("    -> Renamed: {} -> {}", source_path.display(), target);
                     }
                 }
