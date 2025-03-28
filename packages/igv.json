@@ -1,0 +1,40 @@
+{
+  "name": "igv",
+  "version": "2.17.4",
+  "description": "Integrative Genomics Viewer",
+  "homepage": "https://igv.org/",
+  "license": "MIT",
+  "type": "prebuild",
+  "downloads": {
+    "linux": {
+      "url": "https://data.broadinstitute.org/igv/projects/downloads/2.17/IGV_2.17.4.zip",
+      "extract": "unzip",
+      "rename": {
+        "IGV_*": "libexec/igv"
+      },
+      "symlink": {
+        "igv": "../libexec/igv/igv.sh",
+        "igvtools": "../libexec/igv/igvtools"
+      }
+    },
+    "macos": {
+      "url": "https://data.broadinstitute.org/igv/projects/downloads/2.17/IGV_2.17.4.zip",
+      "extract": "unzip",
+      "rename": {
+        "IGV_*": "libexec/igv"
+      },
+      "symlink": {
+        "igv": "../libexec/igv/igv.sh",
+        "igvtools": "../libexec/igv/igvtools"
+      }
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "igv",
+      "pattern": "IGV Version",
+      "args": "--version"
+    }
+  ]
+}

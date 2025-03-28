@@ -433,8 +433,9 @@ cbp build prebuild mash mmseqs raxml-ng
 
 # java
 cbp build prebuild fastqc
-cbp build prebuild picard
 cbp build prebuild figtree
+cbp build prebuild igv
+cbp build prebuild picard
 
 bash scripts/prebuilds/sratoolkit.sh linux
 bash scripts/prebuilds/sratoolkit.sh macos
