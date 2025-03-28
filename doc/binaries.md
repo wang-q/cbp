@@ -1,12 +1,20 @@
 # Build Process
 
-This file contains build instructions for each component. Note that:
+This document describes the build process for all packages in the cbp (Cross-platform Binary Packages) project.
 
-1. Most builds use Zig as the cross-compiler targeting glibc 2.17 for Linux
-2. Build artifacts are packaged into .tar.gz files and stored in the `binaries/` directory
-3. Each build is performed in a temporary directory to avoid polluting the project's directories
+## Overview
 
-## Manage package json
+Key points about the build process:
+
+1. Package definitions are stored in the `packages/` directory as JSON files
+2. Source codes are downloaded (and optionally repackaged) to the `sources/` directory
+3. Most builds use Zig as the cross-compiler targeting glibc 2.17 for Linux
+4. Build artifacts are packaged into .tar.gz files and stored in the `binaries/` directory
+5. Each build is performed in a temporary directory to avoid polluting the project's directories
+
+## Package Analysis
+
+Commands for analyzing package configurations:
 
 ```bash
 # Find packages with any rename field at any level in the JSON structure
@@ -28,11 +36,11 @@ fd -e json . packages -x jq -r 'select(.type == "prebuild" and ([.. | objects | 
 
 # Count all package types and sort by frequency
 fd -e json . packages -x jq -r '.type // "undefined"' | sort | uniq -c | sort -rn
-#   29 prebuild
+#   31 prebuild
 #   26 vcpkg
 #   18 make
 #   17 rust
-#   12 autotools
+#   13 autotools
 #    9 font
 #    5 cmake
 #    2 source
@@ -113,6 +121,9 @@ bash scripts/vcpkg.sh fastga
 cbp build source merquryfk
 bash scripts/vcpkg.sh merquryfk
 
+cbp build source seqtk
+bash scripts/vcpkg.sh seqtk
+
 # ./configure
 cbp build source cabextract
 bash scripts/vcpkg.sh cabextract
@@ -132,7 +143,7 @@ bash scripts/vcpkg.sh diamond
 
 ```
 
-## `Makefile`
+## `make`
 
 ```bash
 cbp build source aster
@@ -182,7 +193,7 @@ bash scripts/trimal.sh
 
 ```
 
-## `./configure`
+## `autotools`
 
 ```bash
 cbp build source bcftools
@@ -224,6 +235,9 @@ bash scripts/samtools.sh    # bundled htslib
 
 cbp build source snp-sites
 bash scripts/snp-sites.sh
+
+cbp build source stow
+bash scripts/stow.sh
 
 # mcl
 curl -L https://micans.org/mcl/src/cimfomfa-22-273.tar.gz |
@@ -395,14 +409,14 @@ mv python3.linux.tar.gz binaries/python3.11.linux.tar.gz
 
 ```
 
-## Prebuilds from the official repositories
+## Prebuilt packages from the official repositories
 
 ### Development Environments
 
 ```bash
 cbp build prebuild cmake
 cbp build prebuild nodejs
-cbp build prebuild openjdk
+cbp build prebuild openjdk # version 17
 
 ```
 
@@ -431,15 +445,23 @@ cbp build prebuild bowtie2 stringtie
 cbp build prebuild iqtree2
 cbp build prebuild mash mmseqs raxml-ng
 
-# java
+bash scripts/prebuilds/sratoolkit.sh linux
+bash scripts/prebuilds/sratoolkit.sh macos
+bash scripts/prebuilds/sratoolkit.sh windows
+
+```
+
+### Java
+
+These packages require `java` environment. They are installed in `libexec` with symlinks or shims placed in `bin/`.
+
+These packages might not be the latest versions due to the provided OpenJDK 17, but they provide similar functionalities.
+
+```bash
 cbp build prebuild fastqc
 cbp build prebuild figtree
 cbp build prebuild igv
 cbp build prebuild picard
-
-bash scripts/prebuilds/sratoolkit.sh linux
-bash scripts/prebuilds/sratoolkit.sh macos
-bash scripts/prebuilds/sratoolkit.sh windows
 
 ```
 

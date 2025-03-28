@@ -1,0 +1,21 @@
+{
+  "name": "seqtk",
+  "version": "1.4",
+  "description": "Toolkit for processing sequences in FASTA/Q formats",
+  "homepage": "https://github.com/lh3/seqtk",
+  "license": "MIT",
+  "type": "make",
+  "downloads": {
+    "source": {
+      "url": "https://github.com/lh3/seqtk/archive/refs/tags/v1.4.tar.gz"
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "seqtk",
+      "ignore_exit_code": true,
+      "pattern": "Version: [0-9]+"
+    }
+  ]
+}

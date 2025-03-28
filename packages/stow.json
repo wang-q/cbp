@@ -1,0 +1,21 @@
+{
+  "name": "stow",
+  "version": "2.4.1",
+  "description": "Organize software neatly under a single directory tree (e.g. /usr/local)",
+  "homepage": "https://www.gnu.org/software/stow/",
+  "license": "GPL-3.0-or-later",
+  "type": "autotools",
+  "downloads": {
+    "source": {
+      "url": "https://ftp.gnu.org/gnu/stow/stow-2.4.1.tar.gz"
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "stow",
+      "args": "--version",
+      "pattern": "GNU Stow"
+    }
+  ]
+}

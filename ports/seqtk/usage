@@ -1,0 +1,3 @@
+The package seqtk provides the following executables:
+
+    seqtk - Toolkit for processing sequences in FASTA/Q formats

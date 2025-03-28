@@ -1,31 +1,37 @@
 {
-    "name": "parallel",
-    "version": "20250322",
-    "description": "Shell command parallelization utility",
-    "homepage": "https://savannah.gnu.org/projects/parallel/",
-    "license": "GPL-3.0-or-later",
-    "type": "autotools",
-    "downloads": {
-        "source": {
-            "url": "https://ftp.gnu.org/gnu/parallel/parallel-20250322.tar.bz2",
-            "extract": "tar xvfj",
-            "rename": {
-                "parallel-*": "parallel"
-            }
-        }
+  "name": "parallel",
+  "version": "20250322",
+  "description": "Shell command parallelization utility",
+  "homepage": "https://savannah.gnu.org/projects/parallel/",
+  "license": "GPL-3.0-or-later",
+  "type": "autotools",
+  "downloads": {
+    "source": {
+      "url": "https://ftp.gnu.org/gnu/parallel/parallel-20250322.tar.bz2",
+      "extract": "tar xvfj",
+      "rename": {
+        "parallel-*": "parallel"
+      }
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "parallel",
+      "args": "--version",
+      "pattern": "GNU parallel [0-9]+"
     },
-    "tests": [
-        {
-            "name": "version",
-            "command": "parallel",
-            "args": "--version",
-            "pattern": "GNU parallel [0-9]+\\."
-        },
-        {
-            "name": "basic",
-            "command": "parallel",
-            "args": ["--will-cite", "echo", ":::", "test", "test"],
-            "pattern": "test\\ntest"
-        }
-    ]
+    {
+      "name": "basic",
+      "command": "parallel",
+      "args": [
+        "--will-cite",
+        "echo",
+        ":::",
+        "test",
+        "test"
+      ],
+      "pattern": "test\\ntest"
+    }
+  ]
 }
