@@ -212,6 +212,8 @@ bash scripts/htslib.sh  # --with-libdeflate
 cbp build source mummer
 bash scripts/mummer.sh
 
+cbp build source parallel
+
 cbp build source pv
 cbp local ncurses
 bash scripts/pv.sh
