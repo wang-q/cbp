@@ -1,0 +1,79 @@
+{
+  "name": "aliview",
+  "version": "1.30",
+  "description": "Alignment viewer and editor for large sequence alignments",
+  "homepage": "http://www.ormbunkar.se/aliview/",
+  "license": "GPL-3.0",
+  "type": "prebuild",
+  "downloads": {
+    "linux": {
+      "url": "http://www.ormbunkar.se/aliview/downloads/linux/linux-version-1.30/aliview/aliview.jar",
+      "rename": {
+        "download.tmp": "libexec/aliview.jar"
+      },
+      "wrapper": {
+        "aliview": [
+          "#!/bin/bash",
+          "",
+          "# Find the real path of the script",
+          "if [ -L \"$0\" ]; then",
+          "    SCRIPT_PATH=$(readlink \"$0\")",
+          "else",
+          "    SCRIPT_PATH=\"$0\"",
+          "fi",
+          "SCRIPT_DIR=$(cd \"$(dirname \"$SCRIPT_PATH\")\" && pwd)",
+          "BASE_DIR=$(dirname \"$SCRIPT_DIR\")",
+          "",
+          "# Set memory options if needed",
+          "JAVA_OPTS=${JAVA_OPTS:-\"-Xmx2g\"}",
+          "",
+          "exec java $JAVA_OPTS -jar \"${BASE_DIR}/libexec/aliview.jar\" \"$@\""
+        ]
+      }
+    },
+    "macos": {
+      "url": "http://www.ormbunkar.se/aliview/downloads/linux/linux-version-1.30/aliview/aliview.jar",
+      "rename": {
+        "download.tmp": "libexec/aliview.jar"
+      },
+      "wrapper": {
+        "aliview": [
+          "#!/bin/bash",
+          "",
+          "# Find the real path of the script",
+          "if [ -L \"$0\" ]; then",
+          "    SCRIPT_PATH=$(readlink \"$0\")",
+          "else",
+          "    SCRIPT_PATH=\"$0\"",
+          "fi",
+          "SCRIPT_DIR=$(cd \"$(dirname \"$SCRIPT_PATH\")\" && pwd)",
+          "BASE_DIR=$(dirname \"$SCRIPT_DIR\")",
+          "",
+          "exec java $JAVA_OPTS -jar \"${BASE_DIR}/libexec/aliview.jar\" \"$@\""
+        ]
+      }
+    },
+    "windows": {
+      "url": "http://www.ormbunkar.se/aliview/downloads/linux/linux-version-1.30/aliview/aliview.jar",
+      "rename": {
+        "download.tmp": "libexec/aliview.jar"
+      },
+      "wrapper": {
+        "aliview.ps1": [
+          "# Get the script path",
+          "$ScriptPath = $MyInvocation.MyCommand.Path",
+          "$ScriptDir = Split-Path -Parent $ScriptPath",
+          "$BaseDir = Split-Path -Parent $ScriptDir",
+          "",
+          "# Set memory options if not defined",
+          "if (-not $env:JAVA_OPTS) {",
+          "    $env:JAVA_OPTS = '-Xmx2g'",
+          "}",
+          "",
+          "# Execute AliView",
+          "& java $env:JAVA_OPTS -jar \"$BaseDir\\libexec\\aliview.jar\" $args"
+        ]
+      }
+    }
+  }
+}

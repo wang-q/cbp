@@ -458,6 +458,7 @@ These packages require `java` environment. They are installed in `libexec` with 
 These packages might not be the latest versions due to the provided OpenJDK 17, but they provide similar functionalities.
 
 ```bash
+cbp build prebuild aliview
 cbp build prebuild fastqc
 cbp build prebuild figtree
 cbp build prebuild igv
