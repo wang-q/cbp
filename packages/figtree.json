@@ -1,0 +1,102 @@
+{
+  "name": "figtree",
+  "version": "1.4.5pre",
+  "description": "Graphical viewer of phylogenetic trees",
+  "homepage": "https://github.com/rambaut/figtree",
+  "license": "LGPL-2.1",
+  "type": "prebuild",
+  "downloads": {
+    "linux": {
+      "url": "https://github.com/rambaut/figtree/releases/download/v1.4.5pre/FigTree_v1.4.5_pre.tgz",
+      "extract": "tar xvfz",
+      "rename": {
+        "FigTree_v1.4.5_pre/lib/figtree.jar": "libexec/figtree.jar"
+      },
+      "clean": [
+        "FigTree_v1.4.5_pre"
+      ],
+      "wrapper": {
+        "figtree": [
+          "#!/bin/bash",
+          "",
+          "# Find the real path of the script",
+          "if [ -L \"$0\" ]; then",
+          "    SCRIPT_PATH=$(readlink \"$0\")",
+          "else",
+          "    SCRIPT_PATH=\"$0\"",
+          "fi",
+          "SCRIPT_DIR=$(cd \"$(dirname \"$SCRIPT_PATH\")\" && pwd)",
+          "BASE_DIR=$(dirname \"$SCRIPT_DIR\")",
+          "",
+          "# Set memory options if needed",
+          "JAVA_OPTS=${JAVA_OPTS:-\"-Xmx2g\"}",
+          "",
+          "exec java $JAVA_OPTS -jar \"${BASE_DIR}/libexec/figtree.jar\" \"$@\""
+        ]
+      }
+    },
+    "macos": {
+      "url": "https://github.com/rambaut/figtree/releases/download/v1.4.5pre/FigTree_v1.4.5_pre.tgz",
+      "extract": "tar xvfz",
+      "rename": {
+        "FigTree_v1.4.5_pre/lib/figtree.jar": "libexec/figtree.jar"
+      },
+      "clean": [
+        "FigTree_v1.4.5_pre"
+      ],
+      "wrapper": {
+        "figtree": [
+          "#!/bin/bash",
+          "",
+          "# Find the real path of the script",
+          "if [ -L \"$0\" ]; then",
+          "    SCRIPT_PATH=$(readlink \"$0\")",
+          "else",
+          "    SCRIPT_PATH=\"$0\"",
+          "fi",
+          "SCRIPT_DIR=$(cd \"$(dirname \"$SCRIPT_PATH\")\" && pwd)",
+          "BASE_DIR=$(dirname \"$SCRIPT_DIR\")",
+          "",
+          "# Set memory options if needed",
+          "JAVA_OPTS=${JAVA_OPTS:-\"-Xmx2g\"}",
+          "",
+          "exec java $JAVA_OPTS -jar \"${BASE_DIR}/libexec/figtree.jar\" \"$@\""
+        ]
+      }
+    },
+    "windows": {
+      "url": "https://github.com/rambaut/figtree/releases/download/v1.4.5pre/FigTree_v1.4.5_pre.tgz",
+      "extract": "tar xvfz",
+      "rename": {
+        "FigTree_v1.4.5_pre/lib/figtree.jar": "libexec/figtree.jar"
+      },
+      "clean": [
+        "FigTree_v1.4.5_pre"
+      ],
+      "wrapper": {
+        "figtree.ps1": [
+          "# Get the script path",
+          "$ScriptPath = $MyInvocation.MyCommand.Path",
+          "$ScriptDir = Split-Path -Parent $ScriptPath",
+          "$BaseDir = Split-Path -Parent $ScriptDir",
+          "",
+          "# Set memory options if not defined",
+          "if (-not $env:JAVA_OPTS) {",
+          "    $env:JAVA_OPTS = '-Xmx2g'",
+          "}",
+          "",
+          "# Execute FigTree",
+          "java $env:JAVA_OPTS -jar \"$BaseDir\\libexec\\figtree.jar\" $args"
+        ]
+      }
+    }
+  },
+  "tests": [
+    {
+      "name": "helps",
+      "command": "figtree",
+      "pattern": "Usage: figtree",
+      "args": "-help"
+    }
+  ]
+}
