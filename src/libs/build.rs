@@ -105,26 +105,35 @@ pub fn handle_rename(
 
             let pattern = glob::Pattern::new(pattern_str)?;
 
-            // Use WalkDir to find matching files recursively
-            let entries: Vec<_> = walkdir::WalkDir::new(temp_dir.path())
-                .into_iter()
-                .filter_map(|e| e.ok())
-                .filter(|e| pattern.matches(&e.file_name().to_string_lossy()))
-                .collect();
+            // Create parent directories if they don't exist
+            if let Some(parent) = std::path::Path::new(target).parent() {
+                std::fs::create_dir_all(temp_dir.path().join(parent))?;
+            }
 
-            if let Some(entry) = entries.first() {
-                let source = entry.path().strip_prefix(temp_dir.path())?.to_path_buf();
-                if source.to_string_lossy() != target {
-                    // Create parent directories if they don't exist
-                    if let Some(parent) = std::path::Path::new(target).parent() {
-                        std::fs::create_dir_all(temp_dir.path().join(parent))?;
+            // Find the first matching entry
+            let mut matched_entry = None;
+            for entry in walkdir::WalkDir::new(temp_dir.path()).min_depth(1) {
+                let entry = entry?;
+                let rel_path = entry
+                    .path()
+                    .strip_prefix(temp_dir.path())?
+                    .to_string_lossy();
+                if pattern.matches(&rel_path) {
+                    matched_entry = Some(entry);
+                    break;
+                }
+            }
+
+            // If found matching item, execute rename
+            if let Some(entry) = matched_entry {
+                let source_path = entry.path();
+                let target_path = temp_dir.path().join(target);
+
+                if source_path != target_path {
+                    if source_path.exists() {
+                        std::fs::rename(source_path, &target_path)?;
+                        println!("    -> Renamed: {} -> {}", source_path.display(), target);
                     }
-
-                    // Perform the rename
-                    std::fs::rename(
-                        temp_dir.path().join(&source),
-                        temp_dir.path().join(target),
-                    )?;
                 }
             }
         }
@@ -133,6 +142,7 @@ pub fn handle_rename(
 }
 
 /// Handle symlink creation based on package configuration
+#[cfg(unix)]
 pub fn handle_symlink(
     temp_dir: &tempfile::TempDir,
     json_obj: &serde_json::Map<String, serde_json::Value>,
@@ -154,10 +164,17 @@ pub fn handle_symlink(
                 .ok_or_else(|| anyhow::anyhow!("Symlink target must be a string"))?;
 
             let link_path = bin_dir.join(link_name);
-            #[cfg(unix)]
             std::os::unix::fs::symlink(target, link_path)?;
         }
     }
+    Ok(())
+}
+
+#[cfg(not(unix))]
+pub fn handle_symlink(
+    _temp_dir: &tempfile::TempDir,
+    _json_obj: &serde_json::Map<String, serde_json::Value>,
+) -> anyhow::Result<()> {
     Ok(())
 }
 
