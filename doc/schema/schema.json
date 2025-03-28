@@ -19,8 +19,8 @@
     },
     "version": {
       "type": "string",
-      "pattern": "^\\d+(\\.\\d+)*[a-zA-Z]?(-[a-zA-Z0-9]+)?$",
-      "description": "Version number in any numeric format with optional letter suffix (e.g., x.y.z, x.y, x.ya, 2.4i)"
+      "pattern": "^\\d+(\\.\\d+)*[a-zA-Z0-9]*(-[a-zA-Z0-9]+)?$",
+      "description": "Version number in any numeric format with optional suffix (e.g., x.y.z, x.y, x.ya, 2.4pre)"
     },
     "description": {
       "type": "string",
