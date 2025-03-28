@@ -33,8 +33,6 @@ mv ${TEMP_DIR}/collect/bin/annotate ${TEMP_DIR}/collect/bin/annotate-mummer
 
 # Build tar
 FN_TAR="${PROJ}.${OS_TYPE}.tar.gz"
-cd $TEMP_DIR
-cbp collect --shebang -o "${FN_TAR}" collect/ ||
+cd $TEMP_DIR/collect
+cbp collect --shebang . -o "${BASH_DIR}/../binaries/${FN_TAR}" ||
     { echo "==> Error: Failed to create archive"; exit 1; }
-mv "${FN_TAR}" ${BASH_DIR}/../binaries/ ||
-    { echo "==> Error: Failed to move archive"; exit 1; }

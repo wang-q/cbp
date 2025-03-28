@@ -213,6 +213,7 @@ cbp build source mummer
 bash scripts/mummer.sh
 
 cbp build source parallel
+bash scripts/parallel.sh
 
 cbp build source pv
 cbp local ncurses

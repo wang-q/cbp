@@ -112,6 +112,7 @@ bash scripts/htslib.sh # --with-libdeflate
 
 bash scripts/mcl.sh
 bash scripts/mummer.sh
+bash scripts/parallel.sh
 
 cbp local ncurses
 bash scripts/pv.sh
