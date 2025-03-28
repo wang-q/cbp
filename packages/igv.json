@@ -33,7 +33,7 @@
     {
       "name": "version",
       "command": "igv",
-      "pattern": "IGV Version",
+      "pattern": "[0-9]+\\.",
       "args": "--version"
     }
   ]
