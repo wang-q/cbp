@@ -121,6 +121,9 @@ bash scripts/vcpkg.sh fastga
 cbp build source merquryfk
 bash scripts/vcpkg.sh merquryfk
 
+cbp build source seqtk
+bash scripts/vcpkg.sh seqtk
+
 # ./configure
 cbp build source cabextract
 bash scripts/vcpkg.sh cabextract
