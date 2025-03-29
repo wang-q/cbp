@@ -49,6 +49,14 @@ fd -e json . packages -x jq -r 'select(.type == "prebuild") | .name'
 
 ```
 
+## Package Status
+
+```bash
+bash scripts/tools/status.sh |
+    rgr md stdin -c 3-5
+
+```
+
 ## `vcpkg` libraries
 
 ```bash
