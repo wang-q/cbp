@@ -1,0 +1,48 @@
+{
+  "name": "maven",
+  "description": "Apache Maven is a software project management and comprehension tool",
+  "version": "3.9.9",
+  "homepage": "https://maven.apache.org/",
+  "license": "Apache-2.0",
+  "type": "prebuild",
+  "downloads": {
+    "linux": {
+      "url": "https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz",
+      "extract": "tar xvzf",
+      "rename": {
+        "apache-maven-*": "libexec/maven"
+      },
+      "symlink": {
+        "mvn": "../libexec/maven/bin/mvn"
+      }
+    },
+    "macos": {
+      "url": "https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz",
+      "extract": "tar xvzf",
+      "rename": {
+        "apache-maven-*": "libexec/maven"
+      },
+      "symlink": {
+        "mvn": "../libexec/maven/bin/mvn"
+      }
+    },
+    "windows": {
+      "url": "https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz",
+      "extract": "tar xvzf",
+      "rename": {
+        "apache-maven-*": "libexec/maven"
+      },
+      "symlink": {
+        "mvn": "..\\libexec\\maven\\bin\\mvn.cmd"
+      }
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "mvn",
+      "pattern": "Apache Maven",
+      "args": "--version"
+    }
+  ]
+}

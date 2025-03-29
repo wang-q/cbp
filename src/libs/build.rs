@@ -144,6 +144,13 @@ pub fn handle_symlink(
                 .as_str()
                 .ok_or_else(|| anyhow::anyhow!("Symlink target must be a string"))?;
 
+            // Make target file executable
+            let target_path = temp_dir.path().join(target);
+            if target_path.exists() {
+                use std::os::unix::fs::PermissionsExt;
+                std::fs::set_permissions(&target_path, std::fs::Permissions::from_mode(0o755))?;
+            }
+
             let link_path = bin_dir.join(link_name);
             std::os::unix::fs::symlink(target, link_path)?;
         }
