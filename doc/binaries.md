@@ -426,6 +426,7 @@ cbp build prebuild openjdk # version 17
 
 ```bash
 cbp build prebuild jq yq
+cbp build prebuild gh
 cbp build prebuild ninja uv
 
 cbp build prebuild aria2
