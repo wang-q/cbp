@@ -18,7 +18,7 @@ mv binaries/readline-unix.macos.tar.gz binaries/readline.macos.tar.gz
 
 bash scripts/vcpkg.sh argtable2
 bash scripts/vcpkg.sh expat
-bash scripts/vcpkg.sh "libxml2[core,iconv,lzma,zlib]"
+bash scripts/vcpkg.sh "libxml2[core,zlib]"
 
 # macOS has libxcrypt
 
