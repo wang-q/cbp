@@ -1,0 +1,34 @@
+{
+  "name": "gh",
+  "version": "2.69.0",
+  "description": "GitHub's official command line tool",
+  "homepage": "https://cli.github.com/",
+  "license": "MIT",
+  "type": "prebuild",
+  "downloads": {
+    "linux": {
+      "url": "https://github.com/cli/cli/releases/download/v2.69.0/gh_2.69.0_linux_amd64.tar.gz",
+      "binary": "gh_*/bin/gh"
+    },
+    "macos": {
+      "url": "https://github.com/cli/cli/releases/download/v2.69.0/gh_2.69.0_macOS_arm64.zip",
+      "extract": "unzip",
+      "binary": "gh_*/bin/gh"
+    },
+    "windows": {
+      "url": "https://github.com/cli/cli/releases/download/v2.69.0/gh_2.69.0_windows_amd64.zip",
+      "extract": "unzip",
+      "binary": "bin/gh.exe"
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "gh",
+      "pattern": "gh version [0-9]+\\.",
+      "args": [
+        "--version"
+      ]
+    }
+  ]
+}
