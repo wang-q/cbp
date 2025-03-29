@@ -55,6 +55,17 @@ fd -e json . packages -x jq -r 'select(.type == "prebuild") | .name'
 bash scripts/tools/status.sh |
     rgr md stdin -c 3-5
 
+find binaries -name "*.tar.gz" -type f |
+    parallel -j 8 '
+        [[ -f {} ]] || exit
+        gzip -t {} 2>/dev/null || exit
+        name=$(basename {})
+        count=$(tar -tzf {} | wc -l | tr -d " ")
+        echo -e "${name}\t${count}"
+    ' |
+    sort -k2 -nr |
+    head -n 20
+
 ```
 
 ## `vcpkg` libraries
