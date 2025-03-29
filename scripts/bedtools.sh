@@ -15,7 +15,7 @@ make \
     AR="zig ar" \
     RANLIB="zig ranlib" \
     CFLAGS="-I${CBP_INCLUDE}" \
-    CXXFLAGS="-Wno-unused-but-set-variable -Wno-unused-result -Wno-implicit-const-int-float-conversion" \
+    CXXFLAGS="-I${CBP_INCLUDE} -Wno-unused-but-set-variable -Wno-unused-result -Wno-implicit-const-int-float-conversion" \
     BT_LIBS="-lm -lpthread ${CBP_LIB}/libz.a ${CBP_LIB}/libbz2.a ${CBP_LIB}/liblzma.a" \
     || exit 1
 
