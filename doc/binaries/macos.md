@@ -69,10 +69,14 @@ bash scripts/vcpkg.sh chainnet
 
 ```
 
-## `Makefile`
+## `make`
 
 ```bash
 bash scripts/aster.sh
+
+cbp install zlib bzip2 libdeflate liblzma
+cbp remove htslib # confuse bundled htslib
+bash scripts/bedtools.sh
 
 cbp local zlib libdeflate htslib
 bash scripts/fastk.sh
@@ -93,7 +97,7 @@ bash scripts/trimal.sh
 
 ```
 
-## `./configure`
+## `autotools`
 
 ```bash
 zvm use 0.13.0

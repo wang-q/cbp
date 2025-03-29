@@ -149,6 +149,11 @@ bash scripts/vcpkg.sh diamond
 cbp build source aster
 bash scripts/aster.sh
 
+cbp build source bedtools
+cbp install zlib bzip2 libdeflate liblzma
+cbp remove htslib # confuse bundled htslib
+bash scripts/bedtools.sh
+
 cbp build source fastk
 cbp local zlib libdeflate htslib
 bash scripts/fastk.sh
@@ -179,17 +184,6 @@ bash scripts/prodigal.sh
 
 cbp build source trimal
 bash scripts/trimal.sh
-
-# curl -L https://github.com/arq5x/bedtools2/archive/refs/tags/v2.31.1.tar.gz |
-#     tar xvfz - \
-#         --exclude='*/docs*' \
-#         --exclude='*/data*' \
-#         --exclude='*/genomes*' \
-#         --exclude='*/tes*t' \
-#         --exclude='*/tutorial*' &&
-#     mv bedtools2-2.31.1 bedtools &&
-#     tar -czf sources/bedtools.tar.gz bedtools/ &&
-#     rm -rf bedtools
 
 ```
 
