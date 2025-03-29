@@ -1,0 +1,16 @@
+{
+  "name": "lua",
+  "description": "A powerful, fast, lightweight, embeddable scripting language",
+  "version": "5.4.7",
+  "homepage": "https://www.lua.org",
+  "license": "MIT",
+  "type": "vcpkg",
+  "tests": [
+    {
+      "name": "version",
+      "command": "lua",
+      "pattern": "Lua [0-9]+\\.",
+      "args": "-v"
+    }
+  ]
+}

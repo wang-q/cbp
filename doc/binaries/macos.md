@@ -40,6 +40,8 @@ bash scripts/vcpkg.sh "curl[core,tool,ssl,http2,websockets]" arm64-osx-release
 
 bash scripts/vcpkg.sh pkgconf arm64-macos-zig pkgconf=pkg-config
 
+bash scripts/vcpkg.sh "lua[core,tools]" arm64-osx-release
+
 ```
 
 ## My ports

@@ -93,6 +93,8 @@ bash scripts/vcpkg.sh "curl[core,tool,ssl,http2,websockets]"
 
 bash scripts/vcpkg.sh pkgconf x64-linux-zig pkgconf=pkg-config
 
+bash scripts/vcpkg.sh "lua[core,tools]"
+
 ```
 
 ## My ports
