@@ -95,6 +95,27 @@ pub fn find_files(dir: &Path, pattern: Option<&str>) -> anyhow::Result<Vec<Strin
     Ok(files)
 }
 
+/// Match files using glob pattern and return matching paths
+pub fn match_files(
+    base_path: &std::path::Path,
+    pattern_str: &str,
+) -> anyhow::Result<Vec<(std::path::PathBuf, String)>> {
+    let pattern = glob::Pattern::new(pattern_str)?;
+    let mut matches = Vec::new();
+    for entry in walkdir::WalkDir::new(base_path) {
+        let entry = entry?;
+        let rel_path = entry
+            .path()
+            .strip_prefix(base_path)?
+            .to_string_lossy()
+            .to_string();
+        if pattern.matches(&rel_path) {
+            matches.push((entry.path().to_path_buf(), rel_path));
+        }
+    }
+    Ok(matches)
+}
+
 /// Check if a file is managed by cbp itself
 pub fn is_cbp_file(path: &str) -> bool {
     path.starts_with("bin/cbp")
@@ -254,6 +275,43 @@ mod tests {
         // Test with pattern
         let files = find_files(base, Some("*.txt"))?;
         assert_eq!(files, vec!["dir1/file3.txt", "file1.txt"]);
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_match_files() -> anyhow::Result<()> {
+        let temp_dir = tempfile::tempdir()?;
+        let base = temp_dir.path();
+
+        // Create test file structure
+        std::fs::create_dir_all(base.join("dir1"))?;
+        std::fs::create_dir_all(base.join("dir2"))?;
+        std::fs::write(base.join("file1.txt"), "")?;
+        std::fs::write(base.join("file2.rs"), "")?;
+        std::fs::write(base.join("dir1/file3.txt"), "")?;
+        std::fs::write(base.join("dir2/file4.rs"), "")?;
+
+        // Test exact match
+        let matches = match_files(base, "file1.txt")?;
+        assert_eq!(matches.len(), 1);
+        assert_eq!(matches[0].1, "file1.txt");
+
+        // Test wildcard match
+        let matches = match_files(base, "*.txt")?;
+        assert_eq!(matches.len(), 2);
+        let paths: Vec<_> = matches.iter().map(|(_, p)| p.as_str()).collect();
+        assert!(paths.contains(&"file1.txt"));
+        assert!(paths.contains(&"dir1/file3.txt"));
+
+        // Test directory wildcard match
+        let matches = match_files(base, "dir*/*.rs")?;
+        assert_eq!(matches.len(), 1);
+        assert_eq!(matches[0].1, "dir2/file4.rs");
+
+        // Test no matches
+        let matches = match_files(base, "nonexistent.*")?;
+        assert!(matches.is_empty());
 
         Ok(())
     }

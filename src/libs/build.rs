@@ -103,46 +103,18 @@ pub fn handle_rename(
                 .as_str()
                 .ok_or_else(|| anyhow::anyhow!("Rename target must be a string"))?;
 
-            let pattern = glob::Pattern::new(pattern_str)?;
-
             // Create parent directories if they don't exist
             if let Some(parent) = std::path::Path::new(target).parent() {
                 std::fs::create_dir_all(temp_dir.path().join(parent))?;
             }
 
-            // Find the first matching entry
-            let mut matched_entry = None;
-            for entry in walkdir::WalkDir::new(temp_dir.path()) {
-                let entry = entry?;
-                let rel_path = entry
-                    .path()
-                    .strip_prefix(temp_dir.path())?
-                    .to_string_lossy();
-                if pattern.matches(&rel_path) {
-                    matched_entry = Some(entry);
-                    break;
-                }
-            }
-
-            // If found matching item, execute rename
-            if let Some(entry) = matched_entry {
-                let source_path = entry.path();
+            // Use utils::match_files to find matching files
+            let matches = crate::match_files(temp_dir.path(), pattern_str)?;
+            if let Some((source_path, _)) = matches.first() {
                 let target_path = temp_dir.path().join(target);
-
-                if source_path != target_path {
-                    if source_path.exists() {
-                        std::fs::rename(source_path, &target_path)?;
-                        // let options = fs_extra::dir::CopyOptions::new()
-                        //     .overwrite(true)
-                        //     .copy_inside(true);
-
-                        // if source_path.is_dir() {
-                        //     fs_extra::dir::move_dir(source_path, &target_path, &options)?;
-                        // } else {
-                        //     fs_extra::file::move_file(source_path, &target_path, &fs_extra::file::CopyOptions::new())?;
-                        // }
-                        println!("    -> Renamed: {} -> {}", source_path.display(), target);
-                    }
+                if source_path != &target_path && source_path.exists() {
+                    std::fs::rename(source_path, &target_path)?;
+                    println!("    -> Renamed: {} -> {}", source_path.display(), target);
                 }
             }
         }
@@ -274,24 +246,16 @@ pub fn clean_files(
             let path_str = path
                 .as_str()
                 .ok_or_else(|| anyhow::anyhow!("Clean path must be a string"))?;
-            let pattern = glob::Pattern::new(path_str)?;
 
-            // Recursively walk through the directory to match all files
-            for entry in walkdir::WalkDir::new(temp_dir.path()) {
-                let entry = entry?;
-                let rel_path = entry
-                    .path()
-                    .strip_prefix(temp_dir.path())?
-                    .to_string_lossy();
-                if pattern.matches(&rel_path) {
-                    let path = entry.path();
-                    if path.is_dir() {
-                        std::fs::remove_dir_all(&path)?;
-                    } else {
-                        std::fs::remove_file(&path)?;
-                    }
-                    println!("    -> Removed: {}", rel_path);
+            // find matching files
+            let matches = crate::match_files(temp_dir.path(), path_str)?;
+            for (path, rel_path) in matches {
+                if path.is_dir() {
+                    std::fs::remove_dir_all(&path)?;
+                } else {
+                    std::fs::remove_file(&path)?;
                 }
+                println!("    -> Removed: {}", rel_path);
             }
         }
     }
@@ -302,14 +266,8 @@ pub fn find_binary_files(
     temp_dir: &std::path::Path,
     json_obj: &serde_json::Map<String, serde_json::Value>,
 ) -> anyhow::Result<Vec<String>> {
-    let binary_paths = match &json_obj["binary"] {
-        serde_json::Value::String(pattern) => {
-            let mut paths = Vec::new();
-            for entry in glob::glob(&format!("{}/{}", temp_dir.display(), pattern))? {
-                paths.push(entry?.file_name().unwrap().to_string_lossy().to_string());
-            }
-            paths
-        }
+    let patterns: Vec<String> = match &json_obj["binary"] {
+        serde_json::Value::String(pattern) => vec![pattern.to_string()],
         serde_json::Value::Array(arr) => arr
             .iter()
             .filter_map(|v| v.as_str())
@@ -317,6 +275,12 @@ pub fn find_binary_files(
             .collect(),
         _ => return Err(anyhow::anyhow!("Invalid binary format")),
     };
+
+    let mut binary_paths = Vec::new();
+    for pattern in patterns {
+        let matches = crate::libs::utils::match_files(temp_dir, &pattern)?;
+        binary_paths.extend(matches.into_iter().map(|(_, rel_path)| rel_path));
+    }
 
     if binary_paths.is_empty() {
         return Err(anyhow::anyhow!("No binary files found"));
