@@ -81,6 +81,9 @@ cbp local zlib bzip2 libdeflate liblzma
 bash scripts/vcpkg.sh ncurses
 bash scripts/vcpkg.sh readline
 
+bash scripts/vcpkg.sh libevent
+bash scripts/vcpkg.sh utf8proc
+
 bash scripts/vcpkg.sh argtable2
 bash scripts/vcpkg.sh expat
 bash scripts/vcpkg.sh "libxml2[core,zlib]"
@@ -253,6 +256,10 @@ bash scripts/snp-sites.sh
 
 cbp build source stow
 bash scripts/stow.sh
+
+cbp build source tmux
+cbp local libevent ncurses utf8proc pkgconf
+bash scripts/tmux.sh
 
 # mcl
 curl -L https://micans.org/mcl/src/cimfomfa-22-273.tar.gz |

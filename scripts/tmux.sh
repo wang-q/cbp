@@ -14,7 +14,7 @@ AR="zig ar" \
 RANLIB="zig ranlib" \
 CFLAGS="-I${CBP_INCLUDE} -Wno-implicit-function-declaration" \
 CPPFLAGS="-I${CBP_INCLUDE} -Wno-implicit-function-declaration" \
-LDFLAGS="-L${CBP_LIB}" \
+LDFLAGS="-L${CBP_LIB} -lresolv" \
 PKG_CONFIG_PATH="${CBP_LIB}/pkgconfig" \
     ./configure \
     --prefix="${TEMP_DIR}/collect" \
