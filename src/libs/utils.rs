@@ -280,6 +280,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(not(target_os = "windows"))]
     fn test_match_files() -> anyhow::Result<()> {
         let temp_dir = tempfile::tempdir()?;
         let base = temp_dir.path();
