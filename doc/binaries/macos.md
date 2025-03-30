@@ -174,20 +174,23 @@ vcpkg install --debug --recurse \
 
 otool -L vcpkg/installed/arm64-osx-release/tools/graphviz/dot
 
-cbp collect --ignore tools/graphviz/graphviz/libgvplugin \
+cbp collect --mode vcpkg --ignore tools/graphviz/graphviz/libgvplugin \
     vcpkg/installed/vcpkg/info/graphviz_*_arm64-osx-release.list
 mv graphviz.osx.tar.gz binaries/graphviz.macos.tar.gz
 
-# CC=~/share/llvm/bin/clang \
-# CXX=~/share/llvm/bin/clang++ \
-# vcpkg install --debug --recurse \
-#     --clean-buildtrees-after-build \
-#     --overlay-ports=ports \
-#     --x-buildtrees-root=vcpkg/buildtrees \
-#     --downloads-root=vcpkg/downloads \
-#     --x-install-root=vcpkg/installed \
-#     --x-packages-root=vcpkg/packages \
-#     gnuplot:arm64-osx-release
+CC=~/share/llvm/bin/clang \
+CXX=~/share/llvm/bin/clang++ \
+vcpkg install --debug --recurse \
+    --clean-buildtrees-after-build \
+    --overlay-ports=ports \
+    --x-buildtrees-root=vcpkg/buildtrees \
+    --downloads-root=vcpkg/downloads \
+    --x-install-root=vcpkg/installed \
+    --x-packages-root=vcpkg/packages \
+    gnuplot:arm64-osx-release
+
+cbp collect --mode vcpkg vcpkg/installed/vcpkg/info/gnuplot_*_arm64-osx-release.list
+mv gnuplot.osx.tar.gz binaries/gnuplot.macos.tar.gz
 
 CC=~/share/llvm/bin/clang \
 CXX=~/share/llvm/bin/clang++ \
@@ -199,7 +202,7 @@ vcpkg install --debug --recurse \
     --x-packages-root=vcpkg/packages \
     "python3[core,extensions]":arm64-osx-release
 
-cbp collect vcpkg/installed/vcpkg/info/python3_*_arm64-osx-release.list
+cbp collect --mode vcpkg vcpkg/installed/vcpkg/info/python3_*_arm64-osx-release.list
 mv python3.osx.tar.gz binaries/python3.11.macos.tar.gz
 
 ```
