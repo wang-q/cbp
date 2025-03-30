@@ -1,0 +1,12 @@
+{
+  "name": "tmux",
+  "description": "Terminal multiplexer",
+  "version": "3.5a",
+  "homepage": "https://tmux.github.io/",
+  "license": "ISC",
+  "downloads": {
+    "source": {
+      "url": "https://github.com/tmux/tmux/releases/download/3.5a/tmux-3.5a.tar.gz"
+    }
+  }
+}

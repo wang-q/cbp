@@ -16,6 +16,9 @@ bash scripts/vcpkg.sh ncurses arm64-osx-release
 bash scripts/vcpkg.sh readline-unix arm64-osx-release
 mv binaries/readline-unix.macos.tar.gz binaries/readline.macos.tar.gz
 
+bash scripts/vcpkg.sh libevent arm64-osx-release
+bash scripts/vcpkg.sh utf8proc arm64-osx-release
+
 bash scripts/vcpkg.sh argtable2
 bash scripts/vcpkg.sh expat
 bash scripts/vcpkg.sh "libxml2[core,zlib]"
@@ -128,6 +131,10 @@ bash scripts/samtools.sh    # bundled htslib
 bash scripts/bcftools.sh    # bundled htslib
 
 bash scripts/snp-sites.sh
+
+cbp build source tmux
+cbp local libevent ncurses utf8proc
+bash scripts/tmux.sh
 
 ```
 
