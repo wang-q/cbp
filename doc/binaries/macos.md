@@ -23,7 +23,7 @@ bash scripts/vcpkg.sh argtable2
 bash scripts/vcpkg.sh expat
 bash scripts/vcpkg.sh "libxml2[core,zlib]"
 
-# macOS has libxcrypt
+PATH="/opt/homebrew/opt/libtool/libexec/gnubin:$PATH" bash scripts/vcpkg.sh libxcrypt
 
 bash scripts/vcpkg.sh gsl
 # bash scripts/vcpkg.sh gmp
@@ -132,9 +132,9 @@ bash scripts/bcftools.sh    # bundled htslib
 
 bash scripts/snp-sites.sh
 
-cbp build source tmux
-cbp local libevent ncurses utf8proc pkgconf
-bash scripts/tmux.sh
+# cbp build source tmux
+# cbp local libevent ncurses utf8proc pkgconf
+# bash scripts/tmux.sh
 
 ```
 

@@ -257,9 +257,9 @@ bash scripts/snp-sites.sh
 cbp build source stow
 bash scripts/stow.sh
 
-cbp build source tmux
-cbp local libevent ncurses utf8proc pkgconf
-bash scripts/tmux.sh
+# cbp build source tmux
+# cbp local libevent ncurses utf8proc pkgconf
+# bash scripts/tmux.sh
 
 # mcl
 curl -L https://micans.org/mcl/src/cimfomfa-22-273.tar.gz |

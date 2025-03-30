@@ -4,6 +4,7 @@
   "version": "3.5a",
   "homepage": "https://tmux.github.io/",
   "license": "ISC",
+  "type": "autotools",
   "downloads": {
     "source": {
       "url": "https://github.com/tmux/tmux/releases/download/3.5a/tmux-3.5a.tar.gz"
