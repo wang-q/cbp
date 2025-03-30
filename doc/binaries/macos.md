@@ -133,7 +133,7 @@ bash scripts/bcftools.sh    # bundled htslib
 bash scripts/snp-sites.sh
 
 cbp build source tmux
-cbp local libevent ncurses utf8proc
+cbp local libevent ncurses utf8proc pkgconf
 bash scripts/tmux.sh
 
 ```
