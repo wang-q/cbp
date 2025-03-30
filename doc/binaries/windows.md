@@ -106,6 +106,8 @@ ABI compatibility is not a concern.
 
 # .\scripts\vcpkg.ps1 python3 x64-windows-release
 
+.\scripts\vcpkg.ps1 "lua[core,tools]" x64-windows-static-release
+
 ```
 
 ## My ports
@@ -121,7 +123,7 @@ Get-Command pigz
 
 .\scripts\vcpkg.ps1 multiz
 
-.\scripts\vcpkg.ps1 cabextract
+# .\scripts\vcpkg.ps1 cabextract
 
 .\scripts\vcpkg.ps1 trf
 
@@ -131,6 +133,6 @@ Get-Command pigz
 
 ```powershell
 $files = Get-ChildItem "binaries\*.tar.gz" | Select-Object -ExpandProperty FullName
-cbp upload $files
+cbp build upload $files
 
 ```
