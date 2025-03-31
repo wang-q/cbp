@@ -23,7 +23,6 @@ PKG_CONFIG_LIBDIR="${CBP_LIB}/pkgconfig" \
     --disable-silent-rules \
     --enable-sixel \
     --enable-utf8proc \
-    --with-TERM=screen-256color \
     || exit 1
 
 make || exit 1
