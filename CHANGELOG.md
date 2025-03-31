@@ -2,6 +2,8 @@
 
 ## Unreleased - ReleaseDate
 
+## 0.3.11 - 2025-03-31
+
 - Improved Rust implementation
   - Improved path handling in match_files
   - Optimize file renaming logic
