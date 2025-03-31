@@ -9,12 +9,6 @@ extract_source
 # ./configure --help
 
 # Build with the specified target architecture
-# Set make options based on OS type
-if [ "$OS_TYPE" == "linux" ]; then
-    EXTRA_OPT="--enable-static --disable-shared"
-elif [ "$OS_TYPE" == "macos" ]; then
-    EXTRA_OPT=""
-fi
 
 # need getrandom, can't use -target
 CC="zig cc" \
@@ -30,7 +24,6 @@ PKG_CONFIG_LIBDIR="${CBP_LIB}/pkgconfig" \
     --enable-sixel \
     --enable-utf8proc \
     --with-TERM=screen-256color \
-    ${EXTRA_OPT} \
     || exit 1
 
 make || exit 1

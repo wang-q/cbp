@@ -454,6 +454,8 @@ cbp build prebuild bat
 cbp build prebuild pandoc tectonic
 cbp build prebuild pup tsv-utils
 
+cbp build prebuild tmux
+
 ```
 
 ### Bioinformatics tools

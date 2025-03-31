@@ -8,6 +8,12 @@
   "downloads": {
     "source": {
       "url": "https://github.com/tmux/tmux/releases/download/3.5a/tmux-3.5a.tar.gz"
+    },
+    "linux": {
+      "url": "https://github.com/mjakob-gh/build-static-tmux/releases/download/v3.3a/tmux.linux-amd64.gz",
+      "extract": "gzip -d",
+      "download_name": "tmux.gz",
+      "binary": "tmux"
     }
   }
 }
