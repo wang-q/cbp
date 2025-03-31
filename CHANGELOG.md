@@ -2,6 +2,18 @@
 
 ## Unreleased - ReleaseDate
 
+- Improved Rust implementation
+  - Improved path handling in match_files
+  - Optimize file renaming logic
+- Added new tools and scripts
+  - Added package analysis scripts
+- Enhanced package validation
+  - Updated schema with flexible version format
+  - Added `--schema` option and workflow
+- Documentation improvements
+  - Reorganized binaries.md
+  - Updated command descriptions
+
 ## 0.3.10 - 2025-03-27
 
 - Reorganized commands
