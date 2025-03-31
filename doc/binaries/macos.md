@@ -132,6 +132,7 @@ bash scripts/bcftools.sh    # bundled htslib
 
 bash scripts/snp-sites.sh
 
+# missing or unsuitable terminal: xterm-256color
 # cbp build source tmux
 # cbp local libevent ncurses utf8proc pkgconf
 # bash scripts/tmux.sh

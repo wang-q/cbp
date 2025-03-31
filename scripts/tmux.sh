@@ -25,6 +25,9 @@ PKG_CONFIG_LIBDIR="${CBP_LIB}/pkgconfig" \
     --enable-utf8proc \
     || exit 1
 
+# PKG_CONFIG_PATH="${CBP_LIB}/pkgconfig" \
+    # --with-TERM=screen-256color \
+
 make || exit 1
 make install || exit 1
 
