@@ -8,9 +8,9 @@ Key points about the build process:
 
 1. Package definitions are stored in the `packages/` directory as JSON files
 2. Source codes are downloaded (and optionally repackaged) to the `sources/` directory
-3. Most builds use Zig as the cross-compiler targeting glibc 2.17 for Linux
-4. Build artifacts are packaged into .tar.gz files and stored in the `binaries/` directory
-5. Each build is performed in a temporary directory to avoid polluting the project's directories
+3. Build artifacts are packaged into .tar.gz files and stored in the `binaries/` directory
+4. Each build is performed in a temporary directory to avoid polluting the project's directories
+5. Most builds use Zig as the cross-compiler targeting glibc 2.17 for Linux
 
 ## Package Analysis
 
