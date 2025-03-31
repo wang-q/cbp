@@ -189,6 +189,10 @@
           "format": "uri",
           "description": "Download URL for the platform"
         },
+        "download_name": {
+          "type": "string",
+          "description": "Specify the name of the downloaded file"
+        },
         "binary": {
           "oneOf": [
             {

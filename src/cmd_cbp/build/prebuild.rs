@@ -83,12 +83,19 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             println!("-> Processing for OS: {}", os_type);
 
             let temp_dir = tempfile::tempdir()?;
-            let temp_file = temp_dir.path().join("download.tmp");
 
             // Download file
             let url = dl_obj["url"]
                 .as_str()
                 .ok_or_else(|| anyhow::anyhow!("URL not found"))?;
+
+            let temp_file = if let Some(name) = dl_obj.get("download_name").and_then(|v| v.as_str()) {
+                // Use specified download name
+                temp_dir.path().join(name)
+            } else {
+                temp_dir.path().join("download.tmp")
+            };
+
             println!("-> Downloading from {}", url);
             cbp::download_file(url, &temp_file, &agent)?;
 
