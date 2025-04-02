@@ -46,7 +46,6 @@ bash scripts/rust.sh tokei
 
 # Bioinformatics utilities
 bash scripts/rust.sh intspan
-bash scripts/rust.sh nwr
 bash scripts/rust.sh hnsm
 bash scripts/rust.sh pgr
 bash scripts/rust.sh anchr
@@ -71,7 +70,6 @@ bash scripts/rust.sh jnv native
 bash scripts/rust.sh resvg native
 
 bash scripts/rust.sh intspan native
-bash scripts/rust.sh nwr native
 bash scripts/rust.sh hnsm native
 bash scripts/rust.sh pgr native
 bash scripts/rust.sh anchr native
@@ -99,7 +97,6 @@ winget install 7zip.7zip
 cbp local -l eza
 
 .\scripts\rust.ps1 intspan
-.\scripts\rust.ps1 nwr
 .\scripts\rust.ps1 hnsm
 .\scripts\rust.ps1 pgr
 .\scripts\rust.ps1 anchr

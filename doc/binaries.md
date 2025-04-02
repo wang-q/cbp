@@ -456,6 +456,8 @@ cbp build prebuild pup tsv-utils
 
 cbp build prebuild tmux
 
+cbp build prebuild nwr
+
 ```
 
 ### Bioinformatics tools
