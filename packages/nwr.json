@@ -1,6 +1,6 @@
 {
   "name": "nwr",
-  "version": "0.7.7",
+  "version": "0.8.4",
   "description": "NCBI taxonomy, NeWick files and assembly Reports",
   "homepage": "https://github.com/wang-q/nwr",
   "license": "MIT",

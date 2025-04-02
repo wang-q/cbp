@@ -456,7 +456,6 @@ cbp build prebuild pup tsv-utils
 
 cbp build prebuild tmux
 
-cbp build prebuild nwr
 
 ```
 
@@ -475,6 +474,9 @@ cbp build prebuild mash mmseqs raxml-ng
 bash scripts/prebuilds/sratoolkit.sh linux
 bash scripts/prebuilds/sratoolkit.sh macos
 bash scripts/prebuilds/sratoolkit.sh windows
+
+cbp build prebuild nwr
+cbp build prebuild hnsm
 
 ```
 
