@@ -475,6 +475,7 @@ bash scripts/prebuilds/sratoolkit.sh linux
 bash scripts/prebuilds/sratoolkit.sh macos
 bash scripts/prebuilds/sratoolkit.sh windows
 
+cbp build prebuild intspan
 cbp build prebuild nwr
 cbp build prebuild hnsm
 
