@@ -50,19 +50,36 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             .ok_or_else(|| anyhow::anyhow!("Download configuration not found"))?;
 
         let temp_dir = tempfile::tempdir()?;
-        let temp_file = temp_dir.path().join("download.tmp");
 
-        // Download font file
+        // Download file
         let url = dl_obj["url"]
             .as_str()
             .ok_or_else(|| anyhow::anyhow!("Font URL not found"))?;
+
+        let temp_file =
+            if let Some(name) = dl_obj.get("download_name").and_then(|v| v.as_str()) {
+                // Use specified download name
+                temp_dir.path().join(name)
+            } else {
+                temp_dir.path().join("download.tmp")
+            };
+
         println!("-> Downloading from {}", url);
         cbp::download_file(url, &temp_file, &agent)?;
 
-        // Check number of keys in dl_obj
-        if dl_obj.len() > 1 {
+        // Check if extraction is needed
+        let needs_extract = url.ends_with(".zip")
+            || url.ends_with(".tar.gz")
+            || url.ends_with(".tar.xz")
+            || url.ends_with(".tar.bz2")
+            || dl_obj.get("extract").is_some();
+
+        if needs_extract {
             println!("-> Processing source archive");
             cbp::extract_archive(&temp_dir, &temp_file, dl_obj)?;
+        }
+
+        {
             cbp::handle_rename(&temp_dir, dl_obj)?;
             cbp::clean_files(&temp_dir, dl_obj)?;
 

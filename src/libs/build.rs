@@ -40,6 +40,10 @@ pub fn download_file(
     file_path: &std::path::Path,
     agent: &ureq::Agent,
 ) -> anyhow::Result<()> {
+    if let Some(parent) = file_path.parent() {
+        std::fs::create_dir_all(parent)?;
+    }
+
     let mut file = std::fs::File::create(file_path)?;
     let resp = agent.get(url).call()?;
     std::io::copy(&mut resp.into_reader(), &mut file)?;
@@ -47,14 +51,15 @@ pub fn download_file(
 }
 
 /// Extract archive using custom command or default tar
-///
-/// Uses gtar on macOS and tar on other platforms
+/// Or copy single source file to destination
 pub fn extract_archive(
     temp_dir: &tempfile::TempDir,
     temp_file: &std::path::Path,
     json_obj: &serde_json::Map<String, serde_json::Value>,
 ) -> anyhow::Result<()> {
     println!("-> Extracting archive");
+
+    // Original archive extraction logic
     if let Some(extract_cmd) = json_obj.get("extract") {
         let cmd_str = extract_cmd
             .as_str()
@@ -148,7 +153,10 @@ pub fn handle_symlink(
             let target_path = temp_dir.path().join(target);
             if target_path.exists() {
                 use std::os::unix::fs::PermissionsExt;
-                std::fs::set_permissions(&target_path, std::fs::Permissions::from_mode(0o755))?;
+                std::fs::set_permissions(
+                    &target_path,
+                    std::fs::Permissions::from_mode(0o755),
+                )?;
             }
 
             let link_path = bin_dir.join(link_name);

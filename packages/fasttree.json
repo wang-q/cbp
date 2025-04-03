@@ -5,7 +5,13 @@
   "homepage": "http://www.microbesonline.org/fasttree/",
   "license": "GPL-2.0",
   "type": "source",
-  "tests": [
+  "downloads": {
+    "source": {
+      "url": "https://raw.githubusercontent.com/morgannprice/fasttree/refs/heads/main/old/FastTree-2.1.11.c",
+      "download_name": "fasttree/FastTree.c"
+    }
+  },
+ "tests": [
     {
       "name": "help",
       "command": "FastTree",

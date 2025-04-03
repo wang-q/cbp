@@ -89,7 +89,9 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                 .as_str()
                 .ok_or_else(|| anyhow::anyhow!("URL not found"))?;
 
-            let temp_file = if let Some(name) = dl_obj.get("download_name").and_then(|v| v.as_str()) {
+            let temp_file = if let Some(name) =
+                dl_obj.get("download_name").and_then(|v| v.as_str())
+            {
                 // Use specified download name
                 temp_dir.path().join(name)
             } else {
@@ -102,6 +104,8 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             // Check if extraction is needed
             let needs_extract = url.ends_with(".zip")
                 || url.ends_with(".tar.gz")
+                || url.ends_with(".tar.xz")
+                || url.ends_with(".tar.bz2")
                 || dl_obj.get("extract").is_some();
 
             if needs_extract {
