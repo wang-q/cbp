@@ -1,0 +1,24 @@
+{
+  "name": "usalign",
+  "version": "20241108",
+  "description": "Universal structure alignment of monomeric, complex proteins and nucleic acids",
+  "homepage": "https://github.com/pylelab/USalign",
+  "license": "CUSTOM",
+  "type": "vcpkg",
+  "downloads": {
+    "source": {
+      "url": "https://github.com/pylelab/USalign/archive/609e718d19ee525f9c86a6e6b3b33243775cc011.tar.gz",
+      "rename": {
+        "USalign-*": "usalign"
+      }
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "USalign",
+      "pattern": "US-align ",
+      "args": "-h"
+    }
+  ]
+}

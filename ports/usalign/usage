@@ -1,0 +1,16 @@
+The package usalign provides the following programs:
+    qTMclust
+    USalign
+    TMalign
+    TMscore
+    MMalign
+    se
+    pdb2xyz
+    xyz_sfetch
+    pdb2fasta
+    pdb2ss
+    NWalign
+    HwRMSD
+    cif2pdb
+    pdbAtomName
+    addChainID

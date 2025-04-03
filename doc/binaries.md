@@ -151,6 +151,9 @@ bash scripts/vcpkg.sh merquryfk
 cbp build source seqtk
 bash scripts/vcpkg.sh seqtk
 
+cbp build source usalign
+bash scripts/vcpkg.sh usalign
+
 # ./configure
 cbp build source cabextract
 bash scripts/vcpkg.sh cabextract

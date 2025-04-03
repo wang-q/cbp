@@ -1,0 +1,16 @@
+{
+  "name": "usalign",
+  "version": "20241108",
+  "description": "Universal structure alignment of monomeric, complex proteins and nucleic acids",
+  "homepage": "https://github.com/pylelab/USalign",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
