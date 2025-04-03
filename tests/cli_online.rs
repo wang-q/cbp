@@ -167,10 +167,6 @@ fn command_info() -> anyhow::Result<()> {
 }
 
 #[test]
-#[cfg_attr(
-    target_os = "windows",
-    ignore = "tar operations not supported on Windows"
-)]
 fn command_build_source() -> anyhow::Result<()> {
     let temp_dir = tempfile::TempDir::new()?;
 
@@ -247,10 +243,6 @@ fn command_build_source() -> anyhow::Result<()> {
 }
 
 #[test]
-#[cfg_attr(
-    target_os = "windows",
-    ignore = "tar operations not supported on Windows"
-)]
 fn command_build_font() -> anyhow::Result<()> {
     let temp_dir = tempfile::TempDir::new()?;
 
@@ -313,10 +305,6 @@ fn command_build_font() -> anyhow::Result<()> {
 }
 
 #[test]
-#[cfg_attr(
-    target_os = "windows",
-    ignore = "tar operations not supported on Windows"
-)]
 fn command_build_prebuild_binary() -> anyhow::Result<()> {
     let temp_dir = tempfile::TempDir::new()?;
 

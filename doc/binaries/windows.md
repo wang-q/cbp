@@ -119,6 +119,8 @@ ABI compatibility is not a concern.
 Get-Command pigz
 (Get-Command pigz).Path
 
+.\scripts\vcpkg.ps1 aragorn
+
 .\scripts\vcpkg.ps1 sickle
 
 .\scripts\vcpkg.ps1 multiz

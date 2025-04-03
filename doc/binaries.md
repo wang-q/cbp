@@ -114,6 +114,9 @@ bash scripts/vcpkg.sh "lua[core,tools]"
 ## My ports
 
 ```bash
+cbp build source aragorn
+bash scripts/vcpkg.sh aragorn
+
 # Transform Makefile to CMakeLists.txt
 cbp build source bwa
 bash scripts/vcpkg.sh bwa

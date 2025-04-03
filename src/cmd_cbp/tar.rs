@@ -99,7 +99,11 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
     // Create and compress archive
     let tar_file = std::fs::File::create(&tar_name)?;
-    let gz = flate2::write::GzEncoder::new(tar_file, flate2::Compression::default());
+    let gz = flate2::GzBuilder::new()
+        .filename("")
+        .comment("")
+        .mtime(1704067200) // 2024-01-01 00:00:00 UTC
+        .write(tar_file, flate2::Compression::default());
     let mut archive = tar::Builder::new(gz);
 
     // Add files with relative paths

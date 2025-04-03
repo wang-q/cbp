@@ -71,6 +71,10 @@ fn setup_test_data() -> anyhow::Result<tempfile::TempDir> {
     Ok(temp_dir)
 }
 
+#[cfg_attr(
+    target_os = "windows",
+    ignore = "Test package uses Unix-style 'ls' command"
+)]
 #[test]
 fn command_build_test_font() -> anyhow::Result<()> {
     let temp_dir = setup_test_data()?;
