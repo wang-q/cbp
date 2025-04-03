@@ -64,6 +64,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                 temp_dir.path().join("download.tmp")
             };
 
+        // Process file after download
         println!("-> Downloading from {}", url);
         cbp::download_file(url, &temp_file, &agent)?;
 
@@ -77,6 +78,8 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         if needs_extract {
             println!("-> Processing source archive");
             cbp::extract_archive(&temp_dir, &temp_file, dl_obj)?;
+        } else {
+            normalize_line_endings(&temp_file)?;
         }
 
         {
@@ -120,6 +123,23 @@ fn get_target_name(
         println!("  -> Using package name as target: {}", pkg);
         Ok(pkg.to_string())
     }
+}
+
+/// Convert CRLF to LF for text files
+fn normalize_line_endings(path: &std::path::Path) -> anyhow::Result<()> {
+    // Only process text files
+    if path.extension().map_or(false, |ext| {
+        matches!(
+            ext.to_str().unwrap_or(""),
+            "c" | "h" | "cpp" | "hpp" | "txt"
+        )
+    }) {
+        let content = std::fs::read_to_string(path)?;
+        let normalized = content.replace("\r\n", "\n");
+        std::fs::write(path, normalized)?;
+        println!("  -> Normalized line endings: {}", path.display());
+    }
+    Ok(())
 }
 
 /// Get target name from rename map
