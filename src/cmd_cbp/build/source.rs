@@ -113,6 +113,10 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         // let target_name = get_target_name(&temp_dir, dl_obj, pkg)?;
         // create_reproducible_archive(&temp_dir, &temp_file, &target_name)?;
 
+        if temp_file.exists() {
+            std::fs::remove_file(&temp_file)?;
+        }
+
         run_cmd!(
             cd ${temp_path};
             ${cbp} tar . -o ${target_path}
