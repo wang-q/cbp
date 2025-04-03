@@ -337,11 +337,6 @@ mv vcpkg-centos_master.sif vcpkg/vcpkg-centos.sif
 
 # fasttree
 cbp build source fasttree
-
-mkdir -p fasttree &&
-    curl -o fasttree/FastTree.c -L https://raw.githubusercontent.com/morgannprice/fasttree/refs/heads/main/old/FastTree-2.1.11.c &&
-    tar -czf sources/fasttree.tar.gz fasttree/ &&
-    rm -fr fasttree
 bash scripts/fasttree.sh
 
 ```
