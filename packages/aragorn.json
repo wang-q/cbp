@@ -1,0 +1,22 @@
+{
+  "name": "aragorn",
+  "version": "1.2.41",
+  "description": "Detect tRNA and tmRNA genes in contigs",
+  "homepage": "https://www.trna.se/ARAGORN/",
+  "license": "GPL-3.0-only",
+  "type": "source",
+  "downloads": {
+    "source": {
+      "url": "https://www.trna.se/ARAGORN/Downloads/aragorn1.2.41.c",
+      "download_name": "aragorn/aragorn.c"
+    }
+  },
+ "tests": [
+    {
+      "name": "help",
+      "command": "aragorn",
+      "pattern": "ARAGORN v[0-9]+\\.",
+      "args": "-h"
+    }
+  ]
+}
