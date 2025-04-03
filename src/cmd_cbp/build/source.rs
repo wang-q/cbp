@@ -127,18 +127,10 @@ fn get_target_name(
 
 /// Convert CRLF to LF for text files
 fn normalize_line_endings(path: &std::path::Path) -> anyhow::Result<()> {
-    // Only process text files
-    if path.extension().map_or(false, |ext| {
-        matches!(
-            ext.to_str().unwrap_or(""),
-            "c" | "h" | "cpp" | "hpp" | "txt"
-        )
-    }) {
-        let content = std::fs::read_to_string(path)?;
-        let normalized = content.replace("\r\n", "\n");
-        std::fs::write(path, normalized)?;
-        println!("  -> Normalized line endings: {}", path.display());
-    }
+    let content = std::fs::read_to_string(path)?;
+    let normalized = content.replace("\r\n", "\n");
+    std::fs::write(path, normalized)?;
+    println!("  -> Normalized line endings: {}", path.display());
     Ok(())
 }
 
