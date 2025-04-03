@@ -77,6 +77,20 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         println!("-> Downloading from {}", url);
         cbp::download_file(url, &temp_file, &agent)?;
 
+        let target_path = base_dir
+            .canonicalize()?
+            .join("sources")
+            .join(format!("{}.tar.gz", pkg))
+            .display()
+            .to_string();
+        std::fs::create_dir_all(base_dir.join("sources"))?;
+
+        if dl_obj.len() == 1 {
+            std::fs::rename(temp_file, target_path)?;
+            println!("-> Successfully downloaded and processed");
+            continue;
+        }
+
         // Check if extraction is needed
         let needs_extract = url.ends_with(".zip")
             || url.ends_with(".tar.gz")
@@ -91,30 +105,18 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             normalize_line_endings(&temp_file)?;
         }
 
-        let target_path = base_dir
-            .canonicalize()?
-            .join("sources")
-            .join(format!("{}.tar.gz", pkg))
-            .display()
-            .to_string();
-        std::fs::create_dir_all(base_dir.join("sources"))?;
         let temp_path = temp_dir.path().canonicalize()?;
 
-        if dl_obj.len() > 1 {
-            cbp::handle_rename(&temp_dir, dl_obj)?;
-            cbp::clean_files(&temp_dir, dl_obj)?;
+        cbp::handle_rename(&temp_dir, dl_obj)?;
+        cbp::clean_files(&temp_dir, dl_obj)?;
 
-            // let target_name = get_target_name(&temp_dir, dl_obj, pkg)?;
-            // create_reproducible_archive(&temp_dir, &temp_file, &target_name)?;
+        // let target_name = get_target_name(&temp_dir, dl_obj, pkg)?;
+        // create_reproducible_archive(&temp_dir, &temp_file, &target_name)?;
 
-            run_cmd!(
-                cd ${temp_path};
-                ${cbp} tar . -o ${target_path}
-            )?;
-        } else {
-            std::fs::rename(temp_file, target_path)?;
-        }
-
+        run_cmd!(
+            cd ${temp_path};
+            ${cbp} tar . -o ${target_path}
+        )?;
         println!("-> Successfully downloaded and processed");
     }
 
