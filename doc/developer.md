@@ -112,6 +112,7 @@ export PATH=$VCPKG_ROOT:$PATH
 
 # List all available features for a package
 vcpkg search bzip2
+
 # To remove a vcpkg package
 vcpkg install --debug --recurse \
     --clean-buildtrees-after-build --clean-packages-after-build \
@@ -131,6 +132,7 @@ vcpkg remove --debug --recurse \
     --x-install-root=vcpkg/installed \
     --x-packages-root=vcpkg/packages \
     zlib:x64-linux-zig
+
 # Install zlib with custom target
 # vcpkg install zlib:x64-linux-zig \
 #     --cmake-args="-DCMAKE_C_COMPILER_TARGET=aarch64-macos-none" \
@@ -172,11 +174,12 @@ uv pip install --system meson
 
 ```
 
-### git lfs
+### git lfs and gh
 
 ```bash
 # linux
 sudo apt install git-lfs
+sudo apt install gh
 
 # macos
 brew install git-lfs
