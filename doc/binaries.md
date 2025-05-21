@@ -454,7 +454,7 @@ cbp build prebuild gh
 cbp build prebuild ninja uv
 
 cbp build prebuild aria2
-cbp build prebuild bat
+cbp build prebuild bat zenith
 cbp build prebuild pandoc tectonic
 cbp build prebuild pup tsv-utils
 

@@ -1,0 +1,28 @@
+{
+  "name": "zenith",
+  "version": "0.14.1",
+  "description": "Sort of like top or htop but with zoom-able charts, CPU, GPU, network, and disk usage",
+  "homepage": "https://github.com/bvaisvil/zenith",
+  "license": "MIT",
+  "type": "prebuild",
+  "downloads": {
+    "linux": {
+      "url": "https://github.com/bvaisvil/zenith/releases/download/0.14.1/zenith.x86_64-unknown-linux-musl.tgz",
+      "extract": "tar xvfz",
+      "binary": "zenith"
+    },
+    "macos": {
+      "url": "https://github.com/bvaisvil/zenith/releases/download/0.14.1/zenith.aarch64-apple-darwin.tgz",
+      "extract": "tar xvfz",
+      "binary": "zenith"
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "zenith",
+      "pattern": "zenith [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}
