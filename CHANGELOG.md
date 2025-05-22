@@ -2,6 +2,22 @@
 
 ## Unreleased - ReleaseDate
 
+- Package Management Changes
+  - Added some packages
+- Build System Improvements
+  - Enhanced Windows command execution handling
+    - Added support for `.exe`, `.ps1`, `.bat`, `.cmd` extensions
+    - Improved handling of built-in Windows commands
+    - Added PowerShell script execution support
+- Schema Validation Updates
+  - Refactored `schema.json` downloads field validation rules
+  - Simplified downloads object structure
+  - Improved platform-specific download configurations
+- Documentation Updates
+  - Streamlined build instructions in binaries.md
+  - Simplified vcpkg usage examples in developer.md
+  - Updated Windows-specific build instructions
+
 ## 0.3.11 - 2025-03-31
 
 - Improved Rust implementation
