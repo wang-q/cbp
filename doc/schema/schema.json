@@ -82,13 +82,15 @@
         },
         "linux": { "$ref": "#/definitions/platformDownload" },
         "macos": { "$ref": "#/definitions/platformDownload" },
-        "windows": { "$ref": "#/definitions/platformDownload" }
+        "windows": { "$ref": "#/definitions/platformDownload" },
+        "font": { "$ref": "#/definitions/platformDownload" }
       },
       "anyOf": [
         { "required": ["source"] },
         { "required": ["linux"] },
         { "required": ["macos"] },
-        { "required": ["windows"] }
+        { "required": ["windows"] },
+        { "required": ["font"] }
       ]
     },
     "tests": {
