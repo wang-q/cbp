@@ -203,6 +203,9 @@ cargo build
 
 cargo run -release --bin cbp init --dev
 
+git log v0.3.11..HEAD > gitlog.txt
+git diff HEAD v0.3.11 > gitdiff.txt
+
 ```
 
 ## Project Structure
