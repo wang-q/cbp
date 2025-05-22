@@ -201,7 +201,7 @@ mkdir -p /tmp/cargo
 export CARGO_TARGET_DIR=/tmp/cargo
 cargo build
 
-cargo run -release --bin cbp init --dev
+cargo run --release --bin cbp init --dev
 
 git log v0.3.11..HEAD > gitlog.txt
 git diff HEAD v0.3.11 > gitdiff.txt
