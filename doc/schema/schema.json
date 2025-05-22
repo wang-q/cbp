@@ -52,83 +52,43 @@
     },
     "downloads": {
       "type": "object",
-      "oneOf": [
-        {
-          "required": [
-            "source"
-          ],
+      "properties": {
+        "source": {
+          "type": "object",
+          "required": ["url"],
           "properties": {
-            "source": {
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "description": "Source code download URL"
+            },
+            "rename": {
               "type": "object",
-              "required": [
-                "url"
-              ],
-              "properties": {
-                "url": {
-                  "type": "string",
-                  "format": "uri",
-                  "description": "Source code download URL"
-                },
-                "rename": {
-                  "type": "object",
-                  "patternProperties": {
-                    "^.*$": {
-                      "type": "string"
-                    }
-                  },
-                  "description": "File renaming rules"
-                },
-                "clean": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "description": "Patterns of files to be removed"
+              "patternProperties": {
+                "^.*$": {
+                  "type": "string"
                 }
-              }
+              },
+              "description": "File renaming rules"
+            },
+            "clean": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Patterns of files to be removed"
             }
           }
         },
-        {
-          "required": [
-            "font"
-          ],
-          "properties": {
-            "font": {
-              "$ref": "#/definitions/platformDownload"
-            }
-          }
-        },
-        {
-          "anyOf": [
-            {
-              "required": [
-                "linux"
-              ]
-            },
-            {
-              "required": [
-                "macos"
-              ]
-            },
-            {
-              "required": [
-                "windows"
-              ]
-            }
-          ],
-          "properties": {
-            "linux": {
-              "$ref": "#/definitions/platformDownload"
-            },
-            "macos": {
-              "$ref": "#/definitions/platformDownload"
-            },
-            "windows": {
-              "$ref": "#/definitions/platformDownload"
-            }
-          }
-        }
+        "linux": { "$ref": "#/definitions/platformDownload" },
+        "macos": { "$ref": "#/definitions/platformDownload" },
+        "windows": { "$ref": "#/definitions/platformDownload" }
+      },
+      "anyOf": [
+        { "required": ["source"] },
+        { "required": ["linux"] },
+        { "required": ["macos"] },
+        { "required": ["windows"] }
       ]
     },
     "tests": {
