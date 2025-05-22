@@ -1,0 +1,32 @@
+{
+  "name": "macchina",
+  "version": "6.4.0",
+  "description": "A system information fetcher, with an emphasis on performance and minimalism",
+  "homepage": "https://github.com/Macchina-CLI/macchina",
+  "license": "MIT",
+  "type": "prebuild",
+  "downloads": {
+    "linux": {
+      "url": "https://github.com/Macchina-CLI/macchina/releases/download/v6.4.0/macchina-v6.4.0-linux-musl-x86_64.tar.gz",
+      "extract": "tar xvfz",
+      "binary": "macchina"
+    },
+    "macos": {
+      "url": "https://github.com/Macchina-CLI/macchina/releases/download/v6.4.0/macchina-v6.4.0-macos-aarch64.tar.gz",
+      "extract": "tar xvfz",
+      "binary": "macchina"
+    },
+    "windows": {
+      "url": "https://github.com/Macchina-CLI/macchina/releases/download/v6.4.0/macchina-v6.4.0-windows-x86_64.exe",
+      "binary": "macchina.exe"
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "macchina",
+      "pattern": "macchina [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}
