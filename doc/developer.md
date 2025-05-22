@@ -201,6 +201,8 @@ mkdir -p /tmp/cargo
 export CARGO_TARGET_DIR=/tmp/cargo
 cargo build
 
+cargo run -release --bin cbp init --dev
+
 ```
 
 ## Project Structure
