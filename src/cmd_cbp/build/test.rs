@@ -69,6 +69,8 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         cbp::CbpDirs::from_exe()?
     };
 
+    let os_type = cbp::get_os_type()?;
+
     //----------------------------
     // Operating
     //----------------------------
@@ -121,7 +123,25 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             {
                 cmd.to_string()
             } else {
-                cbp_dirs.bin.join(cmd).to_string_lossy().to_string()
+                let cmd_path = cbp_dirs.bin.join(cmd);
+                if os_type == "windows" {
+                    if cmd_path.exists() {
+                        cmd_path.to_string_lossy().to_string()
+                    } else {
+                        // Try common Windows executable extensions
+                        let extensions = [".exe", ".ps1", ".bat", ".cmd"];
+                        extensions
+                            .iter()
+                            .map(|ext| cmd_path.with_extension(ext.trim_start_matches(".")))
+                            .find(|path| path.exists())
+                            .map_or_else(
+                                || cmd_path.to_string_lossy().to_string(),
+                                |path| path.to_string_lossy().to_string()
+                            )
+                    }
+                } else {
+                    cmd_path.to_string_lossy().to_string()
+                }
             };
 
             // Get arguments
@@ -159,10 +179,33 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                 .unwrap_or_default();
 
             // Execute command
-            let output = Command::new(&full_cmd)
-                .args(&args)
-                .output()
-                .with_context(|| format!("Failed to execute command: {}", full_cmd))?;
+            let output = if os_type == "windows" {
+                if ["cls", "dir", "cd", "echo", "type", "del", "copy", "move", "md", "rd",
+                    "ren", "set", "path", "exit", "start", "title", "ver", "vol", "date", "time"
+                ].contains(&full_cmd.to_lowercase().as_str()) {
+                    Command::new("cmd")
+                        .args(["/c", &full_cmd])
+                        .args(&args)
+                        .output()
+                        .with_context(|| format!("Failed to execute command: {}", full_cmd))?
+                } else if full_cmd.to_lowercase().ends_with(".ps1") {
+                    Command::new("powershell")
+                        .args(["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", &full_cmd])
+                        .args(&args)
+                        .output()
+                        .with_context(|| format!("Failed to execute PowerShell script: {}", full_cmd))?
+                } else {
+                    Command::new(&full_cmd)
+                        .args(&args)
+                        .output()
+                        .with_context(|| format!("Failed to execute command: {}", full_cmd))?
+                }
+            } else {
+                Command::new(&full_cmd)
+                    .args(&args)
+                    .output()
+                    .with_context(|| format!("Failed to execute command: {}", full_cmd))?
+            };
 
             let output_str = String::from_utf8_lossy(&output.stdout).to_string();
             let stderr_str = String::from_utf8_lossy(&output.stderr).to_string();
