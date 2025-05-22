@@ -2,6 +2,8 @@
 
 ## Unreleased - ReleaseDate
 
+## 0.3.12 - 2025-05-22
+
 - Package Management Changes
   - Added some packages
 - Build System Improvements
