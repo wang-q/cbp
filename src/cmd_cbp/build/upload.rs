@@ -1,4 +1,3 @@
-use chrono::prelude::*;
 use clap::*;
 use md5::{Digest, Md5};
 use serde::{Deserialize, Serialize};
@@ -8,7 +7,6 @@ use std::path::Path;
 struct Package {
     name: String,
     md5: String,
-    created_at: String,
     path: String,
 }
 
@@ -99,15 +97,14 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
         println!("==> Processing {}...", name);
 
-        // Calculate MD5 and get file info
-        let (hash, created_at) = calculate_file_info(file)?;
+        // Calculate MD5
+        let hash = calculate_file_info(file)?;
 
         // Update package information
         if let Some(existing) = packages.iter_mut().find(|p| p.name == name) {
             // Check MD5, only update and upload if different
             if existing.md5 != hash {
                 existing.md5 = hash;
-                existing.created_at = created_at.format("%Y-%m-%d").to_string();
                 existing.path = file.to_string();
                 to_upload.push(file.to_string());
                 println!("==> MD5 changed, will upload");
@@ -119,7 +116,6 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             packages.push(Package {
                 name: name.clone(),
                 md5: hash,
-                created_at: created_at.format("%Y-%m-%d").to_string(),
                 path: file.to_string(),
             });
             to_upload.push(file.to_string());
@@ -192,12 +188,10 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     Ok(())
 }
 
-fn calculate_file_info(file: &str) -> anyhow::Result<(String, DateTime<Local>)> {
+fn calculate_file_info(file: &str) -> anyhow::Result<String> {
     let mut file_handle = std::fs::File::open(file)?;
-    let metadata = std::fs::metadata(file)?;
     let mut hasher = Md5::new();
     std::io::copy(&mut file_handle, &mut hasher)?;
     let hash = format!("{:x}", hasher.finalize());
-    let created_at = DateTime::<Local>::from(metadata.created()?);
-    Ok((hash, created_at))
+    Ok(hash)
 }
