@@ -170,6 +170,7 @@ cbp install ninja
 cbp install uv
 cbp install jq
 
+cbp install python3.11
 uv pip install --system meson
 
 ```
