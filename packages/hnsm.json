@@ -7,17 +7,17 @@
   "type": "rust",
   "downloads": {
     "linux": {
-      "url": "https://github.com/wang-q/hnsm/releases/download/v0.3.2/hnsm-x86_64-unknown-linux-gnu.tar.gz",
+      "url": "https://github.com/wang-q/hnsm/releases/download/v0.3.3/hnsm-x86_64-unknown-linux-gnu.tar.gz",
       "extract": "tar xvfz",
       "binary": "target/x86_64-unknown-linux-gnu/release/hnsm"
     },
     "macos": {
-      "url": "https://github.com/wang-q/hnsm/releases/download/v0.3.2/hnsm-x86_64-apple-darwin.tar.gz",
+      "url": "https://github.com/wang-q/hnsm/releases/download/v0.3.3/hnsm-x86_64-apple-darwin.tar.gz",
       "extract": "tar xvfz",
       "binary": "target/release/hnsm"
     },
     "windows": {
-      "url": "https://github.com/wang-q/hnsm/releases/download/v0.3.2/hnsm-x86_64-pc-windows-msvc.zip",
+      "url": "https://github.com/wang-q/hnsm/releases/download/v0.3.3/hnsm-x86_64-pc-windows-msvc.zip",
       "extract": "unzip",
       "binary": "hnsm.exe"
     }
