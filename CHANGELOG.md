@@ -2,6 +2,11 @@
 
 ## Unreleased - ReleaseDate
 
+- Removed created_at field from upload.rs
+- Updated test dependency versions (assert_cmd, predicates, mockito)
+- Build System Improvements
+  - Moved unused tool scripts from `scripts/tools/` to `doc/attempts/tools/`
+
 ## 0.3.12 - 2025-05-22
 
 - Package Management Changes
