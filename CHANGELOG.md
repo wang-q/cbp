@@ -2,6 +2,8 @@
 
 ## Unreleased - ReleaseDate
 
+## 0.3.13 - 2025-06-05
+
 - Removed created_at field from upload.rs
 - Updated test dependency versions (assert_cmd, predicates, mockito)
 - Build System Improvements

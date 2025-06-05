@@ -70,7 +70,7 @@ iwr "https://github.com/wang-q/cbp/releases/latest/download/cbp.windows.exe" -Ou
 
 ## `cbp help`
 
-Current release: 0.3.12
+Current release: 0.3.13
 
 ```console
 $ cbp help
