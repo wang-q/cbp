@@ -28,7 +28,7 @@ internal workings.
 
 ### Requirements
 
-* Zig compiler (>= 0.14.0)
+* Zig compiler (>= 0.13.0)
 * Rust toolchain (stable)
 * Git (with LFS support)
 * `gh` command (GitHub CLI)
