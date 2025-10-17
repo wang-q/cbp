@@ -6,6 +6,8 @@
 [![Lines of code](https://www.aschey.tech/tokei/github/wang-q/cbp)](https://github.com//wang-q/cbp)
 [![License](https://img.shields.io/github/license/wang-q/builds)](https://github.com/wang-q/builds/blob/main/LICENSE)
 
+![cbp logo](logo.svg)
+
 `cbp` is a **C**ross-platform **B**inary **P**ackage manager that simplifies the distribution of CLI
 tools, with a focus on bioinformatics software. It ensures compatibility with older Linux systems (
 glibc 2.17+), Windows (x86_64), and provides native support for Apple Silicon, using Zig for
@@ -223,3 +225,7 @@ on any Linux system with glibc 2.17 or newer.
 ### How do I request a new package?
 
 Open an issue on GitHub with the package name, source URL, and any specific build requirements.
+
+## Logo
+
+CBP’s logo conveys reliability and innovation through a clear, science‑forward motif. A dynamic DNA double helix reflects our bioinformatics focus and constant pairing, echoing consistent cross‑platform compatibility. A subtle packaging form symbolizes stewardship and delivery of binaries, tying the helix to practical distribution.
