@@ -1,6 +1,4 @@
-# 
-
-![cbp logo](logo.svg)
+# ![cbp logo](logo.svg)
 
 [![Publish](https://github.com/wang-q/cbp/actions/workflows/publish.yml/badge.svg)](https://github.com/wang-q/cbp/actions)
 [![Build](https://github.com/wang-q/cbp/actions/workflows/build.yml/badge.svg)](https://github.com/wang-q/cbp/actions)
