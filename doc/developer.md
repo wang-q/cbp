@@ -4,24 +4,25 @@ This guide is intended for developers who want to contribute to the `cbp` projec
 internal workings.
 
 <!-- TOC -->
-- [Developer Guide](#developer-guide)
-  - [Development Environment](#development-environment)
-    - [Requirements](#requirements)
-    - [Setup Build Environment](#setup-build-environment)
-    - [Other tools](#other-tools)
-    - [git lfs](#git-lfs)
-    - [cbp itself](#cbp-itself)
-  - [Project Structure](#project-structure)
-  - [Build Process](#build-process)
-    - [Building Binary Packages](#building-binary-packages)
-  - [Dynamic Library Dependencies](#dynamic-library-dependencies)
-  - [Uploading Binaries](#uploading-binaries)
-    - [Upload Process](#upload-process)
-    - [Download URLs](#download-urls)
-  - [Contributing](#contributing)
-    - [Development Workflow](#development-workflow)
-    - [Adding a New Package](#adding-a-new-package)
-    - [Example build script templates:](#example-build-script-templates)
+* [Developer Guide](#developer-guide)
+  * [Development Environment](#development-environment)
+    * [Requirements](#requirements)
+    * [Setup Build Environment](#setup-build-environment)
+    * [Other tools](#other-tools)
+    * [git lfs and gh](#git-lfs-and-gh)
+    * [cbp itself](#cbp-itself)
+  * [Project Structure](#project-structure)
+  * [Build Process](#build-process)
+    * [Building Binary Packages](#building-binary-packages)
+  * [Dynamic Library Dependencies](#dynamic-library-dependencies)
+  * [Uploading Binaries](#uploading-binaries)
+    * [Upload Process](#upload-process)
+    * [Download URLs](#download-urls)
+  * [Packages](#packages)
+  * [Contributing](#contributing)
+    * [Development Workflow](#development-workflow)
+    * [Adding a New Package](#adding-a-new-package)
+    * [Example build script templates:](#example-build-script-templates)
 <!-- TOC -->
 
 ## Development Environment
@@ -55,8 +56,10 @@ source $HOME/.bashrc
 
 # need 0.14 for pthread on x86_64-windows-gnu
 # https://github.com/ziglang/zig/issues/10989
+zvm install 0.14.1
 zvm install 0.13.0
-zvm install 0.14.0
+
+zvm use 0.13.0
 
 # # zigup
 # curl -L https://github.com/marler8997/zigup/releases/download/v2025_01_02/zigup-x86_64-linux.tar.gz |
@@ -80,6 +83,17 @@ zig targets | jq .libc
 # Install Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
+if grep -q -i RUST_PATH $HOME/.bashrc; then
+    echo "==> .bashrc already contains RUST_PATH"
+else
+    echo "==> Updating .bashrc with RUST_PATH..."
+    RUST_PATH="export PATH=\"\$HOME/.cargo/bin:\$PATH\""
+    echo '# RUST_PATH'       >> $HOME/.bashrc
+    echo $RUST_PATH          >> $HOME/.bashrc
+    echo >> $HOME/.bashrc
+fi
+source $HOME/.bashrc
+
 # Install cargo-zigbuild
 cargo install --locked cargo-zigbuild
 
@@ -99,7 +113,7 @@ mkdir -p $HOME/share
 cd $HOME/share
 
 # Download and extract vcpkg
-curl -L https://github.com/microsoft/vcpkg/archive/refs/tags/2025.02.14.tar.gz |
+curl -L https://github.com/microsoft/vcpkg/archive/refs/tags/2025.10.17.tar.gz |
     tar xvz &&
     mv vcpkg-* vcpkg
 
@@ -107,13 +121,24 @@ cd vcpkg
 ./bootstrap-vcpkg.sh -disableMetrics
 
 # Set environment variables
-export VCPKG_ROOT=$HOME/share/vcpkg
-export PATH=$VCPKG_ROOT:$PATH
+if grep -q -i VCPKG_PATH $HOME/.bashrc; then
+    echo "==> .bashrc already contains VCPKG_PATH"
+else
+    echo "==> Updating .bashrc with VCPKG_PATH..."
+    VCPKG_ROOT=
+    VCPKG_PATH=
+    echo '# VCPKG_PATH'                         >> $HOME/.bashrc
+    echo "export VCPKG_ROOT=\"\$HOME/share/vcpkg\"" >> $HOME/.bashrc
+    echo "export PATH=\"\$VCPKG_ROOT:\$PATH\""  >> $HOME/.bashrc
+    echo >> $HOME/.bashrc
+fi
+source $HOME/.bashrc
 
 # List all available features for a package
 vcpkg search bzip2
 
-# To remove a vcpkg package
+# Switch to the cbp building dir
+# To install a vcpkg package
 vcpkg install --debug --recurse \
     --clean-buildtrees-after-build --clean-packages-after-build \
     --overlay-ports=ports \
@@ -124,6 +149,7 @@ vcpkg install --debug --recurse \
     --x-packages-root=vcpkg/packages \
     zlib:x64-linux-zig
 
+# To remove a vcpkg package
 vcpkg remove --debug --recurse \
     --overlay-ports=ports \
     --overlay-triplets="$(cbp prefix triplets)" \

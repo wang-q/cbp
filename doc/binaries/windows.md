@@ -7,7 +7,9 @@ This document follows the same structure as `doc/binaries.md` for consistency an
 ### Zig and Basic Tools
 
 ```powershell
-scoop install zig # 0.14.0
+irm https://raw.githubusercontent.com/tristanisham/zvm/master/install.ps1 | iex
+
+zvm i 0.14.1
 
 ~\.cargo\bin\cbp.exe init --dev
 
@@ -20,7 +22,7 @@ cbp install cmake ninja jq
 ```powershell
 # Download and extract vcpkg
 cd $env:USERPROFILE
-iwr -Uri "https://github.com/microsoft/vcpkg/archive/refs/tags/2025.02.14.tar.gz" -OutFile "vcpkg.tar.gz"
+iwr -Uri "https://github.com/microsoft/vcpkg/archive/refs/tags/2025.10.17.tar.gz" -OutFile "vcpkg.tar.gz"
 tar xf vcpkg.tar.gz
 Move-Item -Path "vcpkg-*" -Destination "vcpkg"
 
@@ -84,7 +86,7 @@ Some packages rely heavily on MSVC-specific features or Windows SDK. For these p
 x64-windows-static-release triplet to ensure successful builds. Since these are command-line tools,
 ABI compatibility is not a concern.
 
-```bash
+```powershell
 # avoid icu from sqlite3[*]
 .\scripts\vcpkg.ps1 "sqlite3[core,tool,dbstat,fts3,fts4,fts5,json1,math,rtree,soundex,zlib]" x64-windows-static-release
 
