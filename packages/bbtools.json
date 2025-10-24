@@ -1,0 +1,58 @@
+{
+  "name": "bbtools",
+  "version": "39.38",
+  "description": "Brian Bushnell's tools for manipulating reads",
+  "homepage": "https://github.com/bbushnell/BBTools/",
+  "license": "MIT",
+  "type": "prebuild",
+  "downloads": {
+    "linux": {
+      "url": "https://github.com/bbushnell/BBTools/archive/refs/tags/v39.38.tar.gz",
+      "extract": "tar xvfz",
+      "rename": {
+        "BBTools*": "libexec/bbtools"
+      },
+      "symlink": {
+        "bbduk.sh": "../libexec/bbtools/bbduk.sh",
+        "bbmap.sh": "../libexec/bbtools/bbmap.sh",
+        "bbmerge.sh": "../libexec/bbtools/bbmerge.sh",
+        "bbmerge-auto.sh": "../libexec/bbtools/bbmerge-auto.sh",
+        "bbnorm.sh": "../libexec/bbtools/bbnorm.sh",
+        "clumpify.sh": "../libexec/bbtools/clumpify.sh",
+        "filterbytile.sh": "../libexec/bbtools/filterbytile.sh",
+        "kmercountexact.sh": "../libexec/bbtools/kmercountexact.sh",
+        "reformat.sh": "../libexec/bbtools/reformat.sh",
+        "repair.sh": "../libexec/bbtools/repair.sh",
+        "tadpole.sh": "../libexec/bbtools/tadpole.sh"
+      }
+    },
+    "macos": {
+      "url": "https://github.com/bbushnell/BBTools/archive/refs/tags/v39.38.tar.gz",
+      "extract": "tar xvfz",
+      "rename": {
+        "BBTools*": "libexec/bbtools"
+      },
+      "symlink": {
+        "bbduk.sh": "../libexec/bbtools/bbduk.sh",
+        "bbmap.sh": "../libexec/bbtools/bbmap.sh",
+        "bbmerge.sh": "../libexec/bbtools/bbmerge.sh",
+        "bbmerge-auto.sh": "../libexec/bbtools/bbmerge-auto.sh",
+        "bbnorm.sh": "../libexec/bbtools/bbnorm.sh",
+        "clumpify.sh": "../libexec/bbtools/clumpify.sh",
+        "filterbytile.sh": "../libexec/bbtools/filterbytile.sh",
+        "kmercountexact.sh": "../libexec/bbtools/kmercountexact.sh",
+        "reformat.sh": "../libexec/bbtools/reformat.sh",
+        "repair.sh": "../libexec/bbtools/repair.sh",
+        "tadpole.sh": "../libexec/bbtools/tadpole.sh"
+      }
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "reformat.sh",
+      "pattern": "Brian Bushnell",
+      "args": "--version"
+    }
+  ]
+}
