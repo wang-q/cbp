@@ -16,7 +16,7 @@
   "tests": [
     {
       "name": "helps",
-      "command": "FastGA",
+      "command": "FastK",
       "ignore_exit_code": true,
       "pattern": "Usage: FastK"
     }
