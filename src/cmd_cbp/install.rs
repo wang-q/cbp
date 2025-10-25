@@ -122,8 +122,9 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         let resp = agent.get(&url).call()?;
         std::io::copy(&mut resp.into_reader(), &mut file)?;
 
-        // Move to final location
-        std::fs::rename(&temp_file, &cache_file)?;
+        // Move to final location using copy and delete to handle cross-device scenarios
+        std::fs::copy(&temp_file, &cache_file)?;
+        std::fs::remove_file(&temp_file)?;
 
         // Install package
         cbp_dirs.install_package(pkg, &cache_file)?;

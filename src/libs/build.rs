@@ -118,8 +118,10 @@ pub fn handle_rename(
             if let Some((source_path, _)) = matches.first() {
                 let target_path = temp_dir.path().join(target);
                 if source_path != &target_path && source_path.exists() {
-                    std::fs::rename(source_path, &target_path)?;
-                    println!("    -> Renamed: {} -> {}", source_path.display(), target);
+                    // Use copy and delete instead of rename to handle cross-device scenarios
+                    std::fs::copy(source_path, &target_path)?;
+                    std::fs::remove_file(source_path)?;
+                    println!("    -> Moved: {} -> {}", source_path.display(), target);
                 }
             }
         }

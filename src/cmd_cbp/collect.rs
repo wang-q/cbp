@@ -252,7 +252,9 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
             {
                 let dest_exe = dest_path.with_extension("exe");
                 if dest_path != dest_exe {
-                    std::fs::rename(&dest_path, &dest_exe)?;
+                    // Use copy and delete instead of rename to handle cross-device scenarios
+                    std::fs::copy(&dest_path, &dest_exe)?;
+                    std::fs::remove_file(&dest_path)?;
                 }
             }
 

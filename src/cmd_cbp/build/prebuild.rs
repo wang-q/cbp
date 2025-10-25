@@ -111,11 +111,13 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             if needs_extract {
                 cbp::extract_archive(&temp_dir, &temp_file, dl_obj)?;
             } else if dl_obj.get("binary").is_some() {
-                // For single binary files, just rename the downloaded file
+                // For single binary files, use copy and delete instead of rename to handle cross-device scenarios
                 let binary_name = dl_obj["binary"]
                     .as_str()
                     .ok_or_else(|| anyhow::anyhow!("Binary name not found"))?;
-                std::fs::rename(&temp_file, temp_dir.path().join(binary_name))?;
+                let target_path = temp_dir.path().join(binary_name);
+                std::fs::copy(&temp_file, &target_path)?;
+                std::fs::remove_file(&temp_file)?;
             }
 
             // Process downloaded files
