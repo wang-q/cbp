@@ -1,0 +1,3 @@
+The package jellyfish provides the following executables:
+
+    jellyfish - A fast multi-threaded k-mer counter

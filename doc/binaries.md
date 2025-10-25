@@ -161,6 +161,9 @@ bash scripts/vcpkg.sh cabextract
 cbp build source datamash
 bash scripts/vcpkg.sh datamash
 
+cbp build source jellyfish
+bash scripts/vcpkg.sh jellyfish
+
 cbp build source trf
 bash scripts/vcpkg.sh trf
 
@@ -244,9 +247,6 @@ cbp local libdeflate
 zvm use 0.13.0
 bash scripts/htslib.sh  # --with-libdeflate
 
-cbp build source jellyfish
-bash scripts/jellyfish.sh
-
 cbp build source mummer
 bash scripts/mummer.sh
 
@@ -256,6 +256,10 @@ bash scripts/parallel.sh
 cbp build source pv
 cbp local ncurses
 bash scripts/pv.sh
+
+cbp local jellyfish
+cbp build source quorum
+bash scripts/quorum.sh
 
 cbp build source samtools
 bash scripts/samtools.sh    # bundled htslib
