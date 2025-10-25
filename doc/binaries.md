@@ -109,6 +109,8 @@ bash scripts/vcpkg.sh pkgconf x64-linux-zig pkgconf=pkg-config
 
 bash scripts/vcpkg.sh "lua[core,tools]"
 
+bash scripts/vcpkg.sh "graphicsmagick"
+
 ```
 
 ## My ports
@@ -257,8 +259,8 @@ cbp build source pv
 cbp local ncurses
 bash scripts/pv.sh
 
-cbp local jellyfish
 cbp build source quorum
+cbp local jellyfish
 bash scripts/quorum.sh
 
 cbp build source samtools
