@@ -15,7 +15,7 @@
       "name": "version",
       "command": "jellyfish",
       "ignore_exit_code": true,
-      "pattern": "lastz ",
+      "pattern": "jellyfish [0-9]+\\.",
       "args": "--version"
     }
   ]
