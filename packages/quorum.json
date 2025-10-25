@@ -15,7 +15,7 @@
       "name": "version",
       "command": "quorum",
       "ignore_exit_code": true,
-      "pattern": "quorum [0-9]+\\.",
+      "pattern": "[0-9]+\\.",
       "args": "--version"
     }
   ]
