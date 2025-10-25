@@ -244,6 +244,9 @@ cbp local libdeflate
 zvm use 0.13.0
 bash scripts/htslib.sh  # --with-libdeflate
 
+cbp build source jellyfish
+bash scripts/jellyfish.sh
+
 cbp build source mummer
 bash scripts/mummer.sh
 

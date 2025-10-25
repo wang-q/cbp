@@ -1,0 +1,22 @@
+{
+  "name": "jellyfish",
+  "version": "2.3.1",
+  "description": "A fast multi-threaded k-mer counter",
+  "homepage": "https://github.com/gmarcais/Jellyfish",
+  "license": "BSD3-GPL3",
+  "type": "autotools",
+  "downloads": {
+    "source": {
+      "url": "https://github.com/gmarcais/Jellyfish/releases/download/v2.3.1/jellyfish-2.3.1.tar.gz"
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "jellyfish",
+      "ignore_exit_code": true,
+      "pattern": "lastz ",
+      "args": "--version"
+    }
+  ]
+}
