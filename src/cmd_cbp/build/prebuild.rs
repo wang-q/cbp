@@ -116,8 +116,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                     .as_str()
                     .ok_or_else(|| anyhow::anyhow!("Binary name not found"))?;
                 let target_path = temp_dir.path().join(binary_name);
-                std::fs::copy(&temp_file, &target_path)?;
-                std::fs::remove_file(&temp_file)?;
+                cbp::move_file_or_dir(&temp_file, &target_path)?;
             }
 
             // Process downloaded files

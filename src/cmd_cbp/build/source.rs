@@ -86,9 +86,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         std::fs::create_dir_all(base_dir.join("sources"))?;
 
         if dl_obj.len() == 1 {
-            // Use copy and delete instead of rename to handle cross-device scenarios
-            std::fs::copy(&temp_file, &target_path)?;
-            std::fs::remove_file(temp_file)?;
+            cbp::move_file_or_dir(&temp_file, std::path::Path::new(&target_path))?;
             println!("-> Successfully downloaded and processed");
             continue;
         }

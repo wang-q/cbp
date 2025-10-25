@@ -61,6 +61,38 @@ pub fn format_packages(packages: &[String]) -> String {
     result
 }
 
+/// Recursively copy a directory and all its contents
+pub fn copy_dir_all(src: impl AsRef<std::path::Path>, dst: impl AsRef<std::path::Path>) -> anyhow::Result<()> {
+    std::fs::create_dir_all(&dst)?;
+    for entry in std::fs::read_dir(src)? {
+        let entry = entry?;
+        let ty = entry.file_type()?;
+        if ty.is_dir() {
+            copy_dir_all(entry.path(), dst.as_ref().join(entry.file_name()))?;
+        } else {
+            std::fs::copy(entry.path(), dst.as_ref().join(entry.file_name()))?;
+        }
+    }
+    Ok(())
+}
+
+/// Move a file or directory from source to destination
+/// Uses copy and delete to handle cross-device scenarios
+pub fn move_file_or_dir(source_path: &std::path::Path, target_path: &std::path::Path) -> anyhow::Result<()> {
+    if source_path != target_path && source_path.exists() {
+        if source_path.is_dir() {
+            // For directories, use recursive copy
+            copy_dir_all(source_path, target_path)?;
+            std::fs::remove_dir_all(source_path)?;
+        } else {
+            // For files, use simple copy
+            std::fs::copy(source_path, target_path)?;
+            std::fs::remove_file(source_path)?;
+        }
+    }
+    Ok(())
+}
+
 /// Find files in directory with optional pattern
 /// Returns sorted relative paths with forward slashes
 pub fn find_files(dir: &Path, pattern: Option<&str>) -> anyhow::Result<Vec<String>> {
@@ -313,6 +345,98 @@ mod tests {
         // Test no matches
         let matches = match_files(base, "nonexistent.*")?;
         assert!(matches.is_empty());
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_copy_dir_all() -> anyhow::Result<()> {
+        let temp_dir = tempfile::tempdir()?;
+        let base = temp_dir.path();
+
+        // Create source directory structure
+        let src_dir = base.join("src");
+        let dst_dir = base.join("dst");
+        
+        std::fs::create_dir_all(&src_dir)?;
+        std::fs::create_dir_all(src_dir.join("subdir"))?;
+        std::fs::write(src_dir.join("file1.txt"), "content1")?;
+        std::fs::write(src_dir.join("file2.dat"), "content2")?;
+        std::fs::write(src_dir.join("subdir/file3.txt"), "content3")?;
+
+        // Test copy_dir_all
+        copy_dir_all(&src_dir, &dst_dir)?;
+
+        // Verify destination structure
+        assert!(dst_dir.exists());
+        assert!(dst_dir.join("file1.txt").exists());
+        assert!(dst_dir.join("file2.dat").exists());
+        assert!(dst_dir.join("subdir").exists());
+        assert!(dst_dir.join("subdir/file3.txt").exists());
+
+        // Verify file contents
+        assert_eq!(std::fs::read_to_string(dst_dir.join("file1.txt"))?, "content1");
+        assert_eq!(std::fs::read_to_string(dst_dir.join("file2.dat"))?, "content2");
+        assert_eq!(std::fs::read_to_string(dst_dir.join("subdir/file3.txt"))?, "content3");
+
+        // Verify source still exists
+        assert!(src_dir.exists());
+        assert!(src_dir.join("file1.txt").exists());
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_move_file_or_dir() -> anyhow::Result<()> {
+        let temp_dir = tempfile::tempdir()?;
+        let base = temp_dir.path();
+
+        // Test moving a file
+        let src_file = base.join("source.txt");
+        let dst_file = base.join("destination.txt");
+        std::fs::write(&src_file, "test content")?;
+
+        move_file_or_dir(&src_file, &dst_file)?;
+
+        assert!(!src_file.exists());
+        assert!(dst_file.exists());
+        assert_eq!(std::fs::read_to_string(&dst_file)?, "test content");
+
+        // Test moving a directory
+        let src_dir = base.join("src_dir");
+        let dst_dir = base.join("dst_dir");
+        
+        std::fs::create_dir_all(&src_dir)?;
+        std::fs::create_dir_all(src_dir.join("subdir"))?;
+        std::fs::write(src_dir.join("file1.txt"), "content1")?;
+        std::fs::write(src_dir.join("subdir/file2.txt"), "content2")?;
+
+        move_file_or_dir(&src_dir, &dst_dir)?;
+
+        // Verify source is gone and destination exists
+        assert!(!src_dir.exists());
+        assert!(dst_dir.exists());
+        assert!(dst_dir.join("file1.txt").exists());
+        assert!(dst_dir.join("subdir").exists());
+        assert!(dst_dir.join("subdir/file2.txt").exists());
+
+        // Verify file contents
+        assert_eq!(std::fs::read_to_string(dst_dir.join("file1.txt"))?, "content1");
+        assert_eq!(std::fs::read_to_string(dst_dir.join("subdir/file2.txt"))?, "content2");
+
+        // Test no-op when source and destination are the same
+        let same_file = base.join("same.txt");
+        std::fs::write(&same_file, "same content")?;
+        move_file_or_dir(&same_file, &same_file)?;
+        assert!(same_file.exists());
+        assert_eq!(std::fs::read_to_string(&same_file)?, "same content");
+
+        // Test no-op when source doesn't exist
+        let nonexistent = base.join("nonexistent.txt");
+        let target = base.join("target.txt");
+        move_file_or_dir(&nonexistent, &target)?;
+        assert!(!nonexistent.exists());
+        assert!(!target.exists());
 
         Ok(())
     }
