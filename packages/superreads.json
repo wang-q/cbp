@@ -1,0 +1,25 @@
+{
+  "name": "superreads",
+  "version": "539c438",
+  "description": "superreads",
+  "homepage": "https://github.com/alekseyzimin/SuperReads",
+  "license": "GPL3",
+  "type": "autotools",
+  "downloads": {
+    "source": {
+      "url": "https://github.com/alekseyzimin/SuperReads/archive/539c438cff391a03f5ff5ace116373b6974d5468.tar.gz",
+      "rename": {
+        "SuperReads-*": "superreads"
+      }
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "quorum",
+      "ignore_exit_code": true,
+      "pattern": "[0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

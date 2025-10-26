@@ -272,6 +272,10 @@ bash scripts/snp-sites.sh
 cbp build source stow
 bash scripts/stow.sh
 
+cbp build source superreads
+cbp local jellyfish
+bash scripts/superreads.sh
+
 # cbp build source tmux
 # cbp local libevent ncurses utf8proc pkgconf
 # bash scripts/tmux.sh
@@ -470,7 +474,6 @@ cbp build prebuild pup tsv-utils
 cbp build prebuild macchina
 cbp build prebuild tmux
 cbp build prebuild zenith
-
 
 ```
 
