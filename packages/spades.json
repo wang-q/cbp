@@ -16,9 +16,9 @@
   "tests": [
     {
       "name": "version",
-      "command": "spades",
-      "pattern": "[0-9]+\\.",
-      "args": "--version"
+      "command": "spades-bwa",
+      "ignore_exit_code": true,
+      "pattern": "Version: [0-9]+\\."
     }
   ]
 }
