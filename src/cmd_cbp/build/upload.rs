@@ -35,6 +35,9 @@ Examples:
 2. Upload multiple files:
    cbp build upload binaries/*.tar.gz
 
+3. Force upload (skip MD5 check):
+   cbp build upload --force binaries/*.tar.gz
+
 "###,
         )
         .arg(
@@ -44,10 +47,18 @@ Examples:
                 .num_args(1..)
                 .value_name("FILES"),
         )
+        .arg(
+            Arg::new("force")
+                .long("force")
+                .short('f')
+                .help("Force upload files, skip MD5 check")
+                .action(ArgAction::SetTrue),
+        )
 }
 
 pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     let files: Vec<_> = args.get_many::<String>("files").unwrap().collect();
+    let opt_force = args.get_flag("force");
 
     let mut release_notes = include_str!("../../../doc/release.md").to_string();
     release_notes = release_notes
@@ -102,12 +113,16 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
         // Update package information
         if let Some(existing) = packages.iter_mut().find(|p| p.name == name) {
-            // Check MD5, only update and upload if different
-            if existing.md5 != hash {
+            // Check MD5, only update and upload if different or if force is enabled
+            if opt_force || existing.md5 != hash {
+                if opt_force {
+                    println!("==> Force upload enabled, will upload");
+                } else {
+                    println!("==> MD5 changed, will upload");
+                }
                 existing.md5 = hash;
                 existing.path = file.to_string();
                 to_upload.push(file.to_string());
-                println!("==> MD5 changed, will upload");
             } else {
                 println!("==> MD5 unchanged, skip upload");
             }
