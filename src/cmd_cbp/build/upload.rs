@@ -30,10 +30,10 @@ The command will:
 
 Examples:
 1. Upload single file:
-   cbp upload binaries/zlib.macos.tar.gz
+   cbp build upload binaries/zlib.macos.tar.gz
 
 2. Upload multiple files:
-   cbp upload binaries/*.tar.gz
+   cbp build upload binaries/*.tar.gz
 
 "###,
         )

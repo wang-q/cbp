@@ -311,6 +311,7 @@ bash scripts/spoa.sh
 # need gcc version 9.1 or later
 cbp build source spades
 cbp local bzip2
+zvm use 0.14.1
 bash scripts/spades.sh
 
 # Remove large files
