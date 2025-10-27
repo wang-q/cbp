@@ -307,6 +307,12 @@ bash scripts/bifrost.sh
 cbp build source spoa
 bash scripts/spoa.sh
 
+# spades
+# need gcc version 9.1 or later
+cbp build source spades
+cbp local bzip2
+bash scripts/spades.sh
+
 # Remove large files
 curl -L https://github.com/tjunier/newick_utils/archive/da121155a977197cab9fbb15953ca1b40b11eb87.tar.gz |
     tar xvfz - &&
@@ -355,14 +361,6 @@ mv vcpkg-centos_master.sif vcpkg/vcpkg-centos.sif
 # fasttree
 cbp build source fasttree
 bash scripts/fasttree.sh
-
-# spades
-# can't use symlinked directory as working directory
-cbp build source spades
-cbp local bzip2
-singularity run \
-    vcpkg/vcpkg-centos.sif \
-bash /home/wangq/cbp/scripts/spades.sh
 
 ```
 

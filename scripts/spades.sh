@@ -9,9 +9,9 @@ extract_source
 # cmake -S src -LH
 
 # Configure CMake with Zig compiler
-ASM="gcc" \
-CC="gcc" \
-CXX="g++" \
+ASM="zig cc" \
+CC="zig cc" \
+CXX="zig c++" \
 CFLAGS="-I$HOME/.cbp/include -w" \
 CXXFLAGS="-I$HOME/.cbp/include -w" \
 LDFLAGS="-L$HOME/.cbp/lib" \
@@ -19,17 +19,17 @@ cmake \
     -DCMAKE_ASM_COMPILER_TARGET="${TARGET_ARCH}" \
     -DCMAKE_C_COMPILER_TARGET="${TARGET_ARCH}" \
     -DCMAKE_CXX_COMPILER_TARGET="${TARGET_ARCH}" \
-    -DSPADES_STATIC_BUILD=ON \
-    -DSPADES_USE_MIMALLOC=OFF \
     -DCMAKE_INSTALL_PREFIX="${TEMP_DIR}/collect" \
+    -DSPADES_USE_MIMALLOC=OFF \
     -S src -B build
+    # -DSPADES_STATIC_BUILD=ON \
 
 # Build the project
 cmake --build build -- -j 16 || exit 1
 cmake --install build || exit 1
 
 ldd "${TEMP_DIR}/collect/bin/spades-core"
-eza -T "${TEMP_DIR}/collectd/bin"
+eza -T "${TEMP_DIR}/collect/bin"
 
 # Collect binaries and create tarball
 FN_TAR="${PROJ}.${OS_TYPE}.tar.gz"
