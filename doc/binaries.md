@@ -274,6 +274,7 @@ bash scripts/stow.sh
 
 cbp build source superreads
 cbp local jellyfish
+# sudo apt install yaggo
 bash scripts/superreads.sh
 
 # cbp build source tmux
@@ -354,6 +355,14 @@ mv vcpkg-centos_master.sif vcpkg/vcpkg-centos.sif
 # fasttree
 cbp build source fasttree
 bash scripts/fasttree.sh
+
+# spades
+# can't use symlinked directory as working directory
+cbp build source spades
+cbp local bzip2
+singularity run \
+    vcpkg/vcpkg-centos.sif \
+bash /home/wangq/cbp/scripts/spades.sh
 
 ```
 
