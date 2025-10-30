@@ -13,7 +13,7 @@
         "gatk-*": "libexec/gatk"
       },
       "symlink": {
-        "igv": "../libexec/gatk/gatk"
+        "gatk": "../libexec/gatk/gatk"
       }
     }
   },
