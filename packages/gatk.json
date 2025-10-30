@@ -12,6 +12,10 @@
       "rename": {
         "gatk-*": "libexec/gatk"
       },
+      "clean": [
+        "libexec/gatk/gatkdoc",
+        "libexec/gatk/gatk-*-spark.jar"
+      ],
       "symlink": {
         "gatk": "../libexec/gatk/gatk"
       }
