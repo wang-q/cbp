@@ -1,0 +1,28 @@
+{
+  "name": "gatk",
+  "version": "4.6.2.0",
+  "description": "Genome Analysis Toolkit",
+  "homepage": "https://github.com/broadinstitute/gatk",
+  "license": "BSD3",
+  "type": "prebuild",
+  "downloads": {
+    "linux": {
+      "url": "https://github.com/broadinstitute/gatk/releases/download/4.6.2.0/gatk-4.6.2.0.zip",
+      "extract": "unzip",
+      "rename": {
+        "gatk-*": "libexec/gatk"
+      },
+      "symlink": {
+        "igv": "../libexec/gatk/gatk"
+      }
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "gatk",
+      "pattern": "[0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

@@ -518,6 +518,7 @@ cbp build prebuild aliview
 cbp build prebuild bbtools
 cbp build prebuild fastqc
 cbp build prebuild figtree
+cbp build prebuild gatk
 cbp build prebuild igv
 cbp build prebuild picard
 
