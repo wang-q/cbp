@@ -360,7 +360,8 @@ gh release create Binaries \
     # 1. Calculate MD5 hash for each file
     # 2. Upload files to GitHub Release
     # 3. Update release notes with new hashes
-    cbp upload binaries/zlib.*.tar.gz
+    cbp build upload binaries/zlib.*.tar.gz
+
 
     # Or upload manually with gh command
     # Note: This method does not update MD5 hashes
