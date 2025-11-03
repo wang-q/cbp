@@ -2,6 +2,8 @@
 
 ## Unreleased - ReleaseDate
 
+## 0.3.14 - 2025-11-03
+
 - CLI Improvements
   - Added `--force` option to `build upload` to skip MD5 checks and force uploads.
 - Documentation Updates
