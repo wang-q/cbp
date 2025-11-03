@@ -435,6 +435,7 @@ cbp collect vcpkg/installed/vcpkg/info/gnuplot_*_x64-linux-release.list
 mv gnuplot.linux.tar.gz binaries/
 
 # python3
+# sudo apt-get install autoconf automake autoconf-archive
 singularity run \
     vcpkg/vcpkg-centos.sif \
 /opt/vcpkg/vcpkg install --debug --recurse \
@@ -446,7 +447,7 @@ singularity run \
     --x-packages-root=vcpkg/packages \
     python3[core,extensions]:x64-linux-release
 
-cbp collect vcpkg/installed/vcpkg/info/python3_*_x64-linux-release.list
+cbp collect vcpkg/installed/vcpkg/info/python3_*_x64-linux-release.list --mode vcpkg --copy python3=python
 mv python3.linux.tar.gz binaries/python3.11.linux.tar.gz
 
 # static python can't load shared libraries
