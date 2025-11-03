@@ -139,7 +139,7 @@ fn command_collect_with_ignore() -> anyhow::Result<()> {
     Command::cargo_bin("cbp")?
         .arg("collect")
         .arg("--mode")
-        .arg("files") // 明确指定 files 模式
+        .arg("files") // Explicitly specify files mode
         .arg("--ignore")
         .arg(".txt")
         .arg("-o")

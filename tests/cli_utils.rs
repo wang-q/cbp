@@ -218,7 +218,7 @@ fn command_prefix() -> anyhow::Result<()> {
     let stdout = String::from_utf8(output.stdout)?;
     assert_eq!(stdout.trim(), cbp_home.to_string_lossy().trim());
 
-    // 创建所有路径的字符串表示
+    // Create string representations for all paths
     let bin_path = cbp_home.join("bin").to_string_lossy().into_owned();
     let cache_path = cbp_home.join("cache").to_string_lossy().into_owned();
     let records_path = cbp_home.join("records").to_string_lossy().into_owned();

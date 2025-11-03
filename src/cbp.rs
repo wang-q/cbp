@@ -69,7 +69,7 @@ Quick Start:
         Some(("prefix", sub_matches)) => cmd_cbp::prefix::execute(sub_matches),
         Some(("remove", sub_matches)) => cmd_cbp::remove::execute(sub_matches),
         Some(("tar", sub_matches)) => cmd_cbp::tar::execute(sub_matches),
-        Some(("uninstall", sub_matches)) => cmd_cbp::remove::execute(sub_matches), // 添加别名处理
+        Some(("uninstall", sub_matches)) => cmd_cbp::remove::execute(sub_matches), // Handle alias subcommand
         _ => unreachable!(),
     }?;
 

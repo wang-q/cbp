@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# 预先缓存所有平台的包列表
+# Pre-cache package lists for all platforms
 LINUX_PKGS=$(cbp avail linux)
 MACOS_PKGS=$(cbp avail macos)
 WINDOWS_PKGS=$(cbp avail windows)
 FONT_PKGS=$(cbp avail font)
 
-# 生成表头
+# Print table header
 echo -e "Type\tPackage\tLinux\tmacOS\tWindows"
 
-# 获取所有类型和包名
+# Get all types and package names
 fd -e json . packages -x jq -r '.type // "undefined"' | sort -u |
 while read -r type; do
     [ -z "$type" ] && continue
