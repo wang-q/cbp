@@ -2,6 +2,18 @@
 
 ## Unreleased - ReleaseDate
 
+- CLI Improvements
+  - Added `--force` option to `build upload` to skip MD5 checks and force uploads.
+- Documentation Updates
+  - Use zvm 0.14.1 for Zig, bump vcpkg tag to `2025.10.17`, unify PowerShell fences.
+  - Developer guide (`doc/developer.md`): clarified Zig versions (install 0.13.0 and 0.14.1, use 0.13.0); added PATH setup snippets for Rust/VCPKG; bumped vcpkg tag to `2025.10.17`; restored detailed TOC format.
+- Package Management
+  - Added packages: `bbtools`, `gatk`, `graphicsmagick`, `jellyfish`, `quorum`, `spades`, and `superreads`.
+- Build System and Ports
+  - General cleanups and small fixes in build documentation.
+- Repository Housekeeping
+  - Added `logo.svg`; updated README header to display logo and added Logo section.
+
 ## 0.3.13 - 2025-06-05
 
 - Removed created_at field from upload.rs

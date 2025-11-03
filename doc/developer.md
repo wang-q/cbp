@@ -230,8 +230,8 @@ cargo build
 
 cargo run --release --bin cbp init --dev
 
-git log v0.3.12..HEAD > gitlog.txt
-git diff HEAD v0.3.12 > gitdiff.txt
+git log v0.3.13..HEAD > gitlog.txt
+git diff v0.3.13 HEAD > gitdiff.txt
 
 ```
 
