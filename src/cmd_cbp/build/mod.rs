@@ -34,5 +34,3 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         ),
     }
 }
-
-// TODO: spades
