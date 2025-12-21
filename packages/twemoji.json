@@ -1,0 +1,22 @@
+{
+  "name": "twemoji",
+  "version": "0.7.0",
+  "description": "Twemoji font in COLR/CPAL layered format",
+  "homepage": "https://github.com/mozilla/twemoji-colr",
+  "license": "Apache",
+  "type": "font",
+  "downloads": {
+    "font": {
+      "url": "https://github.com/mozilla/twemoji-colr/releases/download/v0.7.0/Twemoji.Mozilla.ttf",
+      "binary": "Twemoji.Mozilla.ttf"
+    }
+  },
+  "tests": [
+    {
+      "name": "files",
+      "command": "ls",
+      "pattern": "Twemoji.Mozilla\\.ttf$",
+      "args": "$(cbp prefix)/share/fonts"
+    }
+  ]
+}

@@ -539,4 +539,6 @@ cbp build font lxgw-wenkai
 cbp build font source-han-sans
 cbp build font source-han-serif
 
+cbp build font twemoji
+
 ```
