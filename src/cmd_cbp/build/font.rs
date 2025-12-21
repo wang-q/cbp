@@ -60,7 +60,11 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             .ok_or_else(|| anyhow::anyhow!("Download configuration not found"))?;
 
         let temp_dir = tempfile::tempdir()?;
-        let temp_file = temp_dir.path().join("download.tmp");
+        let temp_file = if let Some(name) = dl_obj.get("download_name").and_then(|v| v.as_str()) {
+            temp_dir.path().join(name)
+        } else {
+            temp_dir.path().join("download.tmp")
+        };
 
         // Download font file
         let url = dl_obj["url"]
@@ -69,9 +73,30 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         println!("-> Downloading from {}", url);
         cbp::download_file(url, &temp_file, &agent)?;
 
-        // Process downloaded file
-        cbp::extract_archive(&temp_dir, &temp_file, dl_obj)?;
+        // Check if extraction is needed
+        let needs_extract = url.ends_with(".zip")
+            || url.ends_with(".tar.gz")
+            || url.ends_with(".tar.xz")
+            || url.ends_with(".tar.bz2")
+            || dl_obj.get("extract").is_some();
+
+        if needs_extract {
+            cbp::extract_archive(&temp_dir, &temp_file, dl_obj)?;
+        } else if dl_obj.get("binary").is_some() {
+            // For single-file downloads, move to target binary name
+            let binary_name = dl_obj["binary"]
+                .as_str()
+                .ok_or_else(|| anyhow::anyhow!("Binary name not found"))?;
+            let target_path = temp_dir.path().join(binary_name);
+            cbp::move_file_or_dir(&temp_file, &target_path)?;
+        }
+
+        // Post-processing
+        cbp::handle_rename(&temp_dir, dl_obj)?;
         cbp::clean_files(&temp_dir, dl_obj)?;
+        if temp_file.exists() {
+            std::fs::remove_file(&temp_file)?;
+        }
 
         // Find binary files
         let binary_paths = cbp::find_binary_files(temp_dir.path(), dl_obj)?;
