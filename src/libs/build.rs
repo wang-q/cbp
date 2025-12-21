@@ -91,6 +91,28 @@ pub fn extract_archive(
     Ok(())
 }
 
+pub fn needs_extract(
+    url: &str,
+    json_obj: &serde_json::Map<String, serde_json::Value>,
+) -> bool {
+    url.ends_with(".zip")
+        || url.ends_with(".tar.gz")
+        || url.ends_with(".tar.xz")
+        || url.ends_with(".tar.bz2")
+        || json_obj.get("extract").is_some()
+}
+
+pub fn temp_download_path(
+    temp_dir: &tempfile::TempDir,
+    json_obj: &serde_json::Map<String, serde_json::Value>,
+) -> std::path::PathBuf {
+    if let Some(name) = json_obj.get("download_name").and_then(|v| v.as_str()) {
+        temp_dir.path().join(name)
+    } else {
+        temp_dir.path().join("download.tmp")
+    }
+}
+
 /// Handle file renaming based on package configuration
 pub fn handle_rename(
     temp_dir: &tempfile::TempDir,
@@ -347,5 +369,52 @@ pub fn fix_shebang(path: &std::path::Path) -> anyhow::Result<()> {
         eprintln!("==> Fixed shebang in '{}'", path.display());
     }
 
+    Ok(())
+}
+
+pub fn target_binary_path(
+    base_dir: &std::path::Path,
+    pkg: &str,
+    os_type: &str,
+) -> anyhow::Result<String> {
+    std::fs::create_dir_all(base_dir.join("binaries"))?;
+    let path = base_dir
+        .canonicalize()?
+        .join("binaries")
+        .join(format!("{}.{}.tar.gz", pkg, os_type))
+        .display()
+        .to_string();
+    Ok(path)
+}
+
+pub fn target_font_path(base_dir: &std::path::Path, pkg: &str) -> anyhow::Result<String> {
+    std::fs::create_dir_all(base_dir.join("binaries"))?;
+    let path = base_dir
+        .canonicalize()?
+        .join("binaries")
+        .join(format!("{}.font.tar.gz", pkg))
+        .display()
+        .to_string();
+    Ok(path)
+}
+
+pub fn target_source_path(
+    base_dir: &std::path::Path,
+    pkg: &str,
+) -> anyhow::Result<String> {
+    std::fs::create_dir_all(base_dir.join("sources"))?;
+    let path = base_dir
+        .canonicalize()?
+        .join("sources")
+        .join(format!("{}.tar.gz", pkg))
+        .display()
+        .to_string();
+    Ok(path)
+}
+
+pub fn normalize_line_endings(path: &std::path::Path) -> anyhow::Result<()> {
+    let content = std::fs::read_to_string(path)?;
+    let normalized = content.replace("\r\n", "\n");
+    std::fs::write(path, normalized)?;
     Ok(())
 }

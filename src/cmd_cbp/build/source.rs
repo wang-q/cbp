@@ -65,25 +65,13 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             .as_str()
             .ok_or_else(|| anyhow::anyhow!("Font URL not found"))?;
 
-        let temp_file =
-            if let Some(name) = dl_obj.get("download_name").and_then(|v| v.as_str()) {
-                // Use specified download name
-                temp_dir.path().join(name)
-            } else {
-                temp_dir.path().join("download.tmp")
-            };
+        let temp_file = cbp::temp_download_path(&temp_dir, dl_obj);
 
         // Process file after download
         println!("-> Downloading from {}", url);
         cbp::download_file(url, &temp_file, &agent)?;
 
-        let target_path = base_dir
-            .canonicalize()?
-            .join("sources")
-            .join(format!("{}.tar.gz", pkg))
-            .display()
-            .to_string();
-        std::fs::create_dir_all(base_dir.join("sources"))?;
+        let target_path = cbp::target_source_path(&base_dir, pkg)?;
 
         if dl_obj.len() == 1 {
             cbp::move_file_or_dir(&temp_file, std::path::Path::new(&target_path))?;
@@ -92,17 +80,13 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         }
 
         // Check if extraction is needed
-        let needs_extract = url.ends_with(".zip")
-            || url.ends_with(".tar.gz")
-            || url.ends_with(".tar.xz")
-            || url.ends_with(".tar.bz2")
-            || dl_obj.get("extract").is_some();
+        let needs_extract = cbp::needs_extract(url, dl_obj);
 
         if needs_extract {
             println!("-> Processing source archive");
             cbp::extract_archive(&temp_dir, &temp_file, dl_obj)?;
         } else {
-            normalize_line_endings(&temp_file)?;
+            cbp::normalize_line_endings(&temp_file)?;
         }
 
         let temp_path = temp_dir.path().canonicalize()?;
@@ -127,14 +111,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     Ok(())
 }
 
-/// Convert CRLF to LF for text files
-fn normalize_line_endings(path: &std::path::Path) -> anyhow::Result<()> {
-    let content = std::fs::read_to_string(path)?;
-    let normalized = content.replace("\r\n", "\n");
-    std::fs::write(path, normalized)?;
-    println!("  -> Normalized line endings: {}", path.display());
-    Ok(())
-}
+ 
 
 // /// Get target directory name for archive
 // fn get_target_name(

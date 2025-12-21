@@ -60,11 +60,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             .ok_or_else(|| anyhow::anyhow!("Download configuration not found"))?;
 
         let temp_dir = tempfile::tempdir()?;
-        let temp_file = if let Some(name) = dl_obj.get("download_name").and_then(|v| v.as_str()) {
-            temp_dir.path().join(name)
-        } else {
-            temp_dir.path().join("download.tmp")
-        };
+        let temp_file = cbp::temp_download_path(&temp_dir, dl_obj);
 
         // Download font file
         let url = dl_obj["url"]
@@ -74,11 +70,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         cbp::download_file(url, &temp_file, &agent)?;
 
         // Check if extraction is needed
-        let needs_extract = url.ends_with(".zip")
-            || url.ends_with(".tar.gz")
-            || url.ends_with(".tar.xz")
-            || url.ends_with(".tar.bz2")
-            || dl_obj.get("extract").is_some();
+        let needs_extract = cbp::needs_extract(url, dl_obj);
 
         if needs_extract {
             cbp::extract_archive(&temp_dir, &temp_file, dl_obj)?;
@@ -101,17 +93,10 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         // Find binary files
         let binary_paths = cbp::find_binary_files(temp_dir.path(), dl_obj)?;
 
-        // Create final font package
-        let target_path = base_dir
-            .canonicalize()?
-            .join("binaries")
-            .join(format!("{}.font.tar.gz", pkg))
-            .display()
-            .to_string();
+        let target_path = cbp::target_font_path(&base_dir, pkg)?;
         let temp_path = temp_dir.path().canonicalize()?;
 
-        // Create binaries directory if it doesn't exist
-        std::fs::create_dir_all(base_dir.join("binaries"))?;
+        
 
         // Change to temp directory and collect files
         run_cmd!(

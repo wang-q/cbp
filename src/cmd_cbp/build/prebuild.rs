@@ -89,24 +89,13 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                 .as_str()
                 .ok_or_else(|| anyhow::anyhow!("URL not found"))?;
 
-            let temp_file = if let Some(name) =
-                dl_obj.get("download_name").and_then(|v| v.as_str())
-            {
-                // Use specified download name
-                temp_dir.path().join(name)
-            } else {
-                temp_dir.path().join("download.tmp")
-            };
+            let temp_file = cbp::temp_download_path(&temp_dir, dl_obj);
 
             println!("-> Downloading from {}", url);
             cbp::download_file(url, &temp_file, &agent)?;
 
             // Check if extraction is needed
-            let needs_extract = url.ends_with(".zip")
-                || url.ends_with(".tar.gz")
-                || url.ends_with(".tar.xz")
-                || url.ends_with(".tar.bz2")
-                || dl_obj.get("extract").is_some();
+            let needs_extract = cbp::needs_extract(url, dl_obj);
 
             if needs_extract {
                 cbp::extract_archive(&temp_dir, &temp_file, dl_obj)?;
@@ -132,14 +121,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                 std::fs::remove_file(&temp_file)?;
             }
 
-            // Create final package
-            std::fs::create_dir_all(base_dir.join("binaries"))?;
-            let target_path = base_dir
-                .canonicalize()?
-                .join("binaries")
-                .join(format!("{}.{}.tar.gz", pkg, os_type))
-                .display()
-                .to_string();
+            let target_path = cbp::target_binary_path(&base_dir, pkg, os_type)?;
             let temp_path = temp_dir.path().canonicalize()?;
 
             // Add shebang option if enabled
