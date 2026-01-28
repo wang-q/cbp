@@ -36,14 +36,14 @@ fd -e json . packages -x jq -r 'select(.type == "prebuild" and ([.. | objects | 
 
 # Count all package types and sort by frequency
 fd -e json . packages -x jq -r '.type // "undefined"' | sort | uniq -c | sort -rn
-#   32 prebuild
-#   26 vcpkg
-#   20 make
-#   17 rust
-#   14 autotools
-#    9 font
-#    5 cmake
-#    2 source
+#  38 prebuild
+#  30 vcpkg
+#  20 make
+#  18 autotools
+#  17 rust
+#  10 font
+#   7 cmake
+#   3 source
 
 fd -e json . packages -x jq -r 'select(.type == "prebuild") | .name'
 
