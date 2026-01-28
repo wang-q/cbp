@@ -353,6 +353,15 @@ bash scripts/bcalm.sh
 
 ```
 
+## Source codes from author's website
+
+* [ms](https://home.uchicago.edu/~rhudson1/source/mksamples.html)
+
+```bash
+bash scripts/ms.sh
+
+```
+
 ## Projects requiring specific build environments
 
 * Build on Ubuntu host using CentOS 7 container to utilize system libgomp

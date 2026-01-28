@@ -1,0 +1,15 @@
+{
+  "name": "ms",
+  "version": "msHOT",
+  "description": "A program for generating samples under neutral models",
+  "homepage": "https://home.uchicago.edu/~rhudson1/source/mksamples.html",
+  "license": "GPL-3.0-only",
+  "type": "source",
+ "tests": [
+    {
+      "name": "help",
+      "command": "ms",
+      "pattern": "ms nsam howmany"
+    }
+  ]
+}

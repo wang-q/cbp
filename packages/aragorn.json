@@ -4,7 +4,7 @@
   "description": "Detect tRNA and tmRNA genes in contigs",
   "homepage": "https://www.trna.se/ARAGORN/",
   "license": "GPL-3.0-only",
-  "type": "source",
+  "type": "vcpkg",
   "downloads": {
     "source": {
       "url": "https://www.trna.se/ARAGORN/Downloads/aragorn1.2.41.c",
