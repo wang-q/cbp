@@ -176,6 +176,11 @@ bash scripts/vcpkg.sh chainnet
 cbp build source diamond
 bash scripts/vcpkg.sh diamond
 
+
+
+cbp build source libdivsufsort
+bash scripts/libdivsufsort.sh
+
 ```
 
 ## `make`
@@ -322,9 +327,6 @@ curl -L https://github.com/tjunier/newick_utils/archive/da121155a977197cab9fbb15
     tar -czf sources/newick-utils.tar.gz newick-utils/ &&
     rm -rf newick-utils
 bash scripts/newick-utils.sh # bison, flex
-
-cbp build source libdivsufsort
-bash scripts/libdivsufsort.sh
 
 ```
 
