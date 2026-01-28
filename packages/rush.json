@@ -1,0 +1,24 @@
+{
+  "name": "rush",
+  "version": "1.5",
+  "description": "Fast detection of recombination in unaligned bacterial genome sequences",
+  "homepage": "https://github.com/EvolBioInf/rush",
+  "license": "GPL",
+  "type": "make",
+  "downloads": {
+    "source": {
+      "url": "https://github.com/EvolBioInf/rush/archive/refs/tags/v1.5.tar.gz",
+      "rename": {
+        "rush-*": "rush"
+      }
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "rush",
+      "ignore_exit_code": true,
+      "pattern": "rush.v"
+    }
+  ]
+}

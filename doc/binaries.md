@@ -220,6 +220,10 @@ bash scripts/phylip.sh
 cbp build source prodigal
 bash scripts/prodigal.sh
 
+cbp build source rush
+cbp install gsl libdivsufsort
+bash scripts/rush.sh
+
 cbp build source trimal
 bash scripts/trimal.sh
 
