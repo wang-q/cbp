@@ -176,10 +176,8 @@ bash scripts/vcpkg.sh chainnet
 cbp build source diamond
 bash scripts/vcpkg.sh diamond
 
-
-
 cbp build source libdivsufsort
-bash scripts/libdivsufsort.sh
+bash scripts/vcpkg.sh libdivsufsort
 
 ```
 

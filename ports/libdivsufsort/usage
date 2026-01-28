@@ -1,0 +1,4 @@
+The package libdivsufsort provides the following libraries:
+
+    divsufsort
+    divsufsort64
