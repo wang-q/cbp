@@ -15,10 +15,10 @@
   },
   "tests": [
     {
-      "name": "version",
+      "name": "help",
       "command": "rush",
       "ignore_exit_code": true,
-      "pattern": "rush.v"
+      "pattern": "SHustrings"
     }
   ]
 }
