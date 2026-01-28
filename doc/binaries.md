@@ -323,6 +323,8 @@ curl -L https://github.com/tjunier/newick_utils/archive/da121155a977197cab9fbb15
     rm -rf newick-utils
 bash scripts/newick-utils.sh # bison, flex
 
+cbp build source libdivsufsort
+
 ```
 
 ## Source codes from Git Repositories

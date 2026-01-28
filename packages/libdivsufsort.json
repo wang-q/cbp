@@ -1,0 +1,13 @@
+{
+  "name": "libdivsufsort",
+  "version": "2.0.1",
+  "description": "Lightweight suffix-sorting library",
+  "homepage": "https://github.com/y-256/libdivsufsort",
+  "license": "MIT",
+  "type": "cmake",
+  "downloads": {
+    "source": {
+      "url": "https://github.com/y-256/libdivsufsort/archive/refs/tags/2.0.1.tar.gz"
+    }
+  }
+}
