@@ -1,0 +1,22 @@
+{
+  "name": "miniprot",
+  "version": "0.13",
+  "description": "Fast protein-to-genome aligner",
+  "homepage": "https://github.com/lh3/miniprot",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib",
+    {
+      "name": "pthread",
+      "platform": "windows"
+    }
+  ]
+}

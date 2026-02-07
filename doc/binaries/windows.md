@@ -126,6 +126,7 @@ Get-Command pigz
 .\scripts\vcpkg.ps1 sickle
 
 .\scripts\vcpkg.ps1 minigraph
+.\scripts\vcpkg.ps1 miniprot
 
 .\scripts\vcpkg.ps1 multiz
 
