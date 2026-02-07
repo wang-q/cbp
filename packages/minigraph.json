@@ -1,0 +1,21 @@
+{
+  "name": "minigraph",
+  "version": "0.21",
+  "description": "Sequence-to-graph mapper and graph generator",
+  "homepage": "https://github.com/lh3/minigraph",
+  "license": "MIT",
+  "type": "make",
+  "downloads": {
+    "source": {
+      "url": "https://github.com/lh3/minigraph/archive/refs/tags/v0.21.tar.gz"
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "minigraph",
+      "pattern": "[0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}

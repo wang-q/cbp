@@ -202,6 +202,9 @@ bash scripts/lastz.sh
 cbp build source mafft
 bash scripts/mafft.sh
 
+cbp build source minigraph
+bash scripts/minigraph.sh
+
 cbp build source minimap2
 bash scripts/minimap2.sh
 
