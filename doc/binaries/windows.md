@@ -125,6 +125,8 @@ Get-Command pigz
 
 .\scripts\vcpkg.ps1 sickle
 
+.\scripts\vcpkg.ps1 minigraph
+
 .\scripts\vcpkg.ps1 multiz
 
 # .\scripts\vcpkg.ps1 cabextract

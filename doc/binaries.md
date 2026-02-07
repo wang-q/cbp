@@ -129,6 +129,9 @@ bash scripts/vcpkg.sh consel
 cbp build source faops
 bash scripts/vcpkg.sh faops
 
+cbp build source minigraph
+bash scripts/vcpkg.sh minigraph
+
 cbp build source multiz
 bash scripts/vcpkg.sh multiz
 
@@ -201,9 +204,6 @@ bash scripts/lastz.sh
 
 cbp build source mafft
 bash scripts/mafft.sh
-
-cbp build source minigraph
-bash scripts/minigraph.sh
 
 cbp build source minimap2
 bash scripts/minimap2.sh
