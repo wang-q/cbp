@@ -132,6 +132,9 @@ bash scripts/vcpkg.sh faops
 cbp build source minigraph
 bash scripts/vcpkg.sh minigraph
 
+cbp build source miniprot
+bash scripts/vcpkg.sh miniprot
+
 cbp build source multiz
 bash scripts/vcpkg.sh multiz
 
@@ -207,9 +210,6 @@ bash scripts/mafft.sh
 
 cbp build source minimap2
 bash scripts/minimap2.sh
-
-cbp build source miniprot
-bash scripts/miniprot.sh
 
 cbp build source paml
 bash scripts/paml.sh
