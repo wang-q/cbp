@@ -21,7 +21,7 @@ cbp build source hyperfine tokei tealdeer
 
 ```bash
 cbp build source hnsm intspan nwr
-cbp build source pgr anchr
+cbp build source pgr anchr tva
 cbp build source wgatools
 
 ```
@@ -47,6 +47,7 @@ bash scripts/rust.sh tokei
 # Bioinformatics utilities
 bash scripts/rust.sh pgr
 bash scripts/rust.sh anchr
+bash scripts/rust.sh tva
 
 bash scripts/rust.sh wgatools
 

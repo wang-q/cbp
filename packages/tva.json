@@ -1,0 +1,21 @@
+{
+  "name": "tva",
+  "version": "0.1.0",
+  "description": "Tab-separated Values Assistant",
+  "homepage": "https://github.com/wang-q/tva",
+  "license": "MIT",
+  "type": "rust",
+  "downloads": {
+    "source": {
+      "url": "https://github.com/wang-q/tva/archive/refs/tags/v0.1.0.tar.gz"
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "tva",
+      "pattern": "tva [0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}
