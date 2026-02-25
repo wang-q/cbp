@@ -95,6 +95,7 @@ cbp local -l eza
 
 .\scripts\rust.ps1 pgr
 .\scripts\rust.ps1 anchr
+.\scripts\rust.ps1 tva
 
 # .\scripts\rust.ps1 wgatools
 
