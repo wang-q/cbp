@@ -71,6 +71,7 @@ bash scripts/rust.sh resvg native
 
 bash scripts/rust.sh pgr native
 bash scripts/rust.sh anchr native
+bash scripts/rust.sh tva native
 
 bash scripts/rust.sh wgatools native
 
