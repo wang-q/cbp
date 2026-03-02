@@ -21,7 +21,8 @@ cbp build source hyperfine tokei tealdeer
 
 ```bash
 cbp build source hnsm intspan nwr
-cbp build source pgr anchr tva
+cbp build source pgr anchr
+cbp build source tva
 cbp build source wgatools
 
 ```
