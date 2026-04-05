@@ -503,6 +503,8 @@ cbp build prebuild macchina
 cbp build prebuild tmux
 cbp build prebuild zenith
 
+cbp build prebuild coreutils
+
 ```
 
 ### Bioinformatics tools

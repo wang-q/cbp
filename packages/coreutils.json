@@ -1,0 +1,29 @@
+{
+  "name": "coreutils",
+  "version": "0.7.0",
+  "description": "Cross-platform Rust rewrite of the GNU coreutils",
+  "homepage": "https://github.com/uutils/coreutils",
+  "license": "MIT",
+  "type": "prebuild",
+  "downloads": {
+    "windows": {
+      "url": "https://github.com/uutils/coreutils/releases/download/0.7.0/coreutils-0.7.0-x86_64-pc-windows-msvc.zip",
+      "extract": "7z x -y",
+      "rename": {
+        "coreutils-*": "bin"
+      },
+      "clean": [
+        "bin/*.md",
+        "bin/LICENSE"
+      ]
+    }
+  },
+  "tests": [
+    {
+      "name": "version",
+      "command": "ls",
+      "pattern": "[0-9]+\\.",
+      "args": "--version"
+    }
+  ]
+}
