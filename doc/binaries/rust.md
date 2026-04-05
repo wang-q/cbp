@@ -46,7 +46,6 @@ bash scripts/rust.sh tealdeer
 bash scripts/rust.sh tokei
 
 # Bioinformatics utilities
-bash scripts/rust.sh pgr
 bash scripts/rust.sh anchr
 bash scripts/rust.sh tva
 

@@ -1,13 +1,25 @@
 {
   "name": "pgr",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Population Genomes Refiner",
   "homepage": "https://github.com/wang-q/pgr",
   "license": "MIT",
-  "type": "rust",
+  "type": "prebuild",
   "downloads": {
-    "source": {
-      "url": "https://github.com/wang-q/pgr/archive/refs/tags/v0.1.0.tar.gz"
+    "linux": {
+      "url": "https://github.com/wang-q/pgr/releases/download/v0.2.0/pgr-x86_64-unknown-linux-gnu.tar.gz",
+      "extract": "tar xvfz",
+      "binary": "pgr"
+    },
+    "macos": {
+      "url": "https://github.com/wang-q/pgr/releases/download/v0.2.0/pgr-x86_64-apple-darwin.tar.gz",
+      "extract": "tar xvfz",
+      "binary": "pgr"
+    },
+    "windows": {
+      "url": "https://github.com/wang-q/pgr/releases/download/v0.2.0/pgr-x86_64-pc-windows-msvc.zip",
+      "extract": "unzip",
+      "binary": "pgr.exe"
     }
   },
   "tests": [

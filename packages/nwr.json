@@ -4,7 +4,7 @@
   "description": "NCBI taxonomy, NeWick files and assembly Reports",
   "homepage": "https://github.com/wang-q/nwr",
   "license": "MIT",
-  "type": "rust",
+  "type": "prebuild",
   "downloads": {
     "linux": {
       "url": "https://github.com/wang-q/nwr/releases/download/v0.9.0/nwr-x86_64-unknown-linux-gnu.tar.gz",
