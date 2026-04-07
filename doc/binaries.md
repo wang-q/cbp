@@ -560,6 +560,7 @@ cbp build font fira jetbrains-mono firacode-nf
 cbp build font lxgw-wenkai
 cbp build font source-han-sans
 cbp build font source-han-serif
+cbp build font maple-mono
 
 cbp build font twemoji
 

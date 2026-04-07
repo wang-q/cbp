@@ -1,0 +1,23 @@
+{
+  "name": "maple-mono",
+  "version": "7.9",
+  "description": "Open source monospace font with round corner, ligatures and Nerd-Font icons for IDE and terminal, fine-grained",
+  "homepage": "https://github.com/subframe7536/maple-font",
+  "license": "OFL-1.1",
+  "type": "font",
+  "downloads": {
+    "font": {
+      "url": "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-NF-CN-unhinted.zip",
+      "extract": "unzip -j -o",
+      "binary": "*.ttf"
+    }
+  },
+  "tests": [
+    {
+      "name": "files",
+      "command": "ls",
+      "pattern": "MapleMono-NF-CN-Regular\\.ttf$",
+      "args": "$(cbp prefix)/share/fonts"
+    }
+  ]
+}
