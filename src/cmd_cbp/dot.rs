@@ -247,12 +247,15 @@ fn apply_template(
         // Write file
         std::fs::write(&target_path, final_content)?;
 
-        // Set permissions on Unix
+        // Set permissions on Unix only if explicitly specified
         #[cfg(unix)]
         {
             use std::os::unix::fs::PermissionsExt;
-            let permissions = std::fs::Permissions::from_mode(info.permissions.mode());
-            std::fs::set_permissions(&target_path, permissions)?;
+            if info.permissions.is_explicit() {
+                let permissions =
+                    std::fs::Permissions::from_mode(info.permissions.mode());
+                std::fs::set_permissions(&target_path, permissions)?;
+            }
         }
 
         println!(

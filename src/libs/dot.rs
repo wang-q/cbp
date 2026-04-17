@@ -137,8 +137,8 @@ pub enum TargetDir {
 /// File permissions
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum FilePermissions {
-    /// Default permissions (0644)
-    Default,
+    /// No explicit permission specified (use default 0644)
+    None,
     /// Private file (0600)
     Private,
     /// Executable file (0755)
@@ -149,10 +149,15 @@ impl FilePermissions {
     /// Get numeric mode
     pub fn mode(&self) -> u32 {
         match self {
-            FilePermissions::Default => 0o644,
+            FilePermissions::None => 0o644,
             FilePermissions::Private => 0o600,
             FilePermissions::Executable => 0o755,
         }
+    }
+
+    /// Check if permissions are explicitly specified
+    pub fn is_explicit(&self) -> bool {
+        !matches!(self, FilePermissions::None)
     }
 }
 
@@ -163,7 +168,7 @@ impl DotfileParser {
     /// Parse a dotfile name and extract information
     pub fn parse(name: &str) -> DotfileInfo {
         let mut remaining = name.to_string();
-        let mut permissions = FilePermissions::Default;
+        let mut permissions = FilePermissions::None;
         let mut target_dir = TargetDir::Home;
         let mut is_template = false;
 
@@ -237,17 +242,19 @@ impl DotfileParser {
         let mut prefix = String::new();
         let mut target_dir = TargetDir::Home;
         #[cfg(unix)]
-        let mut permissions = FilePermissions::Default;
+        let mut permissions = FilePermissions::None;
         #[cfg(not(unix))]
-        let permissions = FilePermissions::Default;
+        let permissions = FilePermissions::None;
 
-        // Check if file is executable
+        // Check if file is executable (only on Unix)
         #[cfg(unix)]
         {
             use std::os::unix::fs::PermissionsExt;
             if let Ok(metadata) = source_path.metadata() {
                 let mode = metadata.permissions().mode();
-                if mode & 0o111 != 0 {
+                // Only mark as executable if the file is actually executable by someone
+                // and it's a regular file (not a directory or symlink)
+                if mode & 0o111 != 0 && metadata.is_file() {
                     permissions = FilePermissions::Executable;
                     prefix.push_str("executable_");
                 }
@@ -357,7 +364,7 @@ mod tests {
         let info = DotfileParser::parse("dot_bashrc");
         assert_eq!(info.target_name, ".bashrc");
         assert_eq!(info.target_dir, TargetDir::Home);
-        assert_eq!(info.permissions, FilePermissions::Default);
+        assert_eq!(info.permissions, FilePermissions::None);
         assert!(!info.is_template);
     }
 
@@ -440,7 +447,7 @@ mod tests {
 
     #[test]
     fn test_permissions_mode() {
-        assert_eq!(FilePermissions::Default.mode(), 0o644);
+        assert_eq!(FilePermissions::None.mode(), 0o644);
         assert_eq!(FilePermissions::Private.mode(), 0o600);
         assert_eq!(FilePermissions::Executable.mode(), 0o755);
     }
