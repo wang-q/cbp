@@ -63,13 +63,25 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         // Download file
         let url = dl_obj["url"]
             .as_str()
-            .ok_or_else(|| anyhow::anyhow!("Font URL not found"))?;
+            .ok_or_else(|| anyhow::anyhow!("Source URL not found"))?;
+
+        // Allow overriding the base URL via environment variable for testing
+        let url = if let Ok(base_url) = std::env::var("GITHUB_RELEASE_URL") {
+            // Replace the scheme and host part of the URL
+            if let Some(path_part) = url.strip_prefix("https://github.com") {
+                format!("{}{}", base_url, path_part)
+            } else {
+                url.to_string()
+            }
+        } else {
+            url.to_string()
+        };
 
         let temp_file = cbp::temp_download_path(&temp_dir, dl_obj);
 
         // Process file after download
         println!("-> Downloading from {}", url);
-        cbp::download_file(url, &temp_file, &agent)?;
+        cbp::download_file(&url, &temp_file, &agent)?;
 
         let target_path = cbp::target_source_path(&base_dir, pkg)?;
 
@@ -80,7 +92,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         }
 
         // Check if extraction is needed
-        let needs_extract = cbp::needs_extract(url, dl_obj);
+        let needs_extract = cbp::needs_extract(&url, dl_obj);
 
         if needs_extract {
             println!("-> Processing source archive");
