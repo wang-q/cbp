@@ -78,12 +78,25 @@ CBP Dot 通过文件名前缀决定如何处理文件。
 
 **目录前缀（目录模式，用 `/` 分隔）：**
 
-| 前缀 | Linux/Mac 目标 | Windows 目标 | 示例 |
-|------|----------------|--------------|------|
-| `dot_config/` | `~/.config/{path}` | `~/.config/{path}` | `dot_config/nvim/init.vim` |
-| `xdg_config/` | `~/.config/{path}` | `%APPDATA%/{path}` | `xdg_config/myapp/config` |
-| `xdg_data/` | `~/.local/share/{path}` | `%LOCALAPPDATA%/{path}` | `xdg_data/myapp/data.db` |
-| `xdg_cache/` | `~/.cache/{path}` | `%LOCALAPPDATA%/Temp/{path}` | `xdg_cache/myapp/tmp` |
+- `dot_config/` - 配置目录（仅 $HOME）
+  - Linux/Mac: `~/.config/{path}`
+  - Windows: `~/.config/{path}`
+  - 示例：`dot_config/nvim/init.vim`
+
+- `xdg_config/` - 配置目录（跨平台）
+  - Linux/Mac: `~/.config/{path}`
+  - Windows: `%APPDATA%/{path}`
+  - 示例：`xdg_config/myapp/config`
+
+- `xdg_data/` - 数据目录（跨平台）
+  - Linux/Mac: `~/.local/share/{path}`
+  - Windows: `%LOCALAPPDATA%/{path}`
+  - 示例：`xdg_data/myapp/data.db`
+
+- `xdg_cache/` - 缓存目录（跨平台）
+  - Linux/Mac: `~/.cache/{path}`
+  - Windows: `%LOCALAPPDATA%/Temp/{path}`
+  - 示例：`xdg_cache/myapp/tmp`
 
 **模板后缀：**
 
@@ -102,6 +115,12 @@ cbp dot [OPTIONS] <template_file>
 
 # 从现有配置创建模板
 cbp dot [OPTIONS] <source_file> --dir <template_dir>
+
+# 应用压缩包配置
+cbp dot [OPTIONS] <archive.tar.gz>
+
+# 导出配置为压缩包
+cbp dot [OPTIONS] <source> --tar <archive.tar.gz>
 ```
 
 **选项：**
@@ -111,8 +130,12 @@ cbp dot [OPTIONS] <source_file> --dir <template_dir>
 | `-a, --apply` | 实际应用更改（默认仅预览，应用模式） |
 | `-v, --verbose` | 显示详细操作信息 |
 | `-d, --dir <dir>` | 指定模板存储目录（创建模式） |
+| `--tar <file>` | 导出为 tar.gz 压缩包 |
 
-**注意：** `--apply` 和 `--dir` 是互斥选项，不能同时使用。
+**注意：**
+- `--apply` 和 `--dir` 是互斥选项，不能同时使用
+- 压缩包内使用最终路径（如 `.config/nvim/init.vim`），不需要前缀转换
+- `--tar` 和 `--dir` 是互斥选项，不能同时使用
 
 ### 4.2 使用示例
 
@@ -145,6 +168,17 @@ git clone https://github.com/username/dotfiles.git ~/dotfiles
 for f in ~/dotfiles/dot_* ~/dotfiles/dot_config/**/*; do 
     [ -f "$f" ] && cbp dot -a "$f"
 done
+```
+
+**使用压缩包：**
+```bash
+# 导出单个软件配置为压缩包
+cbp dot ~/.config/nvim --tar nvim.tar.gz
+# 压缩包内：.config/nvim/init.vim（最终路径，无前缀）
+
+# 应用压缩包配置
+cbp dot -a nvim.tar.gz
+# 直接解压到 ~/.config/nvim/init.vim
 ```
 
 ---
@@ -209,6 +243,8 @@ src/
 │   └── dot.rs             # dot 功能模块
 ├── libs/
 │   ├── mod.rs
+│   ├── dirs.rs            # 目录管理
+│   ├── utils.rs           # 工具函数
 │   └── dot.rs             # 系统信息检测 + 文件名解析
 └── ...
 ```
@@ -228,8 +264,47 @@ src/
 | 路径处理 | `std::path::Path` + `dunce` |
 | CLI 解析 | `clap` |
 | 系统信息 | `sysinfo` |
+| 压缩包 | `tar` + `flate2` |
 
-### 7.2 与类似工具对比
+### 7.2 可复用的现有代码
+
+CBP 项目中已有以下代码可直接复用：
+
+**目录管理 (`libs/dirs.rs`)：**
+- `CbpDirs` - 目录结构管理
+- `to_absolute_path()` - 相对路径转绝对路径
+
+**压缩包操作 (`libs/utils.rs`)：**
+- `list_archive_files()` - 列出 tar.gz 内文件列表
+- `read_file_from_archive()` - 读取压缩包内指定文件内容
+- `find_files()` - 递归查找目录内所有文件
+- `match_files()` - 使用 glob 模式匹配文件
+
+**文件操作 (`libs/utils.rs`)：**
+- `copy_dir_all()` - 递归复制目录
+- `move_file_or_dir()` - 移动文件/目录（支持跨设备）
+- `writer()` - 创建缓冲写入器（支持 stdout 或文件）
+
+**系统检测 (`libs/utils.rs`)：**
+- `get_os_type()` - 获取操作系统类型（linux/macos/windows）
+- `is_system_file()` - 检测系统文件（.DS_Store 等）
+- `is_cbp_file()` - 检测 CBP 管理文件
+
+**tar 命令 (`cmd_cbp/tar.rs`)：**
+- 创建 tar.gz 压缩包
+- 保留符号链接
+- 过滤系统文件
+- 支持清理文档目录
+
+**HTTP 代理 (`libs/utils.rs`)：**
+- `create_http_agent()` - 创建带代理支持的 HTTP 客户端
+- 支持 ALL_PROXY, HTTP_PROXY 等环境变量
+
+**CLI 模式 (`cmd_cbp/` 各模块)：**
+- `make_subcommand()` - 创建子命令参数
+- `execute()` - 执行命令逻辑
+
+### 7.3 与类似工具对比
 
 | 特性 | CBP Dot | chezmoi | YADM |
 |------|---------|---------|------|
@@ -240,7 +315,7 @@ src/
 | 配置文件 | 无 | 有 | 有 |
 | 学习曲线 | 极低 | 中等 | 低 |
 
-### 7.3 参考资源
+### 7.4 参考资源
 
 - [YADM 官方文档](https://yadm.io/docs/overview)
 - [chezmoi 文档](https://www.chezmoi.io/)
