@@ -4,13 +4,180 @@
 
 ---
 
-## 核心设计
+## 1. 概述
 
-### 1. 模板系统
+CBP Dot 是一个极简的 dotfiles 管理工具，核心功能：
 
-**设计原则：完全依赖模板，不使用 ALT 文件系统**
+- **单命令设计**：`cbp dot <file>` 完成所有操作
+- **模板支持**：使用 Tera 引擎，根据系统信息动态渲染
+- **路径自动转换**：通过文件名前缀自动确定目标位置
+- **Git 外部化**：用户自行管理 Git，工具只负责文件处理
 
-采用类似 chezmoi 的单文件模板方式，通过文件名前缀和模板变量处理差异：
+---
+
+## 2. 快速开始
+
+**第一步：创建源目录**
+
+```bash
+# 创建你的 dotfiles 目录（示例：~/dotfiles）
+mkdir ~/dotfiles
+```
+
+**第二步：从现有配置创建模板**
+
+```bash
+cbp dot ~/.bashrc --dir ~/dotfiles/
+# 创建：~/dotfiles/dot_bashrc.tmpl
+
+cbp dot ~/.ssh/config --dir ~/dotfiles/
+# 创建：~/dotfiles/private_dot_ssh_config.tmpl
+```
+
+**第三步：应用配置**
+
+```bash
+# 预览（默认）
+cbp dot ~/dotfiles/dot_bashrc.tmpl
+
+# 确认无误后，实际应用
+cbp dot -a ~/dotfiles/dot_bashrc.tmpl
+```
+
+**第四步：管理你的 dotfiles**
+
+使用你喜欢的版本控制工具管理 `~/dotfiles` 目录。
+
+---
+
+## 3. 命令参考
+
+### 3.1 命令格式
+
+```bash
+# 应用模板（默认模式）
+cbp dot [OPTIONS] <template_file>
+
+# 从现有配置创建模板
+cbp dot [OPTIONS] <source_file> --dir <template_dir>
+```
+
+**选项：**
+
+| 选项 | 说明 |
+|------|------|
+| `-a, --apply` | 实际应用更改（默认仅预览，应用模式） |
+| `-v, --verbose` | 显示详细操作信息 |
+| `-d, --dir <dir>` | 指定模板存储目录（创建模式） |
+
+**注意：** `--apply` 和 `--dir` 是互斥选项，不能同时使用。
+
+**示例：**
+
+```bash
+# 预览（默认）
+cbp dot ~/dotfiles/dot_bashrc.tmpl
+# 输出：[预览] 将会覆盖 ~/.bashrc
+
+# 实际应用
+cbp dot -a ~/dotfiles/dot_bashrc.tmpl
+# 输出：已覆盖 ~/.bashrc
+
+# 从现有配置创建模板
+cbp dot ~/.bashrc --dir ~/dotfiles/
+```
+
+### 3.2 文件命名约定
+
+CBP Dot 通过文件名前缀决定如何处理文件。前缀可以组合使用，处理顺序为：
+1. 属性前缀（`private_`, `executable_`）
+2. 路径前缀（`dot_`, `xdg_*`）
+3. 后缀（`.tmpl`）
+
+#### 属性前缀（影响权限）
+
+- `private_` - 设置 0600 权限（敏感文件）
+  - 示例：`private_dot_ssh_config` → `~/.ssh/config` (权限 0600)
+  
+- `executable_` - 设置 0755 权限（可执行脚本）
+  - 示例：`executable_script.sh` → `~/script.sh` (权限 0755)
+
+#### 路径前缀（单文件模式，用 `_` 分隔）
+
+- `dot_` - 转为隐藏文件（`~/.` 开头）
+  - 示例：`dot_bashrc` → `~/.bashrc`
+
+#### 目录前缀（目录模式，用 `/` 分隔）
+
+| 前缀 | Linux/Mac 目标 | Windows 目标 | 示例 |
+|------|----------------|--------------|------|
+| `dot_config/` | `~/.config/{path}` | `~/.config/{path}` | `dot_config/nvim/init.vim` |
+| `xdg_config/` | `~/.config/{path}` | `%APPDATA%/{path}` | `xdg_config/myapp/config` |
+| `xdg_data/` | `~/.local/share/{path}` | `%LOCALAPPDATA%/{path}` | `xdg_data/myapp/data.db` |
+| `xdg_cache/` | `~/.cache/{path}` | `%LOCALAPPDATA%/Temp/{path}` | `xdg_cache/myapp/tmp` |
+
+#### 模板后缀
+
+- `.tmpl` - 模板文件，使用 Tera 引擎渲染
+  - 示例：`dot_bashrc.tmpl` → 渲染后 → `~/.bashrc`
+
+#### 完整示例
+
+```
+源文件：private_executable_dot_myscript.tmpl
+
+处理步骤：
+  1. private_      → 设置权限为 0600
+  2. executable_   → 设置权限为 0755（executable 优先级高于 private）
+  3. dot_          → 目标路径 ~/.myscript
+  4. .tmpl         → 使用模板渲染
+
+最终结果：~/.myscript (权限 0755，已渲染模板)
+```
+
+### 3.3 使用示例
+
+**添加新文件：**
+```bash
+# 从现有配置创建模板
+cbp dot ~/.gitconfig --dir ~/dotfiles/
+
+# 预览并应用
+cbp dot ~/dotfiles/dot_gitconfig.tmpl
+cbp dot -a ~/dotfiles/dot_gitconfig.tmpl
+
+# 提交
+cd ~/dotfiles && git add . && git commit -m "Add gitconfig"
+```
+
+**编辑文件：**
+```bash
+vim ~/dotfiles/dot_bashrc.tmpl
+cbp dot -a ~/dotfiles/dot_bashrc.tmpl
+```
+
+**批量应用：**
+```bash
+for f in ~/dotfiles/dot_* ~/dotfiles/dot_config/**/*; do 
+    [ -f "$f" ] && cbp dot -a "$f"
+done
+```
+
+**在新机器上部署：**
+```bash
+git clone https://github.com/username/dotfiles.git ~/dotfiles
+for f in ~/dotfiles/dot_* ~/dotfiles/dot_config/**/*; do 
+    [ -f "$f" ] && cbp dot -a "$f"
+done
+```
+
+---
+
+## 4. 模板系统
+
+### 4.1 模板语法
+
+使用 Tera 引擎（Jinja2 兼容）：
 
 ```bash
 # dot_bashrc.tmpl
@@ -25,269 +192,69 @@ export HTTP_PROXY=http://proxy.company.com:8080
 {% endif %}
 ```
 
-#### 1.1 模板处理器
+### 4.2 可用变量
 
-使用 `tera` crate（Jinja2 兼容）：
-
-| 功能 | 说明 |
-|------|------|
-| 条件判断 | `{% if os == "linux" %}` |
-| 变量输出 | `{{ hostname }}`, `{{ env.HOME }}` |
-| 包含文件 | `{% include "common.conf" %}` |
-
-#### 1.2 模板变量（运行时检测）
-
-```rust
-let context = Context::new();
-context.insert("os", std::env::consts::OS);
-context.insert("arch", std::env::consts::ARCH);
-context.insert("hostname", get_hostname());
-context.insert("user", std::env::var("USER").unwrap_or_default());
-context.insert("distro", get_distro());  // 读取 /etc/os-release
-context.insert("env", &env_vars);
-```
+| 变量 | 说明 | 示例 |
+|------|------|------|
+| `os` | 操作系统 | linux, macos, windows |
+| `arch` | 架构 | x86_64, aarch64 |
+| `hostname` | 主机名 | myhost |
+| `user` | 用户名 | username |
+| `distro` | 发行版 | Ubuntu |
+| `env.*` | 环境变量 | `env.HOME`, `env.PATH` |
 
 ---
 
-### 2. 命令设计
+## 5. 实现要点
 
-**Git 完全外部化**：用户直接使用原生 Git，`cbp dot` 只负责文件处理。
-
-| 命令 | 功能 | 说明 |
-|------|------|------|
-| `cbp dot <file>` | 应用单个文件 | 根据文件名前缀自动处理，复制/渲染到 `$HOME` |
-
-#### 2.1 文件命名约定（参考 chezmoi）
-
-CBP Dot 通过文件名前缀来决定如何处理文件。前缀可以组合使用（如 `private_dot_bashrc.tmpl`），处理顺序为：
-1. 先处理属性前缀（`private_`, `executable_`）
-2. 再处理路径前缀（`dot_`, `xdg_*`）
-3. 最后处理后缀（`.tmpl`）
-
-##### 属性前缀（影响文件权限）
-
-| 前缀 | 作用 | 说明 |
-|------|------|------|
-| `private_` | 设置 0600 权限 | 敏感配置文件，如 SSH 密钥、密码文件 |
-| `executable_` | 设置可执行权限（0755） | 脚本文件 |
-
-**示例：**
-```
-private_ssh_config          → ~/.ssh/config (权限 0600)
-executable_script.sh        → ~/script.sh (权限 0755)
-```
-
-##### 路径前缀（影响目标位置）
-
-| 前缀/目录 | Linux/Mac 目标 | Windows 目标 | 说明 |
-|-----------|----------------|--------------|------|
-| `dot_` | `~/.{name}` | `~/.{name}` | 隐藏文件/目录，前缀 `dot_` 替换为 `.` |
-| `dot_config/` | `~/.config/{path}` | `~/.config/{path}` | 配置目录（仅 $HOME） |
-| `xdg_config/` | `~/.config/{path}` | `%APPDATA%/{path}` | XDG 配置目录（跨平台） |
-| `xdg_data/` | `~/.local/share/{path}` | `%LOCALAPPDATA%/{path}` | XDG 数据目录（跨平台） |
-| `xdg_cache/` | `~/.cache/{path}` | `%LOCALAPPDATA%/Temp/{path}` | XDG 缓存目录（跨平台） |
-
-**详细示例：**
-
-```
-# dot_ 前缀 - 隐藏文件
-dot_bashrc                  → ~/.bashrc
-dot_vimrc                   → ~/.vimrc
-
-# dot_config/ 目录 - 配置目录（仅 $HOME）
-dot_config/nvim/init.vim    → ~/.config/nvim/init.vim
-dot_config/myapp/config     → ~/.config/myapp/config
-
-# xdg_config/ 目录 - 配置目录（跨平台）
-xdg_config/myapp/settings.json
-                            → ~/.config/myapp/settings.json (Linux/Mac)
-                            → %APPDATA%/myapp/settings.json (Windows)
-
-xdg_config/git/config       → ~/.config/git/config (Linux/Mac)
-                            → %APPDATA%/git/config (Windows)
-
-# xdg_data/ 目录 - 数据目录（跨平台）
-xdg_data/myapp/data.db      → ~/.local/share/myapp/data.db (Linux/Mac)
-                            → %LOCALAPPDATA%/myapp/data.db (Windows)
-
-# xdg_cache/ 目录 - 缓存目录（跨平台）
-xdg_cache/myapp/cache.tmp   → ~/.cache/myapp/cache.tmp (Linux/Mac)
-                            → %LOCALAPPDATA%/Temp/myapp/cache.tmp (Windows)
-```
-
-##### 模板后缀
-
-| 后缀 | 作用 | 说明 |
-|------|------|------|
-| `.tmpl` | 模板文件 | 使用 Tera 引擎渲染，可与其他前缀组合 |
-
-**组合示例：**
-```
-dot_bashrc.tmpl                     → 渲染模板 → ~/.bashrc
-private_dot_ssh_config.tmpl         → 渲染模板 → ~/.ssh/config (权限 0600)
-xdg_config/myapp/config.tmpl        → 渲染模板 → ~/.config/myapp/config (Linux/Mac)
-                                    → %APPDATA%/myapp/config (Windows)
-```
-
-##### 完整示例
-
-```
-源文件：
-  private_executable_dot_myscript.tmpl
-
-处理步骤：
-  1. private_      → 设置权限为 0600
-  2. executable_   → 设置权限为 0755（executable 优先级高于 private）
-  3. dot_          → 目标路径 ~/.myscript
-  4. .tmpl         → 使用模板渲染
-
-最终结果：
-  ~/.myscript (权限 0755，已渲染模板)
-```
-
-#### 2.2 使用示例
-
-```bash
-# 普通文件（自动转为隐藏文件）
-cbp dot ~/.dotfiles/dot_bashrc
-# 生成：~/.bashrc
-
-# 模板文件（渲染后复制）
-cbp dot ~/.dotfiles/dot_bashrc.tmpl
-# 生成：~/.bashrc
-
-# 可执行脚本
-cbp dot ~/.dotfiles/executable_script.sh
-# 生成：~/script.sh（带可执行权限）
-
-# 批量处理（用 shell 循环）
-for f in ~/.dotfiles/dot_*; do cbp dot "$f"; done
-```
-
-#### 2.3 Git 工作流（用户自行管理）
-
-```bash
-# 设置 Git 别名（可选）
-alias dotf='git --git-dir=$HOME/.dotfiles.git --work-tree=$HOME'
-
-# 日常使用
-dotf add dot_bashrc
-dotf commit -m "update"
-dotf push
-
-# 应用配置
-cbp dot ~/.dotfiles/dot_bashrc.tmpl
-```
-
----
-
-### 3. 配置系统
-
-**无配置文件**：运行时动态检测系统信息，无需维护配置。
-
-| 变量 | 检测方式 | 示例 |
-|------|----------|------|
-| `os` | `std::env::consts::OS` | linux, macos, windows |
-| `arch` | `std::env::consts::ARCH` | x86_64, aarch64 |
-| `hostname` | `hostname` crate | myhost |
-| `user` | `std::env::var("USER")` | username |
-| `distro` | 读取 `/etc/os-release` | Ubuntu |
-| `env.*` | `std::env::var()` | HOME, PATH |
-
----
-
-### 4. 实现要点
-
-#### 4.1 代码结构
+### 5.1 代码结构
 
 ```
 src/
 ├── cmd_cbp/
 │   ├── mod.rs
-│   └── dot.rs             # dot 功能模块（单命令）
+│   └── dot.rs             # dot 功能模块
 ├── libs/
 │   ├── mod.rs
 │   └── dot.rs             # 系统信息检测 + 文件名解析
 └── ...
 ```
 
-#### 4.2 关键功能
+### 5.2 关键功能
 
-1. **单文件处理**：`cbp dot <file>` 根据文件名前缀自动处理
+1. **源文件解析**：从输入路径提取文件名，识别特殊前缀
 2. **模板渲染**：使用 `tera` 渲染 `.tmpl` 文件
 3. **权限设置**：根据 `private_`/`executable_` 前缀设置权限
 4. **路径转换**：根据前缀自动转换目标路径
+5. **安全默认**：默认预览模式，加 `-a` 才实际写入文件
 
-##### 特殊前缀列表
-
-程序按以下顺序识别前缀（长前缀优先）：
-
-**属性前缀（影响权限）：**
-
-- `private_` - 设置 0600 权限（敏感文件）
-  - 示例：`private_dot_ssh_config` → `~/.ssh/config` (权限 0600)
-  
-- `executable_` - 设置 0755 权限（可执行脚本）
-  - 示例：`executable_script.sh` → `~/script.sh` (权限 0755)
-
-**路径前缀（单文件模式，用 `_` 分隔）：**
-
-- `dot_` - 转为隐藏文件（`~/.` 开头）
-  - 示例：`dot_bashrc` → `~/.bashrc`
-
-**目录前缀（目录模式，用 `/` 分隔）：**
-
-- `dot_config/` - 配置目录（仅 $HOME）
-  - Linux/Mac: `~/.config/{path}`
-  - Windows: `~/.config/{path}`
-  - 示例：`dot_config/nvim/init.vim` → `~/.config/nvim/init.vim`
-
-- `xdg_config/` - 配置目录（跨平台）
-  - Linux/Mac: `~/.config/{path}`
-  - Windows: `%APPDATA%/{path}`
-  - 示例：`xdg_config/myapp/config` → `~/.config/myapp/config`
-
-- `xdg_data/` - 数据目录（跨平台）
-  - Linux/Mac: `~/.local/share/{path}`
-  - Windows: `%LOCALAPPDATA%/{path}`
-  - 示例：`xdg_data/myapp/data.db`
-
-- `xdg_cache/` - 缓存目录（跨平台）
-  - Linux/Mac: `~/.cache/{path}`
-  - Windows: `%LOCALAPPDATA%/Temp/{path}`
-  - 示例：`xdg_cache/myapp/tmp`
-
-**处理规则：**
-1. 检查路径第一段是否为目录前缀（含 `/`）
-2. 如果不是，从文件名中提取属性前缀和路径前缀（含 `_`）
-3. 长前缀优先匹配（如 `private_dot_` 优先于 `dot_`）
-4. 移除 `.tmpl` 后缀后确定最终目标路径
-
-#### 4.3 技术栈
+### 5.3 技术栈
 
 | 功能 | 实现 |
 |------|------|
-| 模板处理 | `tera`（Jinja2 兼容） |
+| 模板处理 | `tera` |
 | 路径处理 | `std::path::Path` + `dunce` |
 | CLI 解析 | `clap` |
+| 系统信息 | `sysinfo` |
 
 ---
 
-### 5. 与 YADM 的差异
+## 6. 对比与参考
 
-| 特性 | YADM | CBP Dot |
-|------|------|---------|
-| Git 集成 | 内置 | 外部化 |
-| 配置文件 | 有 | 无（运行时检测） |
-| ALT 系统 | 支持 | 不支持（用模板替代） |
-| 加密 | 支持 | 不支持 |
-| 钩子 | 支持 | 不支持 |
-| 命令数量 | 多个 | 单个 |
+### 6.1 与类似工具对比
 
----
+| 特性 | CBP Dot | chezmoi | YADM |
+|------|---------|---------|------|
+| 定位 | 极简单命令工具 | 完整 dotfiles 管理器 | Git 包装器 |
+| Git 集成 | 外部化 | 内置 | 内置 |
+| 模板 | 支持 | 支持 | 支持 |
+| 加密 | 不支持 | 支持 | 支持 |
+| 配置文件 | 无 | 有 | 有 |
+| 学习曲线 | 极低 | 中等 | 低 |
 
-## 参考资源
+### 6.2 参考资源
 
 - [YADM 官方文档](https://yadm.io/docs/overview)
 - [chezmoi 文档](https://www.chezmoi.io/)
 - [Tera 模板引擎](https://keats.github.io/tera/)
+- [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html)
