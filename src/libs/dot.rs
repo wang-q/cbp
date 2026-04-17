@@ -236,6 +236,9 @@ impl DotfileParser {
 
         let mut prefix = String::new();
         let mut target_dir = TargetDir::Home;
+        #[cfg(unix)]
+        let mut permissions = FilePermissions::Default;
+        #[cfg(not(unix))]
         let permissions = FilePermissions::Default;
 
         // Check if file is executable

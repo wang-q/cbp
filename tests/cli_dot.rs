@@ -270,10 +270,7 @@ fn command_dot_full_workflow() -> anyhow::Result<()> {
 
     // Step 1: Create a source config file with template variables
     let source_file = source_dir.join("config.txt");
-    std::fs::write(
-        &source_file,
-        "# Config for {{ os }}\nuser={{ user }}\n",
-    )?;
+    std::fs::write(&source_file, "# Config for {{ os }}\nuser={{ user }}\n")?;
 
     // Step 2: Create template from source
     Command::cargo_bin("cbp")?
@@ -310,10 +307,7 @@ fn command_dot_full_workflow() -> anyhow::Result<()> {
     println!("Preview output:\n{}", stdout);
 
     assert!(output.status.success(), "Preview should succeed");
-    assert!(
-        stdout.contains("Preview:"),
-        "Should show preview message"
-    );
+    assert!(stdout.contains("Preview:"), "Should show preview message");
     assert!(
         stdout.contains("Rendered content"),
         "Should show rendered content section"
@@ -367,10 +361,7 @@ alias ls='ls --color=auto'
         is_windows || is_unix,
         "Should render one of the OS-specific aliases"
     );
-    assert!(
-        !(is_windows && is_unix),
-        "Should not render both aliases"
-    );
+    assert!(!(is_windows && is_unix), "Should not render both aliases");
 
     // Verify user and hostname are rendered (not empty)
     assert!(
