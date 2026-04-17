@@ -1,5 +1,5 @@
 use clap::*;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use cbp::dot::{DotfileParser, SystemInfo};
 
@@ -44,9 +44,9 @@ Examples:
         )
         .arg(
             Arg::new("source")
-                .help("Source file, template file, or archive")
+                .help("Source file(s), template file(s), or archive(s)")
                 .required(true)
-                .num_args(1)
+                .num_args(1..)
                 .value_name("SOURCE"),
         )
         .arg(
@@ -81,8 +81,11 @@ Examples:
 }
 
 pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
-    let source = args.get_one::<String>("source").unwrap();
-    let source_path = std::path::Path::new(source);
+    let sources: Vec<String> = args
+        .get_many::<String>("source")
+        .unwrap()
+        .cloned()
+        .collect();
     let apply = args.get_flag("apply");
     let verbose = args.get_flag("verbose");
 
@@ -103,18 +106,30 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     // Dispatch to appropriate handler
     if has_dir {
         // Create mode: from existing config
+        if sources.len() > 1 {
+            return Err(anyhow::anyhow!(
+                "Cannot use multiple sources with --dir. Please specify a single source."
+            ));
+        }
         let template_dir = args.get_one::<String>("dir").unwrap();
-        create_template(source_path, template_dir, verbose)
+        create_template(std::path::Path::new(&sources[0]), template_dir, verbose)
     } else if has_tar {
         // Export mode: to tar.gz
         let tar_file = args.get_one::<String>("tar").unwrap();
-        export_archive(source_path, tar_file, verbose)
-    } else if source.ends_with(".tar.gz") || source.ends_with(".tgz") {
-        // Archive apply mode
-        apply_archive(source_path, apply, verbose)
+        let source_paths: Vec<&Path> =
+            sources.iter().map(|s| std::path::Path::new(s)).collect();
+        export_archive(&source_paths, tar_file, verbose)
     } else {
-        // Template apply mode
-        apply_template(source_path, apply, verbose)
+        // Apply mode: process each source
+        for source in &sources {
+            let source_path = std::path::Path::new(source);
+            if source.ends_with(".tar.gz") || source.ends_with(".tgz") {
+                apply_archive(source_path, apply, verbose)?;
+            } else {
+                apply_template(source_path, apply, verbose)?;
+            }
+        }
+        Ok(())
     }
 }
 
@@ -349,76 +364,56 @@ fn apply_archive(archive_path: &Path, apply: bool, verbose: bool) -> anyhow::Res
 
 /// Export config to tar.gz archive
 fn export_archive(
-    source_path: &Path,
+    source_paths: &[&Path],
     tar_file: &str,
     verbose: bool,
 ) -> anyhow::Result<()> {
-    if !source_path.exists() {
-        return Err(anyhow::anyhow!(
-            "Source not found: {}",
-            source_path.display()
-        ));
+    for source_path in source_paths {
+        if !source_path.exists() {
+            return Err(anyhow::anyhow!(
+                "Source not found: {}",
+                source_path.display()
+            ));
+        }
     }
 
     let tar_path = std::path::Path::new(tar_file);
+    let cbp = std::env::current_exe()?.display().to_string();
 
-    if source_path.is_file() {
-        // Single file
-        let file = std::fs::File::create(tar_path)?;
-        let gz = flate2::GzBuilder::new()
-            .filename("")
-            .comment("")
-            .mtime(1704067200)
-            .write(file, flate2::Compression::default());
-        let mut archive = tar::Builder::new(gz);
+    // Create temporary directory to collect all sources
+    let temp_dir = tempfile::tempdir()?;
 
-        // Determine relative path in archive
-        let rel_path = if let Some(name) = source_path.file_name() {
-            PathBuf::from(name)
+    // Copy all sources to temporary directory
+    for source_path in source_paths {
+        let dest_name = source_path
+            .file_name()
+            .ok_or_else(|| anyhow::anyhow!("Invalid source path"))?;
+        let dest_path = temp_dir.path().join(dest_name);
+
+        if source_path.is_file() {
+            std::fs::copy(source_path, &dest_path)?;
         } else {
-            source_path.to_path_buf()
-        };
-
-        archive.append_path_with_name(source_path, rel_path)?;
-        archive.finish()?;
-    } else {
-        // Directory
-        let files = cbp::find_files(source_path, None)?;
-
-        let file = std::fs::File::create(tar_path)?;
-        let gz = flate2::GzBuilder::new()
-            .filename("")
-            .comment("")
-            .mtime(1704067200)
-            .write(file, flate2::Compression::default());
-        let mut archive = tar::Builder::new(gz);
-
-        for rel_path in &files {
-            let full_path = source_path.join(rel_path);
-
-            // Skip system files
-            if cbp::is_system_file(rel_path) {
-                continue;
-            }
-
-            if full_path.is_symlink() {
-                let target = std::fs::read_link(&full_path)?;
-                let mut header = tar::Header::new_gnu();
-                header.set_path(rel_path)?;
-                header.set_size(0);
-                header.set_entry_type(tar::EntryType::Symlink);
-                header.set_link_name(&target)?;
-                archive.append_data(&mut header, rel_path, std::io::empty())?;
-            } else {
-                archive.append_path_with_name(&full_path, rel_path)?;
-            }
+            cbp::copy_dir_all(source_path, &dest_path)?;
         }
+    }
 
-        archive.finish()?;
+    // Use cbp tar command to create archive
+    let output = std::process::Command::new(&cbp)
+        .args(["tar", temp_dir.path().to_str().unwrap(), "-o"])
+        .arg(tar_path)
+        .output()?;
+
+    if !output.status.success() {
+        return Err(anyhow::anyhow!(
+            "Failed to create archive: {}",
+            String::from_utf8_lossy(&output.stderr)
+        ));
     }
 
     if verbose {
-        println!("Source: {}", source_path.display());
+        for source_path in source_paths {
+            println!("Source: {}", source_path.display());
+        }
         println!("Archive: {}", tar_path.display());
     } else {
         println!("Created: {}", tar_path.display());
