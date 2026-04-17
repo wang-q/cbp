@@ -4,6 +4,7 @@ pub mod avail;
 pub mod build;
 pub mod check;
 pub mod collect;
+pub mod dot;
 pub mod info;
 pub mod init;
 pub mod install;
