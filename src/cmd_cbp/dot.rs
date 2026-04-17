@@ -234,6 +234,13 @@ fn apply_template(
             std::fs::create_dir_all(parent)?;
         }
 
+        // Remove existing file or symlink before writing
+        // Note: std::fs::write follows symlinks and writes to the target file,
+        // which is not the desired behavior. We need to remove the symlink first.
+        if target_path.exists() || target_path.is_symlink() {
+            std::fs::remove_file(&target_path)?;
+        }
+
         // Write file
         std::fs::write(&target_path, final_content)?;
 
