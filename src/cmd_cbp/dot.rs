@@ -234,16 +234,6 @@ fn apply_template(
             std::fs::create_dir_all(parent)?;
         }
 
-        // Check if target exists
-        if target_path.exists() {
-            // Create backup
-            let backup_path = target_path.with_extension("backup");
-            std::fs::copy(&target_path, &backup_path)?;
-            if verbose {
-                println!("Backup: {}", backup_path.display());
-            }
-        }
-
         // Write file
         std::fs::write(&target_path, final_content)?;
 
