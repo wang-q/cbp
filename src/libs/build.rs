@@ -387,7 +387,10 @@ pub fn target_binary_path(
     Ok(path)
 }
 
-pub fn target_font_path(base_dir: &std::path::Path, pkg: &str) -> anyhow::Result<String> {
+pub fn target_font_path(
+    base_dir: &std::path::Path,
+    pkg: &str,
+) -> anyhow::Result<String> {
     std::fs::create_dir_all(base_dir.join("binaries"))?;
     let path = base_dir
         .canonicalize()?

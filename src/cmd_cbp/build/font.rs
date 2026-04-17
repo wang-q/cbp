@@ -96,8 +96,6 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         let target_path = cbp::target_font_path(&base_dir, pkg)?;
         let temp_path = temp_dir.path().canonicalize()?;
 
-        
-
         // Change to temp directory and collect files
         run_cmd!(
             cd ${temp_path};

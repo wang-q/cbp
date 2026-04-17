@@ -62,7 +62,10 @@ pub fn format_packages(packages: &[String]) -> String {
 }
 
 /// Recursively copy a directory and all its contents
-pub fn copy_dir_all(src: impl AsRef<std::path::Path>, dst: impl AsRef<std::path::Path>) -> anyhow::Result<()> {
+pub fn copy_dir_all(
+    src: impl AsRef<std::path::Path>,
+    dst: impl AsRef<std::path::Path>,
+) -> anyhow::Result<()> {
     std::fs::create_dir_all(&dst)?;
     for entry in std::fs::read_dir(src)? {
         let entry = entry?;
@@ -78,7 +81,10 @@ pub fn copy_dir_all(src: impl AsRef<std::path::Path>, dst: impl AsRef<std::path:
 
 /// Move a file or directory from source to destination
 /// Uses copy and delete to handle cross-device scenarios
-pub fn move_file_or_dir(source_path: &std::path::Path, target_path: &std::path::Path) -> anyhow::Result<()> {
+pub fn move_file_or_dir(
+    source_path: &std::path::Path,
+    target_path: &std::path::Path,
+) -> anyhow::Result<()> {
     if source_path != target_path && source_path.exists() {
         if source_path.is_dir() {
             // For directories, use recursive copy
@@ -357,7 +363,7 @@ mod tests {
         // Create source directory structure
         let src_dir = base.join("src");
         let dst_dir = base.join("dst");
-        
+
         std::fs::create_dir_all(&src_dir)?;
         std::fs::create_dir_all(src_dir.join("subdir"))?;
         std::fs::write(src_dir.join("file1.txt"), "content1")?;
@@ -375,9 +381,18 @@ mod tests {
         assert!(dst_dir.join("subdir/file3.txt").exists());
 
         // Verify file contents
-        assert_eq!(std::fs::read_to_string(dst_dir.join("file1.txt"))?, "content1");
-        assert_eq!(std::fs::read_to_string(dst_dir.join("file2.dat"))?, "content2");
-        assert_eq!(std::fs::read_to_string(dst_dir.join("subdir/file3.txt"))?, "content3");
+        assert_eq!(
+            std::fs::read_to_string(dst_dir.join("file1.txt"))?,
+            "content1"
+        );
+        assert_eq!(
+            std::fs::read_to_string(dst_dir.join("file2.dat"))?,
+            "content2"
+        );
+        assert_eq!(
+            std::fs::read_to_string(dst_dir.join("subdir/file3.txt"))?,
+            "content3"
+        );
 
         // Verify source still exists
         assert!(src_dir.exists());
@@ -405,7 +420,7 @@ mod tests {
         // Test moving a directory
         let src_dir = base.join("src_dir");
         let dst_dir = base.join("dst_dir");
-        
+
         std::fs::create_dir_all(&src_dir)?;
         std::fs::create_dir_all(src_dir.join("subdir"))?;
         std::fs::write(src_dir.join("file1.txt"), "content1")?;
@@ -421,8 +436,14 @@ mod tests {
         assert!(dst_dir.join("subdir/file2.txt").exists());
 
         // Verify file contents
-        assert_eq!(std::fs::read_to_string(dst_dir.join("file1.txt"))?, "content1");
-        assert_eq!(std::fs::read_to_string(dst_dir.join("subdir/file2.txt"))?, "content2");
+        assert_eq!(
+            std::fs::read_to_string(dst_dir.join("file1.txt"))?,
+            "content1"
+        );
+        assert_eq!(
+            std::fs::read_to_string(dst_dir.join("subdir/file2.txt"))?,
+            "content2"
+        );
 
         // Test no-op when source and destination are the same
         let same_file = base.join("same.txt");

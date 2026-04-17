@@ -111,8 +111,6 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     Ok(())
 }
 
- 
-
 // /// Get target directory name for archive
 // fn get_target_name(
 //     temp_dir: &tempfile::TempDir,
