@@ -1,6 +1,7 @@
 use clap::*;
-use std::io::Read;
 use std::path::Path;
+
+use cbp::libs::utils::{format_size, read_comment};
 
 pub fn make_subcommand() -> Command {
     Command::new("list")
@@ -69,28 +70,4 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     println!("{} files, {} total", count, format_size(total_size));
 
     Ok(())
-}
-
-fn read_comment(path: &Path) -> anyhow::Result<String> {
-    let file = std::fs::File::open(path)?;
-    let mut decoder = flate2::read::GzDecoder::new(file);
-    let mut buf = Vec::new();
-    decoder.read_to_end(&mut buf)?;
-    let header = decoder.header();
-    Ok(header
-        .and_then(|h| h.comment())
-        .map(|c| String::from_utf8_lossy(c).to_string())
-        .unwrap_or_default())
-}
-
-fn format_size(bytes: u64) -> String {
-    if bytes < 1024 {
-        format!("{}B", bytes)
-    } else if bytes < 1024 * 1024 {
-        format!("{:.1}K", bytes as f64 / 1024.0)
-    } else if bytes < 1024 * 1024 * 1024 {
-        format!("{:.1}M", bytes as f64 / (1024.0 * 1024.0))
-    } else {
-        format!("{:.1}G", bytes as f64 / (1024.0 * 1024.0 * 1024.0))
-    }
 }

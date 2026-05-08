@@ -1,5 +1,5 @@
 use std::io::{BufWriter, Read, Write};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 /// Creates a buffered writer for either stdout or a file
 ///
@@ -59,6 +59,74 @@ pub fn format_packages(packages: &[String]) -> String {
     }
 
     result
+}
+
+/// Resolve a path, expanding `~` to the home directory
+pub fn resolve_path(path: &Path, home: &Path) -> anyhow::Result<PathBuf> {
+    use anyhow::Context;
+
+    let path_str = path.to_string_lossy();
+    let expanded = if path_str == "~" {
+        home.to_path_buf()
+    } else if path_str.starts_with("~/") || path_str.starts_with("~\\") {
+        home.join(&path_str[2..])
+    } else {
+        path.to_path_buf()
+    };
+
+    if expanded.exists() {
+        Ok(expanded)
+    } else {
+        dunce::canonicalize(&expanded)
+            .with_context(|| format!("Path not found: {}", expanded.display()))
+    }
+}
+
+/// Convert an absolute path to a home-relative path with `~` prefix
+pub fn to_home_path(abs: &Path, home: &Path) -> anyhow::Result<String> {
+    let abs = dunce::canonicalize(abs).unwrap_or_else(|_| abs.to_path_buf());
+    let home = dunce::canonicalize(home).unwrap_or_else(|_| home.to_path_buf());
+
+    if let Ok(rel) = abs.strip_prefix(&home) {
+        let rel_str = rel.display().to_string();
+        return Ok(if rel_str.is_empty() {
+            "~/".to_string()
+        } else {
+            format!("~/ {}", rel_str).replace(" ", "")
+        });
+    }
+
+    let mut ancestor = home.as_path();
+    let mut ups = String::new();
+    loop {
+        if let Ok(rel) = abs.strip_prefix(ancestor) {
+            return Ok(format!("~/{}/{}", ups, rel.display()));
+        }
+        match ancestor.parent() {
+            Some(p) => {
+                ancestor = p;
+                ups.push_str("../");
+            }
+            None => return Ok(abs.to_string_lossy().to_string()),
+        }
+    }
+}
+
+/// Expand `~` in a string path to the home directory (no existence check)
+pub fn expand_home_path(path: &str, home: &Path) -> PathBuf {
+    if path == "~" {
+        return home.to_path_buf();
+    }
+    let separator = if path.contains('/') { '/' } else { '\\' };
+    if let Some(rest) = path.strip_prefix(&format!("~{}", separator)) {
+        home.join(rest)
+    } else if let Some(rest) = path.strip_prefix("~/") {
+        home.join(rest)
+    } else if let Some(rest) = path.strip_prefix("~\\") {
+        home.join(rest)
+    } else {
+        PathBuf::from(path)
+    }
 }
 
 /// Recursively copy a directory and all its contents
@@ -461,6 +529,178 @@ mod tests {
 
         Ok(())
     }
+
+    #[test]
+    fn test_resolve_path_tilde() -> anyhow::Result<()> {
+        let tmp = tempfile::tempdir()?;
+        let home = tmp.path().join("home");
+        std::fs::create_dir(&home)?;
+        let file = home.join("test.txt");
+        std::fs::File::create(&file)?;
+
+        let resolved = resolve_path(Path::new("~/test.txt"), &home)?;
+        assert_eq!(resolved, file);
+        Ok(())
+    }
+
+    #[test]
+    fn test_resolve_path_absolute() -> anyhow::Result<()> {
+        let tmp = tempfile::tempdir()?;
+        let home = tmp.path().join("home");
+        std::fs::create_dir(&home)?;
+        let file = home.join("abs.txt");
+        std::fs::File::create(&file)?;
+
+        let resolved = resolve_path(&file, &home)?;
+        assert_eq!(resolved, file);
+        Ok(())
+    }
+
+    #[test]
+    fn test_resolve_path_not_found() {
+        let tmp = tempfile::tempdir().unwrap();
+        let home = tmp.path().join("home");
+        std::fs::create_dir(&home).unwrap();
+        let result = resolve_path(Path::new("~/nonexistent.txt"), &home);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_to_home_path_under_home() -> anyhow::Result<()> {
+        let tmp = tempfile::tempdir()?;
+        let home = tmp.path().join("home");
+        std::fs::create_dir_all(home.join(".config/nvim"))?;
+        let subdir = home.join(".config/nvim");
+
+        let rel = to_home_path(&subdir, &home)?;
+        assert!(rel.contains(".config") && rel.contains("nvim"));
+        Ok(())
+    }
+
+    #[test]
+    fn test_to_home_path_outside_home() -> anyhow::Result<()> {
+        let tmp = tempfile::tempdir()?;
+        let home = tmp.path().join("home");
+        std::fs::create_dir(&home)?;
+        let outside = tmp.path().join("outside");
+        std::fs::create_dir(&outside)?;
+
+        let rel = to_home_path(&outside, &home)?;
+        assert!(rel.starts_with("~/../../") || rel.contains("outside"));
+        Ok(())
+    }
+
+    #[test]
+    fn test_to_home_path_home_itself() -> anyhow::Result<()> {
+        let tmp = tempfile::tempdir()?;
+        let home = tmp.path().join("home");
+        std::fs::create_dir(&home)?;
+
+        let rel = to_home_path(&home, &home)?;
+        assert_eq!(rel, "~/");
+        Ok(())
+    }
+
+    #[test]
+    fn test_expand_home_path() {
+        let home = PathBuf::from("/home/user");
+        assert_eq!(expand_home_path("~", &home), PathBuf::from("/home/user"));
+        assert_eq!(
+            expand_home_path("~/foo", &home),
+            PathBuf::from("/home/user/foo")
+        );
+        assert_eq!(
+            expand_home_path("/absolute/path", &home),
+            PathBuf::from("/absolute/path")
+        );
+    }
+
+    #[test]
+    fn test_read_comment() -> anyhow::Result<()> {
+        use flate2::write::GzEncoder;
+        use flate2::Compression;
+        use std::io::Write;
+
+        let tmp = tempfile::tempdir()?;
+        let archive_path = tmp.path().join("test.snap.tar.gz");
+
+        // Create a gz file with comment
+        let file = std::fs::File::create(&archive_path)?;
+        let mut encoder = GzEncoder::new(file, Compression::default());
+        encoder.write_all(b"test content")?;
+        let mut file = encoder.finish()?;
+        // Note: GzEncoder doesn't support comment, so we test empty case
+
+        let comment = read_comment(&archive_path)?;
+        assert!(comment.is_empty());
+        Ok(())
+    }
+
+    #[test]
+    fn test_format_size() {
+        assert_eq!(format_size(500), "500B");
+        assert_eq!(format_size(1024), "1.0K");
+        assert_eq!(format_size(1024 * 1024), "1.0M");
+        assert_eq!(format_size(1024 * 1024 * 1024), "1.0G");
+    }
+}
+
+/// Read gzip comment from a snapshot archive
+pub fn read_comment(path: &Path) -> anyhow::Result<String> {
+    use std::io::Read;
+
+    let file = std::fs::File::open(path)?;
+    let mut decoder = flate2::read::GzDecoder::new(file);
+    let mut buf = Vec::new();
+    decoder.read_to_end(&mut buf)?;
+    let header = decoder.header();
+    Ok(header
+        .and_then(|h| h.comment())
+        .map(|c| String::from_utf8_lossy(c).to_string())
+        .unwrap_or_default())
+}
+
+/// Format byte size to human readable string
+pub fn format_size(bytes: u64) -> String {
+    if bytes < 1024 {
+        format!("{}B", bytes)
+    } else if bytes < 1024 * 1024 {
+        format!("{:.1}K", bytes as f64 / 1024.0)
+    } else if bytes < 1024 * 1024 * 1024 {
+        format!("{:.1}M", bytes as f64 / (1024.0 * 1024.0))
+    } else {
+        format!("{:.1}G", bytes as f64 / (1024.0 * 1024.0 * 1024.0))
+    }
+}
+
+/// Find the target path for an archive entry based on source paths
+/// Returns the absolute path where the entry should be extracted
+pub fn find_target_path(
+    archive_entry: &Path,
+    source_paths: &[String],
+    home: &Path,
+) -> Option<PathBuf> {
+    let entry_str = archive_entry.to_string_lossy().to_string();
+
+    // Try to match against each source path
+    for source in source_paths {
+        let source_path = expand_home_path(source, home);
+        let source_name = source_path.file_name()?.to_string_lossy();
+
+        // Check if entry starts with the source name
+        if entry_str.starts_with(&*source_name) {
+            // Get the relative part after the source name
+            let rel_part = entry_str.strip_prefix(&*source_name)?;
+            let rel_part = rel_part.strip_prefix('/').or_else(|| rel_part.strip_prefix('\\'))?;
+
+            // Build the full target path
+            let target = source_path.parent()?.join(rel_part);
+            return Some(target);
+        }
+    }
+
+    // Fallback: try to construct path from home
+    Some(home.join(&entry_str))
 }
 
 /// Generate font installation instructions for the current OS

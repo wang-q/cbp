@@ -2,6 +2,8 @@ use anyhow::Context;
 use clap::*;
 use std::path::{Path, PathBuf};
 
+use cbp::libs::utils::{resolve_path, to_home_path};
+
 pub fn make_subcommand() -> Command {
     Command::new("save")
         .about("Save files/directories as a snapshot")
@@ -104,46 +106,4 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     println!("==> Source paths: {}", comment);
 
     Ok(())
-}
-
-fn resolve_path(path: &Path, home: &Path) -> anyhow::Result<PathBuf> {
-    let path_str = path.to_string_lossy();
-    let expanded = if path_str == "~" {
-        home.to_path_buf()
-    } else if path_str.starts_with("~/") || path_str.starts_with("~\\") {
-        home.join(&path_str[2..])
-    } else {
-        path.to_path_buf()
-    };
-
-    if expanded.exists() {
-        Ok(expanded)
-    } else {
-        dunce::canonicalize(&expanded)
-            .with_context(|| format!("Path not found: {}", expanded.display()))
-    }
-}
-
-fn to_home_path(abs: &Path, home: &Path) -> anyhow::Result<String> {
-    let abs = dunce::canonicalize(abs).unwrap_or_else(|_| abs.to_path_buf());
-    let home = dunce::canonicalize(home).unwrap_or_else(|_| home.to_path_buf());
-
-    if let Ok(rel) = abs.strip_prefix(&home) {
-        return Ok(format!("~/{}", rel.display()));
-    }
-
-    let mut ancestor = home.as_path();
-    let mut ups = String::new();
-    loop {
-        if let Ok(rel) = abs.strip_prefix(ancestor) {
-            return Ok(format!("~/{}/{}", ups, rel.display()));
-        }
-        match ancestor.parent() {
-            Some(p) => {
-                ancestor = p;
-                ups.push_str("../");
-            }
-            None => return Ok(abs.to_string_lossy().to_string()),
-        }
-    }
 }
