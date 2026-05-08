@@ -123,13 +123,13 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
 
 #[cfg(unix)]
 // Generate PATH configurations
-fn generate_path_configs(dir_path: &PathBuf) -> String {
+fn generate_path_configs(dir_path: &Path) -> String {
     format!("export PATH=\"{}:$PATH\"", dir_path.display())
 }
 
 #[cfg(unix)]
 // Update PATH in shell config files
-fn update_shell_rc(rc_path: &PathBuf, bin_dir: &PathBuf) -> anyhow::Result<()> {
+fn update_shell_rc(rc_path: &Path, bin_dir: &Path) -> anyhow::Result<()> {
     let content = fs::read_to_string(rc_path)?;
     let mut new_content = Vec::new();
     let mut in_cbp_section = false;
