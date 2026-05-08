@@ -1,6 +1,6 @@
 # Windows binaries
 
-This document follows the same structure as `doc/binaries.md` for consistency and easier reference.
+This document follows the same structure as `docs/binaries.md` for consistency and easier reference.
 
 ## Development Environment
 

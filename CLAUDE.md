@@ -119,8 +119,8 @@ cargo clippy -- -D warnings
 - **`src/lib.rs`** - 库入口，导出模块。
 - **`src/cmd_cbp/`** - 命令实现模块。按功能分组：
     - **Package Management**: `init`, `install`, `local`, `list`, `remove`, `info`, `avail`, `check`.
-    - **Utilities**: `tar`, `prefix`, `kb`, `collect`, `dot`.
-    - **Build**: `build` (包含多个子命令).
+    - **Utilities**: `tar`, `prefix`, `collect`, `dot`, `snap`.
+    - **Build**: `build` (`font`, `source`, `prebuild`, `test`, `upload`, `validate`).
 - **`src/libs/`** - 共享工具库和核心逻辑。
   - **`dirs.rs`** - 目录结构管理。
   - **`utils.rs`** - 通用工具函数。

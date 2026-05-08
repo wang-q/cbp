@@ -90,7 +90,6 @@ Commands:
   check    Check for unmanaged files
   tar      Create compressed archive
   prefix   Display cbp installation directories
-  kb       Display project documentation
   build    Build package commands
   collect  Collect and package files into a tar.gz archive
   help     Print this message or the help of the given subcommand(s)
@@ -117,7 +116,6 @@ Quick Start:
     cbp install <package>       # Install package
     cbp list                    # List installed packages
     cbp avail                   # List available packages
-    cbp kb readme               # View more examples
 
 ```
 

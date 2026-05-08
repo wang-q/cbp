@@ -17,7 +17,7 @@ To avoid conflicts with existing Linux files, after initializing `cbp` with defa
 installing required tools, use `cbp init ~/win-build` to store the compiled Windows libraries in a
 separate location.
 
-This document follows the same structure as `doc/binaries.md` for consistency and easier reference.
+This document follows the same structure as `docs/binaries.md` for consistency and easier reference.
 
 ## Setup
 
