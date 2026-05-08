@@ -8,7 +8,6 @@ pub mod dot;
 pub mod info;
 pub mod init;
 pub mod install;
-pub mod kb;
 pub mod list;
 pub mod local;
 pub mod prefix;

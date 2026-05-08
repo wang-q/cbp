@@ -22,7 +22,6 @@ fn main() -> anyhow::Result<()> {
         .subcommand(cmd_cbp::check::make_subcommand())
         .subcommand(cmd_cbp::tar::make_subcommand())
         .subcommand(cmd_cbp::prefix::make_subcommand())
-        .subcommand(cmd_cbp::kb::make_subcommand())
         .subcommand(cmd_cbp::build::make_subcommand())
         .subcommand(cmd_cbp::collect::make_subcommand())
         .subcommand(cmd_cbp::dot::make_subcommand())
@@ -52,7 +51,6 @@ Quick Start:
     cbp install <package>       # Install package
     cbp list                    # List installed packages
     cbp avail                   # List available packages
-    cbp kb readme               # View more examples
 
 "###,
         );
@@ -67,7 +65,6 @@ Quick Start:
         Some(("info", sub_matches)) => cmd_cbp::info::execute(sub_matches),
         Some(("init", sub_matches)) => cmd_cbp::init::execute(sub_matches),
         Some(("install", sub_matches)) => cmd_cbp::install::execute(sub_matches),
-        Some(("kb", sub_matches)) => cmd_cbp::kb::execute(sub_matches),
         Some(("list", sub_matches)) => cmd_cbp::list::execute(sub_matches),
         Some(("local", sub_matches)) => cmd_cbp::local::execute(sub_matches),
         Some(("prefix", sub_matches)) => cmd_cbp::prefix::execute(sub_matches),
