@@ -1,0 +1,9 @@
+[book]
+authors = ["Qiang Wang"]
+language = "en"
+src = "docs"
+title = "cbp Documentation"
+
+[output.html]
+git-repository-url = "https://github.com/wang-q/cbp"
+edit-url-template = "https://github.com/wang-q/cbp/edit/master/{path}"

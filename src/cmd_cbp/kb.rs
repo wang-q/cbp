@@ -45,8 +45,8 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     let outfile = args.get_one::<String>("outfile").unwrap();
 
     static FILE_MD_README: &str = include_str!("../../README.md");
-    static FILE_MD_DEVELOPER: &str = include_str!("../../doc/developer.md");
-    static FILE_MD_BINARIES: &str = include_str!("../../doc/binaries.md");
+    static FILE_MD_DEVELOPER: &str = include_str!("../../docs/developer.md");
+    static FILE_MD_BINARIES: &str = include_str!("../../docs/binaries.md");
 
     match args.get_one::<String>("name").unwrap().as_ref() {
         "readme" => {

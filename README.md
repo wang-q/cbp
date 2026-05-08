@@ -182,7 +182,7 @@ uv pip install --system numpy matplotlib
         - Testing framework
 
 For detailed information about development and build process, see
-the [Developer Guide](doc/developer.md).
+the [Developer Guide](docs/developer.md).
 
 ## Contributing
 

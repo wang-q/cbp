@@ -240,7 +240,7 @@ git diff v0.3.13 HEAD > gitdiff.txt
 ```text
 cbp/
 |-- binaries/      # Build artifacts
-|-- doc/           # Documentation
+|-- docs/          # Documentation
 |-- scripts/       # Build scripts
 |   |-- common.sh  # Shared build functions
 |   |-- tools/     # Helper scripts

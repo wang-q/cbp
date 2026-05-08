@@ -42,7 +42,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         std::fs::read_to_string(schema_path)
             .map_err(|e| anyhow::anyhow!("Failed to read schema file: {}", e))?
     } else {
-        include_str!("../../../doc/schema/schema.json").to_string()
+        include_str!("../../../docs/schema/schema.json").to_string()
     };
     let schema = serde_json::from_str(&schema_str)?;
     let compiled: jsonschema::JSONSchema = jsonschema::JSONSchema::compile(&schema)

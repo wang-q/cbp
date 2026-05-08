@@ -5,11 +5,11 @@ on:
     paths:
       - '.github/workflows/validate-schema.yml'
       - 'packages/**'
-      - 'doc/schema/schema.json'
+      - 'docs/schema/schema.json'
   pull_request:
     paths:
       - 'packages/**'
-      - 'doc/schema/schema.json'
+      - 'docs/schema/schema.json'
   workflow_dispatch:
 
 jobs:
@@ -57,7 +57,7 @@ jobs:
           # Test each package
           for pkg in $packages; do
             echo "==> Validating $pkg..."
-            if cbp build validate --schema doc/schema/schema.json $pkg; then
+            if cbp build validate --schema docs/schema/schema.json $pkg; then
               validate_pass="${validate_pass:+$validate_pass }$pkg"
             else
               validate_fail="${validate_fail}❌ Failed: $pkg\n"

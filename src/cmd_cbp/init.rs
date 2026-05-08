@@ -275,17 +275,17 @@ fn create_triplet_files(config_dir: &Path) -> anyhow::Result<()> {
     fs::create_dir_all(&triplets_dir)?;
 
     // Base toolchain files
-    const ZIG_LINUX_CMAKE: &str = include_str!("../../doc/triplets/zig-linux.cmake");
-    const ZIG_MACOS_CMAKE: &str = include_str!("../../doc/triplets/zig-macos.cmake");
-    const ZIG_WINDOWS_CMAKE: &str = include_str!("../../doc/triplets/zig-windows.cmake");
+    const ZIG_LINUX_CMAKE: &str = include_str!("../../docs/triplets/zig-linux.cmake");
+    const ZIG_MACOS_CMAKE: &str = include_str!("../../docs/triplets/zig-macos.cmake");
+    const ZIG_WINDOWS_CMAKE: &str = include_str!("../../docs/triplets/zig-windows.cmake");
 
     // Platform-specific triplet files
     const ARM64_MACOS_ZIG_CMAKE: &str =
-        include_str!("../../doc/triplets/arm64-macos-zig.cmake");
+        include_str!("../../docs/triplets/arm64-macos-zig.cmake");
     const X64_LINUX_ZIG_CMAKE: &str =
-        include_str!("../../doc/triplets/x64-linux-zig.cmake");
+        include_str!("../../docs/triplets/x64-linux-zig.cmake");
     const X64_WINDOWS_ZIG_CMAKE: &str =
-        include_str!("../../doc/triplets/x64-windows-zig.cmake");
+        include_str!("../../docs/triplets/x64-windows-zig.cmake");
 
     // Write base toolchain files
     fs::write(triplets_dir.join("zig-linux.cmake"), ZIG_LINUX_CMAKE)?;
