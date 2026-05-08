@@ -195,7 +195,7 @@ cbp snap list nvim.snap.tar.gz
 cbp snap delta nvim.snap.tar.gz
 
 # 将修改过的文件打包为增量快照
-cbp snap delta nvim.snap.tar.gz --pack
+cbp snap delta nvim.snap.tar.gz -p
 
 # 多路径备份
 cbp snap save ~/.config/nvim ~/.bashrc ~/.gitconfig -o dev-env.snap.tar.gz
