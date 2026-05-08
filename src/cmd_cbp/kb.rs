@@ -64,5 +64,9 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         _ => unreachable!(),
     };
 
+    if outfile != "stdout" {
+        println!("Created: {}", outfile);
+    }
+
     Ok(())
 }

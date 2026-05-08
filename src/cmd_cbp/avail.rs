@@ -107,6 +107,8 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     }
     if !packages.is_empty() {
         println!("{}", cbp::format_packages(&packages));
+    } else {
+        println!("  No packages available.");
     }
     println!();
 

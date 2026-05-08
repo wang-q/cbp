@@ -129,6 +129,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         }
 
         cbp_dirs.install_package(pkg, &pkg_file)?;
+        println!("==> Successfully installed {}", pkg);
     }
 
     // Font installation reminder

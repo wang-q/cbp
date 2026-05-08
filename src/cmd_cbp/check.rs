@@ -63,6 +63,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     }
 
     // Find and display files not in the known list
+    let mut count = 0u64;
     let all_files = cbp::find_files(&cbp_dirs.home, None)?;
     for file in all_files {
         if !cbp::is_cbp_file(&file)
@@ -70,7 +71,12 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             && !known_files.contains(&file)
         {
             println!("  {}", file);
+            count += 1;
         }
+    }
+
+    if count == 0 {
+        println!("  No unmanaged files found.");
     }
 
     println!();
