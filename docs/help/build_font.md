@@ -5,10 +5,10 @@ font-specific cbp archives for distribution.
 
 Examples:
 1. Build a font package:
-   cbp build font arial
+   `cbp build font arial`
 
 2. Build multiple font packages:
-   cbp build font arial courier
+   `cbp build font arial courier`
 
 3. Specify base directory:
-   cbp build font arial --base /path/to/project
+   `cbp build font arial --base /path/to/project`

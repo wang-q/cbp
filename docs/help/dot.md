@@ -17,13 +17,13 @@ Behavior:
 
 Examples:
 1. Create template from existing config:
-   cbp dot ~/.bashrc --dir ~/dotfiles/
+   `cbp dot ~/.bashrc --dir ~/dotfiles/`
 
 2. Preview template:
-   cbp dot ~/dotfiles/dot_bashrc.tmpl
+   `cbp dot ~/dotfiles/dot_bashrc.tmpl`
 
 3. Apply template:
-   cbp dot -a ~/dotfiles/dot_bashrc.tmpl
+   `cbp dot -a ~/dotfiles/dot_bashrc.tmpl`
 
 4. Apply all templates:
    ```
@@ -31,4 +31,4 @@ Examples:
    ```
 
 5. Preview with verbose output:
-   cbp dot -v ~/dotfiles/dot_bashrc.tmpl
+   `cbp dot -v ~/dotfiles/dot_bashrc.tmpl`

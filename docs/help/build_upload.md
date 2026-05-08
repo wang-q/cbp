@@ -11,10 +11,10 @@ The command will:
 
 Examples:
 1. Upload a single file:
-   cbp build upload binaries/zlib.macos.tar.gz
+   `cbp build upload binaries/zlib.macos.tar.gz`
 
 2. Upload multiple files:
-   cbp build upload binaries/*.tar.gz
+   `cbp build upload binaries/*.tar.gz`
 
 3. Force upload (skip MD5 check):
-   cbp build upload --force binaries/*.tar.gz
+   `cbp build upload --force binaries/*.tar.gz`

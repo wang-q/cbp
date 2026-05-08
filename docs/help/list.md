@@ -6,10 +6,10 @@ Operations:
 
 Examples:
 1. List all installed packages:
-   cbp list
+   `cbp list`
 
 2. Show package contents:
-   cbp list zlib
+   `cbp list zlib`
 
 3. Show multiple package contents:
-   cbp list zlib bzip2
+   `cbp list zlib bzip2`

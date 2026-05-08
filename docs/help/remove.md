@@ -6,7 +6,7 @@ Warning: This operation cannot be undone.
 
 Examples:
 1. Remove a single package:
-   cbp remove zlib
+   `cbp remove zlib`
 
 2. Remove multiple packages:
-   cbp remove zlib bzip2
+   `cbp remove zlib bzip2`

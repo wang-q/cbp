@@ -5,10 +5,10 @@ into reproducible source archives.
 
 Examples:
 1. Download a source package:
-   cbp build source zlib
+   `cbp build source zlib`
 
 2. Download multiple source packages:
-   cbp build source zlib bzip2
+   `cbp build source zlib bzip2`
 
 3. Specify base directory:
-   cbp build source zlib --base /path/to/project
+   `cbp build source zlib --base /path/to/project`

@@ -10,13 +10,13 @@ The command will:
 
 Examples:
 1. Package current directory:
-   cbp tar .
+   `cbp tar .`
 
 2. Package specific directory:
-   cbp tar path/to/dir
+   `cbp tar path/to/dir`
 
 3. Custom output:
-   cbp tar path/to/dir -o output.tar.gz
+   `cbp tar path/to/dir -o output.tar.gz`
 
 4. Clean up docs:
-   cbp tar path/to/dir --cleanup
+   `cbp tar path/to/dir --cleanup`

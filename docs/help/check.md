@@ -13,4 +13,4 @@ Auto-ignored files:
 
 Examples:
 1. Check for unmanaged files:
-   cbp check
+   `cbp check`

@@ -5,7 +5,7 @@ that have changed.
 
 Examples:
 1. Show modified files:
-   cbp snap delta dotfiles.snap.tar.gz
+   `cbp snap delta dotfiles.snap.tar.gz`
 
 2. Pack modified files into a delta snapshot:
-   cbp snap delta dotfiles.snap.tar.gz -p
+   `cbp snap delta dotfiles.snap.tar.gz -p`

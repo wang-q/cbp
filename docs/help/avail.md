@@ -9,13 +9,13 @@ Network proxy support (priority high to low):
 
 Examples:
 1. List all packages:
-   cbp avail
+   `cbp avail`
 
 2. Platform-specific filtering:
-   cbp avail linux
+   `cbp avail linux`
 
 3. List fonts:
-   cbp avail font
+   `cbp avail font`
 
 4. Use proxy:
-   cbp avail --proxy socks5://127.0.0.1:7890
+   `cbp avail --proxy socks5://127.0.0.1:7890`

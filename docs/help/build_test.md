@@ -24,4 +24,4 @@ Test case fields:
 
 Examples:
 1. Test specified packages:
-   cbp build test zlib bzip2
+   `cbp build test zlib bzip2`

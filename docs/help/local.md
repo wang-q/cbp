@@ -14,16 +14,16 @@ Features:
 
 Examples:
 1. Install a single package:
-   cbp local zlib
+   `cbp local zlib`
 
 2. Install multiple packages:
-   cbp local zlib bzip2
+   `cbp local zlib bzip2`
 
 3. Install fonts:
-   cbp local -t font arial
+   `cbp local -t font arial`
 
 4. List package contents without installing:
-   cbp local -l zlib
+   `cbp local -l zlib`
 
 5. Cross-platform install (developer option):
-   cbp local -t windows zlib
+   `cbp local -t windows zlib`

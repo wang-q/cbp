@@ -10,13 +10,13 @@ Network proxy support (priority high to low):
 
 Examples:
 1. Install a single package:
-   cbp install zlib
+   `cbp install zlib`
 
 2. Install multiple packages:
-   cbp install zlib bzip2
+   `cbp install zlib bzip2`
 
 3. Install fonts:
-   cbp install -t font arial
+   `cbp install -t font arial`
 
 4. Use proxy:
-   cbp install --proxy socks5://127.0.0.1:7890 zlib
+   `cbp install --proxy socks5://127.0.0.1:7890 zlib`

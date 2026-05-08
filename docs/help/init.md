@@ -11,7 +11,7 @@ Configuration:
 
 Examples:
 1. Default installation:
-   cbp init
+   `cbp init`
 
 2. Custom package directory:
-   cbp init /opt/cbp
+   `cbp init /opt/cbp`
