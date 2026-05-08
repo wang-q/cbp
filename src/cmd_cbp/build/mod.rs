@@ -11,6 +11,7 @@ pub mod validate;
 pub fn make_subcommand() -> Command {
     Command::new("build")
         .about("Build package commands")
+        .after_help(include_str!("../../../docs/help/build.md"))
         .subcommand_required(true)
         .subcommand(font::make_subcommand())
         .subcommand(prebuild::make_subcommand())
