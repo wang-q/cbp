@@ -1,5 +1,5 @@
 use std::io::Read;
-use tracing::warn;
+use tracing::{info, warn};
 
 /// Read and validate package JSON configuration
 ///
@@ -36,6 +36,7 @@ pub fn read_package_json(
     Ok(json)
 }
 
+/// Download a file from URL to the specified path
 pub fn download_file(
     url: &str,
     file_path: &std::path::Path,
@@ -58,14 +59,14 @@ pub fn extract_archive(
     temp_file: &std::path::Path,
     json_obj: &serde_json::Map<String, serde_json::Value>,
 ) -> anyhow::Result<()> {
-    println!("-> Extracting archive");
+    info!("-> Extracting archive");
 
     // Original archive extraction logic
     if let Some(extract_cmd) = json_obj.get("extract") {
         let cmd_str = extract_cmd
             .as_str()
             .ok_or_else(|| anyhow::anyhow!("Extract command must be a string"))?;
-        println!("-> Using custom extract command: {}", cmd_str);
+        info!("-> Using custom extract command: {}", cmd_str);
 
         let mut parts = cmd_str.split_whitespace();
         let program = parts
@@ -88,10 +89,11 @@ pub fn extract_archive(
         .current_dir(temp_dir.path())
         .status()?;
     }
-    println!("  -> Extraction completed");
+    info!("  -> Extraction completed");
     Ok(())
 }
 
+/// Determine if a downloaded file needs archive extraction
 pub fn needs_extract(
     url: &str,
     json_obj: &serde_json::Map<String, serde_json::Value>,
@@ -103,6 +105,7 @@ pub fn needs_extract(
         || json_obj.get("extract").is_some()
 }
 
+/// Return the path for a temporary download file
 pub fn temp_download_path(
     temp_dir: &tempfile::TempDir,
     json_obj: &serde_json::Map<String, serde_json::Value>,
@@ -120,7 +123,7 @@ pub fn handle_rename(
     json_obj: &serde_json::Map<String, serde_json::Value>,
 ) -> anyhow::Result<()> {
     if let Some(rename) = json_obj.get("rename") {
-        println!("  -> Processing rename rules");
+        info!("  -> Processing rename rules");
         let rename_map = rename
             .as_object()
             .ok_or_else(|| anyhow::anyhow!("Rename must be an object"))?;
@@ -142,7 +145,7 @@ pub fn handle_rename(
                 let target_path = temp_dir.path().join(target);
                 if source_path != &target_path && source_path.exists() {
                     crate::move_file_or_dir(source_path, &target_path)?;
-                    println!("    -> Moved: {} -> {}", source_path.display(), target);
+                    info!("    -> Moved: {} -> {}", source_path.display(), target);
                 }
             }
         }
@@ -157,7 +160,7 @@ pub fn handle_symlink(
     json_obj: &serde_json::Map<String, serde_json::Value>,
 ) -> anyhow::Result<()> {
     if let Some(symlink) = json_obj.get("symlink") {
-        println!("  -> Processing symlink rules");
+        info!("  -> Processing symlink rules");
         let symlink_map = symlink
             .as_object()
             .ok_or_else(|| anyhow::anyhow!("Symlink must be an object"))?;
@@ -197,13 +200,13 @@ pub fn handle_symlink(
     Ok(())
 }
 
-/// Handle Windows shims
+/// Create Windows PowerShell shim scripts for binary symlinks
 pub fn handle_shim(
     temp_dir: &tempfile::TempDir,
     json_obj: &serde_json::Map<String, serde_json::Value>,
 ) -> anyhow::Result<()> {
     if let Some(symlink) = json_obj.get("symlink") {
-        println!("  -> Processing symlink rules");
+        info!("  -> Processing symlink rules");
         let symlink_map = symlink
             .as_object()
             .ok_or_else(|| anyhow::anyhow!("Symlink must be an object"))?;
@@ -228,6 +231,7 @@ pub fn handle_shim(
     Ok(())
 }
 
+/// Create wrapper scripts for binaries based on package config
 pub fn handle_wrapper(
     temp_dir: &tempfile::TempDir,
     json_obj: &serde_json::Map<String, serde_json::Value>,
@@ -279,7 +283,7 @@ pub fn clean_files(
             .as_array()
             .ok_or_else(|| anyhow::anyhow!("Clean must be an array"))?;
 
-        println!("  -> Cleaning {} patterns", clean_paths.len());
+        info!("  -> Cleaning {} patterns", clean_paths.len());
         for path in clean_paths {
             let path_str = path
                 .as_str()
@@ -293,13 +297,14 @@ pub fn clean_files(
                 } else {
                     std::fs::remove_file(&path)?;
                 }
-                println!("    -> Removed: {}", rel_path);
+                info!("    -> Removed: {}", rel_path);
             }
         }
     }
     Ok(())
 }
 
+/// Find binary files matching patterns in package configuration
 pub fn find_binary_files(
     temp_dir: &std::path::Path,
     json_obj: &serde_json::Map<String, serde_json::Value>,
@@ -327,6 +332,7 @@ pub fn find_binary_files(
     Ok(binary_paths)
 }
 
+/// Fix shebang lines in scripts to use portable `#!/usr/bin/env` form
 pub fn fix_shebang(path: &std::path::Path) -> anyhow::Result<()> {
     // Check if it's a text file
     let mut file = std::fs::File::open(path)?;
@@ -370,6 +376,7 @@ pub fn fix_shebang(path: &std::path::Path) -> anyhow::Result<()> {
     Ok(())
 }
 
+/// Return the target path for a pre-built binary package archive
 pub fn target_binary_path(
     base_dir: &std::path::Path,
     pkg: &str,
@@ -385,6 +392,7 @@ pub fn target_binary_path(
     Ok(path)
 }
 
+/// Return the target path for a font package archive
 pub fn target_font_path(
     base_dir: &std::path::Path,
     pkg: &str,
@@ -399,6 +407,7 @@ pub fn target_font_path(
     Ok(path)
 }
 
+/// Return the target path for a source package archive
 pub fn target_source_path(
     base_dir: &std::path::Path,
     pkg: &str,
@@ -413,6 +422,7 @@ pub fn target_source_path(
     Ok(path)
 }
 
+/// Normalize Windows-style CRLF line endings to LF
 pub fn normalize_line_endings(path: &std::path::Path) -> anyhow::Result<()> {
     let content = std::fs::read_to_string(path)?;
     let normalized = content.replace("\r\n", "\n");

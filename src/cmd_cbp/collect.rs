@@ -200,15 +200,27 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
             // For vcpkg list, use parent^3 as base
             base_dir = source_file
                 .parent()
-                .unwrap()
-                .parent()
-                .unwrap()
-                .parent()
-                .unwrap()
-                .to_path_buf();
+                .and_then(|p| p.parent())
+                .and_then(|p| p.parent())
+                .map(|p| p.to_path_buf())
+                .ok_or_else(|| {
+                    anyhow::anyhow!(
+                        "Cannot find vcpkg root (parent^3) from: {}",
+                        source_file.display()
+                    )
+                })?;
         } else {
             // For normal list, use parent as base
-            base_dir = source_file.parent().unwrap().to_path_buf();
+            base_dir =
+                source_file
+                    .parent()
+                    .map(|p| p.to_path_buf())
+                    .ok_or_else(|| {
+                        anyhow::anyhow!(
+                            "Cannot find parent directory of: {}",
+                            source_file.display()
+                        )
+                    })?;
         }
     }
 

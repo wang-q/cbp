@@ -104,7 +104,11 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     let mut to_upload = Vec::new(); // Track files that need to be uploaded
     for file in &files {
         let path = Path::new(file);
-        let name = path.file_name().unwrap().to_string_lossy().to_string();
+        let name = path
+            .file_name()
+            .ok_or_else(|| anyhow::anyhow!("Cannot get file name from path: {}", file))?
+            .to_string_lossy()
+            .to_string();
 
         println!("==> Processing {}...", name);
 
@@ -145,7 +149,11 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
     for file in &to_upload {
         let path = Path::new(file);
-        let name = path.file_name().unwrap().to_string_lossy().to_string();
+        let name = path
+            .file_name()
+            .ok_or_else(|| anyhow::anyhow!("Cannot get file name from path: {}", file))?
+            .to_string_lossy()
+            .to_string();
         println!("==> Uploading {}...", name);
         // gh release upload <tag> <files>... [flags]
         std::process::Command::new("gh")

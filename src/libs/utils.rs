@@ -21,6 +21,7 @@ pub fn writer(output: &str) -> anyhow::Result<Box<dyn Write>> {
     Ok(writer)
 }
 
+/// Returns the current OS type: "linux", "macos", or "windows"
 pub fn get_os_type() -> anyhow::Result<String> {
     match std::env::consts::OS {
         "macos" => Ok("macos".to_string()),
@@ -264,11 +265,15 @@ pub fn create_http_agent(proxy_url: Option<&String>) -> anyhow::Result<ureq::Age
         .or_else(|| std::env::var("http_proxy").ok())
         .map(|url| url.replace("socks5h://", "socks5://"));
 
+    let builder = ureq::AgentBuilder::new()
+        .timeout_connect(std::time::Duration::from_secs(30))
+        .timeout_read(std::time::Duration::from_secs(300));
+
     Ok(if let Some(proxy_url) = proxy_url {
         let proxy = ureq::Proxy::new(&proxy_url)?;
-        ureq::AgentBuilder::new().proxy(proxy).build()
+        builder.proxy(proxy).build()
     } else {
-        ureq::AgentBuilder::new().build()
+        builder.build()
     })
 }
 
