@@ -45,7 +45,8 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     }
 
     let home = dirs::home_dir().context("Cannot determine HOME directory")?;
-    let target = match args.get_one::<String>("target") {
+    let custom_target = args.get_one::<String>("target");
+    let target = match custom_target {
         Some(t) => PathBuf::from(t),
         None => home.clone(),
     };
@@ -77,27 +78,43 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         let mut entry = entry?;
         let entry_path = entry.path()?.to_path_buf();
 
-        match find_target_path(&entry_path, &source_paths, &home) {
-            Some(source_target) => {
-                let target_path = target
-                    .join(source_target.strip_prefix(&home).unwrap_or(&source_target));
-                if verbose {
-                    println!(
-                        "Extracting: {} -> {}",
-                        entry_path.display(),
-                        target_path.display()
+        if custom_target.is_some() {
+            let target_path = target.join(&entry_path);
+            if verbose {
+                println!(
+                    "Extracting: {} -> {}",
+                    entry_path.display(),
+                    target_path.display()
+                );
+            }
+            if let Some(parent) = target_path.parent() {
+                std::fs::create_dir_all(parent)?;
+            }
+            entry.unpack(&target_path)?;
+        } else {
+            match find_target_path(&entry_path, &source_paths, &home) {
+                Some(source_target) => {
+                    let target_path = target.join(
+                        source_target.strip_prefix(&home).unwrap_or(&source_target),
+                    );
+                    if verbose {
+                        println!(
+                            "Extracting: {} -> {}",
+                            entry_path.display(),
+                            target_path.display()
+                        );
+                    }
+                    if let Some(parent) = target_path.parent() {
+                        std::fs::create_dir_all(parent)?;
+                    }
+                    entry.unpack(&target_path)?;
+                }
+                None => {
+                    warn!(
+                        "Cannot determine target for archive entry: {}",
+                        entry_path.display()
                     );
                 }
-                if let Some(parent) = target_path.parent() {
-                    std::fs::create_dir_all(parent)?;
-                }
-                entry.unpack(&target_path)?;
-            }
-            None => {
-                warn!(
-                    "Cannot determine target for archive entry: {}",
-                    entry_path.display()
-                );
             }
         }
     }

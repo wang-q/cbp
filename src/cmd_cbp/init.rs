@@ -277,7 +277,8 @@ fn create_triplet_files(config_dir: &Path) -> anyhow::Result<()> {
     // Base toolchain files
     const ZIG_LINUX_CMAKE: &str = include_str!("../../docs/triplets/zig-linux.cmake");
     const ZIG_MACOS_CMAKE: &str = include_str!("../../docs/triplets/zig-macos.cmake");
-    const ZIG_WINDOWS_CMAKE: &str = include_str!("../../docs/triplets/zig-windows.cmake");
+    const ZIG_WINDOWS_CMAKE: &str =
+        include_str!("../../docs/triplets/zig-windows.cmake");
 
     // Platform-specific triplet files
     const ARM64_MACOS_ZIG_CMAKE: &str =
