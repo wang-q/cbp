@@ -175,7 +175,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                     ${cbp} tar ${tar} -o ${target_path}
                 )?;
             } else {
-                println!("-> Creating tarball from {}", ".");
+                println!("-> Creating tarball from .");
                 // Change to temp directory and collect files
                 // cbp collect can't handle symlinks
                 run_cmd!(

@@ -1,5 +1,5 @@
 use std::fs;
-use std::path::PathBuf;
+use std::path::Path;
 
 pub fn make_subcommand() -> clap::Command {
     clap::Command::new("init")
@@ -174,7 +174,7 @@ fn update_shell_rc(rc_path: &PathBuf, bin_dir: &PathBuf) -> anyhow::Result<()> {
 }
 
 #[cfg(windows)]
-fn update_windows_path(bin_dir: &PathBuf) -> anyhow::Result<()> {
+fn update_windows_path(bin_dir: &Path) -> anyhow::Result<()> {
     use anyhow::Context;
     use std::process::Command;
 
@@ -233,7 +233,7 @@ fn update_windows_path(bin_dir: &PathBuf) -> anyhow::Result<()> {
 
 // Add new function for creating compiler shims
 #[cfg(windows)]
-fn create_compiler_shims(bin_dir: &PathBuf) -> anyhow::Result<()> {
+fn create_compiler_shims(bin_dir: &Path) -> anyhow::Result<()> {
     let shims = [
         ("zig-cc.cmd", "@echo off\nzig cc %*"),
         ("zig-c++.cmd", "@echo off\nzig c++ %*"),
@@ -270,7 +270,7 @@ fn create_compiler_shims(bin_dir: &PathBuf) -> anyhow::Result<()> {
     Ok(())
 }
 
-fn create_triplet_files(config_dir: &PathBuf) -> anyhow::Result<()> {
+fn create_triplet_files(config_dir: &Path) -> anyhow::Result<()> {
     let triplets_dir = config_dir.join("triplets");
     fs::create_dir_all(&triplets_dir)?;
 

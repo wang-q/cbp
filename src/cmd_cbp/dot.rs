@@ -117,7 +117,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         // Export mode: to tar.gz
         let tar_file = args.get_one::<String>("tar").unwrap();
         let source_paths: Vec<&Path> =
-            sources.iter().map(|s| std::path::Path::new(s)).collect();
+            sources.iter().map(std::path::Path::new).collect();
         export_archive(&source_paths, tar_file, verbose)
     } else {
         // Apply mode: process each source
@@ -162,8 +162,8 @@ fn create_template(
         .unwrap_or_default();
 
     // Remove leading dot if present (we'll add dot_ prefix)
-    let base_name = if file_name.starts_with('.') {
-        &file_name[1..]
+    let base_name = if let Some(stripped) = file_name.strip_prefix('.') {
+        stripped
     } else {
         &file_name
     };

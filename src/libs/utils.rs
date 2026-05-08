@@ -169,7 +169,7 @@ pub fn is_system_file(path: &str) -> bool {
     path.ends_with(".DS_Store") ||      // macOS system files
     path.contains("/__MACOSX/") ||
     path.ends_with(".AppleDouble") ||
-    path.split('/').last().is_some_and(|f| f.starts_with("._")) || // macOS resource fork files
+    path.split('/').next_back().is_some_and(|f| f.starts_with("._")) || // macOS resource fork files
     path.ends_with("Thumbs.db") ||      // Windows system files
     path.ends_with("desktop.ini") ||
     path.ends_with("~") ||              // Linux hidden files
@@ -487,7 +487,7 @@ pub fn font_install_instructions(os_type: &str, font_dir: &Path) -> String {
             result.push_str("}\n");
         }
         "macos" => {
-            result.push_str(&format!("for ext in ttf ttc otf; do\n",));
+            result.push_str("for ext in ttf ttc otf; do\n");
             result.push_str(&format!(
                 "    find \"{}\" -type f -iname \"*.$ext\" -print0 | while IFS= read -r -d '' font; do\n",
                 font_dir.display()
@@ -504,7 +504,7 @@ pub fn font_install_instructions(os_type: &str, font_dir: &Path) -> String {
         }
         "linux" => {
             result.push_str("mkdir -p \"$HOME/.local/share/fonts\"\n");
-            result.push_str(&format!("for ext in ttf ttc otf; do\n",));
+            result.push_str("for ext in ttf ttc otf; do\n");
             result.push_str(&format!(
                 "    find \"{}\" -type f -iname \"*.$ext\" -print0 | while IFS= read -r -d '' font; do\n",
                 font_dir.display()

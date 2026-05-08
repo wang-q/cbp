@@ -97,7 +97,7 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
     let is_vcpkg = mode == "vcpkg";
 
     // Get first source for output name
-    let first_source = sources.clone().into_iter().next().unwrap();
+    let first_source = sources.clone().next().unwrap();
 
     // output name
     let output: String =
@@ -300,9 +300,7 @@ fn get_path_parts(line: &str, is_vcpkg: bool) -> Option<Vec<String>> {
     }
 }
 fn get_relative_path(parts: &[String], mode: &str, is_vcpkg: bool) -> String {
-    if is_vcpkg && parts[0] == "tools" {
-        format!("bin/{}", parts.last().unwrap())
-    } else if mode == "bin" {
+    if (is_vcpkg && parts[0] == "tools") || mode == "bin" {
         format!("bin/{}", parts.last().unwrap())
     } else if mode == "font" {
         format!("share/fonts/{}", parts.last().unwrap())
