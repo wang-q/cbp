@@ -4,6 +4,7 @@ use clap::*;
 mod cmd_cbp;
 
 fn main() -> anyhow::Result<()> {
+    tracing_subscriber::fmt::init();
     let app = Command::new("cbp")
         .version(crate_version!())
         .author(crate_authors!())

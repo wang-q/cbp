@@ -1,6 +1,7 @@
 use anyhow::Context;
 use clap::*;
 use std::path::{Path, PathBuf};
+use tracing::warn;
 
 use cbp::libs::utils::{find_target_path, read_comment};
 
@@ -93,8 +94,8 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                 entry.unpack(&target_path)?;
             }
             None => {
-                eprintln!(
-                    "Warning: Cannot determine target for archive entry: {}",
+                warn!(
+                    "Cannot determine target for archive entry: {}",
                     entry_path.display()
                 );
             }

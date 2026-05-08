@@ -58,7 +58,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         let path = entry.path()?.to_path_buf();
         let size = entry.header().size()?;
         if verbose {
-            println!("  {}  {}", format_size(size), path.display());
+            println!("  {:>10}  {}", format_size(size), path.display());
         } else {
             println!("  {}", path.display());
         }
