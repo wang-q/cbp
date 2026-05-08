@@ -99,7 +99,11 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     if pack {
         let delta_name = delta_output_name(archive_path);
         pack_modified(&modified, &source_paths, &home, &delta_name)?;
-        println!("==> Delta snapshot created: {}", delta_name);
+        println!(
+            "==> Delta snapshot created: {} ({} files)",
+            delta_name,
+            modified.len()
+        );
     } else {
         println!("{} files modified.", modified.len());
     }
