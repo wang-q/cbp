@@ -5,6 +5,7 @@
 [![Codecov](https://img.shields.io/codecov/c/github/wang-q/cbp/main.svg)](https://codecov.io/github/wang-q/cbp?branch=main)
 [![Lines of code](https://www.aschey.tech/tokei/github/wang-q/cbp)](https://github.com/wang-q/cbp)
 [![License](https://img.shields.io/github/license/wang-q/cbp)](https://github.com/wang-q/cbp/blob/main/LICENSE)
+[![Documentation](https://img.shields.io/badge/docs-online-blue)](https://wang-q.github.io/cbp/)
 
 `cbp` is a **C**ross-platform **B**inary **P**ackage manager that simplifies the distribution of CLI
 tools, with a focus on bioinformatics software. It ensures compatibility with older Linux systems (
