@@ -165,8 +165,8 @@ fn create_template(
     if verbose {
         println!("Source: {}", source_path.display());
         println!("Template: {}", template_path.display());
-        println!("Target dir: {:?}", target_dir);
-        println!("Permissions: {:?}", permissions);
+        println!("Target directory: {:?}", target_dir);
+        println!("Permissions: 0{:o}", permissions.mode());
     } else {
         println!("Created: {}", template_path.display());
     }
@@ -214,12 +214,11 @@ fn apply_template(
     if verbose {
         println!("Template: {}", template_path.display());
         println!("Target: {}", target_path.display());
+        println!("Permissions: 0{:o}", info.permissions.mode());
         println!(
-            "Permissions: {:?} (0{:o})",
-            info.permissions,
-            info.permissions.mode()
+            "Type: {}",
+            if info.is_template { "template" } else { "file" }
         );
-        println!("Is template: {}", info.is_template);
     }
 
     if apply {
@@ -254,6 +253,7 @@ fn apply_template(
             template_path.display(),
             target_path.display()
         );
+        println!("Permissions: 0{:o}", info.permissions.mode());
     } else {
         // Preview mode
         println!(
@@ -261,11 +261,7 @@ fn apply_template(
             template_path.display(),
             target_path.display()
         );
-        println!(
-            "    Permissions: {:?} (0{:o})",
-            info.permissions,
-            info.permissions.mode()
-        );
+        println!("    Permissions: 0{:o}", info.permissions.mode());
 
         if info.is_template {
             println!("\n--- Rendered content ---");
@@ -273,7 +269,6 @@ fn apply_template(
             println!("\n--- Content ---");
         }
         println!("{}", final_content);
-        println!("------------------------");
         println!("\nUse -a or --apply to actually apply this template.");
     }
 

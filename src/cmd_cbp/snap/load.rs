@@ -66,7 +66,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     if verbose {
         println!("==> Restoring snapshot: {}", archive_path.display());
         println!("==> Target: {}", target.display());
-        println!("==> Sources: {:?}", source_paths);
+        println!("==> Source paths: {}", source_paths.join(", "));
     }
 
     let file = std::fs::File::open(archive_path)?;

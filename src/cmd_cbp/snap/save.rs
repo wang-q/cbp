@@ -74,10 +74,13 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         .write(tar_file, flate2::Compression::default());
     let mut archive = tar::Builder::new(gz);
 
+    let mut file_count = 0u64;
+
     for (abs, _rel) in &source_infos {
         if abs.is_file() {
             let name = abs.file_name().unwrap();
             archive.append_path_with_name(abs, name)?;
+            file_count += 1;
             if verbose {
                 println!("Added: {}", name.to_string_lossy());
             }
@@ -92,6 +95,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                 let archive_path =
                     Path::new(base_name).join(file_path.strip_prefix(abs)?);
                 archive.append_path_with_name(file_path, &archive_path)?;
+                file_count += 1;
                 if verbose {
                     println!("Added: {}", archive_path.display());
                 }
@@ -103,6 +107,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
     archive.finish()?;
     println!("==> Snapshot created: {}", output);
+    println!("==> Files: {}", file_count);
     println!("==> Source paths: {}", comment);
 
     Ok(())
