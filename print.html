@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-8d6c40df.js";
+            window.path_to_searchindex_js = "searchindex-22d018a1.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-418f43c1.js"></script>
+        <script src="toc-862b95b9.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -1639,6 +1639,642 @@ cbp snap delta &lt;archive&gt; [-p]
 <li><a href="https://keats.github.io/tera/">Tera template engine</a></li>
 <li><a href="https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html">XDG Base Directory Specification</a></li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="init"><a href="#init" class="header">init</a></h1>
+<p>Initialize cbp environment and configure shell settings.</p>
+<p>Operations:</p>
+<ul>
+<li>Create <code>~/.cbp</code> directory structure</li>
+<li>Install cbp executable</li>
+<li>Update <code>$PATH</code> on Bash, Zsh, or Windows</li>
+</ul>
+<p>Configuration:</p>
+<ul>
+<li>Default: Uses <code>~/.cbp</code> for everything</li>
+<li>Custom: Separates config and packages</li>
+</ul>
+<p>Examples:</p>
+<ol>
+<li>
+<p>Default installation:
+cbp init</p>
+</li>
+<li>
+<p>Custom package directory:
+cbp init /opt/cbp</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="install"><a href="#install" class="header">install</a></h1>
+<p>Download and install pre-built binary packages from the GitHub release repository.
+Checks for existing installations to avoid duplicates and handles platform-specific
+package selection automatically.</p>
+<p><a href="https://github.com/wang-q/cbp/releases/tag/Binaries">Release page</a></p>
+<p>Network proxy support (priority high to low):</p>
+<ul>
+<li><code>--proxy</code> argument</li>
+<li>Environment variables: <code>ALL_PROXY</code>, <code>HTTP_PROXY</code>, <code>all_proxy</code>, <code>http_proxy</code></li>
+</ul>
+<p>Examples:</p>
+<ol>
+<li>
+<p>Install a single package:
+cbp install zlib</p>
+</li>
+<li>
+<p>Install multiple packages:
+cbp install zlib bzip2</p>
+</li>
+<li>
+<p>Install fonts:
+cbp install -t font arial</p>
+</li>
+<li>
+<p>Use proxy:
+cbp install –proxy socks5://127.0.0.1:7890 zlib</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="local"><a href="#local" class="header">local</a></h1>
+<p>Install packages from local binaries or downloaded cache.</p>
+<p>Search locations:</p>
+<ul>
+<li><code>./binaries/</code> — Pre-built binary directory (primary)</li>
+<li><code>~/.cbp/cache/</code> — Downloaded packages (fallback)</li>
+</ul>
+<p>Package format: <code>&lt;package_name&gt;.&lt;type&gt;.tar.gz</code></p>
+<p>Features:</p>
+<ul>
+<li>Installation status checking</li>
+<li>Automatic location selection</li>
+<li>Package record management</li>
+<li>File extraction to <code>~/.cbp</code></li>
+</ul>
+<p>Examples:</p>
+<ol>
+<li>
+<p>Install a single package:
+cbp local zlib</p>
+</li>
+<li>
+<p>Install multiple packages:
+cbp local zlib bzip2</p>
+</li>
+<li>
+<p>Install fonts:
+cbp local -t font arial</p>
+</li>
+<li>
+<p>List package contents without installing:
+cbp local -l zlib</p>
+</li>
+<li>
+<p>Cross-platform install (developer option):
+cbp local -t windows zlib</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="list-1"><a href="#list-1" class="header">list</a></h1>
+<p>Display information about installed packages.</p>
+<p>Operations:</p>
+<ul>
+<li>Without arguments: Show all installed packages with alphabetical grouping</li>
+<li>With package names: Show detailed file contents of specified packages</li>
+</ul>
+<p>Examples:</p>
+<ol>
+<li>
+<p>List all installed packages:
+cbp list</p>
+</li>
+<li>
+<p>Show package contents:
+cbp list zlib</p>
+</li>
+<li>
+<p>Show multiple package contents:
+cbp list zlib bzip2</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="remove"><a href="#remove" class="header">remove</a></h1>
+<p>Remove installed packages and their associated files.
+The removal process is guided by package records to ensure only managed files
+are affected, leaving other files untouched.</p>
+<p>Warning: This operation cannot be undone.</p>
+<p>Examples:</p>
+<ol>
+<li>
+<p>Remove a single package:
+cbp remove zlib</p>
+</li>
+<li>
+<p>Remove multiple packages:
+cbp remove zlib bzip2</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="info"><a href="#info" class="header">info</a></h1>
+<p>Display detailed package information from the GitHub repository.
+Information is sourced from JSON files in the <code>packages/</code> directory.</p>
+<p>Network proxy support (priority high to low):</p>
+<ul>
+<li><code>--proxy</code> argument</li>
+<li>Environment variables: <code>ALL_PROXY</code>, <code>HTTP_PROXY</code>, <code>all_proxy</code>, <code>http_proxy</code></li>
+</ul>
+<p>Examples:</p>
+<ol>
+<li>
+<p>View package information:
+cbp info newick-utils</p>
+</li>
+<li>
+<p>Output in JSON format:
+cbp info bwa –json</p>
+</li>
+<li>
+<p>Use proxy:
+cbp info newick-utils –proxy socks5://127.0.0.1:7890</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="avail"><a href="#avail" class="header">avail</a></h1>
+<p>Query and list available packages from the GitHub release repository.
+Results are displayed in a formatted table, grouped alphabetically for better readability.</p>
+<p><a href="https://github.com/wang-q/cbp/releases/tag/Binaries">Release page</a></p>
+<p>Network proxy support (priority high to low):</p>
+<ul>
+<li><code>--proxy</code> argument</li>
+<li>Environment variables: <code>ALL_PROXY</code>, <code>HTTP_PROXY</code>, <code>all_proxy</code>, <code>http_proxy</code></li>
+</ul>
+<p>Examples:</p>
+<ol>
+<li>
+<p>List all packages:
+cbp avail</p>
+</li>
+<li>
+<p>Platform-specific filtering:
+cbp avail linux</p>
+</li>
+<li>
+<p>List fonts:
+cbp avail font</p>
+</li>
+<li>
+<p>Use proxy:
+cbp avail –proxy socks5://127.0.0.1:7890</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="check"><a href="#check" class="header">check</a></h1>
+<p>Scan ~/.cbp directory for files not managed by any package.
+Helps identify and clean up redundant files.</p>
+<p>Scan scope:</p>
+<ul>
+<li>Files not listed in any package records</li>
+<li>Files outside cbp system directories (<code>records/</code>, <code>cache/</code>)</li>
+<li>Files not required by cbp itself</li>
+</ul>
+<p>Auto-ignored files:</p>
+<ul>
+<li>macOS: <code>.DS_Store</code>, <code>__MACOSX/</code>, <code>.AppleDouble</code>, <code>._*</code> (resource fork files)</li>
+<li>Linux: backup files (<code>*~</code>), Vim swap files (<code>.swp</code>)</li>
+<li>Windows: <code>Thumbs.db</code>, <code>desktop.ini</code></li>
+</ul>
+<p>Examples:</p>
+<ol>
+<li>Check for unmanaged files:
+cbp check</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="tar"><a href="#tar" class="header">tar</a></h1>
+<p>Create a compressed archive from a software package directory.
+This command is specifically designed for packaging software installations,
+not as a general-purpose tar replacement.</p>
+<p>The command will:</p>
+<ul>
+<li>Filter out system files (.DS_Store, etc.)</li>
+<li>Preserve relative paths within archive</li>
+<li>Preserve symbolic links with relative targets</li>
+<li>Clean up documentation directories (optional)</li>
+</ul>
+<p>Examples:</p>
+<ol>
+<li>
+<p>Package current directory:
+cbp tar .</p>
+</li>
+<li>
+<p>Package specific directory:
+cbp tar path/to/dir</p>
+</li>
+<li>
+<p>Custom output:
+cbp tar path/to/dir -o output.tar.gz</p>
+</li>
+<li>
+<p>Clean up docs:
+cbp tar path/to/dir –cleanup</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="prefix"><a href="#prefix" class="header">prefix</a></h1>
+<p>Display cbp installation directory paths.</p>
+<p>Examples:</p>
+<ol>
+<li>
+<p>Show home directory:
+cbp prefix</p>
+</li>
+<li>
+<p>Show binary directory:
+cbp prefix bin</p>
+</li>
+<li>
+<p>Show library directory:
+cbp prefix lib</p>
+</li>
+<li>
+<p>Show include directory:
+cbp prefix include</p>
+</li>
+<li>
+<p>Show cbp executable path:
+cbp prefix exe</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="collect"><a href="#collect" class="header">collect</a></h1>
+<p>Collect and package files into a tar.gz archive.
+Supports multiple processing modes for different file organization strategies.</p>
+<p>Mode options:</p>
+<ul>
+<li><code>files</code> — Collect files as-is (default)</li>
+<li><code>list</code> — Process a list file containing file paths</li>
+<li><code>vcpkg</code> — Process vcpkg-style list file</li>
+<li><code>bin</code> — Place files in <code>bin/</code> directory</li>
+<li><code>font</code> — Place files in <code>share/fonts/</code> directory</li>
+</ul>
+<p>Examples:</p>
+<ol>
+<li>
+<p>Process files (default mode):
+cbp collect program.exe</p>
+</li>
+<li>
+<p>Process list file:
+cbp collect list.txt –mode list</p>
+</li>
+<li>
+<p>Process vcpkg list:
+cbp collect pkg.list –mode vcpkg</p>
+</li>
+<li>
+<p>Create file aliases:
+cbp collect program.exe –copy libz.so=libz.so.1</p>
+</li>
+<li>
+<p>Ignore specific files:
+cbp collect src/ –ignore .dll –ignore .exe</p>
+</li>
+<li>
+<p>Specify output file:
+cbp collect program.exe -o output.tar.gz</p>
+</li>
+<li>
+<p>Collect binaries:
+cbp collect program.exe –mode bin</p>
+</li>
+<li>
+<p>Collect fonts:
+cbp collect font.ttf –mode font</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="dot"><a href="#dot" class="header">dot</a></h1>
+<p>Manage dotfiles using filename conventions and templates.</p>
+<p>Filename prefixes:</p>
+<ul>
+<li><code>private_</code> — Set 0600 permissions (sensitive files)</li>
+<li><code>executable_</code> — Set 0755 permissions (scripts)</li>
+<li><code>dot_</code> — Convert to hidden file (<code>~/.name</code>)</li>
+<li><code>dot_config/</code> — Config directory (<code>~/.config/</code>)</li>
+<li><code>xdg_config/</code> — Cross-platform config</li>
+<li><code>xdg_data/</code> — Cross-platform data</li>
+<li><code>xdg_cache/</code> — Cross-platform cache</li>
+<li><code>.tmpl</code> — Template file (Tera/Jinja2 syntax)</li>
+</ul>
+<p>Behavior:</p>
+<ul>
+<li>Default mode is preview (dry-run), use <code>--apply</code> to make changes</li>
+<li><code>--dir</code> and <code>--apply</code> cannot be used together</li>
+<li>Use <code>--verbose</code> to see detailed processing information</li>
+</ul>
+<p>Examples:</p>
+<ol>
+<li>
+<p>Create template from existing config:
+cbp dot ~/.bashrc –dir ~/dotfiles/</p>
+</li>
+<li>
+<p>Preview template:
+cbp dot ~/dotfiles/dot_bashrc.tmpl</p>
+</li>
+<li>
+<p>Apply template:
+cbp dot -a ~/dotfiles/dot_bashrc.tmpl</p>
+</li>
+<li>
+<p>Apply all templates:</p>
+<pre><code>for f in ~/dotfiles/dot_*; do cbp dot -a "$f"; done
+</code></pre>
+</li>
+<li>
+<p>Preview with verbose output:
+cbp dot -v ~/dotfiles/dot_bashrc.tmpl</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="build"><a href="#build" class="header">build</a></h1>
+<p>Build package commands for cbp development.</p>
+<p>Subcommands:</p>
+<ul>
+<li><code>font</code> — Build font packages</li>
+<li><code>prebuild</code> — Build prebuilt binary packages</li>
+<li><code>source</code> — Download package source archives</li>
+<li><code>test</code> — Execute test cases defined in package configuration files</li>
+<li><code>upload</code> — Upload package files to GitHub release</li>
+<li><code>validate</code> — Validate package configuration files against JSON schema</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="build-font"><a href="#build-font" class="header">build font</a></h1>
+<p>Build font packages from source distributions.</p>
+<p>Downloads font files from GitHub releases and packages them into
+font-specific cbp archives for distribution.</p>
+<p>Examples:</p>
+<ol>
+<li>
+<p>Build a font package:
+cbp build font arial</p>
+</li>
+<li>
+<p>Build multiple font packages:
+cbp build font arial courier</p>
+</li>
+<li>
+<p>Specify base directory:
+cbp build font arial –base /path/to/project</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="build-prebuild"><a href="#build-prebuild" class="header">build prebuild</a></h1>
+<p>Build prebuilt binary packages from source distributions.</p>
+<p>The command downloads pre-compiled binaries from GitHub releases,
+extracts them, and packages them into platform-specific cbp archives.</p>
+<p>Examples:</p>
+<ol>
+<li>
+<p>Build for current platform:
+cbp build prebuild zlib</p>
+</li>
+<li>
+<p>Build for specific platform:
+cbp build prebuild zlib -t linux</p>
+</li>
+<li>
+<p>Build multiple packages:
+cbp build prebuild zlib bzip2</p>
+</li>
+<li>
+<p>Specify base directory:
+cbp build prebuild zlib –base /path/to/project</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="build-source"><a href="#build-source" class="header">build source</a></h1>
+<p>Download package source archives for offline building.</p>
+<p>Downloads source tarballs from GitHub releases and packages them
+into reproducible source archives.</p>
+<p>Examples:</p>
+<ol>
+<li>
+<p>Download a source package:
+cbp build source zlib</p>
+</li>
+<li>
+<p>Download multiple source packages:
+cbp build source zlib bzip2</p>
+</li>
+<li>
+<p>Specify base directory:
+cbp build source zlib –base /path/to/project</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="build-test"><a href="#build-test" class="header">build test</a></h1>
+<p>Execute test cases defined in package configuration files.</p>
+<p>Test cases are defined in package configuration files under the <code>"tests"</code> section:</p>
+<pre><code>{
+  "tests": [
+    {
+      "name": "test name",
+      "command": "command",
+      "args": ["arg1", "arg2"],
+      "pattern": "regex",
+      "ignore_exit_code": false
+    }
+  ]
+}
+</code></pre>
+<p>Test case fields:</p>
+<ul>
+<li><code>name</code> — Optional, defaults to “test #N”</li>
+<li><code>command</code> — Required, command to execute</li>
+<li><code>args</code> — Optional, command arguments</li>
+<li><code>pattern</code> — Optional, regex pattern to match in output</li>
+<li><code>ignore_exit_code</code> — Optional, ignore command exit code</li>
+</ul>
+<p>Examples:</p>
+<ol>
+<li>Test specified packages:
+cbp build test zlib bzip2</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="build-upload"><a href="#build-upload" class="header">build upload</a></h1>
+<p>Upload package files to GitHub release and update checksums.</p>
+<p>Requirements:</p>
+<ul>
+<li>GitHub CLI (<code>gh</code>) must be installed and authenticated</li>
+<li>For proxy support, use <code>HTTPS_PROXY</code> environment variable</li>
+</ul>
+<p>The command will:</p>
+<ul>
+<li>Calculate MD5 checksums</li>
+<li>Upload files to GitHub release</li>
+<li>Update release notes with checksums</li>
+</ul>
+<p>Examples:</p>
+<ol>
+<li>
+<p>Upload a single file:
+cbp build upload binaries/zlib.macos.tar.gz</p>
+</li>
+<li>
+<p>Upload multiple files:
+cbp build upload binaries/*.tar.gz</p>
+</li>
+<li>
+<p>Force upload (skip MD5 check):
+cbp build upload –force binaries/*.tar.gz</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="build-validate"><a href="#build-validate" class="header">build validate</a></h1>
+<p>Validate package configuration files against JSON schema.</p>
+<p>Checks that package JSON files conform to the expected schema,
+ensuring all required fields are present and correctly typed.</p>
+<p>Examples:</p>
+<ol>
+<li>
+<p>Validate packages:
+cbp build validate zlib</p>
+</li>
+<li>
+<p>Validate multiple packages:
+cbp build validate zlib bzip2</p>
+</li>
+<li>
+<p>Use custom schema:
+cbp build validate zlib –schema custom-schema.json</p>
+</li>
+<li>
+<p>Specify base directory:
+cbp build validate zlib –base /path/to/project</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="snap"><a href="#snap" class="header">snap</a></h1>
+<p>Manage file snapshots for backup and restore.</p>
+<p>Snapshots store the original file paths in the gzip comment,
+allowing files to be restored to their correct locations.</p>
+<p>Behavior:</p>
+<ul>
+<li>Snapshots are stored as <code>.snap.tar.gz</code> files</li>
+<li>Source paths are saved relative to HOME when possible</li>
+<li>Files outside HOME are stored with absolute paths</li>
+<li>Delta snapshots capture only modified files</li>
+</ul>
+<p>Examples:</p>
+<ol>
+<li>
+<p>Save a single file:
+cbp snap save ~/.bashrc</p>
+</li>
+<li>
+<p>Save multiple files to specific archive:
+cbp snap save ~/.bashrc ~/.vimrc -o dotfiles.snap.tar.gz</p>
+</li>
+<li>
+<p>Save a directory:
+cbp snap save ~/.config/nvim -o nvim.snap.tar.gz</p>
+</li>
+<li>
+<p>List snapshot contents:
+cbp snap list dotfiles.snap.tar.gz</p>
+</li>
+<li>
+<p>Restore snapshot to HOME:
+cbp snap load dotfiles.snap.tar.gz</p>
+</li>
+<li>
+<p>Restore to different directory:
+cbp snap load dotfiles.snap.tar.gz -t /tmp/restore</p>
+</li>
+<li>
+<p>Check what files have changed:
+cbp snap delta dotfiles.snap.tar.gz</p>
+</li>
+<li>
+<p>Pack modified files into delta snapshot:
+cbp snap delta dotfiles.snap.tar.gz -p</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="snap-delta"><a href="#snap-delta" class="header">snap delta</a></h1>
+<p>Show files modified since a snapshot was taken.</p>
+<p>Compares files on disk against a snapshot archive and lists files
+that have changed.</p>
+<p>Examples:</p>
+<ol>
+<li>
+<p>Show modified files:
+cbp snap delta dotfiles.snap.tar.gz</p>
+</li>
+<li>
+<p>Pack modified files into a delta snapshot:
+cbp snap delta dotfiles.snap.tar.gz -p</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="snap-list"><a href="#snap-list" class="header">snap list</a></h1>
+<p>List contents of a snapshot archive.</p>
+<p>Displays source paths (from gzip comment) and the files stored in the archive.</p>
+<p>Examples:</p>
+<ol>
+<li>
+<p>List snapshot contents:
+cbp snap list dotfiles.snap.tar.gz</p>
+</li>
+<li>
+<p>Verbose listing with file sizes:
+cbp snap list -v dotfiles.snap.tar.gz</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="snap-load"><a href="#snap-load" class="header">snap load</a></h1>
+<p>Restore files from a snapshot archive.</p>
+<p>Extracts files from the archive to their original locations using
+the source path information stored in the gzip comment.</p>
+<p>Examples:</p>
+<ol>
+<li>
+<p>Restore to HOME:
+cbp snap load dotfiles.snap.tar.gz</p>
+</li>
+<li>
+<p>Restore to a custom directory:
+cbp snap load dotfiles.snap.tar.gz -t /tmp/restore</p>
+</li>
+<li>
+<p>Verbose output:
+cbp snap load -v dotfiles.snap.tar.gz</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="snap-save"><a href="#snap-save" class="header">snap save</a></h1>
+<p>Save files and directories as a snapshot archive.</p>
+<p>Creates a <code>.snap.tar.gz</code> file containing the specified paths.
+Source paths are stored in the gzip comment for reliable restoration.</p>
+<p>Examples:</p>
+<ol>
+<li>
+<p>Save a single file:
+cbp snap save ~/.bashrc</p>
+</li>
+<li>
+<p>Save multiple files:
+cbp snap save ~/.bashrc ~/.vimrc -o dotfiles.snap.tar.gz</p>
+</li>
+<li>
+<p>Save a directory:
+cbp snap save ~/.config/nvim -o nvim.snap.tar.gz</p>
+</li>
+<li>
+<p>Verbose output:
+cbp snap save -v ~/.bashrc</p>
+</li>
+</ol>
 
                     </main>
 
