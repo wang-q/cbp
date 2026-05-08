@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-22d018a1.js";
+            window.path_to_searchindex_js = "../searchindex-a40e787f.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-862b95b9.js"></script>
@@ -194,35 +194,35 @@ Supports multiple processing modes for different file organization strategies.</
 <ol>
 <li>
 <p>Process files (default mode):
-cbp collect program.exe</p>
+<code>cbp collect program.exe</code></p>
 </li>
 <li>
 <p>Process list file:
-cbp collect list.txt –mode list</p>
+<code>cbp collect list.txt --mode list</code></p>
 </li>
 <li>
 <p>Process vcpkg list:
-cbp collect pkg.list –mode vcpkg</p>
+<code>cbp collect pkg.list --mode vcpkg</code></p>
 </li>
 <li>
 <p>Create file aliases:
-cbp collect program.exe –copy libz.so=libz.so.1</p>
+<code>cbp collect program.exe --copy libz.so=libz.so.1</code></p>
 </li>
 <li>
 <p>Ignore specific files:
-cbp collect src/ –ignore .dll –ignore .exe</p>
+<code>cbp collect src/ --ignore .dll --ignore .exe</code></p>
 </li>
 <li>
 <p>Specify output file:
-cbp collect program.exe -o output.tar.gz</p>
+<code>cbp collect program.exe -o output.tar.gz</code></p>
 </li>
 <li>
 <p>Collect binaries:
-cbp collect program.exe –mode bin</p>
+<code>cbp collect program.exe --mode bin</code></p>
 </li>
 <li>
 <p>Collect fonts:
-cbp collect font.ttf –mode font</p>
+<code>cbp collect font.ttf --mode font</code></p>
 </li>
 </ol>
 

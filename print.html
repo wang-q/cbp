@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-22d018a1.js";
+            window.path_to_searchindex_js = "searchindex-a40e787f.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-862b95b9.js"></script>
@@ -1657,11 +1657,11 @@ cbp snap delta &lt;archive&gt; [-p]
 <ol>
 <li>
 <p>Default installation:
-cbp init</p>
+<code>cbp init</code></p>
 </li>
 <li>
 <p>Custom package directory:
-cbp init /opt/cbp</p>
+<code>cbp init /opt/cbp</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -1679,19 +1679,19 @@ package selection automatically.</p>
 <ol>
 <li>
 <p>Install a single package:
-cbp install zlib</p>
+<code>cbp install zlib</code></p>
 </li>
 <li>
 <p>Install multiple packages:
-cbp install zlib bzip2</p>
+<code>cbp install zlib bzip2</code></p>
 </li>
 <li>
 <p>Install fonts:
-cbp install -t font arial</p>
+<code>cbp install -t font arial</code></p>
 </li>
 <li>
 <p>Use proxy:
-cbp install –proxy socks5://127.0.0.1:7890 zlib</p>
+<code>cbp install --proxy socks5://127.0.0.1:7890 zlib</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -1714,23 +1714,23 @@ cbp install –proxy socks5://127.0.0.1:7890 zlib</p>
 <ol>
 <li>
 <p>Install a single package:
-cbp local zlib</p>
+<code>cbp local zlib</code></p>
 </li>
 <li>
 <p>Install multiple packages:
-cbp local zlib bzip2</p>
+<code>cbp local zlib bzip2</code></p>
 </li>
 <li>
 <p>Install fonts:
-cbp local -t font arial</p>
+<code>cbp local -t font arial</code></p>
 </li>
 <li>
 <p>List package contents without installing:
-cbp local -l zlib</p>
+<code>cbp local -l zlib</code></p>
 </li>
 <li>
 <p>Cross-platform install (developer option):
-cbp local -t windows zlib</p>
+<code>cbp local -t windows zlib</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -1745,15 +1745,15 @@ cbp local -t windows zlib</p>
 <ol>
 <li>
 <p>List all installed packages:
-cbp list</p>
+<code>cbp list</code></p>
 </li>
 <li>
 <p>Show package contents:
-cbp list zlib</p>
+<code>cbp list zlib</code></p>
 </li>
 <li>
 <p>Show multiple package contents:
-cbp list zlib bzip2</p>
+<code>cbp list zlib bzip2</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -1766,11 +1766,11 @@ are affected, leaving other files untouched.</p>
 <ol>
 <li>
 <p>Remove a single package:
-cbp remove zlib</p>
+<code>cbp remove zlib</code></p>
 </li>
 <li>
 <p>Remove multiple packages:
-cbp remove zlib bzip2</p>
+<code>cbp remove zlib bzip2</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -1786,15 +1786,15 @@ Information is sourced from JSON files in the <code>packages/</code> directory.<
 <ol>
 <li>
 <p>View package information:
-cbp info newick-utils</p>
+<code>cbp info newick-utils</code></p>
 </li>
 <li>
 <p>Output in JSON format:
-cbp info bwa –json</p>
+<code>cbp info bwa --json</code></p>
 </li>
 <li>
 <p>Use proxy:
-cbp info newick-utils –proxy socks5://127.0.0.1:7890</p>
+<code>cbp info newick-utils --proxy socks5://127.0.0.1:7890</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -1811,19 +1811,19 @@ Results are displayed in a formatted table, grouped alphabetically for better re
 <ol>
 <li>
 <p>List all packages:
-cbp avail</p>
+<code>cbp avail</code></p>
 </li>
 <li>
 <p>Platform-specific filtering:
-cbp avail linux</p>
+<code>cbp avail linux</code></p>
 </li>
 <li>
 <p>List fonts:
-cbp avail font</p>
+<code>cbp avail font</code></p>
 </li>
 <li>
 <p>Use proxy:
-cbp avail –proxy socks5://127.0.0.1:7890</p>
+<code>cbp avail --proxy socks5://127.0.0.1:7890</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -1845,7 +1845,7 @@ Helps identify and clean up redundant files.</p>
 <p>Examples:</p>
 <ol>
 <li>Check for unmanaged files:
-cbp check</li>
+<code>cbp check</code></li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="tar"><a href="#tar" class="header">tar</a></h1>
@@ -1863,19 +1863,19 @@ not as a general-purpose tar replacement.</p>
 <ol>
 <li>
 <p>Package current directory:
-cbp tar .</p>
+<code>cbp tar .</code></p>
 </li>
 <li>
 <p>Package specific directory:
-cbp tar path/to/dir</p>
+<code>cbp tar path/to/dir</code></p>
 </li>
 <li>
 <p>Custom output:
-cbp tar path/to/dir -o output.tar.gz</p>
+<code>cbp tar path/to/dir -o output.tar.gz</code></p>
 </li>
 <li>
 <p>Clean up docs:
-cbp tar path/to/dir –cleanup</p>
+<code>cbp tar path/to/dir --cleanup</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -1885,23 +1885,23 @@ cbp tar path/to/dir –cleanup</p>
 <ol>
 <li>
 <p>Show home directory:
-cbp prefix</p>
+<code>cbp prefix</code></p>
 </li>
 <li>
 <p>Show binary directory:
-cbp prefix bin</p>
+<code>cbp prefix bin</code></p>
 </li>
 <li>
 <p>Show library directory:
-cbp prefix lib</p>
+<code>cbp prefix lib</code></p>
 </li>
 <li>
 <p>Show include directory:
-cbp prefix include</p>
+<code>cbp prefix include</code></p>
 </li>
 <li>
 <p>Show cbp executable path:
-cbp prefix exe</p>
+<code>cbp prefix exe</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -1920,35 +1920,35 @@ Supports multiple processing modes for different file organization strategies.</
 <ol>
 <li>
 <p>Process files (default mode):
-cbp collect program.exe</p>
+<code>cbp collect program.exe</code></p>
 </li>
 <li>
 <p>Process list file:
-cbp collect list.txt –mode list</p>
+<code>cbp collect list.txt --mode list</code></p>
 </li>
 <li>
 <p>Process vcpkg list:
-cbp collect pkg.list –mode vcpkg</p>
+<code>cbp collect pkg.list --mode vcpkg</code></p>
 </li>
 <li>
 <p>Create file aliases:
-cbp collect program.exe –copy libz.so=libz.so.1</p>
+<code>cbp collect program.exe --copy libz.so=libz.so.1</code></p>
 </li>
 <li>
 <p>Ignore specific files:
-cbp collect src/ –ignore .dll –ignore .exe</p>
+<code>cbp collect src/ --ignore .dll --ignore .exe</code></p>
 </li>
 <li>
 <p>Specify output file:
-cbp collect program.exe -o output.tar.gz</p>
+<code>cbp collect program.exe -o output.tar.gz</code></p>
 </li>
 <li>
 <p>Collect binaries:
-cbp collect program.exe –mode bin</p>
+<code>cbp collect program.exe --mode bin</code></p>
 </li>
 <li>
 <p>Collect fonts:
-cbp collect font.ttf –mode font</p>
+<code>cbp collect font.ttf --mode font</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -1975,15 +1975,15 @@ cbp collect font.ttf –mode font</p>
 <ol>
 <li>
 <p>Create template from existing config:
-cbp dot ~/.bashrc –dir ~/dotfiles/</p>
+<code>cbp dot ~/.bashrc --dir ~/dotfiles/</code></p>
 </li>
 <li>
 <p>Preview template:
-cbp dot ~/dotfiles/dot_bashrc.tmpl</p>
+<code>cbp dot ~/dotfiles/dot_bashrc.tmpl</code></p>
 </li>
 <li>
 <p>Apply template:
-cbp dot -a ~/dotfiles/dot_bashrc.tmpl</p>
+<code>cbp dot -a ~/dotfiles/dot_bashrc.tmpl</code></p>
 </li>
 <li>
 <p>Apply all templates:</p>
@@ -1992,7 +1992,7 @@ cbp dot -a ~/dotfiles/dot_bashrc.tmpl</p>
 </li>
 <li>
 <p>Preview with verbose output:
-cbp dot -v ~/dotfiles/dot_bashrc.tmpl</p>
+<code>cbp dot -v ~/dotfiles/dot_bashrc.tmpl</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -2016,15 +2016,15 @@ font-specific cbp archives for distribution.</p>
 <ol>
 <li>
 <p>Build a font package:
-cbp build font arial</p>
+<code>cbp build font arial</code></p>
 </li>
 <li>
 <p>Build multiple font packages:
-cbp build font arial courier</p>
+<code>cbp build font arial courier</code></p>
 </li>
 <li>
 <p>Specify base directory:
-cbp build font arial –base /path/to/project</p>
+<code>cbp build font arial --base /path/to/project</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -2036,19 +2036,19 @@ extracts them, and packages them into platform-specific cbp archives.</p>
 <ol>
 <li>
 <p>Build for current platform:
-cbp build prebuild zlib</p>
+<code>cbp build prebuild zlib</code></p>
 </li>
 <li>
 <p>Build for specific platform:
-cbp build prebuild zlib -t linux</p>
+<code>cbp build prebuild zlib -t linux</code></p>
 </li>
 <li>
 <p>Build multiple packages:
-cbp build prebuild zlib bzip2</p>
+<code>cbp build prebuild zlib bzip2</code></p>
 </li>
 <li>
 <p>Specify base directory:
-cbp build prebuild zlib –base /path/to/project</p>
+<code>cbp build prebuild zlib --base /path/to/project</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -2060,15 +2060,15 @@ into reproducible source archives.</p>
 <ol>
 <li>
 <p>Download a source package:
-cbp build source zlib</p>
+<code>cbp build source zlib</code></p>
 </li>
 <li>
 <p>Download multiple source packages:
-cbp build source zlib bzip2</p>
+<code>cbp build source zlib bzip2</code></p>
 </li>
 <li>
 <p>Specify base directory:
-cbp build source zlib –base /path/to/project</p>
+<code>cbp build source zlib --base /path/to/project</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -2098,7 +2098,7 @@ cbp build source zlib –base /path/to/project</p>
 <p>Examples:</p>
 <ol>
 <li>Test specified packages:
-cbp build test zlib bzip2</li>
+<code>cbp build test zlib bzip2</code></li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="build-upload"><a href="#build-upload" class="header">build upload</a></h1>
@@ -2118,15 +2118,15 @@ cbp build test zlib bzip2</li>
 <ol>
 <li>
 <p>Upload a single file:
-cbp build upload binaries/zlib.macos.tar.gz</p>
+<code>cbp build upload binaries/zlib.macos.tar.gz</code></p>
 </li>
 <li>
 <p>Upload multiple files:
-cbp build upload binaries/*.tar.gz</p>
+<code>cbp build upload binaries/*.tar.gz</code></p>
 </li>
 <li>
 <p>Force upload (skip MD5 check):
-cbp build upload –force binaries/*.tar.gz</p>
+<code>cbp build upload --force binaries/*.tar.gz</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -2138,19 +2138,19 @@ ensuring all required fields are present and correctly typed.</p>
 <ol>
 <li>
 <p>Validate packages:
-cbp build validate zlib</p>
+<code>cbp build validate zlib</code></p>
 </li>
 <li>
 <p>Validate multiple packages:
-cbp build validate zlib bzip2</p>
+<code>cbp build validate zlib bzip2</code></p>
 </li>
 <li>
 <p>Use custom schema:
-cbp build validate zlib –schema custom-schema.json</p>
+<code>cbp build validate zlib --schema custom-schema.json</code></p>
 </li>
 <li>
 <p>Specify base directory:
-cbp build validate zlib –base /path/to/project</p>
+<code>cbp build validate zlib --base /path/to/project</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -2169,35 +2169,35 @@ allowing files to be restored to their correct locations.</p>
 <ol>
 <li>
 <p>Save a single file:
-cbp snap save ~/.bashrc</p>
+<code>cbp snap save ~/.bashrc</code></p>
 </li>
 <li>
 <p>Save multiple files to specific archive:
-cbp snap save ~/.bashrc ~/.vimrc -o dotfiles.snap.tar.gz</p>
+<code>cbp snap save ~/.bashrc ~/.vimrc -o dotfiles.snap.tar.gz</code></p>
 </li>
 <li>
 <p>Save a directory:
-cbp snap save ~/.config/nvim -o nvim.snap.tar.gz</p>
+<code>cbp snap save ~/.config/nvim -o nvim.snap.tar.gz</code></p>
 </li>
 <li>
 <p>List snapshot contents:
-cbp snap list dotfiles.snap.tar.gz</p>
+<code>cbp snap list dotfiles.snap.tar.gz</code></p>
 </li>
 <li>
 <p>Restore snapshot to HOME:
-cbp snap load dotfiles.snap.tar.gz</p>
+<code>cbp snap load dotfiles.snap.tar.gz</code></p>
 </li>
 <li>
 <p>Restore to different directory:
-cbp snap load dotfiles.snap.tar.gz -t /tmp/restore</p>
+<code>cbp snap load dotfiles.snap.tar.gz -t /tmp/restore</code></p>
 </li>
 <li>
 <p>Check what files have changed:
-cbp snap delta dotfiles.snap.tar.gz</p>
+<code>cbp snap delta dotfiles.snap.tar.gz</code></p>
 </li>
 <li>
 <p>Pack modified files into delta snapshot:
-cbp snap delta dotfiles.snap.tar.gz -p</p>
+<code>cbp snap delta dotfiles.snap.tar.gz -p</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -2209,11 +2209,11 @@ that have changed.</p>
 <ol>
 <li>
 <p>Show modified files:
-cbp snap delta dotfiles.snap.tar.gz</p>
+<code>cbp snap delta dotfiles.snap.tar.gz</code></p>
 </li>
 <li>
 <p>Pack modified files into a delta snapshot:
-cbp snap delta dotfiles.snap.tar.gz -p</p>
+<code>cbp snap delta dotfiles.snap.tar.gz -p</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -2224,11 +2224,11 @@ cbp snap delta dotfiles.snap.tar.gz -p</p>
 <ol>
 <li>
 <p>List snapshot contents:
-cbp snap list dotfiles.snap.tar.gz</p>
+<code>cbp snap list dotfiles.snap.tar.gz</code></p>
 </li>
 <li>
 <p>Verbose listing with file sizes:
-cbp snap list -v dotfiles.snap.tar.gz</p>
+<code>cbp snap list -v dotfiles.snap.tar.gz</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -2240,15 +2240,15 @@ the source path information stored in the gzip comment.</p>
 <ol>
 <li>
 <p>Restore to HOME:
-cbp snap load dotfiles.snap.tar.gz</p>
+<code>cbp snap load dotfiles.snap.tar.gz</code></p>
 </li>
 <li>
 <p>Restore to a custom directory:
-cbp snap load dotfiles.snap.tar.gz -t /tmp/restore</p>
+<code>cbp snap load dotfiles.snap.tar.gz -t /tmp/restore</code></p>
 </li>
 <li>
 <p>Verbose output:
-cbp snap load -v dotfiles.snap.tar.gz</p>
+<code>cbp snap load -v dotfiles.snap.tar.gz</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -2260,19 +2260,19 @@ Source paths are stored in the gzip comment for reliable restoration.</p>
 <ol>
 <li>
 <p>Save a single file:
-cbp snap save ~/.bashrc</p>
+<code>cbp snap save ~/.bashrc</code></p>
 </li>
 <li>
 <p>Save multiple files:
-cbp snap save ~/.bashrc ~/.vimrc -o dotfiles.snap.tar.gz</p>
+<code>cbp snap save ~/.bashrc ~/.vimrc -o dotfiles.snap.tar.gz</code></p>
 </li>
 <li>
 <p>Save a directory:
-cbp snap save ~/.config/nvim -o nvim.snap.tar.gz</p>
+<code>cbp snap save ~/.config/nvim -o nvim.snap.tar.gz</code></p>
 </li>
 <li>
 <p>Verbose output:
-cbp snap save -v ~/.bashrc</p>
+<code>cbp snap save -v ~/.bashrc</code></p>
 </li>
 </ol>
 
