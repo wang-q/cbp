@@ -249,7 +249,7 @@ fn create_compiler_shims(bin_dir: &Path) -> anyhow::Result<()> {
 }
 
 #[cfg(unix)]
-fn create_compiler_shims(bin_dir: &PathBuf) -> anyhow::Result<()> {
+fn create_compiler_shims(bin_dir: &Path) -> anyhow::Result<()> {
     let shims = [
         ("zig-cc", "#!/bin/bash\nexec zig cc \"$@\""),
         ("zig-c++", "#!/bin/bash\nexec zig c++ \"$@\""),
