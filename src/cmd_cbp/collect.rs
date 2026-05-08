@@ -1,6 +1,7 @@
 use clap::{Arg, ArgAction, Command};
 use cmd_lib::*;
 use std::io::{Read, Seek, SeekFrom};
+use tracing::warn;
 
 pub fn make_subcommand() -> Command {
     Command::new("collect")
@@ -164,7 +165,7 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
         for source in sources {
             let path = std::path::Path::new(source);
             if !path.exists() {
-                eprintln!("Warning: Source not found: {}", source);
+                warn!("Source not found: {}", source);
                 continue;
             }
             if path.is_file() {
@@ -212,8 +213,8 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
         }
     }
 
-    eprintln!("base_dir = {:#?}", base_dir);
-    // eprintln!("file_list = {:#?}", file_list);
+    warn!("base_dir = {:#?}", base_dir);
+    // warn!("file_list = {:#?}", file_list);
 
     // Create temporary directory
     let temp_dir = tempfile::Builder::new().prefix("cbp-collect-").tempdir()?;
@@ -226,7 +227,7 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
 
         let src_path = base_dir.join(line);
         if !src_path.exists() {
-            eprintln!("Warning: File not found: {}", src_path.display());
+            warn!("File not found: {}", src_path.display());
             continue;
         }
 

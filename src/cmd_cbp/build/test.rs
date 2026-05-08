@@ -2,6 +2,7 @@ use anyhow::Context;
 use clap::*;
 use serde_json::Value;
 use std::process::Command;
+use tracing::warn;
 
 /// Create clap subcommand arguments
 pub fn make_subcommand() -> clap::Command {
@@ -87,7 +88,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         // Check if tests are defined
         let tests = json.get("tests").and_then(Value::as_array);
         if tests.is_none() {
-            println!("Warning: No test cases defined for package {}", pkg);
+            warn!("No test cases defined for package {}", pkg);
             continue;
         }
 
