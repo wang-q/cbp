@@ -143,3 +143,13 @@ Cargo.lock
 
 /binaries/
 /vcpkg/
+
+# mdBook output directory
+/book/
+
+# Coverage directory
+/coverage-*/
+/coverage_*/
+coverge-*
+coverge_*
+coverage.*
