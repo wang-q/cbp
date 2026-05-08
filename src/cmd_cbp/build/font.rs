@@ -68,16 +68,9 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             .ok_or_else(|| anyhow::anyhow!("Font URL not found"))?;
 
         // Allow overriding the URL via environment variable for testing
-        let url = if let Ok(base_url) = std::env::var("GITHUB_RELEASE_URL") {
-            // For font URLs, replace the scheme part only
-            // e.g., "https://practicaltypography.com/fonts/Charter%20210112.zip"
-            // becomes "{base_url}/practicaltypography.com/fonts/Charter%20210112.zip"
-            if let Some(pos) = url.find("://") {
-                let rest = &url[pos + 3..];
-                format!("{}/{}", base_url, rest)
-            } else {
-                url.to_string()
-            }
+        let url = if let Some(pos) = url.find("://") {
+            let rest = &url[pos + 3..];
+            format!("{}/{}", cbp::github_release_url(), rest)
         } else {
             url.to_string()
         };

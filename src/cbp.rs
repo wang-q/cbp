@@ -1,5 +1,4 @@
-extern crate clap;
-use clap::*;
+use clap::{crate_authors, crate_version, ColorChoice, Command};
 
 mod cmd_cbp;
 
@@ -72,7 +71,7 @@ Quick Start:
         Some(("snap", sub_matches)) => cmd_cbp::snap::execute(sub_matches),
         Some(("tar", sub_matches)) => cmd_cbp::tar::execute(sub_matches),
         Some(("uninstall", sub_matches)) => cmd_cbp::remove::execute(sub_matches), // Handle alias subcommand
-        _ => unreachable!(),
+        _ => unreachable!("exhausted list of subcommands"),
     }?;
 
     Ok(())

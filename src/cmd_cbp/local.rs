@@ -75,13 +75,7 @@ Developer Options:
 
 /// Execute local command
 pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
-    let cbp_dirs = if args.contains_id("dir") {
-        let home =
-            std::path::Path::new(args.get_one::<String>("dir").unwrap()).to_path_buf();
-        cbp::CbpDirs::from(home)?
-    } else {
-        cbp::CbpDirs::from_exe()?
-    };
+    let cbp_dirs = cbp::CbpDirs::from_arg_matches(args)?;
 
     let os_type = cbp::get_os_type()?;
     let pkg_type = args

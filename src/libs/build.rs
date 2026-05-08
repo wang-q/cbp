@@ -1,4 +1,5 @@
 use std::io::Read;
+use tracing::warn;
 
 /// Read and validate package JSON configuration
 ///
@@ -332,11 +333,8 @@ pub fn fix_shebang(path: &std::path::Path) -> anyhow::Result<()> {
     let mut buffer = [0u8; 512];
     let n = file.read(&mut buffer)?;
 
-    // Check if the first n bytes are valid UTF-8 or ASCII characters
-    if !buffer[..n]
-        .iter()
-        .all(|&b| b.is_ascii() || (b & 0xC0) == 0x80)
-    {
+    // Check if the first n bytes are valid UTF-8 text
+    if std::str::from_utf8(&buffer[..n]).is_err() {
         return Ok(());
     }
 
@@ -366,7 +364,7 @@ pub fn fix_shebang(path: &std::path::Path) -> anyhow::Result<()> {
         lines[0] = new_line;
         let new_content = lines.join("\n") + "\n";
         std::fs::write(path, new_content)?;
-        eprintln!("==> Fixed shebang in '{}'", path.display());
+        warn!("Fixed shebang in '{}'", path.display());
     }
 
     Ok(())

@@ -77,13 +77,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     let opt_proxy_url = args.get_one::<String>("proxy");
     let agent = cbp::create_http_agent(opt_proxy_url)?;
 
-    let cbp_dirs = if args.contains_id("dir") {
-        let home =
-            std::path::Path::new(args.get_one::<String>("dir").unwrap()).to_path_buf();
-        cbp::CbpDirs::from(home)?
-    } else {
-        cbp::CbpDirs::from_exe()?
-    };
+    let cbp_dirs = cbp::CbpDirs::from_arg_matches(args)?;
 
     let os_type = cbp::get_os_type()?;
     let pkg_type = args
@@ -112,8 +106,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         std::fs::create_dir_all(&cbp_dirs.cache)?;
 
         // Download from GitHub
-        let base_url = std::env::var("GITHUB_RELEASE_URL")
-            .unwrap_or_else(|_| "https://github.com".to_string());
+        let base_url = cbp::github_release_url();
         let url = format!(
             "{}/wang-q/cbp/releases/download/Binaries/{}",
             base_url, pkg_file

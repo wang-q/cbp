@@ -1,5 +1,6 @@
 use std::io::{BufWriter, Read, Write};
 use std::path::{Path, PathBuf};
+use tracing::warn;
 
 /// Creates a buffered writer for either stdout or a file
 ///
@@ -10,14 +11,14 @@ use std::path::{Path, PathBuf};
 /// # Returns
 ///
 /// A boxed writer implementing the Write trait
-pub fn writer(output: &str) -> Box<dyn Write> {
+pub fn writer(output: &str) -> anyhow::Result<Box<dyn Write>> {
     let writer: Box<dyn Write> = if output == "stdout" {
         Box::new(BufWriter::new(std::io::stdout()))
     } else {
-        Box::new(BufWriter::new(std::fs::File::create(output).unwrap()))
+        Box::new(BufWriter::new(std::fs::File::create(output)?))
     };
 
-    writer
+    Ok(writer)
 }
 
 pub fn get_os_type() -> anyhow::Result<String> {
@@ -84,8 +85,14 @@ pub fn resolve_path(path: &Path, home: &Path) -> anyhow::Result<PathBuf> {
 
 /// Convert an absolute path to a home-relative path with `~` prefix
 pub fn to_home_path(abs: &Path, home: &Path) -> anyhow::Result<String> {
-    let abs = dunce::canonicalize(abs).unwrap_or_else(|_| abs.to_path_buf());
-    let home = dunce::canonicalize(home).unwrap_or_else(|_| home.to_path_buf());
+    let abs = dunce::canonicalize(abs).unwrap_or_else(|e| {
+        warn!("Failed to canonicalize path {}: {}", abs.display(), e);
+        abs.to_path_buf()
+    });
+    let home = dunce::canonicalize(home).unwrap_or_else(|e| {
+        warn!("Failed to canonicalize home {}: {}", home.display(), e);
+        home.to_path_buf()
+    });
 
     if let Ok(rel) = abs.strip_prefix(&home) {
         let rel_str = rel.display().to_string();
@@ -263,6 +270,24 @@ pub fn create_http_agent(proxy_url: Option<&String>) -> anyhow::Result<ureq::Age
     } else {
         ureq::AgentBuilder::new().build()
     })
+}
+
+/// Returns the base URL for GitHub releases, respecting `GITHUB_RELEASE_URL` env var
+pub fn github_release_url() -> String {
+    std::env::var("GITHUB_RELEASE_URL")
+        .unwrap_or_else(|_| "https://github.com".to_string())
+}
+
+/// Returns the base URL for GitHub API, respecting `GITHUB_API_URL` env var
+pub fn github_api_url() -> String {
+    std::env::var("GITHUB_API_URL")
+        .unwrap_or_else(|_| "https://api.github.com".to_string())
+}
+
+/// Returns the base URL for GitHub raw content, respecting `GITHUB_RAW_URL` env var
+pub fn github_raw_url() -> String {
+    std::env::var("GITHUB_RAW_URL")
+        .unwrap_or_else(|_| "https://raw.githubusercontent.com".to_string())
 }
 
 /// List files in a tar.gz archive
@@ -628,7 +653,7 @@ mod tests {
         let file = std::fs::File::create(&archive_path)?;
         let mut encoder = GzEncoder::new(file, Compression::default());
         encoder.write_all(b"test content")?;
-        let mut file = encoder.finish()?;
+        let _file = encoder.finish()?;
         // Note: GzEncoder doesn't support comment, so we test empty case
 
         let comment = read_comment(&archive_path)?;

@@ -66,13 +66,8 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
             .ok_or_else(|| anyhow::anyhow!("Source URL not found"))?;
 
         // Allow overriding the base URL via environment variable for testing
-        let url = if let Ok(base_url) = std::env::var("GITHUB_RELEASE_URL") {
-            // Replace the scheme and host part of the URL
-            if let Some(path_part) = url.strip_prefix("https://github.com") {
-                format!("{}{}", base_url, path_part)
-            } else {
-                url.to_string()
-            }
+        let url = if let Some(path_part) = url.strip_prefix("https://github.com") {
+            format!("{}{}", cbp::github_release_url(), path_part)
         } else {
             url.to_string()
         };
@@ -106,9 +101,6 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         cbp::handle_rename(&temp_dir, dl_obj)?;
         cbp::clean_files(&temp_dir, dl_obj)?;
 
-        // let target_name = get_target_name(&temp_dir, dl_obj, pkg)?;
-        // create_reproducible_archive(&temp_dir, &temp_file, &target_name)?;
-
         if temp_file.exists() {
             std::fs::remove_file(&temp_file)?;
         }
@@ -122,94 +114,3 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
     Ok(())
 }
-
-// /// Get target directory name for archive
-// fn get_target_name(
-//     temp_dir: &tempfile::TempDir,
-//     source_obj: &serde_json::Map<String, serde_json::Value>,
-//     pkg: &str,
-// ) -> anyhow::Result<String> {
-//     if let Some(rename) = source_obj.get("rename") {
-//         let rename_map = rename
-//             .as_object()
-//             .ok_or_else(|| anyhow::anyhow!("Rename must be an object"))?;
-//         if let Some(target) = get_rename_target(rename_map)? {
-//             println!("  -> Using rename target: {}", target);
-//             return Ok(target);
-//         }
-//     }
-
-//     // Fallback to first directory or package name
-//     if let Ok(first_dir) = get_first_directory(temp_dir.path()) {
-//         Ok(first_dir)
-//     } else {
-//         println!("  -> Using package name as target: {}", pkg);
-//         Ok(pkg.to_string())
-//     }
-// }
-
-// /// Get target name from rename map
-// fn get_rename_target(
-//     rename_map: &serde_json::Map<String, serde_json::Value>,
-// ) -> anyhow::Result<Option<String>> {
-//     if let Some((_, target)) = rename_map.iter().next() {
-//         let target = target
-//             .as_str()
-//             .ok_or_else(|| anyhow::anyhow!("Rename target must be a string"))?;
-//         Ok(Some(target.to_string()))
-//     } else {
-//         Ok(None)
-//     }
-// }
-
-// /// Find first directory in temp_dir and return its name
-// ///
-// /// Used as fallback when rename target is not specified
-// fn get_first_directory(temp_dir: &std::path::Path) -> anyhow::Result<String> {
-//     let entries: Vec<_> = std::fs::read_dir(temp_dir)?
-//         .filter_map(|e| e.ok())
-//         .filter(|e| e.path().is_dir())
-//         .collect();
-
-//     if let Some(first_dir) = entries.first() {
-//         let target = first_dir.file_name().to_string_lossy().into_owned();
-//         println!("-> Using first directory as target: {}", target);
-//         Ok(target)
-//     } else {
-//         Err(anyhow::anyhow!("No directory found for rename target"))
-//     }
-// }
-
-// /// Create reproducible tar archive with standardized attributes
-// ///
-// /// Sets consistent ownership, permissions, and timestamps
-// fn create_reproducible_archive(
-//     temp_dir: &tempfile::TempDir,
-//     temp_file: &std::path::Path,
-//     rename_target: &str,
-// ) -> anyhow::Result<()> {
-//     let mut cmd = std::process::Command::new(if cfg!(target_os = "macos") {
-//         "gtar"
-//     } else {
-//         "tar"
-//     });
-
-//     // Set GZIP=-n environment variable
-//     cmd.env("GZIP", "-n")
-//         .args([
-//             "--format=gnu",
-//             "--sort=name",
-//             "--owner=0",
-//             "--group=0",
-//             "--numeric-owner",
-//             "--mode=a+rX,u+w,go-w",
-//             "--mtime=2024-01-01 00:00Z",
-//             "-czf",
-//         ])
-//         .arg(temp_file)
-//         .arg(rename_target)
-//         .current_dir(temp_dir.path())
-//         .status()?;
-
-//     Ok(())
-// }

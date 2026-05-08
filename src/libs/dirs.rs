@@ -90,6 +90,18 @@ impl CbpDirs {
         self.home.to_string_lossy().into_owned()
     }
 
+    /// Creates a CbpDirs instance from `clap::ArgMatches`, using `--dir` if present,
+    /// otherwise falling back to `from_exe()`.
+    pub fn from_arg_matches(matches: &clap::ArgMatches) -> anyhow::Result<Self> {
+        if matches.contains_id("dir") {
+            let home = std::path::Path::new(matches.get_one::<String>("dir").unwrap())
+                .to_path_buf();
+            Self::from(home)
+        } else {
+            Self::from_exe()
+        }
+    }
+
     /// Install package from a tar.gz file
     ///
     /// # Arguments

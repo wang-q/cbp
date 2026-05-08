@@ -38,13 +38,7 @@ Usage:
 }
 
 pub fn execute(matches: &ArgMatches) -> Result<()> {
-    let cbp_dirs = if matches.contains_id("dir") {
-        let home = std::path::Path::new(matches.get_one::<String>("dir").unwrap())
-            .to_path_buf();
-        cbp::CbpDirs::from(home)?
-    } else {
-        cbp::CbpDirs::from_exe()?
-    };
+    let cbp_dirs = cbp::CbpDirs::from_arg_matches(matches)?;
 
     match matches.get_one::<String>("directory").map(|s| s.as_str()) {
         Some("bin") => println!("{}", cbp_dirs.bin.display()),

@@ -59,8 +59,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     // Set up HTTP agent with optional proxy
     let agent = cbp::create_http_agent(opt_proxy_url)?;
 
-    let api_url = std::env::var("GITHUB_API_URL")
-        .unwrap_or_else(|_| "https://api.github.com".to_string());
+    let api_url = cbp::github_api_url();
 
     //----------------------------
     // Processing

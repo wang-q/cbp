@@ -1,7 +1,7 @@
 use clap::{Arg, ArgAction, Command};
 use cmd_lib::*;
 use std::io::{Read, Seek, SeekFrom};
-use tracing::warn;
+use tracing::{debug, warn};
 
 pub fn make_subcommand() -> Command {
     Command::new("collect")
@@ -173,7 +173,6 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
             } else if path.is_dir() {
                 let base = path.canonicalize()?;
                 let files = cbp::find_files(&base, None)?;
-                // eprintln!("files = {:#?}", files);
                 for file in files {
                     // Combine base path with file path
                     let full_path = base.join(&file);
@@ -213,8 +212,7 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
         }
     }
 
-    warn!("base_dir = {:#?}", base_dir);
-    // warn!("file_list = {:#?}", file_list);
+    debug!("base_dir = {:#?}", base_dir);
 
     // Create temporary directory
     let temp_dir = tempfile::Builder::new().prefix("cbp-collect-").tempdir()?;
@@ -285,9 +283,11 @@ pub fn execute(matches: &clap::ArgMatches) -> anyhow::Result<()> {
     Ok(())
 }
 
+/// Check if a file should be skipped based on ignore patterns
 fn should_skip_file(line: &str, ignore_patterns: &[String]) -> bool {
     ignore_patterns.iter().any(|pattern| line.contains(pattern))
 }
+/// Split a file path line into parts, optionally skipping the first vcpkg component
 fn get_path_parts(line: &str, is_vcpkg: bool) -> Option<Vec<String>> {
     let parts: Vec<String> = if is_vcpkg {
         line.split('/').skip(1).map(String::from).collect()
@@ -300,6 +300,7 @@ fn get_path_parts(line: &str, is_vcpkg: bool) -> Option<Vec<String>> {
         Some(parts)
     }
 }
+/// Compute the relative archive path based on mode and vcpkg conventions
 fn get_relative_path(parts: &[String], mode: &str, is_vcpkg: bool) -> String {
     if (is_vcpkg && parts[0] == "tools") || mode == "bin" {
         format!("bin/{}", parts.last().unwrap())
@@ -310,6 +311,7 @@ fn get_relative_path(parts: &[String], mode: &str, is_vcpkg: bool) -> String {
     }
 }
 
+/// Create file copies for alias mappings defined in the copy map
 fn process_file_aliases(
     dest_path: &std::path::Path,
     copy_map: &std::collections::HashMap<String, Vec<String>>,
@@ -332,6 +334,7 @@ fn process_file_aliases(
     Ok(())
 }
 
+/// Check if a file is a Windows PE executable (not a DLL)
 fn is_windows_executable(path: &std::path::Path) -> std::io::Result<bool> {
     let mut file = std::fs::File::open(path)?;
     let mut buffer = [0u8; 0x40];

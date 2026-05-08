@@ -42,13 +42,7 @@ Purpose: Helps identify and clean up redundant files in ~/.cbp directory.
 }
 
 pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
-    let cbp_dirs = if args.contains_id("dir") {
-        let home =
-            std::path::Path::new(args.get_one::<String>("dir").unwrap()).to_path_buf();
-        cbp::CbpDirs::from(home)?
-    } else {
-        cbp::CbpDirs::from_exe()?
-    };
+    let cbp_dirs = cbp::CbpDirs::from_arg_matches(args)?;
 
     println!("==> Unmanaged files in {}:", cbp_dirs.home.display());
 

@@ -90,13 +90,8 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                 .ok_or_else(|| anyhow::anyhow!("URL not found"))?;
 
             // Allow overriding the base URL via environment variable for testing
-            let url = if let Ok(base_url) = std::env::var("GITHUB_RELEASE_URL") {
-                // Replace the scheme and host part of the URL
-                if let Some(path_part) = url.strip_prefix("https://github.com") {
-                    format!("{}{}", base_url, path_part)
-                } else {
-                    url.to_string()
-                }
+            let url = if let Some(path_part) = url.strip_prefix("https://github.com") {
+                format!("{}{}", cbp::github_release_url(), path_part)
             } else {
                 url.to_string()
             };

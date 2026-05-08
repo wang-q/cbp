@@ -55,8 +55,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     let agent = cbp::create_http_agent(opt_proxy_url)?;
 
     // Build JSON file URL
-    let raw_url = std::env::var("GITHUB_RAW_URL")
-        .unwrap_or_else(|_| "https://raw.githubusercontent.com".to_string());
+    let raw_url = cbp::github_raw_url();
     let json_url = format!("{}/wang-q/cbp/master/packages/{}.json", raw_url, package);
 
     // Get JSON data

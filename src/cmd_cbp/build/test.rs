@@ -62,13 +62,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     // Args
     //----------------------------
     let base_dir = std::path::PathBuf::from(args.get_one::<String>("base").unwrap());
-    let cbp_dirs = if args.contains_id("dir") {
-        let home =
-            std::path::Path::new(args.get_one::<String>("dir").unwrap()).to_path_buf();
-        cbp::CbpDirs::from(home)?
-    } else {
-        cbp::CbpDirs::from_exe()?
-    };
+    let cbp_dirs = cbp::CbpDirs::from_arg_matches(args)?;
 
     let os_type = cbp::get_os_type()?;
 
