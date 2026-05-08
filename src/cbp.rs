@@ -25,6 +25,7 @@ fn main() -> anyhow::Result<()> {
         .subcommand(cmd_cbp::build::make_subcommand())
         .subcommand(cmd_cbp::collect::make_subcommand())
         .subcommand(cmd_cbp::dot::make_subcommand())
+        .subcommand(cmd_cbp::snap::make_subcommand())
         .subcommand(
             Command::new("uninstall")
                 .about("Alias for remove command")
@@ -70,6 +71,7 @@ Quick Start:
         Some(("local", sub_matches)) => cmd_cbp::local::execute(sub_matches),
         Some(("prefix", sub_matches)) => cmd_cbp::prefix::execute(sub_matches),
         Some(("remove", sub_matches)) => cmd_cbp::remove::execute(sub_matches),
+        Some(("snap", sub_matches)) => cmd_cbp::snap::execute(sub_matches),
         Some(("tar", sub_matches)) => cmd_cbp::tar::execute(sub_matches),
         Some(("uninstall", sub_matches)) => cmd_cbp::remove::execute(sub_matches), // Handle alias subcommand
         _ => unreachable!(),
