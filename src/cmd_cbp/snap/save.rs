@@ -7,6 +7,7 @@ use cbp::libs::utils::{resolve_path, to_home_path};
 pub fn make_subcommand() -> Command {
     Command::new("save")
         .about("Save files/directories as a snapshot")
+        .after_help(include_str!("../../../docs/help/snap_save.md"))
         .arg(
             Arg::new("paths")
                 .help("Files or directories to save")

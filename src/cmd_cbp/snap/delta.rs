@@ -11,6 +11,7 @@ use cbp::libs::utils::{
 pub fn make_subcommand() -> Command {
     Command::new("delta")
         .about("Show files modified since snapshot")
+        .after_help(include_str!("../../../docs/help/snap_delta.md"))
         .arg(
             Arg::new("archive")
                 .help("Snapshot archive to compare")

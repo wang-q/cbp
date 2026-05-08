@@ -3,36 +3,7 @@ use clap::*;
 pub fn make_subcommand() -> Command {
     Command::new("install")
         .about("Download and install packages from GitHub")
-        .after_help(
-            r###"
-Download and install packages from GitHub release repository.
-
-This command downloads and installs pre-built binary packages from GitHub.
-It checks for existing installations to avoid duplicates and handles
-platform-specific package selection automatically.
-
-[Release page](https://github.com/wang-q/cbp/releases/tag/Binaries)
-
-Examples:
-* Basic usage
-  cbp install zlib            # single package
-  cbp install zlib bzip2      # multiple packages
-
-* Package types
-  cbp install -t font arial   # install fonts
-
-* Network proxy support
-  # Priority (high to low):
-  # 1. --proxy argument
-  cbp install --proxy socks5://127.0.0.1:7890 zlib
-  # 2. Environment variables:
-  #    ALL_PROXY
-  #    HTTP_PROXY
-  #    all_proxy
-  #    http_proxy
-
-"###,
-        )
+        .after_help(include_str!("../../docs/help/install.md"))
         .arg(
             Arg::new("packages")
                 .help("Package names to install")

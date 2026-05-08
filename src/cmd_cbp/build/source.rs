@@ -5,6 +5,7 @@ use cmd_lib::*;
 pub fn make_subcommand() -> clap::Command {
     clap::Command::new("source")
         .about("Download package sources")
+        .after_help(include_str!("../../../docs/help/build_source.md"))
         .arg(
             Arg::new("packages")
                 .help("Package names to download")

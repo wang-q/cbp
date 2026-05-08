@@ -13,33 +13,7 @@ struct Package {
 pub fn make_subcommand() -> Command {
     Command::new("upload")
         .about("Upload package files to GitHub release")
-        .after_help(
-            r###"
-Upload package files to GitHub release and update checksums.
-
-Requirements:
-* GitHub CLI (gh) must be installed and authenticated
-* For proxy support, use HTTPS_PROXY environment variable
-  # Different from other commands' proxy settings
-  export HTTPS_PROXY=http://127.0.0.1:7890
-
-The command will:
-* Calculate MD5 checksums
-* Upload files to GitHub release
-* Update release notes with checksums
-
-Examples:
-1. Upload single file:
-   cbp build upload binaries/zlib.macos.tar.gz
-
-2. Upload multiple files:
-   cbp build upload binaries/*.tar.gz
-
-3. Force upload (skip MD5 check):
-   cbp build upload --force binaries/*.tar.gz
-
-"###,
-        )
+        .after_help(include_str!("../../../docs/help/build_upload.md"))
         .arg(
             Arg::new("files")
                 .help("Files to upload")

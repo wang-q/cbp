@@ -4,19 +4,7 @@ use clap::*;
 pub fn make_subcommand() -> Command {
     Command::new("prefix")
         .about("Display cbp installation directories")
-        .after_help(
-            r###"
-Display CBP directory paths.
-
-Usage:
-  cbp prefix         # Show home directory (~/.cbp)
-  cbp prefix bin     # Show binary directory
-  cbp prefix lib     # Show library directory
-  cbp prefix include # Show include directory
-  cbp prefix exe     # Show cbp executable path
-
-"###,
-        )
+        .after_help(include_str!("../../docs/help/prefix.md"))
         .arg(
             Arg::new("directory")
                 .help("Directory to display")

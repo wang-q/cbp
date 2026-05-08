@@ -5,6 +5,7 @@ use cmd_lib::*;
 pub fn make_subcommand() -> clap::Command {
     clap::Command::new("prebuild")
         .about("Build prebuild packages")
+        .after_help(include_str!("../../../docs/help/build_prebuild.md"))
         .arg(
             Arg::new("packages")
                 .help("Package names to build")

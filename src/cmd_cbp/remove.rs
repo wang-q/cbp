@@ -3,27 +3,7 @@ use clap::*;
 pub fn make_subcommand() -> Command {
     Command::new("remove")
         .about("Remove installed packages")
-        .after_help(
-            r###"
-Remove installed packages and their associated files.
-
-This command safely removes installed packages and their associated files,
-including resource forks and symbolic links. It preserves directory structure
-and skips missing files to maintain system integrity. The removal process is
-guided by package records to ensure only managed files are affected, leaving
-other files untouched.
-
-Examples:
-* Single package
-  cbp remove zlib
-
-* Multiple packages
-  cbp remove zlib bzip2
-
-Warning: This operation cannot be undone.
-
-"###,
-        )
+        .after_help(include_str!("../../docs/help/remove.md"))
         .arg(
             Arg::new("packages")
                 .help("Name of the packages")

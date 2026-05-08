@@ -8,6 +8,7 @@ use cbp::libs::utils::{find_target_path, read_comment};
 pub fn make_subcommand() -> Command {
     Command::new("load")
         .about("Restore files from a snapshot")
+        .after_help(include_str!("../../../docs/help/snap_load.md"))
         .arg(
             Arg::new("archive")
                 .help("Snapshot archive to restore")

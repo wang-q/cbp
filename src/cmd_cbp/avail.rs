@@ -4,34 +4,7 @@ use clap::*;
 pub fn make_subcommand() -> Command {
     Command::new("avail")
         .about("List available packages from GitHub")
-        .after_help(
-            r###"
-Query and list available packages from GitHub release repository.
-
-This command queries the GitHub API to retrieve package information, supporting
-platform-specific filtering for macOS, Linux, and Windows. Results are displayed
-in a formatted table, grouped alphabetically for better readability.
-
-[Release page](https://github.com/wang-q/cbp/releases/tag/Binaries)
-
-Examples:
-* Platform filtering
-  cbp avail             # List all packages
-  cbp avail linux       # Linux packages only
-  cbp avail font        # Fonts
-
-* Network proxy support
-  # Priority (high to low):
-  # 1. --proxy argument
-  cbp avail --proxy socks5://127.0.0.1:7890
-  # 2. Environment variables:
-  #    ALL_PROXY
-  #    HTTP_PROXY
-  #    all_proxy
-  #    http_proxy
-
-"###,
-        )
+        .after_help(include_str!("../../docs/help/avail.md"))
         .arg(
             Arg::new("platform")
                 .help("Target platform (linux/macos/windows/font)")

@@ -4,29 +4,7 @@ use clap::*;
 pub fn make_subcommand() -> Command {
     Command::new("list")
         .about("List installed packages and their contents")
-        .after_help(
-            r###"
-Display information about installed packages.
-
-Operations:
-* Without arguments: Show all installed packages
-* With package names: Show detailed contents of specified packages
-
-Features:
-* Alphabetical grouping
-* Columnar output format
-* System file filtering
-
-Examples:
-* List all packages
-  cbp list
-
-* Show package contents
-  cbp list zlib
-  cbp list zlib bzip2
-
-"###,
-        )
+        .after_help(include_str!("../../docs/help/list.md"))
         .arg(
             Arg::new("packages")
                 .help("Name of the packages")

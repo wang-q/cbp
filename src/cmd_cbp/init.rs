@@ -4,30 +4,7 @@ use std::path::Path;
 pub fn make_subcommand() -> clap::Command {
     clap::Command::new("init")
         .about("Initialize cbp environment")
-        .after_help(
-            r###"
-Initialize CBP environment and configure shell settings.
-
-Operations:
-* Create ~/.cbp directory structure
-* Install cbp executable
-* Updates $PATH on Bash, Zsh or Windows
-
-Configuration:
-* Default: Uses ~/.cbp for everything
-* Custom: Separates config and packages
-  - Config stays in ~/.cbp
-  - Packages go to specified directory
-
-Examples:
-* Default installation
-  cbp init
-
-* Custom package directory
-  cbp init /opt/cbp
-
-"###,
-        )
+        .after_help(include_str!("../../docs/help/init.md"))
         .arg(
             clap::Arg::new("home")
                 .help("Custom home directory")

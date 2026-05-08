@@ -4,41 +4,7 @@ use clap::*;
 pub fn make_subcommand() -> Command {
     Command::new("local")
         .about("Install packages from local binaries")
-        .after_help(
-            r###"
-Install packages from local binaries or downloaded cache.
-
-Search Locations:
-* ./binaries/     - Pre-built binary directory (primary)
-* ~/.cbp/cache/   - Downloaded packages (fallback)
-
-Package Format:
-* Naming: <package_name>.<type>.tar.gz
-* Type: Platform-specific (linux/macos/windows) or font
-
-Features:
-* Installation status checking
-* Automatic location selection
-* Package record management
-* File extraction to ~/.cbp
-
-Examples:
-* Basic usage
-  cbp local zlib            # single package
-  cbp local zlib bzip2      # multiple packages
-
-* Package types
-  cbp local -t font arial   # install fonts
-
-* List package contents
-  cbp local -l zlib         # show pkg contents without installing
-
-Developer Options:
-* Install cross-platform packages (use with caution)
-  cbp local -t windows zlib
-
-"###,
-        )
+        .after_help(include_str!("../../docs/help/local.md"))
         .arg(
             Arg::new("packages")
                 .help("Package names to install")

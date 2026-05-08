@@ -6,6 +6,7 @@ use cbp::libs::utils::{format_size, read_comment};
 pub fn make_subcommand() -> Command {
     Command::new("list")
         .about("List contents of a snapshot")
+        .after_help(include_str!("../../../docs/help/snap_list.md"))
         .arg(
             Arg::new("archive")
                 .help("Snapshot archive to inspect")

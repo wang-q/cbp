@@ -4,6 +4,7 @@ use clap::*;
 pub fn make_subcommand() -> clap::Command {
     clap::Command::new("validate")
         .about("Validate package configuration files")
+        .after_help(include_str!("../../../docs/help/build_validate.md"))
         .arg(
             Arg::new("packages")
                 .help("Package names to validate")

@@ -5,6 +5,7 @@ use cmd_lib::*;
 pub fn make_subcommand() -> clap::Command {
     clap::Command::new("font")
         .about("Build font packages")
+        .after_help(include_str!("../../../docs/help/build_font.md"))
         .arg(
             Arg::new("packages")
                 .help("Package names to build")

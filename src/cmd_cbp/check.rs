@@ -4,32 +4,7 @@ use clap::*;
 pub fn make_subcommand() -> Command {
     Command::new("check")
         .about("Check for unmanaged files")
-        .after_help(
-            r###"
-Scan ~/.cbp directory for files not managed by any package.
-
-Scan Scope:
-* Files not listed in any package records
-* Files outside cbp system directories (records/, cache/)
-* Files not required by cbp itself
-
-Auto-ignored:
-* macOS system files
-  - .DS_Store
-  - __MACOSX/
-  - .AppleDouble
-  - ._*         # Resource fork files
-* Linux system files
-  - Backup files (*~)
-  - Vim swap files (.swp)
-* Windows system files
-  - Thumbs.db
-  - desktop.ini
-
-Purpose: Helps identify and clean up redundant files in ~/.cbp directory.
-
-"###,
-        )
+        .after_help(include_str!("../../docs/help/check.md"))
         .arg(
             Arg::new("dir")
                 .long("dir")

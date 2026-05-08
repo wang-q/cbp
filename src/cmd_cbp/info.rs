@@ -3,28 +3,7 @@ use clap::*;
 pub fn make_subcommand() -> Command {
     Command::new("info")
         .about("Display package information")
-        .after_help(
-            r###"
-Get detailed package information from GitHub repository.
-
-Information is sourced from JSON files in the packages/ directory.
-
-Examples:
-* View package information
-  cbp info newick-utils     # Show specific package info
-  cbp info bwa --json      # Output in JSON format
-
-* Network proxy support
-  # Priority (high to low):
-  # 1. --proxy argument
-  cbp info newick-utils --proxy socks5://127.0.0.1:7890
-  # 2. Environment variables:
-  #    ALL_PROXY
-  #    HTTP_PROXY
-  #    all_proxy
-  #    http_proxy
-"###,
-        )
+        .after_help(include_str!("../../docs/help/info.md"))
         .arg(
             Arg::new("package")
                 .help("Package name")
