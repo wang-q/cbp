@@ -78,7 +78,8 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
         match find_target_path(&entry_path, &source_paths, &home) {
             Some(source_target) => {
-                let target_path = target.join(source_target.strip_prefix(&home).unwrap_or(&source_target));
+                let target_path = target
+                    .join(source_target.strip_prefix(&home).unwrap_or(&source_target));
                 if verbose {
                     println!(
                         "Extracting: {} -> {}",

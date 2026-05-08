@@ -3,7 +3,10 @@ use clap::*;
 use std::io::Read;
 use std::path::{Path, PathBuf};
 
-use cbp::libs::utils::{expand_home_path, find_target_path, read_comment};
+use cbp::libs::utils::{
+    delta_output_name, expand_home_path, find_matching_source, find_target_path,
+    read_comment,
+};
 
 pub fn make_subcommand() -> Command {
     Command::new("delta")
@@ -104,19 +107,6 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     Ok(())
 }
 
-fn delta_output_name(archive: &Path) -> String {
-    let stem = archive
-        .file_stem()
-        .map(|s| s.to_string_lossy().to_string())
-        .unwrap_or_else(|| "archive".to_string());
-    let stem = stem
-        .strip_suffix(".tar")
-        .unwrap_or(&stem)
-        .strip_suffix(".snap")
-        .unwrap_or(&stem);
-    format!("{}.delta.tar.gz", stem)
-}
-
 fn pack_modified(
     modified: &[(PathBuf, PathBuf)],
     source_paths: &[String],
@@ -154,21 +144,4 @@ fn pack_modified(
 
     archive.finish()?;
     Ok(())
-}
-
-fn find_matching_source(display_path: &Path, source_paths: &[String]) -> Option<String> {
-    let display = display_path.to_string_lossy().to_string();
-    let display = if display.starts_with('/') || display.starts_with('\\') {
-        display
-    } else {
-        format!("/ {}", display)
-    };
-
-    for source in source_paths {
-        let source_no_tilde = source.strip_prefix('~').unwrap_or(source);
-        if display.starts_with(source_no_tilde) || display.contains(source_no_tilde) {
-            return Some(source.clone());
-        }
-    }
-    source_paths.first().cloned()
 }

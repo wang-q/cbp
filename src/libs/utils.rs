@@ -691,16 +691,62 @@ pub fn find_target_path(
         if entry_str.starts_with(&*source_name) {
             // Get the relative part after the source name
             let rel_part = entry_str.strip_prefix(&*source_name)?;
-            let rel_part = rel_part.strip_prefix('/').or_else(|| rel_part.strip_prefix('\\'))?;
+            let rel_part = rel_part
+                .strip_prefix('/')
+                .or_else(|| rel_part.strip_prefix('\\'))
+                .unwrap_or(rel_part);
 
             // Build the full target path
-            let target = source_path.parent()?.join(rel_part);
+            // If rel_part is empty, return source_path (single file case)
+            // Otherwise, join rel_part to source_path (directory case)
+            let target = if rel_part.is_empty() {
+                source_path
+            } else {
+                source_path.join(rel_part)
+            };
             return Some(target);
         }
     }
 
     // Fallback: try to construct path from home
     Some(home.join(&entry_str))
+}
+
+/// Generate delta snapshot output name from archive path
+/// Converts "name.tar.gz" or "name.snap.tar.gz" to "name.delta.tar.gz"
+pub fn delta_output_name(archive: &Path) -> String {
+    let stem = archive
+        .file_stem()
+        .map(|s| s.to_string_lossy().to_string())
+        .unwrap_or_else(|| "archive".to_string());
+    let stem = stem
+        .strip_suffix(".tar")
+        .unwrap_or(&stem)
+        .strip_suffix(".snap")
+        .unwrap_or(&stem);
+    format!("{}.delta.tar.gz", stem)
+}
+
+/// Find matching source path for a display path
+/// Used when packing modified files to determine archive structure
+pub fn find_matching_source(
+    display_path: &Path,
+    source_paths: &[String],
+) -> Option<String> {
+    let display = display_path.to_string_lossy().to_string();
+    let display = if display.starts_with('/') || display.starts_with('\\') {
+        display
+    } else {
+        format!("/ {}", display)
+    };
+
+    for source in source_paths {
+        let source_no_tilde = source.strip_prefix('~').unwrap_or(source);
+        if display.starts_with(source_no_tilde) || display.contains(source_no_tilde) {
+            return Some(source.clone());
+        }
+    }
+    source_paths.first().cloned()
 }
 
 /// Generate font installation instructions for the current OS

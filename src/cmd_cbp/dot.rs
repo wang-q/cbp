@@ -20,6 +20,11 @@ Filename prefixes:
   xdg_cache/    - Cross-platform cache
   .tmpl         - Template file (Tera/Jinja2 syntax)
 
+Behavior:
+  - Default mode is preview (dry-run), use --apply to make changes
+  - --dir and --apply cannot be used together
+  - Use --verbose to see detailed processing information
+
 Examples:
 1. Create template from existing config:
    cbp dot ~/.bashrc --dir ~/dotfiles/
@@ -34,17 +39,13 @@ Examples:
 4. Apply all templates:
    for f in ~/dotfiles/dot_*; do cbp dot -a "$f"; done
 
-5. Export config to archive:
-   cbp dot ~/.config/nvim --tar nvim.tar.gz
-
-6. Apply archive:
-   cbp dot -a nvim.tar.gz
-
+5. Preview with verbose output:
+   cbp dot -v ~/dotfiles/dot_bashrc.tmpl
 "###,
         )
         .arg(
             Arg::new("source")
-                .help("Source file(s), template file(s), or archive(s)")
+                .help("Source file(s) or template file(s)")
                 .required(true)
                 .num_args(1..)
                 .value_name("SOURCE"),
@@ -71,13 +72,6 @@ Examples:
                 .num_args(1)
                 .value_name("DIR"),
         )
-        .arg(
-            Arg::new("tar")
-                .long("tar")
-                .help("Export to tar.gz archive")
-                .num_args(1)
-                .value_name("FILE"),
-        )
 }
 
 pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
@@ -91,16 +85,11 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
     // Check for conflicting options
     let has_dir = args.contains_id("dir");
-    let has_tar = args.contains_id("tar");
 
     if has_dir && apply {
         return Err(anyhow::anyhow!(
             "Cannot use --apply and --dir together. --dir is for creating templates, --apply is for applying them."
         ));
-    }
-
-    if has_dir && has_tar {
-        return Err(anyhow::anyhow!("Cannot use --dir and --tar together."));
     }
 
     // Dispatch to appropriate handler
@@ -113,21 +102,11 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         }
         let template_dir = args.get_one::<String>("dir").unwrap();
         create_template(std::path::Path::new(&sources[0]), template_dir, verbose)
-    } else if has_tar {
-        // Export mode: to tar.gz
-        let tar_file = args.get_one::<String>("tar").unwrap();
-        let source_paths: Vec<&Path> =
-            sources.iter().map(std::path::Path::new).collect();
-        export_archive(&source_paths, tar_file, verbose)
     } else {
         // Apply mode: process each source
         for source in &sources {
             let source_path = std::path::Path::new(source);
-            if source.ends_with(".tar.gz") || source.ends_with(".tgz") {
-                apply_archive(source_path, apply, verbose)?;
-            } else {
-                apply_template(source_path, apply, verbose)?;
-            }
+            apply_template(source_path, apply, verbose)?;
         }
         Ok(())
     }
@@ -296,127 +275,6 @@ fn apply_template(
         println!("{}", final_content);
         println!("------------------------");
         println!("\nUse -a or --apply to actually apply this template.");
-    }
-
-    Ok(())
-}
-
-/// Apply a tar.gz archive
-fn apply_archive(archive_path: &Path, apply: bool, verbose: bool) -> anyhow::Result<()> {
-    if !archive_path.exists() {
-        return Err(anyhow::anyhow!(
-            "Archive not found: {}",
-            archive_path.display()
-        ));
-    }
-
-    let home = dirs::home_dir()
-        .ok_or_else(|| anyhow::anyhow!("Could not determine home directory"))?;
-
-    // List files in archive
-    let file_list = cbp::list_archive_files(archive_path)?;
-    let files: Vec<&str> = file_list.lines().filter(|l: &&str| !l.is_empty()).collect();
-
-    if verbose {
-        println!("Archive: {}", archive_path.display());
-        println!("Target directory: {}", home.display());
-        println!("Files in archive:");
-        for file in &files {
-            println!("  {}", file);
-        }
-    }
-
-    if apply {
-        // Extract archive
-        let file = std::fs::File::open(archive_path)?;
-        let gz = flate2::read::GzDecoder::new(file);
-        let mut archive = tar::Archive::new(gz);
-
-        archive.unpack(&home)?;
-
-        println!(
-            "Applied archive: {} -> {}",
-            archive_path.display(),
-            home.display()
-        );
-    } else {
-        // Preview mode
-        println!(
-            "==> Preview: {} -> {}",
-            archive_path.display(),
-            home.display()
-        );
-        println!("Files to extract:");
-        for file in &files {
-            let target = home.join(file);
-            let status = if target.exists() {
-                " [will overwrite]"
-            } else {
-                ""
-            };
-            println!("  {}{}", file, status);
-        }
-        println!("\nUse -a or --apply to actually extract this archive.");
-    }
-
-    Ok(())
-}
-
-/// Export config to tar.gz archive
-fn export_archive(
-    source_paths: &[&Path],
-    tar_file: &str,
-    verbose: bool,
-) -> anyhow::Result<()> {
-    for source_path in source_paths {
-        if !source_path.exists() {
-            return Err(anyhow::anyhow!(
-                "Source not found: {}",
-                source_path.display()
-            ));
-        }
-    }
-
-    let tar_path = std::path::Path::new(tar_file);
-    let cbp = std::env::current_exe()?.display().to_string();
-
-    // Create temporary directory to collect all sources
-    let temp_dir = tempfile::tempdir()?;
-
-    // Copy all sources to temporary directory
-    for source_path in source_paths {
-        let dest_name = source_path
-            .file_name()
-            .ok_or_else(|| anyhow::anyhow!("Invalid source path"))?;
-        let dest_path = temp_dir.path().join(dest_name);
-
-        if source_path.is_file() {
-            std::fs::copy(source_path, &dest_path)?;
-        } else {
-            cbp::copy_dir_all(source_path, &dest_path)?;
-        }
-    }
-
-    // Use cbp tar command to create archive
-    let output = std::process::Command::new(&cbp)
-        .args(["tar", temp_dir.path().to_str().unwrap(), "-o"])
-        .arg(tar_path)
-        .output()?;
-
-    if !output.status.success() {
-        return Err(anyhow::anyhow!(
-            "Failed to create archive: {}",
-            String::from_utf8_lossy(&output.stderr)
-        ));
-    }
-
-    if verbose {
-        for source_path in source_paths {
-            println!("Source: {}", source_path.display());
-        }
-        println!("Archive: {}", tar_path.display());
-    } else {
-        println!("Created: {}", tar_path.display());
     }
 
     Ok(())

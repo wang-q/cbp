@@ -162,44 +162,6 @@ fn command_dot_apply_xdg_config() -> anyhow::Result<()> {
 }
 
 #[test]
-fn command_dot_export_and_apply_archive() -> anyhow::Result<()> {
-    let temp_dir = tempfile::TempDir::new()?;
-    let source_dir = temp_dir.path().join("source");
-    let archive_path = temp_dir.path().join("test.tar.gz");
-    let home_dir = temp_dir.path().join("home");
-    std::fs::create_dir_all(&source_dir)?;
-    std::fs::create_dir_all(&home_dir)?;
-
-    // Create source files
-    std::fs::write(source_dir.join("file1.txt"), "content1")?;
-    std::fs::write(source_dir.join("file2.txt"), "content2")?;
-
-    // Export to archive
-    Command::cargo_bin("cbp")?
-        .arg("dot")
-        .arg(&source_dir)
-        .arg("--tar")
-        .arg(&archive_path)
-        .assert()
-        .success()
-        .stdout(predicate::str::contains("Created:"));
-
-    // Verify archive was created
-    assert!(archive_path.exists());
-
-    // Preview archive application
-    Command::cargo_bin("cbp")?
-        .arg("dot")
-        .arg(&archive_path)
-        .env("HOME", &home_dir)
-        .assert()
-        .success()
-        .stdout(predicate::str::contains("Preview:"));
-
-    Ok(())
-}
-
-#[test]
 fn command_dot_conflicting_options() -> anyhow::Result<()> {
     let temp_dir = tempfile::TempDir::new()?;
     let source_file = temp_dir.path().join("test.txt");
