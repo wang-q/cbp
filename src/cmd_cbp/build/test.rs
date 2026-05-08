@@ -8,28 +8,7 @@ use tracing::warn;
 pub fn make_subcommand() -> clap::Command {
     clap::Command::new("test")
         .about("Execute test cases defined in package configuration files")
-        .after_help(
-            r###"
-Execute test cases defined in package configuration files.
-
-Usage:
-  cbp build test <PACKAGES>...     # Test specified packages
-
-Test cases are defined in package configuration files under the "tests" section:
-  {
-    "tests": [
-      {
-        "name": "test name",       # Optional, defaults to "test #N"
-        "command": "command",      # Required, command to execute
-        "args": ["arg1", "arg2"],  # Optional, command arguments
-        "pattern": "regex",        # Optional, pattern to match in output
-        "ignore_exit_code": false  # Optional, ignore command exit code
-      }
-    ]
-  }
-
-"###,
-        )
+        .after_help(include_str!("../../../docs/help/build_test.md"))
         .arg(
             Arg::new("packages")
                 .help("Package names to test")
