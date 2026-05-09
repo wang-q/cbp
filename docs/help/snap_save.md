@@ -17,7 +17,7 @@ Examples:
    `cbp snap save -v ~/.config/nvim`
 
 5. Windows (PowerShell):
-   `cbp snap save ~/AppData/Roaming/alacritty -o alacritty.snap.tar.gz`
+   `cbp snap save $env:APPDATA/alacritty -o alacritty.snap.tar.gz`
 
 6. Windows (CMD):
-   `cbp snap save %USERPROFILE%\AppData\Roaming\alacritty -o alacritty.snap.tar.gz`
+   `cbp snap save %APPDATA%\alacritty -o alacritty.snap.tar.gz`
