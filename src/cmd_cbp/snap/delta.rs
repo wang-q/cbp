@@ -128,13 +128,7 @@ fn pack_modified(
                 let resolved = expand_home_path(&source, home);
                 let base = resolved.file_name().unwrap().to_string_lossy().to_string();
                 let rel = display_path
-                    .strip_prefix(
-                        resolved
-                            .parent()
-                            .unwrap_or(Path::new(""))
-                            .strip_prefix(home)
-                            .unwrap_or(Path::new("")),
-                    )
+                    .strip_prefix(resolved.strip_prefix(home).unwrap_or(Path::new("")))
                     .unwrap_or(display_path);
                 PathBuf::from(&base).join(rel)
             } else {

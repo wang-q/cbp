@@ -406,6 +406,15 @@ fn command_snap_delta_pack() -> anyhow::Result<()> {
     let delta_path = temp_dir.path().join("pack_base.delta.tar.gz");
     assert!(delta_path.exists(), "Delta archive should be created");
 
+    // Verify delta contains the modified file
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("list")
+        .arg(&delta_path)
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("pack_test.txt"));
+
     Ok(())
 }
 
@@ -549,7 +558,8 @@ fn command_snap_delta_deleted_files() -> anyhow::Result<()> {
         .arg("delta")
         .arg(&archive_path)
         .assert()
-        .success();
+        .success()
+        .stdout(predicate::str::contains("No files have been modified"));
 
     Ok(())
 }
@@ -825,7 +835,8 @@ fn command_snap_delta_pack_multiple_files() -> anyhow::Result<()> {
         .assert()
         .success()
         .stdout(predicate::str::contains("file1.txt"))
-        .stdout(predicate::str::contains("file2.txt"));
+        .stdout(predicate::str::contains("file2.txt"))
+        .stdout(predicate::str::contains("2 files"));
 
     Ok(())
 }
@@ -885,7 +896,7 @@ fn command_snap_save_exclude_file() -> anyhow::Result<()> {
         .assert()
         .success()
         .stdout(predicate::str::contains("Snapshot created"))
-        .stdout(predicate::str::contains("1"));
+        .stdout(predicate::str::contains("Files: 1"));
 
     Command::cargo_bin("cbp")?
         .arg("snap")
@@ -1084,6 +1095,294 @@ fn command_snap_delta_inherits_exclude() -> anyhow::Result<()> {
         .success()
         .stdout(predicate::str::contains("Exclude patterns:"))
         .stdout(predicate::str::contains("*.log"));
+
+    Ok(())
+}
+
+#[test]
+fn command_snap_delta_pack_correct_structure() -> anyhow::Result<()> {
+    let temp_dir = tempfile::TempDir::new()?;
+    let source_dir = temp_dir.path().join("myapp");
+    std::fs::create_dir_all(source_dir.join("sub"))?;
+    std::fs::write(
+        source_dir.join("config.toml"),
+        "[core]\nedition = \"2021\"\n",
+    )?;
+    std::fs::write(source_dir.join("sub").join("data.json"), "{\"key\": 1}")?;
+
+    let archive_path = temp_dir.path().join("myapp.snap.tar.gz");
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("save")
+        .arg(&source_dir)
+        .arg("-o")
+        .arg(&archive_path)
+        .assert()
+        .success();
+
+    std::fs::write(
+        source_dir.join("config.toml"),
+        "[core]\nedition = \"2024\"\n",
+    )?;
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("delta")
+        .arg(&archive_path)
+        .arg("-p")
+        .current_dir(&temp_dir)
+        .assert()
+        .success();
+
+    let delta_path = temp_dir.path().join("myapp.delta.tar.gz");
+    assert!(delta_path.exists(), "Delta archive should be created");
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("list")
+        .arg(&delta_path)
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("myapp/config.toml"))
+        .stdout(predicate::str::contains("myapp/myapp").not());
+
+    Ok(())
+}
+
+#[test]
+fn command_snap_delta_load_restores_correctly() -> anyhow::Result<()> {
+    let temp_dir = tempfile::TempDir::new()?;
+    let source_dir = temp_dir.path().join("dotfiles");
+    std::fs::create_dir_all(source_dir.join("nvim"))?;
+    std::fs::write(source_dir.join(".bashrc"), "alias ll='ls -la'\n")?;
+    std::fs::write(source_dir.join("nvim").join("init.vim"), "set number\n")?;
+
+    let archive_path = temp_dir.path().join("dotfiles.snap.tar.gz");
+    let restore_dir = temp_dir.path().join("restored");
+    std::fs::create_dir_all(&restore_dir)?;
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("save")
+        .arg(&source_dir)
+        .arg("-o")
+        .arg(&archive_path)
+        .assert()
+        .success();
+
+    std::fs::write(
+        source_dir.join(".bashrc"),
+        "alias ll='ls -la'\nalias g='git'\n",
+    )?;
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("delta")
+        .arg(&archive_path)
+        .arg("-p")
+        .current_dir(&temp_dir)
+        .assert()
+        .success();
+
+    let delta_path = temp_dir.path().join("dotfiles.delta.tar.gz");
+    assert!(delta_path.exists(), "Delta archive should be created");
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("load")
+        .arg(&delta_path)
+        .arg("-t")
+        .arg(&restore_dir)
+        .assert()
+        .success();
+
+    assert!(
+        restore_dir.join("dotfiles").join(".bashrc").exists(),
+        ".bashrc should be restored under dotfiles"
+    );
+    assert!(
+        !restore_dir.join("dotfiles").join("dotfiles").exists(),
+        "Should not have doubled directory"
+    );
+
+    let content = std::fs::read_to_string(restore_dir.join("dotfiles").join(".bashrc"))?;
+    assert!(
+        content.contains("alias g='git'"),
+        "Should restore modified content"
+    );
+
+    Ok(())
+}
+
+#[test]
+fn command_snap_archive_not_found_delta() -> anyhow::Result<()> {
+    let nonexistent = std::path::Path::new("nonexistent.snap.tar.gz");
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("delta")
+        .arg(&nonexistent)
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("not found"));
+
+    Ok(())
+}
+
+#[test]
+fn command_snap_archive_not_found_load() -> anyhow::Result<()> {
+    let nonexistent = std::path::Path::new("nonexistent.snap.tar.gz");
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("load")
+        .arg(&nonexistent)
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("not found"));
+
+    Ok(())
+}
+
+#[test]
+fn command_snap_save_nonexistent_path() -> anyhow::Result<()> {
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("save")
+        .arg("path_that_does_not_exist")
+        .arg("-o")
+        .arg("out.snap.tar.gz")
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("not found"));
+
+    Ok(())
+}
+
+#[test]
+fn command_snap_save_with_spaces_in_path() -> anyhow::Result<()> {
+    let temp_dir = tempfile::TempDir::new()?;
+    let source_dir = temp_dir.path().join("My Config Dir");
+    std::fs::create_dir_all(&source_dir)?;
+    std::fs::write(source_dir.join("settings.ini"), "key=val\n")?;
+
+    let archive_path = temp_dir.path().join("spaces.snap.tar.gz");
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("save")
+        .arg(&source_dir)
+        .arg("-o")
+        .arg(&archive_path)
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Snapshot created"));
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("list")
+        .arg(&archive_path)
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("My Config Dir/settings.ini"))
+        .stdout(predicate::str::contains("My Config Dir/My Config Dir").not());
+
+    Ok(())
+}
+
+#[test]
+fn command_snap_save_exclude_no_match() -> anyhow::Result<()> {
+    let temp_dir = tempfile::TempDir::new()?;
+    let source_dir = temp_dir.path().join("tempdir");
+    std::fs::create_dir_all(&source_dir)?;
+    std::fs::write(source_dir.join("data.txt"), "data")?;
+    std::fs::write(source_dir.join("notes.md"), "notes")?;
+
+    let archive_path = temp_dir.path().join("nomatch.snap.tar.gz");
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("save")
+        .arg(&source_dir)
+        .arg("-o")
+        .arg(&archive_path)
+        .arg("-x")
+        .arg("*.log")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Files: 2"));
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("list")
+        .arg(&archive_path)
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("data.txt"))
+        .stdout(predicate::str::contains("notes.md"));
+
+    Ok(())
+}
+
+#[test]
+fn command_snap_save_single_file_verify_content() -> anyhow::Result<()> {
+    let temp_dir = tempfile::TempDir::new()?;
+    let source_file = temp_dir.path().join("greeting.txt");
+    std::fs::write(&source_file, "hello world\n")?;
+
+    let archive_path = temp_dir.path().join("greeting.snap.tar.gz");
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("save")
+        .arg(&source_file)
+        .arg("-o")
+        .arg(&archive_path)
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Files: 1"));
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("list")
+        .arg(&archive_path)
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("greeting.txt"));
+
+    Ok(())
+}
+
+#[test]
+fn command_snap_save_multiple_files_verify_content() -> anyhow::Result<()> {
+    let temp_dir = tempfile::TempDir::new()?;
+    let file1 = temp_dir.path().join("a.txt");
+    let file2 = temp_dir.path().join("b.txt");
+    std::fs::write(&file1, "a")?;
+    std::fs::write(&file2, "b")?;
+
+    let archive_path = temp_dir.path().join("two.snap.tar.gz");
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("save")
+        .arg(&file1)
+        .arg(&file2)
+        .arg("-o")
+        .arg(&archive_path)
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Files: 2"));
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("list")
+        .arg(&archive_path)
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("a.txt"))
+        .stdout(predicate::str::contains("b.txt"));
 
     Ok(())
 }

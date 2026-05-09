@@ -122,7 +122,7 @@ pub fn to_home_path(abs: &Path, home: &Path) -> anyhow::Result<String> {
         return Ok(if rel_str.is_empty() {
             "~/".to_string()
         } else {
-            format!("~/ {}", rel_str).replace(" ", "")
+            format!("~/{}", rel_str)
         });
     }
 
@@ -789,7 +789,7 @@ pub fn find_matching_source(
     let display = if display.starts_with('/') || display.starts_with('\\') {
         display
     } else {
-        format!("/ {}", display)
+        format!("/{}", display)
     };
 
     for source in source_paths {
