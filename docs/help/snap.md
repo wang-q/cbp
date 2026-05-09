@@ -9,27 +9,17 @@ Behavior:
 * Files outside HOME are stored with absolute paths
 * Delta snapshots capture only modified files
 
-Examples:
-1. Save a single file:
-   `cbp snap save ~/.bashrc`
+Path handling:
+* `~` expands to the user's home directory (`$HOME` on Unix, `%USERPROFILE%` on Windows)
+* In PowerShell, `~` works natively; in CMD, use `%USERPROFILE%` directly
 
-2. Save multiple files to specific archive:
-   `cbp snap save ~/.bashrc ~/.vimrc -o dotfiles.snap.tar.gz`
+Windows directory mapping:
+* `~/AppData/Roaming/` — Roaming application data (`%APPDATA%`)
+* `~/AppData/Local/` — Local application data (`%LOCALAPPDATA%`)
+* `~/AppData/Local/Temp/` — Temporary files (`%TEMP%`)
 
-3. Save a directory:
-   `cbp snap save ~/.config/nvim -o nvim.snap.tar.gz`
-
-4. List snapshot contents:
-   `cbp snap list dotfiles.snap.tar.gz`
-
-5. Restore snapshot to HOME:
-   `cbp snap load dotfiles.snap.tar.gz`
-
-6. Restore to different directory:
-   `cbp snap load dotfiles.snap.tar.gz -t /tmp/restore`
-
-7. Check what files have changed:
-   `cbp snap delta dotfiles.snap.tar.gz`
-
-8. Pack modified files into delta snapshot:
-   `cbp snap delta dotfiles.snap.tar.gz -p`
+Subcommands:
+* `save` — Save files and directories as a snapshot archive
+* `load` — Restore files from a snapshot archive
+* `list` — List contents of a snapshot archive
+* `delta` — Show files modified since a snapshot was taken
