@@ -137,7 +137,11 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     archive.finish()?;
     println!("==> Snapshot created: {}", output);
     println!("==> Files: {}", file_count);
-    println!("==> Source paths: {}", comment);
+    let sources: Vec<&str> = source_infos.iter().map(|(_, rel)| rel.as_str()).collect();
+    println!("==> Source paths: {}", sources.join(", "));
+    if !exclude_patterns.is_empty() {
+        println!("==> Exclude patterns: {}", exclude_patterns.join(", "));
+    }
 
     Ok(())
 }
