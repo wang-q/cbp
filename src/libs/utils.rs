@@ -63,6 +63,28 @@ pub fn format_packages(packages: &[String]) -> String {
     result
 }
 
+/// Parses a JSON gzip comment into source paths and exclude patterns
+pub fn parse_comment(comment: &str) -> (Vec<String>, Vec<String>) {
+    let v: serde_json::Value = serde_json::from_str(comment).unwrap_or_default();
+    let sources = v["sources"]
+        .as_array()
+        .map(|a| {
+            a.iter()
+                .filter_map(|v| v.as_str().map(String::from))
+                .collect()
+        })
+        .unwrap_or_default();
+    let excludes = v["exclude"]
+        .as_array()
+        .map(|a| {
+            a.iter()
+                .filter_map(|v| v.as_str().map(String::from))
+                .collect()
+        })
+        .unwrap_or_default();
+    (sources, excludes)
+}
+
 /// Resolve a path, expanding `~` to the home directory
 pub fn resolve_path(path: &Path, home: &Path) -> anyhow::Result<PathBuf> {
     use anyhow::Context;

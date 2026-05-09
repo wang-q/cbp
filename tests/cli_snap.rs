@@ -860,3 +860,230 @@ fn command_snap_empty_directory() -> anyhow::Result<()> {
 
     Ok(())
 }
+
+// --- Exclude tests ---
+
+/// Test exclude single file by name
+#[test]
+fn command_snap_save_exclude_file() -> anyhow::Result<()> {
+    let temp_dir = tempfile::TempDir::new()?;
+    let source_dir = temp_dir.path().join("config");
+    std::fs::create_dir_all(&source_dir)?;
+    std::fs::write(source_dir.join("keep.txt"), "keep me")?;
+    std::fs::write(source_dir.join("skip.log"), "skip me")?;
+
+    let archive_path = temp_dir.path().join("excluded.snap.tar.gz");
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("save")
+        .arg(&source_dir)
+        .arg("-o")
+        .arg(&archive_path)
+        .arg("-x")
+        .arg("*.log")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Snapshot created"))
+        .stdout(predicate::str::contains("1"));
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("list")
+        .arg(&archive_path)
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("keep.txt"))
+        .stdout(predicate::str::contains("skip.log").not());
+
+    Ok(())
+}
+
+/// Test exclude with multiple patterns
+#[test]
+fn command_snap_save_exclude_multiple() -> anyhow::Result<()> {
+    let temp_dir = tempfile::TempDir::new()?;
+    let source_dir = temp_dir.path().join("project");
+    std::fs::create_dir_all(&source_dir)?;
+    std::fs::write(source_dir.join("main.rs"), "fn main() {}")?;
+    std::fs::write(source_dir.join("debug.log"), "log")?;
+    std::fs::write(source_dir.join("main.rs.swp"), "swap")?;
+
+    let archive_path = temp_dir.path().join("multiex.snap.tar.gz");
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("save")
+        .arg(&source_dir)
+        .arg("-o")
+        .arg(&archive_path)
+        .arg("-x")
+        .arg("*.log")
+        .arg("-x")
+        .arg("*.swp")
+        .assert()
+        .success();
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("list")
+        .arg(&archive_path)
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("main.rs"))
+        .stdout(predicate::str::contains("debug.log").not())
+        .stdout(predicate::str::contains("main.rs.swp").not());
+
+    Ok(())
+}
+
+/// Test recursive exclude of a subdirectory
+#[test]
+fn command_snap_save_exclude_directory() -> anyhow::Result<()> {
+    let temp_dir = tempfile::TempDir::new()?;
+    let source_dir = temp_dir.path().join("nvim");
+    std::fs::create_dir_all(source_dir.join("lua").join("plugins"))?;
+    std::fs::write(source_dir.join("init.lua"), "init")?;
+    std::fs::write(source_dir.join("lua").join("core.lua"), "core")?;
+    std::fs::write(
+        source_dir.join("lua").join("plugins").join("plugin.lua"),
+        "plugin",
+    )?;
+
+    let archive_path = temp_dir.path().join("dir_ex.snap.tar.gz");
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("save")
+        .arg(&source_dir)
+        .arg("-o")
+        .arg(&archive_path)
+        .arg("-x")
+        .arg("**/plugins/**")
+        .assert()
+        .success();
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("list")
+        .arg(&archive_path)
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("init.lua"))
+        .stdout(predicate::str::contains("core.lua"))
+        .stdout(predicate::str::contains("plugin.lua").not());
+
+    Ok(())
+}
+
+/// Test verbose mode shows skipped files
+#[test]
+fn command_snap_save_exclude_verbose() -> anyhow::Result<()> {
+    let temp_dir = tempfile::TempDir::new()?;
+    let source_dir = temp_dir.path().join("verbose_ex");
+    std::fs::create_dir_all(&source_dir)?;
+    std::fs::write(source_dir.join("good.txt"), "good")?;
+    std::fs::write(source_dir.join("bad.tmp"), "bad")?;
+
+    let archive_path = temp_dir.path().join("vex.snap.tar.gz");
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("save")
+        .arg(&source_dir)
+        .arg("-o")
+        .arg(&archive_path)
+        .arg("-v")
+        .arg("-x")
+        .arg("*.tmp")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Skipped:"))
+        .stdout(predicate::str::contains("bad.tmp"))
+        .stdout(predicate::str::contains("Added:"))
+        .stdout(predicate::str::contains("good.txt"));
+
+    Ok(())
+}
+
+/// Test exclude patterns appear in gzip comment (snap list)
+#[test]
+fn command_snap_save_exclude_in_comment() -> anyhow::Result<()> {
+    let temp_dir = tempfile::TempDir::new()?;
+    let source_dir = temp_dir.path().join("comment_ex");
+    std::fs::create_dir_all(&source_dir)?;
+    std::fs::write(source_dir.join("f1.txt"), "f1")?;
+
+    let archive_path = temp_dir.path().join("comment_ex.snap.tar.gz");
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("save")
+        .arg(&source_dir)
+        .arg("-o")
+        .arg(&archive_path)
+        .arg("-x")
+        .arg("*.swp")
+        .arg("-x")
+        .arg("**/plugged/**")
+        .assert()
+        .success();
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("list")
+        .arg(&archive_path)
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Exclude patterns:"))
+        .stdout(predicate::str::contains("*.swp"))
+        .stdout(predicate::str::contains("**/plugged/**"));
+
+    Ok(())
+}
+/// Test delta inherits exclude patterns from original snapshot
+#[test]
+fn command_snap_delta_inherits_exclude() -> anyhow::Result<()> {
+    let temp_dir = tempfile::TempDir::new()?;
+    let source_dir = temp_dir.path().join("delta_ex");
+    std::fs::create_dir_all(&source_dir)?;
+    std::fs::write(source_dir.join("keep.txt"), "original")?;
+
+    let archive_path = temp_dir.path().join("delta_ex.snap.tar.gz");
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("save")
+        .arg(&source_dir)
+        .arg("-o")
+        .arg(&archive_path)
+        .arg("-x")
+        .arg("*.log")
+        .assert()
+        .success();
+
+    std::fs::write(source_dir.join("keep.txt"), "modified")?;
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("delta")
+        .arg(&archive_path)
+        .arg("-p")
+        .current_dir(&temp_dir)
+        .assert()
+        .success();
+
+    let delta_path = temp_dir.path().join("delta_ex.delta.tar.gz");
+    assert!(delta_path.exists(), "Delta archive should be created");
+
+    Command::cargo_bin("cbp")?
+        .arg("snap")
+        .arg("list")
+        .arg(&delta_path)
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Exclude patterns:"))
+        .stdout(predicate::str::contains("*.log"));
+
+    Ok(())
+}

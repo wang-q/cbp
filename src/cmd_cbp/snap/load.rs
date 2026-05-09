@@ -3,7 +3,7 @@ use clap::*;
 use std::path::{Path, PathBuf};
 use tracing::warn;
 
-use cbp::libs::utils::{find_target_path, read_comment};
+use cbp::libs::utils::{find_target_path, parse_comment, read_comment};
 
 pub fn make_subcommand() -> Command {
     Command::new("load")
@@ -59,11 +59,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         ));
     }
 
-    let source_paths: Vec<String> = comment
-        .split(' ')
-        .filter(|s| !s.is_empty())
-        .map(|s| s.to_string())
-        .collect();
+    let (source_paths, _exclude_patterns) = parse_comment(&comment);
 
     if verbose {
         println!("==> Restoring snapshot: {}", archive_path.display());

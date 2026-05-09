@@ -30,12 +30,26 @@ pub fn make_subcommand() -> Command {
                 .help("Show verbose output")
                 .action(ArgAction::SetTrue),
         )
+        .arg(
+            Arg::new("exclude")
+                .long("exclude")
+                .short('x')
+                .help("Exclude files matching the glob pattern")
+                .action(ArgAction::Append)
+                .num_args(1)
+                .value_name("PATTERN"),
+        )
 }
 
 pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     let verbose = args.get_flag("verbose");
     let paths: Vec<String> =
         args.get_many::<String>("paths").unwrap().cloned().collect();
+
+    let exclude_patterns: Vec<String> = args
+        .get_many::<String>("exclude")
+        .map(|v| v.cloned().collect())
+        .unwrap_or_default();
 
     let home = dirs::home_dir().context("Cannot determine HOME directory")?;
 
@@ -63,11 +77,13 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         }
     };
 
-    let comment = source_infos
-        .iter()
-        .map(|(_, rel)| rel.clone())
-        .collect::<Vec<_>>()
-        .join(" ");
+    // Build comment as JSON for robust parsing
+    let sources: Vec<&String> = source_infos.iter().map(|(_, rel)| rel).collect();
+    let comment = serde_json::json!({
+        "sources": sources,
+        "exclude": exclude_patterns,
+    })
+    .to_string();
 
     let tar_file = std::fs::File::create(&output)?;
     let gz = flate2::GzBuilder::new()
@@ -80,6 +96,12 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     for (abs, _rel) in &source_infos {
         if abs.is_file() {
             let name = abs.file_name().unwrap();
+            if is_excluded(Path::new(name), &exclude_patterns) {
+                if verbose {
+                    println!("Skipped: {}", name.to_string_lossy());
+                }
+                continue;
+            }
             archive.append_path_with_name(abs, name)?;
             file_count += 1;
             if verbose {
@@ -95,6 +117,12 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
                 let file_path = entry.path();
                 let archive_path =
                     Path::new(base_name).join(file_path.strip_prefix(abs)?);
+                if is_excluded(&archive_path, &exclude_patterns) {
+                    if verbose {
+                        println!("Skipped: {}", archive_path.display());
+                    }
+                    continue;
+                }
                 archive.append_path_with_name(file_path, &archive_path)?;
                 file_count += 1;
                 if verbose {
@@ -112,4 +140,13 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     println!("==> Source paths: {}", comment);
 
     Ok(())
+}
+
+fn is_excluded(path: &Path, patterns: &[String]) -> bool {
+    let path_str = path.to_string_lossy();
+    patterns.iter().any(|p| {
+        glob::Pattern::new(p)
+            .map(|pat| pat.matches(&path_str))
+            .unwrap_or(false)
+    })
 }

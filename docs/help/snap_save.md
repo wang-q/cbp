@@ -10,14 +10,17 @@ Examples:
 2. Save multiple directories to a named archive:
    `cbp snap save ~/.config/nvim ~/.config/alacritty -o configs.snap.tar.gz`
 
-3. Save a single file:
+3. Exclude patterns with glob:
+   `cbp snap save ~/.config/nvim -x "**/plugged/**" -x "*.swp"`
+
+4. Save a single file:
    `cbp snap save ~/.bashrc`
 
-4. Verbose output:
+5. Verbose output:
    `cbp snap save -v ~/.config/nvim`
 
-5. Windows (PowerShell):
+6. Windows (PowerShell):
    `cbp snap save $env:APPDATA/alacritty -o alacritty.snap.tar.gz`
 
-6. Windows (CMD):
+7. Windows (CMD):
    `cbp snap save %APPDATA%\alacritty -o alacritty.snap.tar.gz`

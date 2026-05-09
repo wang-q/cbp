@@ -1,7 +1,7 @@
 use clap::*;
 use std::path::Path;
 
-use cbp::libs::utils::{format_size, read_comment};
+use cbp::libs::utils::{format_size, parse_comment, read_comment};
 
 pub fn make_subcommand() -> Command {
     Command::new("list")
@@ -36,13 +36,21 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
     }
 
     let comment = read_comment(archive_path)?;
-    if comment.is_empty() {
-        println!("No source path information in gzip comment");
-    } else {
+    let (source_paths, exclude_patterns) = parse_comment(&comment);
+
+    if !source_paths.is_empty() || !exclude_patterns.is_empty() {
         println!("Source paths:");
-        for src in comment.split(' ').filter(|s| !s.is_empty()) {
+        for src in &source_paths {
             println!("  {}", src);
         }
+        if !exclude_patterns.is_empty() {
+            println!("Exclude patterns:");
+            for pat in &exclude_patterns {
+                println!("  {}", pat);
+            }
+        }
+    } else if comment.is_empty() {
+        println!("No source path information in gzip comment");
     }
 
     println!();

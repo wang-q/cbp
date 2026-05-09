@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 
 use cbp::libs::utils::{
     delta_output_name, expand_home_path, find_matching_source, find_target_path,
-    read_comment,
+    parse_comment, read_comment,
 };
 
 pub fn make_subcommand() -> Command {
@@ -48,11 +48,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
         ));
     }
 
-    let source_paths: Vec<String> = comment
-        .split(' ')
-        .filter(|s| !s.is_empty())
-        .map(|s| s.to_string())
-        .collect();
+    let (source_paths, _exclude_patterns) = parse_comment(&comment);
 
     let pack = args.get_flag("pack");
 
@@ -99,7 +95,7 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
     if pack {
         let delta_name = delta_output_name(archive_path);
-        pack_modified(&modified, &source_paths, &home, &delta_name)?;
+        pack_modified(&modified, &comment, &home, &delta_name)?;
         println!(
             "==> Delta snapshot created: {} ({} files)",
             delta_name,
@@ -114,21 +110,21 @@ pub fn execute(args: &ArgMatches) -> anyhow::Result<()> {
 
 fn pack_modified(
     modified: &[(PathBuf, PathBuf)],
-    source_paths: &[String],
+    full_comment: &str,
     home: &Path,
     output: &str,
 ) -> anyhow::Result<()> {
-    let comment = source_paths.join(" ");
+    let (source_paths, _) = parse_comment(full_comment);
 
     let tar_file = std::fs::File::create(output)?;
     let gz = flate2::GzBuilder::new()
-        .comment(comment.as_bytes())
+        .comment(full_comment.as_bytes())
         .write(tar_file, flate2::Compression::default());
     let mut archive = tar::Builder::new(gz);
 
     for (target, display_path) in modified {
         let archive_name =
-            if let Some(source) = find_matching_source(display_path, source_paths) {
+            if let Some(source) = find_matching_source(display_path, &source_paths) {
                 let resolved = expand_home_path(&source, home);
                 let base = resolved.file_name().unwrap().to_string_lossy().to_string();
                 let rel = display_path
