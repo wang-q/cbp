@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-e9bb21c0.js";
+            window.path_to_searchindex_js = "../searchindex-4c9b26cc.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-862b95b9.js"></script>
@@ -194,6 +194,10 @@ Source paths are stored in the gzip comment for reliable restoration.</p>
 <code>cbp snap save ~/.config/nvim ~/.config/alacritty -o configs.snap.tar.gz</code></p>
 </li>
 <li>
+<p>Exclude patterns with glob:
+<code>cbp snap save ~/.config/nvim -x "**/plugged/**" -x "*.swp"</code></p>
+</li>
+<li>
 <p>Save a single file:
 <code>cbp snap save ~/.bashrc</code></p>
 </li>
@@ -203,11 +207,11 @@ Source paths are stored in the gzip comment for reliable restoration.</p>
 </li>
 <li>
 <p>Windows (PowerShell):
-<code>cbp snap save ~/AppData/Roaming/alacritty -o alacritty.snap.tar.gz</code></p>
+<code>cbp snap save $env:APPDATA/alacritty -o alacritty.snap.tar.gz</code></p>
 </li>
 <li>
 <p>Windows (CMD):
-<code>cbp snap save %USERPROFILE%\AppData\Roaming\alacritty -o alacritty.snap.tar.gz</code></p>
+<code>cbp snap save %APPDATA%\alacritty -o alacritty.snap.tar.gz</code></p>
 </li>
 </ol>
 
