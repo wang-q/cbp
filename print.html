@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-a40e787f.js";
+            window.path_to_searchindex_js = "searchindex-e9bb21c0.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-862b95b9.js"></script>
@@ -2165,41 +2165,24 @@ allowing files to be restored to their correct locations.</p>
 <li>Files outside HOME are stored with absolute paths</li>
 <li>Delta snapshots capture only modified files</li>
 </ul>
-<p>Examples:</p>
-<ol>
-<li>
-<p>Save a single file:
-<code>cbp snap save ~/.bashrc</code></p>
-</li>
-<li>
-<p>Save multiple files to specific archive:
-<code>cbp snap save ~/.bashrc ~/.vimrc -o dotfiles.snap.tar.gz</code></p>
-</li>
-<li>
-<p>Save a directory:
-<code>cbp snap save ~/.config/nvim -o nvim.snap.tar.gz</code></p>
-</li>
-<li>
-<p>List snapshot contents:
-<code>cbp snap list dotfiles.snap.tar.gz</code></p>
-</li>
-<li>
-<p>Restore snapshot to HOME:
-<code>cbp snap load dotfiles.snap.tar.gz</code></p>
-</li>
-<li>
-<p>Restore to different directory:
-<code>cbp snap load dotfiles.snap.tar.gz -t /tmp/restore</code></p>
-</li>
-<li>
-<p>Check what files have changed:
-<code>cbp snap delta dotfiles.snap.tar.gz</code></p>
-</li>
-<li>
-<p>Pack modified files into delta snapshot:
-<code>cbp snap delta dotfiles.snap.tar.gz -p</code></p>
-</li>
-</ol>
+<p>Path handling:</p>
+<ul>
+<li><code>~</code> expands to the user’s home directory (<code>$HOME</code> on Unix, <code>%USERPROFILE%</code> on Windows)</li>
+<li>In PowerShell, <code>~</code> works natively; in CMD, use <code>%USERPROFILE%</code> directly</li>
+</ul>
+<p>Windows directory mapping:</p>
+<ul>
+<li><code>~/AppData/Roaming/</code> — Roaming application data (<code>%APPDATA%</code>)</li>
+<li><code>~/AppData/Local/</code> — Local application data (<code>%LOCALAPPDATA%</code>)</li>
+<li><code>~/AppData/Local/Temp/</code> — Temporary files (<code>%TEMP%</code>)</li>
+</ul>
+<p>Subcommands:</p>
+<ul>
+<li><code>save</code> — Save files and directories as a snapshot archive</li>
+<li><code>load</code> — Restore files from a snapshot archive</li>
+<li><code>list</code> — List contents of a snapshot archive</li>
+<li><code>delta</code> — Show files modified since a snapshot was taken</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="snap-delta"><a href="#snap-delta" class="header">snap delta</a></h1>
 <p>Show files modified since a snapshot was taken.</p>
@@ -2240,15 +2223,23 @@ the source path information stored in the gzip comment.</p>
 <ol>
 <li>
 <p>Restore to HOME:
-<code>cbp snap load dotfiles.snap.tar.gz</code></p>
+<code>cbp snap load configs.snap.tar.gz</code></p>
 </li>
 <li>
 <p>Restore to a custom directory:
-<code>cbp snap load dotfiles.snap.tar.gz -t /tmp/restore</code></p>
+<code>cbp snap load configs.snap.tar.gz -t /tmp/restore</code></p>
 </li>
 <li>
 <p>Verbose output:
-<code>cbp snap load -v dotfiles.snap.tar.gz</code></p>
+<code>cbp snap load -v configs.snap.tar.gz</code></p>
+</li>
+<li>
+<p>Windows (PowerShell):
+<code>cbp snap load alacritty.snap.tar.gz -t ~/Desktop/backup</code></p>
+</li>
+<li>
+<p>Windows (CMD):
+<code>cbp snap load alacritty.snap.tar.gz -t %USERPROFILE%\Desktop\backup</code></p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -2259,20 +2250,28 @@ Source paths are stored in the gzip comment for reliable restoration.</p>
 <p>Examples:</p>
 <ol>
 <li>
+<p>Save a directory:
+<code>cbp snap save ~/.config/nvim</code></p>
+</li>
+<li>
+<p>Save multiple directories to a named archive:
+<code>cbp snap save ~/.config/nvim ~/.config/alacritty -o configs.snap.tar.gz</code></p>
+</li>
+<li>
 <p>Save a single file:
 <code>cbp snap save ~/.bashrc</code></p>
 </li>
 <li>
-<p>Save multiple files:
-<code>cbp snap save ~/.bashrc ~/.vimrc -o dotfiles.snap.tar.gz</code></p>
-</li>
-<li>
-<p>Save a directory:
-<code>cbp snap save ~/.config/nvim -o nvim.snap.tar.gz</code></p>
-</li>
-<li>
 <p>Verbose output:
-<code>cbp snap save -v ~/.bashrc</code></p>
+<code>cbp snap save -v ~/.config/nvim</code></p>
+</li>
+<li>
+<p>Windows (PowerShell):
+<code>cbp snap save ~/AppData/Roaming/alacritty -o alacritty.snap.tar.gz</code></p>
+</li>
+<li>
+<p>Windows (CMD):
+<code>cbp snap save %USERPROFILE%\AppData\Roaming\alacritty -o alacritty.snap.tar.gz</code></p>
 </li>
 </ol>
 
