@@ -3,15 +3,6 @@ Restore files from a snapshot archive.
 Extracts files from the archive to their original locations using
 the source path information stored in the gzip comment.
 
-Path handling:
-* `~` expands to the user's home directory (`$HOME` on Unix, `%USERPROFILE%` on Windows)
-* In PowerShell, `~` works natively; in CMD, use `%USERPROFILE%` directly
-
-Windows directory mapping:
-* `~/AppData/Roaming/` — Roaming application data (synced across devices)
-* `~/AppData/Local/` — Local application data (device-specific)
-* `~/AppData/Local/Temp/` — Temporary files
-
 Examples:
 1. Restore to HOME:
    `cbp snap load configs.snap.tar.gz`

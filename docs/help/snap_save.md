@@ -3,15 +3,6 @@ Save files and directories as a snapshot archive.
 Creates a `.snap.tar.gz` file containing the specified paths.
 Source paths are stored in the gzip comment for reliable restoration.
 
-Path handling:
-* `~` expands to the user's home directory (`$HOME` on Unix, `%USERPROFILE%` on Windows)
-* In PowerShell, `~` works natively; in CMD, use `%USERPROFILE%` directly
-
-Windows directory mapping:
-* `~/AppData/Roaming/` — Roaming application data (synced across devices)
-* `~/AppData/Local/` — Local application data (device-specific)
-* `~/AppData/Local/Temp/` — Temporary files
-
 Examples:
 1. Save a directory:
    `cbp snap save ~/.config/nvim`
