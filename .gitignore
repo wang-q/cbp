@@ -153,3 +153,5 @@ Cargo.lock
 coverge-*
 coverge_*
 coverage.*
+
+git*.txt
