@@ -2,6 +2,64 @@
 
 ## Unreleased - ReleaseDate
 
+- New Commands
+  - Added `snap` command for file snapshot management with `save`, `load`, `list`, and `delta` subcommands.
+    - `save` — Create snapshots of files/directories with gzip comment-based path tracking.
+    - `load` — Restore files from snapshots to original or custom locations.
+    - `list` — Inspect snapshot contents and source paths.
+    - `delta` — Show and pack files modified since a snapshot was taken.
+    - Added `--exclude` flag to `snap save` for glob-based file exclusion.
+  - Enhanced `dot` command with dotfiles management using templates and filename conventions.
+    - Template rendering with Tera engine (Jinja2 compatible syntax).
+    - Filename prefix parsing (`private_`, `executable_`, `dot_`, `xdg_config/`, `xdg_data/`, etc.).
+    - Permission setting via `private_` and `executable_` prefixes.
+    - Multi-source support for `dot` command.
+    - Only set Unix permissions when explicitly specified via filename prefixes.
+  - Removed `kb` command and its associated documentation viewing functionality.
+- Code Quality
+  - Replaced `println!`/`eprintln!` with `tracing` macros (`info!`, `warn!`, `debug!`, `error!`) across all modules.
+  - Added `tracing-subscriber` for structured application logging.
+  - Replaced `unwrap()` with proper error handling in file path and other fallible operations.
+  - Refactored function signatures: replaced `PathBuf` with `Path` where ownership is not needed.
+  - Centralized GitHub URL handling with utility functions (`api`, `raw`, `release`).
+  - Implemented `CbpDirs::from_arg_matches` for consistent directory handling.
+  - Extracted common file path construction and extraction checks into shared library functions.
+  - Moved snap utility functions to shared `utils` module with comprehensive tests.
+  - Simplified path handling using `strip_prefix` and direct iterator methods.
+  - Improved user feedback messages for various commands (install, list, check, dot).
+  - Added file count display in snap creation and delta messages.
+  - Improved verbose output formatting and consistency across snap and dot commands.
+  - Allow overriding download URLs via `CBP_DOWNLOAD_BASE` environment variable in build commands.
+  - Added public function documentation across multiple modules.
+  - Fix: remove existing file before writing in dot command to prevent symlink issues.
+- Documentation
+  - Moved all documentation from `doc/` to `docs/` directory.
+  - Added comprehensive mdBook documentation structure with `SUMMARY.md`.
+  - Added help documentation files for all commands in `docs/help/`.
+  - Moved command help text from inline code to external markdown files using `include_str!`.
+  - Added detailed help text style guide with formatting specifications.
+  - Added comprehensive `homedir.md` documentation for `dot` and `snap` commands.
+  - Updated `binaries.md` with new package build instructions.
+  - Fixed incorrect file paths in documentation references.
+  - Standardized file endings with trailing newlines.
+  - Updated `build` command help with subcommand descriptions.
+  - Added Windows path handling documentation for snap commands.
+  - Replaced `AGENTS.md` with more comprehensive `CLAUDE.md` as AI assistant guide.
+- Package Management
+  - Added packages: `coreutils`, `libdivsufsort`, `maple-mono`, `minigraph`, `miniprot`, `ms`, `pgr`, `rush`, `tva`, `twemoji`.
+  - Migrated `miniprot` from make-based build to vcpkg port.
+- Build System
+  - Extracted common file path and extraction logic into shared library functions.
+  - Added utility functions for target path generation and line ending normalization.
+- CI/CD
+  - Added GitHub workflow (`docs.yml`) for building and deploying documentation to GitHub Pages.
+  - Added build script for documentation with mdBook.
+  - Updated `book.toml` edit URL template from `master` to `main` branch.
+  - Added mdBook output and coverage directories to `.gitignore`.
+- Repository Housekeeping
+  - Updated README badges and links (fixed license URL, added documentation badge).
+  - Updated various package configurations and binary tarballs.
+
 ## 0.3.14 - 2025-11-03
 
 - CLI Improvements
