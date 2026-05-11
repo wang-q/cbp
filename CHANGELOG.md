@@ -2,6 +2,8 @@
 
 ## Unreleased - ReleaseDate
 
+## 0.4.0 - 2026-05-11
+
 - New Commands
   - Added `snap` command for file snapshot management with `save`, `load`, `list`, and `delta` subcommands.
     - `save` — Create snapshots of files/directories with gzip comment-based path tracking.
