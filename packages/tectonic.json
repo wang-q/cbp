@@ -16,6 +16,7 @@
     },
     "windows": {
       "url": "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.16.9/tectonic-0.16.9-x86_64-pc-windows-msvc.zip",
+      "extract": "unzip",
       "binary": "tectonic.exe"
     }
   },
