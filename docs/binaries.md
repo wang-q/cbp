@@ -526,7 +526,7 @@ bash scripts/prebuilds/sratoolkit.sh windows
 cbp build prebuild intspan
 cbp build prebuild nwr
 cbp build prebuild pgr
-cbp build prebuild hnsm
+cbp build prebuild necom
 
 ```
 
