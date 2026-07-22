@@ -213,7 +213,15 @@ https://github.com/wang-q/cbp/releases/download/Binaries/{package}.{platform}.ta
 3. 更新 `version` 字段。
 4. 更新 `downloads` 下各平台的 `url`；若资产名称或架构发生变化，同步修改 `binary` 等字段。
 5. 使用 `python3 -m json.tool packages/{name}.json` 校验 JSON 语法。
-6. 使用 `cbp build test --dir ~/.cbp {name}` 在本地安装并运行测试，确认新版本可正常下载与执行。
+6. 构建本地安装包：
+   `cbp build prebuild {name}`
+   该命令会读取更新后的 JSON，从上游下载各平台资产，并生成 `binaries/{name}.{platform}.tar.gz`。
+7. 安装到本地 `~/.cbp` 进行验证：
+   `cbp local {name}`
+8. 运行配置中的测试，确认新版本可正常执行：
+   `cbp build test --dir ~/.cbp {name}`
+9. 测试通过后，上传二进制包到 GitHub Release：
+   `cbp build upload binaries/{name}.{platform}.tar.gz`
 
 ## 帮助文本规范 (Help Text Style Guide)
 
