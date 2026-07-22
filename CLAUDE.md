@@ -158,6 +158,63 @@ cargo clippy -- -D warnings
 - **Mock 环境**: 测试应使用临时目录，避免影响用户本地系统。
 
 
+## 软件包 (Packages)
+
+`cbp` 管理的软件包以 JSON 配置文件定义，存放在 `packages/` 目录下；构建产物为 `.tar.gz` 压缩包，存放在 `binaries/` 目录下。
+
+### 软件包配置文件
+
+每个软件包对应一个 JSON 文件，字段定义参见 `docs/schema/schema.json`：
+
+* 必填字段：`name`、`version`、`description`、`homepage`、`license`、`type`
+* `name`：小写字母开头，仅含小写字母、数字、点、连字符
+* `version`：数字格式，可带可选后缀（如 `x.y.z`、`x.y`、`2.4pre`）
+* `type`：构建类型，可选值为
+    * `prebuild`：从官方预构建二进制分发
+    * `rust`：使用 Rust 构建
+    * `make`：使用 Makefile 构建
+    * `cmake`：使用 CMake 构建
+    * `autotools`：使用 Autotools 构建
+    * `vcpkg`：使用 vcpkg 构建
+    * `font`：字体包
+    * `source`：通用源码构建
+* `downloads`：下载配置，按平台分组（`source`、`linux`、`macos`、`windows`、`font`），每个平台可指定 `url`、`binary`、`extract` 等
+* `tests`：安装后的验证测试，包含 `name`、`command`、`pattern`，可选 `args` 和 `ignore_exit_code`
+
+### 构建产物命名
+
+构建完成的二进制包按平台命名：
+
+* Linux：`{package}.linux.tar.gz`
+* macOS：`{package}.macos.tar.gz`
+* Windows：`{package}.windows.tar.gz`
+* 字体：`{package}.font.tar.gz`
+
+### 分发方式
+
+二进制包通过 GitHub Releases 的 `Binaries` 标签页统一发布，URL 格式为：
+
+```text
+https://github.com/wang-q/cbp/releases/download/Binaries/{package}.{platform}.tar.gz
+```
+
+发布时使用 `cbp build upload binaries/{package}.{platform}.tar.gz`，该命令会自动计算 MD5 并更新 Release notes。
+
+### 动态库依赖
+
+构建目标尽量静态链接，允许的动态依赖仅限系统库（如 `libc.so.6`、`libstdc++.so.6`、`libm.so.6`、`libgcc_s.so.1` 等）。
+
+### 更新 prebuild 软件包
+
+对于 `type` 为 `prebuild` 的软件包，按以下步骤更新到最新版本：
+
+1. 打开 `packages/{name}.json`，确认当前 `version` 与各平台 `downloads` URL。
+2. 访问上游 Release 页面（通常为 GitHub `releases/latest`），获取最新版本号与资产下载地址。
+3. 更新 `version` 字段。
+4. 更新 `downloads` 下各平台的 `url`；若资产名称或架构发生变化，同步修改 `binary` 等字段。
+5. 使用 `python3 -m json.tool packages/{name}.json` 校验 JSON 语法。
+6. 使用 `cbp build test --dir ~/.cbp {name}` 在本地安装并运行测试，确认新版本可正常下载与执行。
+
 ## 帮助文本规范 (Help Text Style Guide)
 
 ### Rust 实现规范 (Implementation)
